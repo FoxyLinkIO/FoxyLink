@@ -1,6 +1,8 @@
 Расширение процессора вывода 
 =========
 
+[![Join the chat at https://gitter.im/UpdateExpress/OutputProcessorExtension](https://badges.gitter.im/UpdateExpress/OutputProcessorExtension.svg)](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![License LGPLv3](https://img.shields.io/badge/license-LGPLv3-green.svg)](http://www.gnu.org/licenses/lgpl-3.0.html)
 
 ## Краткий Обзор
