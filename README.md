@@ -1,7 +1,7 @@
 Расширение процессора вывода 
 =========
 
-[![License LGPLv3](https://img.shields.io/badge/license-LGPLv3-green.svg)](http://www.gnu.org/licenses/lgpl-3.0.html)
+[![Gitter](https://badges.gitter.im/UpdateExpress/OutputProcessorExtension.svg)](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![License LGPLv3](https://img.shields.io/badge/license-LGPLv3-green.svg)](http://www.gnu.org/licenses/lgpl-3.0.html)
 
 ## Краткий Обзор
 
@@ -48,7 +48,7 @@
 
 Открытые проекты развиваются более продуктивно, если дискуссии являются публичными.
 
-Если у вас есть любые вопросы, проблемы связанные с использованием расширения или хотите обсудить новую фичу, смело создавайте ```issue```.  
+Если у вас есть любые вопросы, проблемы связанные с использованием расширения или хотите обсудить новую фичу, смело пишите в чат [Gitter](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=share-link&utm_medium=link&utm_campaign=share-link).  
 
 Если вы нашли баг, пожалуйста опишите его [Update.Express GitHub Issues](https://github.com/UpdateExpress/OutputProcessorExtension/issues?state=open). Детальное описание и описание ожидаемого поведения приветствуется.
 
