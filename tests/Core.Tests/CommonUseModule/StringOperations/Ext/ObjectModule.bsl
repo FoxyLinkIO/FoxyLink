@@ -36,7 +36,7 @@ Procedure ЗаполнитьНаборТестов(TestsSet) Export
     
 EndProcedure // ЗаполнитьНаборТестов()
 
-#EndRegion // СлужебныйИнтерфейс
+#EndRegion // ServiceInterface
 
 #Region TestCases
 
