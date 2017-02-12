@@ -6,17 +6,17 @@
 				<xr:ClassId>c3831ec8-d8d5-4f93-8a22-f9bfae07327f</xr:ClassId>
 				<xr:ObjectId>23995e46-ff37-4a15-b6eb-d10f8f7be04f</xr:ObjectId>
 			</xr:ContainedObject>
-			<xr:GeneratedType name="ExternalDataProcessorObject.Тесты_ПроверкаСлужебногоМодуля" category="Object">
+			<xr:GeneratedType name="ExternalDataProcessorObject.StringOperations" category="Object">
 				<xr:TypeId>fcd592f5-c8fc-4e82-8fd8-38efd462a51a</xr:TypeId>
 				<xr:ValueId>7dd7bd78-4258-4434-9c68-6d433b0cfbf3</xr:ValueId>
 			</xr:GeneratedType>
 		</InternalInfo>
 		<Properties>
-			<Name>Тесты_ПроверкаСлужебногоМодуля</Name>
+			<Name>StringOperations</Name>
 			<Synonym>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Тесты проверка служебного модуля</v8:content>
+					<v8:content>String operations</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
