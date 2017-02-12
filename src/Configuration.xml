@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1">
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3">
 	<Configuration uuid="fb6e805b-87df-4ac7-ab3a-615dfdeeea8a">
 		<InternalInfo>
 			<xr:ContainedObject>
@@ -28,25 +28,29 @@
 			</xr:ContainedObject>
 		</InternalInfo>
 		<Properties>
-			<Name>UpdateExpress</Name>
+			<Name>IntegrationHappinessLibrary</Name>
 			<Synonym>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Update.Express, бета-версия 0.2</v8:content>
+					<v8:content>IHL, beta-version 0.5</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Integration Happiness Library, beta-version 0.5</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
 			<NamePrefix/>
-			<ConfigurationExtensionCompatibilityMode>DontUse</ConfigurationExtensionCompatibilityMode>
+			<ConfigurationExtensionCompatibilityMode>Version8_3_9</ConfigurationExtensionCompatibilityMode>
 			<DefaultRunMode>ManagedApplication</DefaultRunMode>
 			<UsePurposes>
 				<v8:Value xsi:type="app:ApplicationUsePurpose">PersonalComputer</v8:Value>
 			</UsePurposes>
-			<ScriptVariant>Russian</ScriptVariant>
+			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
-			<Vendor/>
-			<Version>0.2.0.0</Version>
-			<UpdateCatalogAddress/>
+			<Vendor>Petro Bazeliuk</Vendor>
+			<Version>0.5.0.0</Version>
+			<UpdateCatalogAddress>https://github.com/pbazeliuk/OutputProcessorExtension/</UpdateCatalogAddress>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>false</UseManagedFormInOrdinaryApplication>
 			<UseOrdinaryFormInManagedApplication>false</UseOrdinaryFormInManagedApplication>
@@ -102,7 +106,7 @@
 			</RequiredMobileApplicationPermissions>
 			<DefaultInterface/>
 			<DefaultStyle/>
-			<DefaultLanguage>Language.Русский</DefaultLanguage>
+			<DefaultLanguage>Language.English</DefaultLanguage>
 			<BriefInformation>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
@@ -115,7 +119,12 @@
 					<v8:content>Update.Express, бета-версия 0.2</v8:content>
 				</v8:item>
 			</DetailedInformation>
-			<Copyright/>
+			<Copyright>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Copyright © Petro Bazeliuk, 2017. All rights reserved</v8:content>
+				</v8:item>
+			</Copyright>
 			<VendorInformationAddress>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
@@ -128,17 +137,16 @@
 			<ModalityUseMode>DontUse</ModalityUseMode>
 			<SynchronousPlatformExtensionAndAddInCallUseMode>DontUse</SynchronousPlatformExtensionAndAddInCallUseMode>
 			<InterfaceCompatibilityMode>Taxi</InterfaceCompatibilityMode>
-			<CompatibilityMode>DontUse</CompatibilityMode>
+			<CompatibilityMode>Version8_3_8</CompatibilityMode>
 			<DefaultConstantsForm/>
 		</Properties>
 		<ChildObjects>
-			<Language>Русский</Language>
-			<CommonModule>UpdateExpressКомпоновкаДанных</CommonModule>
-			<CommonModule>UpdateExpressПроцессорВывода</CommonModule>
-			<CommonModule>UpdateExpressПроцессорВыводаПовтИсп</CommonModule>
-			<CommonModule>UpdateExpressСлужебный</CommonModule>
-			<CommonModule>UpdateExpressСлужебныйКлиентСервер</CommonModule>
-			<CommonModule>UpdateExpressСлужебныйПовтИсп</CommonModule>
+			<Language>English</Language>
+			<Subsystem>IHL</Subsystem>
+			<CommonModule>IHLCommonUse</CommonModule>
+			<CommonModule>IHLCommonUseClientServer</CommonModule>
+			<CommonModule>IHLDataComposition</CommonModule>
+			<DataProcessor>DataProcessorJSON</DataProcessor>
 		</ChildObjects>
 	</Configuration>
 </MetaDataObject>
