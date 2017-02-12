@@ -1,106 +1,108 @@
-Расширение процессора вывода 
+Integration happiness library (IHL): Output processor extension 
 =========
 
 [![Gitter](https://badges.gitter.im/UpdateExpress/OutputProcessorExtension.svg)](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![License LGPLv3](https://img.shields.io/badge/license-LGPLv3-green.svg)](http://www.gnu.org/licenses/lgpl-3.0.html)
 
-## Краткий Обзор
+## Overview
 
-Небольшое расширение процессора вывода в JSON. Вывод максимально приближен к выводу в ТабличныйДокумент, только в формате JSON. Легко интегрируется в любую конфигурацию на платформе «1С:Предприятие 8» версии 8.3.6 и выше.
+Incredibly easy way to output result from DataCompositionSchema into json, xml, etc format. Output result is arranged in the same way as SpreadsheetDocument. It's easy to start using it with any configuration on "1C:Enterprise 8" platform (version 8.3.6 and higher).
 
-Вы можете начать с простой установки и сразу начинать пользоваться. Основные сценарии использования: 
+You can start with a simple setup. Main usage scenarios: 
 
-- вывод отчетов в формате JSON
-- интеграция с различными BI системами
-- формирование различных выгрузок с иерархией
-- формирование сообщений для систем управления очередями
-- *...и многое другое*
+- output reports in json, xml, etc.
+- integration with different business intelligence systems
+- export data with arbitrary hierarchy
+- export data to json, xml, etc.  
+- creation of messages for message exchange systems
+- *...and so on*
 
-<img align="center" src="https://pbazeliuk.files.wordpress.com/2016/11/11.png" height="613" width="600" alt="Процесс формирования результата схемы компоновки данных"/>
+![Data composition schema output process](https://raw.githubusercontent.com/pbazeliuk/OutputProcessorExtension/develop/img/OutputProcess.png)
 
-
-Установка
+Installation
 -------------
 
-Расширение распространяеться как конфигурация, для старта необходимо ```Cравнить и объединить``` с вашей конфигурацией. 
+IHL extension is available as configuration. You can install it using command ```1C:Enterprise 8 -> Designer -> Configuration -> Compare and merge with configuration from file...```. 
 
 
-Использование
+Usage
 ------
 
-**Обычный вывод**
+**Fast output**
 
-Вывод с использованием дополнительных объектов (деревья, структуры, массивы). Увеличенное использование памяти.
-
-```1C-Enterprise
-Функция ВывестиВJSON(СхемаКомпоновкиДанных, НастройкиКомпоновкиДанных)
-    
-    ПараметрыМакета = UpdateExpressКомпоновкаДанных.ПараметрыМакетаКомпоновкиДанных();
-    ПараметрыМакета.Схема = СхемаКомпоновкиДанных;
-    ПараметрыМакета.Настройки = НастройкиКомпоновкиДанных;
-	
-    ПараметрыВывода = UpdateExpressКомпоновкаДанных.ПараметрыВыводаРезультатаКомпоновки();
-    ПараметрыВывода.ПараметрыМакета = ПараметрыМакета;
-    ПараметрыВывода.ВозможностьИспользованияВнешнихФункций = Истина;
-
-    ЗаписьJSON = Новый ЗаписьJSON;
-    ЗаписьJSON.УстановитьСтроку();
-    ЗаписьJSON.ЗаписатьНачалоОбъекта();
-	
-    // Третий параметр указывает на использование обычного вывода
-    UpdateExpressПроцессорВывода.Вывести(ЗаписьJSON, ПараметрыВывода, Ложь);
-	
-    ЗаписьJSON.ЗаписатьКонецОбъекта();
-    Возврат ЗаписьJSON.Закрыть();
-    
-КонецФункции // ВывестиВJSON()    
-```
-
-**Последовательный вывод**
-
-Последовательный вывод без использования дополнительных объектов (деревья, структуры, массивы). Вывод медленнее на 20%. Пониженное использование памяти.
+Output with using additional objects (tree, structures, arrays). It causes increased use of memory.
 
 ```1C-Enterprise
-Функция ВывестиВJSON(СхемаКомпоновкиДанных, НастройкиКомпоновкиДанных)
+Function OutputInJSON(DataCompositionSchema, DataCompositionSettings)
     
-    ПараметрыМакета = UpdateExpressКомпоновкаДанных.ПараметрыМакетаКомпоновкиДанных();
-    ПараметрыМакета.Схема = СхемаКомпоновкиДанных;
-    ПараметрыМакета.Настройки = НастройкиКомпоновкиДанных;
+    DataCompositionTemplate = IHLDataComposition.NewDataCompositionTemplateParameters();
+    DataCompositionTemplate.Schema   = DataCompositionSchema;
+    DataCompositionTemplate.Template = DataCompositionSettings;
+    
+    OutputParameters = IHLDataComposition.NewOutputParameters();
+    OutputParameters.DCTParameters = DataCompositionTemplate;
+    OutputParameters.CanUseExternalFunctions = True;
+    
+    StreamObject = DataProcessors.DataProcessorJSON.Create();
+    StreamObject.Initialize();
+    StreamObject.WriteStartObject();
 	
-    ПараметрыВывода = UpdateExpressКомпоновкаДанных.ПараметрыВыводаРезультатаКомпоновки();
-    ПараметрыВывода.ПараметрыМакета = ПараметрыМакета;
-    ПараметрыВывода.ВозможностьИспользованияВнешнихФункций = Истина;
+    IHLDataComposition.Output(Undefined, StreamObject, OutputParameters, False);
+    
+    StreamObject.WriteEndObject();
+    Result = StreamObject.Close();
+	
+    Return Result;
+    
+EndFunction // OutputInJSON()    
+```
 
-    ЗаписьJSON = Новый ЗаписьJSON;
-    ЗаписьJSON.УстановитьСтроку();
-    ЗаписьJSON.ЗаписатьНачалоОбъекта();
-	
-    // Третий параметр указывает на необходимость последовательного вывода
-    UpdateExpressПроцессорВывода.Вывести(ЗаписьJSON, ПараметрыВывода, Истина);
-	
-    ЗаписьJSON.ЗаписатьКонецОбъекта();
-    Возврат ЗаписьJSON.Закрыть();
+**Sequential output**
+
+Sequential output is 22.53% slower than fast output, although it has light memory usage.
+
+```1C-Enterprise
+Function OutputInJSON(DataCompositionSchema, DataCompositionSettings)
     
-КонецФункции // ВывестиВJSON()    
+    DataCompositionTemplate = IHLDataComposition.NewDataCompositionTemplateParameters();
+    DataCompositionTemplate.Schema   = DataCompositionSchema;
+    DataCompositionTemplate.Template = DataCompositionSettings;
+    
+    OutputParameters = IHLDataComposition.NewOutputParameters();
+    OutputParameters.DCTParameters = DataCompositionTemplate;
+    OutputParameters.CanUseExternalFunctions = True;
+    
+    StreamObject = DataProcessors.DataProcessorJSON.Create();
+    StreamObject.Initialize();
+    StreamObject.WriteStartObject();
+	
+    IHLDataComposition.Output(Undefined, StreamObject, OutputParameters, True);
+    
+    StreamObject.WriteEndObject();
+    Result = StreamObject.Close();
+	
+    Return Result;
+    
+EndFunction // OutputInJSON()     
 ```
 
 
-Вопросы? Проблемы?
+Questions? Problems?
 ---------------------
 
-Открытые проекты развиваются более продуктивно, если дискуссии являются публичными.
+Open-source projects develop more smoothly when discussions are public.
 
-Если у вас есть любые вопросы, проблемы связанные с использованием расширения или хотите обсудить новую фичу, смело пишите в чат [Gitter](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=share-link&utm_medium=link&utm_campaign=share-link).  
+If you have any questions, problems related to IHL extension usage or if you want to discuss new features, please visit the chatroom [Gitter](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=share-link&utm_medium=link&utm_campaign=share-link).  
 
-Если вы нашли баг, пожалуйста опишите его [Update.Express GitHub Issues](https://github.com/UpdateExpress/OutputProcessorExtension/issues?state=open). Детальное описание и описание ожидаемого поведения приветствуется.
+If you've discovered a bug, please report it to the [IHL GitHub Issues](https://github.com/pbazeliuk/OutputProcessorExtension/issues?state=open). Detailed reports with stack traces, actual and expected behavours are welcome.
 
-Связанные Проекты
+Related Projects
 -----------------
 
 
 License
 --------
 
-Copyright © 2016 Petro Bazeliuk.
+Copyright © 2016-2017 Petro Bazeliuk.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -119,7 +121,7 @@ along with this program.  If not, see [http://www.gnu.org/licenses/](http://www.
 Legal
 ------
 
-By submitting a Pull Request, you disavow any rights or claims to any changes submitted to the Update.Express project and assign the copyright of those changes to Petro Bazeliuk.
+By submitting a Pull Request, you disavow any rights or claims to any changes submitted to the IHL project and assign the copyright of those changes to Petro Bazeliuk.
 
 If you cannot or do not want to reassign those rights (your employment contract for your employer may not allow this), you should not submit a PR. Open an issue and someone else can do the work.
 
