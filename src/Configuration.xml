@@ -122,7 +122,7 @@
 			<Copyright>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Copyright © Petro Bazeliuk, 2017. All rights reserved</v8:content>
+					<v8:content>Copyright © Petro Bazeliuk, 2016-2017. All rights reserved</v8:content>
 				</v8:item>
 			</Copyright>
 			<VendorInformationAddress>
@@ -142,11 +142,16 @@
 		</Properties>
 		<ChildObjects>
 			<Language>English</Language>
+			<Language>Russian</Language>
 			<Subsystem>IHL</Subsystem>
 			<CommonModule>IHLCommonUse</CommonModule>
 			<CommonModule>IHLCommonUseClientServer</CommonModule>
 			<CommonModule>IHLDataComposition</CommonModule>
+			<Catalog>IHLExchangeSettings</Catalog>
+			<Catalog>IHLMethods</Catalog>
 			<DataProcessor>DataProcessorJSON</DataProcessor>
+			<DataProcessor>DataProcessorXML</DataProcessor>
+			<DataProcessor>DataProcessorCSV</DataProcessor>
 		</ChildObjects>
 	</Configuration>
 </MetaDataObject>
