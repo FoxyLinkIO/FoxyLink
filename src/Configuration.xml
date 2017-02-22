@@ -144,11 +144,13 @@
 			<Language>English</Language>
 			<Language>Russian</Language>
 			<Subsystem>IHL</Subsystem>
-			<CommonModule>IHLCommonUse</CommonModule>
-			<CommonModule>IHLCommonUseClientServer</CommonModule>
-			<CommonModule>IHLDataComposition</CommonModule>
-			<Catalog>IHLExchangeSettings</Catalog>
-			<Catalog>IHLMethods</Catalog>
+			<CommonModule>IHL_CommonUse</CommonModule>
+			<CommonModule>IHL_CommonUseClientServer</CommonModule>
+			<CommonModule>IHL_DataComposition</CommonModule>
+			<Catalog>IHL_ExchangeSettings</Catalog>
+			<Catalog>IHL_Methods</Catalog>
+			<Enum>IHL_RESTMethods</Enum>
+			<Enum>IHL_CRUDMethods</Enum>
 			<DataProcessor>DataProcessorJSON</DataProcessor>
 			<DataProcessor>DataProcessorXML</DataProcessor>
 			<DataProcessor>DataProcessorCSV</DataProcessor>

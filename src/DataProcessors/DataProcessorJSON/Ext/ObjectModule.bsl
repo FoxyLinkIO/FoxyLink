@@ -20,6 +20,109 @@
 Var RefTypesCache;
 Var StreamWriter;
 
+#Region FormatDescription
+
+// Number of the formal document from the Internet Engineering Task Force 
+// (IETF) that is the result of committee drafting and subsequent review 
+// by interested parties.
+//
+Function FormatStandard() Export
+    
+    Return "RFC7159";
+    
+EndFunction // FormatStandard()
+
+// Returns link to the formal document from the Internet Engineering Task Force 
+// (IETF) that is the result of committee drafting and subsequent review 
+// by interested parties.
+//
+Function FormatStandardLink() Export
+    
+    Return "https://tools.ietf.org/html/rfc7159";
+    
+EndFunction // FormatStandardLink()
+
+// Returns short format name.
+//
+// Returns:
+//  String - format short name.
+// 
+Function FormatShortName() Export
+    
+    Return "JSON";    
+    
+EndFunction // FormatShortName()
+
+// Returns full format name.
+//
+// Returns:
+//  String - format full name.
+//
+Function FormatFullName() Export
+    
+    Return "The JavaScript Object Notation";    
+    
+EndFunction // FormatFullName()
+
+// Returns format file extension.
+//
+// Returns:
+//  String - file extension.
+//
+Function FormatFileExtension() Export
+    
+    Return ".json";
+    
+EndFunction // FormatFileExtension()
+
+// Returns format media type.
+//
+// Returns:
+//  String - format media type.
+//
+Function FormatMediaType() Export
+    
+    Return "application/json";
+    
+EndFunction // FormatMediaType()
+
+
+//Function SupportedValues() Export
+//    
+//    ValueList = New ValueList();
+//    ValueList.Add("String");
+//    ValueList.Add("Number");
+//    ValueList.Add("Boolean");
+//    ValueList.Add("Null");
+//    ValueList.Add("Object");
+//    ValueList.Add("Array");
+//    Return ValueList;
+//    
+//EndFunction // SupportedValues()
+
+
+//Function PrimitiveTypes() Export
+//    
+//    PTypes = New Map;
+//    PTypes.Insert("string", Type("String"));
+//    PTypes.Insert("number", Type("Number"));
+//    PTypes.Insert("boolean",Type("Boolean"));
+//    PTypes.Insert("null",   Type("Undefined"));
+//    Return PTypes;
+//    
+//EndFunction // PrimitiveTypes()
+
+//Function StructuredTypes() Export
+//    
+//    STypes = New Map;
+//    STypes.Insert("object",Type("Map"));
+//    STypes.Insert("array", Type("Array"));
+//    Return STypes;
+//    
+//EndFunction // StructuredTypes()
+
+#EndRegion // FormatDescription
+
 #Region ProgramInterface
 
 // Constructor of stream object.
@@ -46,7 +149,7 @@ EndProcedure // Initialize()
 //
 // Parameters:
 //  Mediator   - Arbitrary - reserved, currently not in use.
-//  GroupNames - Structure - see function IHLDataComposition.GroupNames.
+//  GroupNames - Structure - see function IHL_DataComposition.GroupNames.
 //
 Procedure VerifyGroupNames(Mediator, GroupNames) Export
     
@@ -58,9 +161,9 @@ EndProcedure // VerifyGroupNames()
 //
 // Parameters:
 //  Mediator        - Arbitrary - reserved, currently not in use.
-//  TemplateColumns - Structure - see function IHLDataComposition.TemplateColumns.
+//  TemplateColumns - Structure - see function IHL_DataComposition.TemplateColumns.
 //
-Procedure VerifyColumnNames(Mediator, GroupNames) Export
+Procedure VerifyColumnNames(Mediator, TemplateColumns) Export
     
     // No naming restrictions.
     
@@ -131,8 +234,8 @@ EndFunction // Close()
 // Parameters:
 //  Item            - DataCompositionResultItem         - a data composition result item.
 //  DataCompositionProcessor - DataCompositionProcessor - object that performs data composition.
-//  TemplateColumns - Structure - see function IHLDataComposition.TemplateColumns.
-//  GroupNames      - Structure - see function IHLDataComposition.GroupNames.
+//  TemplateColumns - Structure - see function IHL_DataComposition.TemplateColumns.
+//  GroupNames      - Structure - see function IHL_DataComposition.GroupNames.
 //
 Procedure MemorySavingOutput(Item, DataCompositionProcessor, TemplateColumns, 
     GroupNames) Export
@@ -217,8 +320,8 @@ EndProcedure // MemorySavingOutput()
 // Parameters:
 //  Item            - DataCompositionResultItem         - a data composition result item.
 //  DataCompositionProcessor - DataCompositionProcessor - object that performs data composition.
-//  TemplateColumns - Structure - see function IHLDataComposition.TemplateColumns.
-//  GroupNames      - Structure - see function IHLDataComposition.GroupNames.
+//  TemplateColumns - Structure - see function IHL_DataComposition.TemplateColumns.
+//  GroupNames      - Structure - see function IHL_DataComposition.GroupNames.
 //
 Procedure FastOutput(Item, DataCompositionProcessor, TemplateColumns, 
     GroupNames) Export 
@@ -328,7 +431,7 @@ Function ConvertFunction(Property, Value, AdditionalParameters, Cancel) Export
         Return Undefined;
     ElsIf RefTypesCache[ValueType] = True Then
         Return XMLString(Value);
-    ElsIf IHLCommonUse.IsReference(ValueType) Then
+    ElsIf IHL_CommonUse.IsReference(ValueType) Then
         RefTypesCache.Insert(ValueType, True);
         Return XMLString(Value);
     Else 
@@ -338,3 +441,43 @@ Function ConvertFunction(Property, Value, AdditionalParameters, Cancel) Export
 EndFunction // ConvertFunction()
 
 #EndRegion // ServiceProgramInterface
+
+#Region ExternalDataProcessorInfo
+
+Function Version() Export
+    
+    Return "0.5.0.0";
+    
+EndFunction // Version()
+
+Function BaseDescription() Export
+    
+    BaseDescription = NStr("en = 'JSON (%1) format data processor, ver. %2'; 
+        |ru = 'Обработчик формата JSON (%1), вер. %2'");
+    BaseDescription = StrTemplate(BaseDescription, FormatStandard(), Version());      
+    Return BaseDescription;    
+    
+EndFunction // BaseDescription()
+
+// Only for internal use.
+//
+Function ExternalDataProcessorInfo() Export
+    
+    Version = Version();
+    
+    Description = BaseDescription();
+     
+EndFunction // ExternalDataProcessorInfo()
+
+// Only for internal use.
+//
+Function СведенияОВнешнейОбработке() Export 
+    
+    // Версия подключаемой функциональности 
+    Версия = Version();
+
+    Наименование = BaseDescription();
+            
+EndFunction // СведенияОВнешнейОбработке()
+
+#EndRegion // ExternalDataProcessorInfo

@@ -19,8 +19,8 @@
 			<Explanation/>
 			<Picture/>
 			<Content>
-				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHLExchangeSettings</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHLMethods</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHL_ExchangeSettings</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHL_Methods</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>
