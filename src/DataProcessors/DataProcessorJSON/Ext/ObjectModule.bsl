@@ -28,7 +28,7 @@ Var StreamWriter;
 //
 Function FormatStandard() Export
     
-    Return "RFC7159";
+    Return "RFC 7159";
     
 EndFunction // FormatStandard()
 
@@ -119,27 +119,6 @@ Function TypeCanHaveNestedItems(TypeName) Export
     Return False;
     
 EndFunction // TypeCanHaveNestedItems()
-
-
-//Function PrimitiveTypes() Export
-//    
-//    PTypes = New Map;
-//    PTypes.Insert("string", Type("String"));
-//    PTypes.Insert("number", Type("Number"));
-//    PTypes.Insert("boolean",Type("Boolean"));
-//    PTypes.Insert("null",   Type("Undefined"));
-//    Return PTypes;
-//    
-//EndFunction // PrimitiveTypes()
-
-//Function StructuredTypes() Export
-//    
-//    STypes = New Map;
-//    STypes.Insert("object",Type("Map"));
-//    STypes.Insert("array", Type("Array"));
-//    Return STypes;
-//    
-//EndFunction // StructuredTypes()
 
 #EndRegion // FormatDescription
 
@@ -478,6 +457,19 @@ Function BaseDescription() Export
     Return BaseDescription;    
     
 EndFunction // BaseDescription()
+
+// Returns library guid which is used to identify different implementations 
+// of specific format.
+//
+// Returns:
+//  String - library guid. 
+//  
+Function LibraryGuid() Export
+    
+    Return "3ca485fe-3fcc-445b-9843-48c5ed370c0f";
+    
+EndFunction // LibraryGuid()
+
 
 // Only for internal use.
 //
