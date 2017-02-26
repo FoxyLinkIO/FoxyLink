@@ -87,18 +87,38 @@ Function FormatMediaType() Export
 EndFunction // FormatMediaType()
 
 
-//Function SupportedValues() Export
-//    
-//    ValueList = New ValueList();
-//    ValueList.Add("String");
-//    ValueList.Add("Number");
-//    ValueList.Add("Boolean");
-//    ValueList.Add("Null");
-//    ValueList.Add("Object");
-//    ValueList.Add("Array");
-//    Return ValueList;
-//    
-//EndFunction // SupportedValues()
+
+
+Function SupportedTypes() Export
+    
+    ValueList = New ValueList();
+    ValueList.Add("String");
+    ValueList.Add("Number");
+    ValueList.Add("Boolean");
+    ValueList.Add("Null");
+    ValueList.Add("Object");
+    ValueList.Add("Array");
+    Return ValueList;
+    
+EndFunction // SupportedTypes()
+
+// Check if a type can have nested items.
+//
+// Parameters:
+//  TypeName  - String - type name.
+//
+// Returns:
+//   Boolean - True if this type can have nested items; False in other case.
+//
+Function TypeCanHaveNestedItems(TypeName) Export
+    
+    If TypeName = "Object" Or TypeName = "Array" Then
+        Return True;
+    EndIf;
+    
+    Return False;
+    
+EndFunction // TypeCanHaveNestedItems()
 
 
 //Function PrimitiveTypes() Export

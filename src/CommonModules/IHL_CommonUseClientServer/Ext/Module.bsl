@@ -19,6 +19,61 @@
 
 #Region ProgramInterface
 
+// Формирует и выводит сообщение, которое может быть связано с элементом 
+// управления формы.
+//
+// Parameters:
+//  Text     - String - текст сообщения.
+//  DataKey  - AnyRef - на объект информационной базы.
+//              Default value: Undefined.
+//                               Ссылка на объект информационной базы, к которому это сообщение относится,
+//                               или ключ записи.
+//  Filed    - String - наименование реквизита формы.
+//              Default value: "".
+//  DataPath - String - путь к данным (путь к реквизиту формы).
+//              Default value: "".
+//  Cancel   - Boolean - выходной параметр.
+//              Default value: False.
+//                               Всегда устанавливается в значение Истина.
+//
+// Случаи некорректного использования:
+//  1. Передача одновременно параметров DataKey и DataPath.
+//  2. Передача в параметре DataKey значения типа отличного от допустимых.
+//  3. Установка ссылки без установки поля (и/или пути к данным).
+//
+Procedure NotifyUser(Val Text, Val DataKey = Undefined, Val Field = "",
+        Val DataPath = "", Cancel = False) Export
+
+    Message = New UserMessage;
+    Message.Text = Text;
+    Message.Field = Field;
+
+    IsObject = False;
+
+    #If Not ТонкийКлиент AND Not ВебКлиент Then
+    If DataKey <> Undefined And XMLTypeOf(DataKey) <> Undefined Then
+        ValueType = XMLTypeOf(DataKey).TypeName;
+        IsObject = Find(ValueType, "Object.") > 0;
+    EndIf;
+    #EndIf
+
+    If IsObject Then
+        Message.SetData(DataKey);
+    Else
+        Message.DataKey = DataKey;
+    EndIf;
+
+    If Not IsBlankString(DataPath) Then
+        Message.DataPath = DataPath;
+    EndIf;
+        
+    Message.Message();
+
+    Cancel = True;
+
+EndProcedure // NotifyUser()
+
+
 // Creates an instance copy of the specified object.
 //
 // Parameters:
