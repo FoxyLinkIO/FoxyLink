@@ -3,6 +3,10 @@
 	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
 	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
 	<AutoCommandBar name="FormCommandBar" id="-1"/>
+	<Events>
+		<Event name="OnOpen">OnOpen</Event>
+		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
+	</Events>
 	<ChildItems>
 		<UsualGroup name="HeaderGroup" id="7">
 			<Title>
@@ -17,26 +21,27 @@
 					<v8:content>Header group</v8:content>
 				</v8:item>
 			</ToolTip>
-			<Group>Vertical</Group>
+			<Group>Horizontal</Group>
 			<Representation>None</Representation>
 			<ShowTitle>false</ShowTitle>
 			<ExtendedTooltip name="HeaderGroupExtendedTooltip" id="8"/>
 			<ChildItems>
-				<UsualGroup name="HeaderGroupTop" id="9">
+				<UsualGroup name="HeaderGroupLeft" id="9">
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Header group top</v8:content>
+							<v8:content>Header group left</v8:content>
 						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Header group top</v8:content>
+							<v8:content>Header group left</v8:content>
 						</v8:item>
 					</ToolTip>
+					<Group>Vertical</Group>
 					<ShowTitle>false</ShowTitle>
-					<ExtendedTooltip name="HeaderGroupTopExtendedTooltip" id="10"/>
+					<ExtendedTooltip name="HeaderGroupLeftExtendedTooltip" id="10"/>
 					<ChildItems>
 						<InputField name="Description" id="4">
 							<DataPath>Object.Description</DataPath>
@@ -58,21 +63,99 @@
 						</CheckBoxField>
 					</ChildItems>
 				</UsualGroup>
-				<UsualGroup name="HeaderGroupBottom" id="11">
-					<Title>
-						<v8:item>
-							<v8:lang>en</v8:lang>
-							<v8:content>Header group bottom</v8:content>
-						</v8:item>
-					</Title>
-					<ToolTip>
-						<v8:item>
-							<v8:lang>en</v8:lang>
-							<v8:content>Header group bottom</v8:content>
-						</v8:item>
-					</ToolTip>
-					<ExtendedTooltip name="HeaderGroupBottomExtendedTooltip" id="12"/>
-				</UsualGroup>
+				<Pages name="HeaderPagesFormat" id="27">
+					<Width>36</Width>
+					<HorizontalStretch>false</HorizontalStretch>
+					<PagesRepresentation>None</PagesRepresentation>
+					<ExtendedTooltip name="HeaderPagesFormatExtendedTooltip" id="28"/>
+					<ChildItems>
+						<Page name="HeaderPageBasicFormat" id="25">
+							<Title>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Basic format</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Базовый формат</v8:content>
+								</v8:item>
+							</Title>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Header page basic format</v8:content>
+								</v8:item>
+							</ToolTip>
+							<Group>HorizontalIfPossible</Group>
+							<ExtendedTooltip name="HeaderPageBasicFormatExtendedTooltip" id="26"/>
+							<ChildItems>
+								<LabelField name="FormatName" id="16">
+									<DataPath>FormatName</DataPath>
+									<ContextMenu name="FormatNameContextMenu" id="17"/>
+									<ExtendedTooltip name="FormatNameExtendedTooltip" id="18"/>
+								</LabelField>
+								<LabelField name="FormatStandard" id="19">
+									<DataPath>FormatStandard</DataPath>
+									<Hiperlink>true</Hiperlink>
+									<ContextMenu name="FormatStandardContextMenu" id="20"/>
+									<ExtendedTooltip name="FormatStandardExtendedTooltip" id="21"/>
+									<Events>
+										<Event name="Click">FormatStandardClick</Event>
+									</Events>
+								</LabelField>
+								<LabelField name="FormatPluginVersion" id="22">
+									<DataPath>FormatPluginVersion</DataPath>
+									<Hiperlink>true</Hiperlink>
+									<ContextMenu name="FormatPluginVersionContextMenu" id="23"/>
+									<ExtendedTooltip name="FormatPluginVersionExtendedTooltip" id="24"/>
+								</LabelField>
+							</ChildItems>
+						</Page>
+						<Page name="HeaderPageSelectFormat" id="29">
+							<Title>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Select format</v8:content>
+								</v8:item>
+							</Title>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Select format</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Выберите формат</v8:content>
+								</v8:item>
+							</ToolTip>
+							<ExtendedTooltip name="HeaderPageSelectFormatExtendedTooltip" id="30"/>
+							<ChildItems>
+								<InputField name="BasicFormatGuid" id="34">
+									<DataPath>Object.BasicFormatGuid</DataPath>
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Select format</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Выберите формат</v8:content>
+										</v8:item>
+									</Title>
+									<Width>1</Width>
+									<ListChoiceMode>true</ListChoiceMode>
+									<ChooseType>false</ChooseType>
+									<TextEdit>false</TextEdit>
+									<ContextMenu name="BasicFormatGuidContextMenu" id="35"/>
+									<ExtendedTooltip name="BasicFormatGuidExtendedTooltip" id="36"/>
+									<Events>
+										<Event name="OnChange">BasicFormatGuidOnChange</Event>
+									</Events>
+								</InputField>
+							</ChildItems>
+						</Page>
+					</ChildItems>
+				</Pages>
 			</ChildItems>
 		</UsualGroup>
 	</ChildItems>
@@ -83,6 +166,82 @@
 			</Type>
 			<MainAttribute>true</MainAttribute>
 			<SavedData>true</SavedData>
+		</Attribute>
+		<Attribute name="FormatName" id="2">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Name</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Наименование</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="FormatStandard" id="3">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Standard</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Стандарт</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="FormatPluginVersion" id="4">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Plugin version</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Версия плагина</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="FormatProcessorName" id="5">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Format processor name</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Имя обработчика формата</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
 		</Attribute>
 	</Attributes>
 </Form>
