@@ -20,6 +20,108 @@
 Var RefTypesCache;
 Var StreamWriter;
 
+#Region FormatDescription
+
+// Number of the formal document from the Internet Engineering Task Force 
+// (IETF) that is the result of committee drafting and subsequent review 
+// by interested parties.
+//
+Function FormatStandard() Export
+    
+    Return "XML 1.0 (Fifth Edition)";
+    
+EndFunction // FormatStandard()
+
+// Returns link to the formal document from the Internet Engineering Task Force 
+// (IETF) that is the result of committee drafting and subsequent review 
+// by interested parties.
+//
+Function FormatStandardLink() Export
+    
+    Return "https://www.w3.org/TR/2008/REC-xml-20081126/";
+    
+EndFunction // FormatStandardLink()
+
+// Returns short format name.
+//
+// Returns:
+//  String - format short name.
+// 
+Function FormatShortName() Export
+    
+    Return "XML";    
+    
+EndFunction // FormatShortName()
+
+// Returns full format name.
+//
+// Returns:
+//  String - format full name.
+//
+Function FormatFullName() Export
+    
+    Return "Extensible Markup Language";    
+    
+EndFunction // FormatFullName()
+
+// Returns format file extension.
+//
+// Returns:
+//  String - file extension.
+//
+Function FormatFileExtension() Export
+    
+    Return ".xml";
+    
+EndFunction // FormatFileExtension()
+
+// Returns format media type.
+//
+// Returns:
+//  String - format media type.
+//
+Function FormatMediaType() Export
+    
+    Return "application/xml";
+    
+EndFunction // FormatMediaType()
+
+
+
+
+//Function SupportedTypes() Export
+//    
+//    ValueList = New ValueList();
+//    ValueList.Add("String");
+//    ValueList.Add("Number");
+//    ValueList.Add("Boolean");
+//    ValueList.Add("Null");
+//    ValueList.Add("Object");
+//    ValueList.Add("Array");
+//    Return ValueList;
+//    
+//EndFunction // SupportedTypes()
+
+//// Check if a type can have nested items.
+////
+//// Parameters:
+////  TypeName  - String - type name.
+////
+//// Returns:
+////   Boolean - True if this type can have nested items; False in other case.
+////
+//Function TypeCanHaveNestedItems(TypeName) Export
+//    
+//    If TypeName = "Object" Or TypeName = "Array" Then
+//        Return True;
+//    EndIf;
+//    
+//    Return False;
+//    
+//EndFunction // TypeCanHaveNestedItems()
+
+#EndRegion // FormatDescription
+
 #Region ProgramInterface
 
 // Constructor of stream object.
@@ -349,3 +451,56 @@ Procedure FastOutput(Item, DataCompositionProcessor, TemplateColumns,
 EndProcedure // FastOutput()
 
 #EndRegion // ServiceProgramInterface
+
+#Region ExternalDataProcessorInfo
+
+Function Version() Export
+    
+    Return "0.0.2.0";
+    
+EndFunction // Version()
+
+Function BaseDescription() Export
+    
+    BaseDescription = NStr("en = 'XML (%1) format data processor, ver. %2'; 
+        |ru = 'Обработчик формата XML (%1), вер. %2'");
+    BaseDescription = StrTemplate(BaseDescription, FormatStandard(), Version());      
+    Return BaseDescription;    
+    
+EndFunction // BaseDescription()
+
+// Returns library guid which is used to identify different implementations 
+// of specific format.
+//
+// Returns:
+//  String - library guid. 
+//  
+Function LibraryGuid() Export
+    
+    Return "a50f9c26-02ee-4bdf-b3cd-3b978f482949";
+    
+EndFunction // LibraryGuid()
+
+
+// Only for internal use.
+//
+Function ExternalDataProcessorInfo() Export
+    
+    Version = Version();
+    
+    Description = BaseDescription();
+     
+EndFunction // ExternalDataProcessorInfo()
+
+// Only for internal use.
+//
+Function СведенияОВнешнейОбработке() Export 
+    
+    // Версия подключаемой функциональности 
+    Версия = Version();
+
+    Наименование = BaseDescription();
+            
+EndFunction // СведенияОВнешнейОбработке()
+
+#EndRegion // ExternalDataProcessorInfo
