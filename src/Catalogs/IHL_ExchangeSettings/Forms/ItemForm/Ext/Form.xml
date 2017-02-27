@@ -61,6 +61,25 @@
 							<ContextMenu name="InUseContextMenu" id="14"/>
 							<ExtendedTooltip name="InUseExtendedTooltip" id="15"/>
 						</CheckBoxField>
+						<UsualGroup name="HeaderGroupCommandsLeft" id="51">
+							<Group>Horizontal</Group>
+							<Representation>None</Representation>
+							<ShowTitle>false</ShowTitle>
+							<ExtendedTooltip name="HeaderGroupCommandsLeftExtendedTooltip" id="52"/>
+							<ChildItems>
+								<Button name="AddAPIMethod" id="41">
+									<Type>UsualButton</Type>
+									<CommandName>Form.Command.AddAPIMethod</CommandName>
+									<ExtendedTooltip name="AddAPIMethodExtendedTooltip" id="42"/>
+								</Button>
+								<Button name="DeleteAPIMethod" id="49">
+									<Type>UsualButton</Type>
+									<Visible>false</Visible>
+									<CommandName>Form.Command.DeleteAPIMethod</CommandName>
+									<ExtendedTooltip name="DeleteAPIMethodExtendedTooltip" id="50"/>
+								</Button>
+							</ChildItems>
+						</UsualGroup>
 					</ChildItems>
 				</UsualGroup>
 				<Pages name="HeaderPagesFormat" id="27">
@@ -89,26 +108,53 @@
 							<Group>HorizontalIfPossible</Group>
 							<ExtendedTooltip name="HeaderPageBasicFormatExtendedTooltip" id="26"/>
 							<ChildItems>
-								<LabelField name="FormatName" id="16">
-									<DataPath>FormatName</DataPath>
-									<ContextMenu name="FormatNameContextMenu" id="17"/>
-									<ExtendedTooltip name="FormatNameExtendedTooltip" id="18"/>
-								</LabelField>
-								<LabelField name="FormatStandard" id="19">
-									<DataPath>FormatStandard</DataPath>
-									<Hiperlink>true</Hiperlink>
-									<ContextMenu name="FormatStandardContextMenu" id="20"/>
-									<ExtendedTooltip name="FormatStandardExtendedTooltip" id="21"/>
-									<Events>
-										<Event name="Click">FormatStandardClick</Event>
-									</Events>
-								</LabelField>
-								<LabelField name="FormatPluginVersion" id="22">
-									<DataPath>FormatPluginVersion</DataPath>
-									<Hiperlink>true</Hiperlink>
-									<ContextMenu name="FormatPluginVersionContextMenu" id="23"/>
-									<ExtendedTooltip name="FormatPluginVersionExtendedTooltip" id="24"/>
-								</LabelField>
+								<UsualGroup name="HeaderGroupBasicFormat" id="43">
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Basic format info</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Описание базового формата</v8:content>
+										</v8:item>
+									</Title>
+									<ToolTip>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Basic format info</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Описание базового формата</v8:content>
+										</v8:item>
+									</ToolTip>
+									<Group>Vertical</Group>
+									<Representation>StrongSeparation</Representation>
+									<ExtendedTooltip name="HeaderGroupBasicFormatExtendedTooltip" id="44"/>
+									<ChildItems>
+										<LabelField name="FormatName" id="16">
+											<DataPath>FormatName</DataPath>
+											<ContextMenu name="FormatNameContextMenu" id="17"/>
+											<ExtendedTooltip name="FormatNameExtendedTooltip" id="18"/>
+										</LabelField>
+										<LabelField name="FormatStandard" id="19">
+											<DataPath>FormatStandard</DataPath>
+											<Hiperlink>true</Hiperlink>
+											<ContextMenu name="FormatStandardContextMenu" id="20"/>
+											<ExtendedTooltip name="FormatStandardExtendedTooltip" id="21"/>
+											<Events>
+												<Event name="Click">FormatStandardClick</Event>
+											</Events>
+										</LabelField>
+										<LabelField name="FormatPluginVersion" id="22">
+											<DataPath>FormatPluginVersion</DataPath>
+											<Hiperlink>true</Hiperlink>
+											<ContextMenu name="FormatPluginVersionContextMenu" id="23"/>
+											<ExtendedTooltip name="FormatPluginVersionExtendedTooltip" id="24"/>
+										</LabelField>
+									</ChildItems>
+								</UsualGroup>
 							</ChildItems>
 						</Page>
 						<Page name="HeaderPageSelectFormat" id="29">
@@ -158,6 +204,162 @@
 				</Pages>
 			</ChildItems>
 		</UsualGroup>
+		<Pages name="MethodPages" id="37">
+			<HorizontalStretch>true</HorizontalStretch>
+			<VerticalStretch>true</VerticalStretch>
+			<ExtendedTooltip name="MethodPagesExtendedTooltip" id="38"/>
+			<Events>
+				<Event name="OnCurrentPageChange">MethodPagesOnCurrentPageChange</Event>
+			</Events>
+		</Pages>
+		<UsualGroup name="HiddenGroup" id="39">
+			<Visible>false</Visible>
+			<ShowTitle>false</ShowTitle>
+			<ExtendedTooltip name="HiddenGroupExtendedTooltip" id="40"/>
+			<ChildItems>
+				<UsualGroup name="HiddenGroupSettings" id="45">
+					<Group>Vertical</Group>
+					<Representation>None</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="HiddenGroupSettingsExtendedTooltip" id="46"/>
+					<ChildItems>
+						<Pages name="HiddenPagesSettings" id="53">
+							<ExtendedTooltip name="HiddenPagesSettingsExtendedTooltip" id="54"/>
+							<ChildItems>
+								<Page name="HiddenPageSettings" id="55">
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Settings</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Настройки</v8:content>
+										</v8:item>
+									</Title>
+									<ToolTip>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Settings</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Настройки</v8:content>
+										</v8:item>
+									</ToolTip>
+									<Picture>
+										<xr:Ref>CommonPicture.IHL_Settings</xr:Ref>
+										<xr:LoadTransparent>true</xr:LoadTransparent>
+									</Picture>
+									<ExtendedTooltip name="HiddenPageSettingsExtendedTooltip" id="56"/>
+									<ChildItems>
+										<UsualGroup name="HiddenGroupBasicSettings" id="57">
+											<Group>Vertical</Group>
+											<Representation>None</Representation>
+											<ShowTitle>false</ShowTitle>
+											<ExtendedTooltip name="HiddenGroupBasicSettingsExtendedTooltip" id="58"/>
+											<ChildItems>
+												<RadioButtonField name="OutputType" id="65">
+													<DataPath>RowOutputType</DataPath>
+													<ToolTipRepresentation>Button</ToolTipRepresentation>
+													<RadioButtonType>Auto</RadioButtonType>
+													<ChoiceList>
+														<xr:Item>
+															<xr:Presentation/>
+															<xr:CheckState>0</xr:CheckState>
+															<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																<Presentation>
+																	<v8:item>
+																		<v8:lang>en</v8:lang>
+																		<v8:content>Fast</v8:content>
+																	</v8:item>
+																</Presentation>
+																<Value xsi:type="xs:decimal">0</Value>
+															</xr:Value>
+														</xr:Item>
+														<xr:Item>
+															<xr:Presentation/>
+															<xr:CheckState>0</xr:CheckState>
+															<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																<Presentation>
+																	<v8:item>
+																		<v8:lang>en</v8:lang>
+																		<v8:content>Sequential</v8:content>
+																	</v8:item>
+																</Presentation>
+																<Value xsi:type="xs:decimal">1</Value>
+															</xr:Value>
+														</xr:Item>
+													</ChoiceList>
+													<ContextMenu name="OutputTypeContextMenu" id="66"/>
+													<ExtendedTooltip name="OutputTypeExtendedTooltip" id="67">
+														<Title formatted="true">
+															<v8:item>
+																<v8:lang>en</v8:lang>
+																<v8:content>&lt;fontsize 10&gt;&lt;b&gt;&lt;color #455185&gt;Fast output&lt;/&gt;&lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt; &lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt;—&lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt; o&lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt;utput with using additional objects (tree, structures, arrays). It causes increased use of memory.&lt;/&gt;&lt;/&gt;
+&lt;fontsize 10&gt;&lt;b&gt;&lt;color #455185&gt;Sequential output&lt;/&gt;&lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt; &lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt;—&lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt; 22.53% slower than fast output, although it has light memory usage.&lt;/&gt;&lt;/&gt;
+</v8:content>
+															</v8:item>
+															<v8:item>
+																<v8:lang>ru</v8:lang>
+																<v8:content>&lt;b&gt;&lt;color #455185&gt;Быстрый вывод&lt;/&gt;&lt;/&gt;&lt;color #455185&gt; &lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt;—&lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt; вывод с использованием дополнительных объектов, повышенное использование памяти.
+&lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;b&gt;&lt;color #455185&gt;Последовательный вывод&lt;/&gt;&lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt; &lt;/&gt;&lt;/&gt;&lt;fontsize 10&gt;&lt;color #455185&gt;— на 22.53% медленее чем быстрый вывод, но имеет пониженное использование памяти.&lt;/&gt;&lt;/&gt;</v8:content>
+															</v8:item>
+														</Title>
+													</ExtendedTooltip>
+												</RadioButtonField>
+											</ChildItems>
+										</UsualGroup>
+									</ChildItems>
+								</Page>
+								<Page name="HiddenPageTesting" id="68">
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Testing</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Тестирование</v8:content>
+										</v8:item>
+									</Title>
+									<ToolTip>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Testing</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Тестирование</v8:content>
+										</v8:item>
+									</ToolTip>
+									<Picture>
+										<xr:Ref>CommonPicture.IHL_Testing</xr:Ref>
+										<xr:LoadTransparent>true</xr:LoadTransparent>
+									</Picture>
+									<ExtendedTooltip name="HiddenPageTestingExtendedTooltip" id="69"/>
+									<ChildItems>
+										<UsualGroup name="HiddenGroupTestingSpreadsheetDocument" id="70">
+											<ShowTitle>false</ShowTitle>
+											<ExtendedTooltip name="HiddenGroupTestingSpreadsheetDocumentExtendedTooltip" id="71"/>
+											<ChildItems>
+												<SpreadSheetDocumentField name="ResultSpreadsheetDocument" id="72">
+													<DataPath>ResultSpreadsheetDocument</DataPath>
+													<TitleLocation>None</TitleLocation>
+													<ShowGrid>true</ShowGrid>
+													<ContextMenu name="ResultSpreadsheetDocumentContextMenu" id="73"/>
+													<ExtendedTooltip name="ResultSpreadsheetDocumentExtendedTooltip" id="74"/>
+												</SpreadSheetDocumentField>
+											</ChildItems>
+										</UsualGroup>
+									</ChildItems>
+								</Page>
+							</ChildItems>
+						</Pages>
+					</ChildItems>
+				</UsualGroup>
+			</ChildItems>
+		</UsualGroup>
 	</ChildItems>
 	<Attributes>
 		<Attribute name="Object" id="1">
@@ -166,6 +368,40 @@
 			</Type>
 			<MainAttribute>true</MainAttribute>
 			<SavedData>true</SavedData>
+			<Columns>
+				<AdditionalColumns table="Object.Methods">
+					<Column name="DataCompositionSchemaAddress" id="1">
+						<Title>
+							<v8:item>
+								<v8:lang>en</v8:lang>
+								<v8:content>Data composition schema address</v8:content>
+							</v8:item>
+						</Title>
+						<Type>
+							<v8:Type>xs:string</v8:Type>
+							<v8:StringQualifiers>
+								<v8:Length>0</v8:Length>
+								<v8:AllowedLength>Variable</v8:AllowedLength>
+							</v8:StringQualifiers>
+						</Type>
+					</Column>
+					<Column name="DataCompositionSettingsAddress" id="2">
+						<Title>
+							<v8:item>
+								<v8:lang>en</v8:lang>
+								<v8:content>Data composition settings address</v8:content>
+							</v8:item>
+						</Title>
+						<Type>
+							<v8:Type>xs:string</v8:Type>
+							<v8:StringQualifiers>
+								<v8:Length>0</v8:Length>
+								<v8:AllowedLength>Variable</v8:AllowedLength>
+							</v8:StringQualifiers>
+						</Type>
+					</Column>
+				</AdditionalColumns>
+			</Columns>
 		</Attribute>
 		<Attribute name="FormatName" id="2">
 			<Title>
@@ -243,5 +479,143 @@
 				</v8:StringQualifiers>
 			</Type>
 		</Attribute>
+		<Attribute name="RowOutputType" id="8">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Output type</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Тип вывода</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:decimal</v8:Type>
+				<v8:NumberQualifiers>
+					<v8:Digits>1</v8:Digits>
+					<v8:FractionDigits>0</v8:FractionDigits>
+					<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+				</v8:NumberQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="RowMethod" id="9">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Method</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Метод</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>10</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="ResultSpreadsheetDocument" id="10">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Result spreadsheet document</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Табличный документ результата</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type xmlns:mxl="http://v8.1c.ru/8.2/data/spreadsheet">mxl:SpreadsheetDocument</v8:Type>
+			</Type>
+		</Attribute>
+		<Attribute name="ResultTextDocument" id="11">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Result text document</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Текстовый документ результата</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type xmlns:d5p1="http://v8.1c.ru/8.1/data/txtedt">d5p1:TextDocument</v8:Type>
+			</Type>
+		</Attribute>
+		<Attribute name="RowAPIVersion" id="12">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>API version</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Версия API</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>10</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
 	</Attributes>
+	<Commands>
+		<Command name="AddAPIMethod" id="1">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add method</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить метод</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add APIMethod</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.IHL_AddMethod</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>AddAPIMethod</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="DeleteAPIMethod" id="2">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Delete method</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Удалить метод</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Delete APIMethod</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.IHL_DeleteMethod</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>DeleteAPIMethod</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+	</Commands>
 </Form>

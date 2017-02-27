@@ -144,6 +144,11 @@
 			<Language>English</Language>
 			<Language>Russian</Language>
 			<Subsystem>IHL</Subsystem>
+			<CommonPicture>IHL_AddMethod</CommonPicture>
+			<CommonPicture>IHL_DeleteMethod</CommonPicture>
+			<CommonPicture>IHL_MethodSettingsInvalid</CommonPicture>
+			<CommonPicture>IHL_Settings</CommonPicture>
+			<CommonPicture>IHL_Testing</CommonPicture>
 			<CommonPicture>StopProcessing</CommonPicture>
 			<CommonModule>IHL_CommonUse</CommonModule>
 			<CommonModule>IHL_CommonUseClientServer</CommonModule>

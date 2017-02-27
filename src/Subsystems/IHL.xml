@@ -21,6 +21,11 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.IHL_RESTMethods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.IHL_CRUDMethods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.StopProcessing</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_AddMethod</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_MethodSettingsInvalid</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_DeleteMethod</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Settings</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Testing</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

@@ -29,10 +29,15 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         For Each Format In Catalogs.IHL_ExchangeSettings.AvailableFormats() Do
             FillPropertyValues(Items.BasicFormatGuid.ChoiceList.Add(), Format);    
         EndDo;
-        Items.HeaderPagesFormat.CurrentPage = Items.HeaderPageSelectFormat; 
+        Items.HeaderPagesFormat.CurrentPage = Items.HeaderPageSelectFormat;
+        Items.HeaderGroupLeft.Visible = False;
     Else
         LoadBasicFormatData();    
     EndIf;
+    
+    Catalogs.IHL_ExchangeSettings.OnCreateAtServer(ThisObject);
+    
+    UpdateMethodsView();
     
 EndProcedure // OnCreateAtServer()
 
@@ -60,23 +65,59 @@ EndProcedure // BasicFormatGuidOnChange()
 Procedure FormatStandardClick(Item, StandardProcessing)
     
     StandardProcessing = False;
-    RunApp(FormatStandardLink());
+    BeginRunningApplication(New NotifyDescription(
+        "DoAfterBeginRunningApplication", ThisObject), 
+        FormatStandardLink());
     
 EndProcedure // FormatStandardClick()
+
+
+
+&AtClient
+Procedure MethodPagesOnCurrentPageChange(Item, CurrentPage)
+    
+    LoadMethodSettings();
+    
+EndProcedure // MethodPagesOnCurrentPageChange()
 
 #EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
 
+&AtClient
+Procedure AddAPIMethod(Command)
+    
+    ShowChooseFromList(New NotifyDescription("DoAfterChooseAvailableMethodToAdd",
+        ThisObject), AvailableMethods(), Items.AddAPIMethod);
+        
+EndProcedure // AddAPIMethod()
+    
+&AtClient
+Procedure DeleteAPIMethod(Command)
+    
+    ShowChooseFromList(New NotifyDescription("DoAfterChooseCurrentMethodToDelete",
+        ThisObject), CurrentMethods(), Items.DeleteAPIMethod);
+    
+EndProcedure // DeleteAPIMethod()
+
 #EndRegion // FormCommandHandlers
 
 #Region ServiceProceduresAndFunctions
+
+&AtClient
+Procedure DoAfterBeginRunningApplication(CodeReturn, AdditionalParameters) Export
+    
+    // TODO: Some checks   
+    
+EndProcedure // DoAfterChooseAvailableFormat() 
+
 
 // Fills basic format info.
 //
 &AtServer
 Procedure LoadBasicFormatData()
 
+    Items.HeaderGroupLeft.Visible = True;
     Items.HeaderPagesFormat.CurrentPage = Items.HeaderPageBasicFormat;
     FormatProcessor = Catalogs.IHL_ExchangeSettings.NewFormatProcessor(
         FormatProcessorName, Object.BasicFormatGuid);
@@ -105,15 +146,157 @@ Function FormatStandardLink()
     
 EndFunction // FormatStandardLink()
 
-//&AtClient
-//Procedure DoAfterChooseAvailableFormat(SelectedElement, 
-//    AdditionalParameters) Export
-//    
-//    If SelectedElement = Undefined Then 
-//        Close();    
-//    EndIf;
-//    
-//EndProcedure // DoAfterChooseAvailableFormat() 
+
+
+#Region Methods
+
+// Adds new API method to ThisObject.
+//
+&AtClient
+Procedure DoAfterChooseAvailableMethodToAdd(SelectedElement, 
+    AdditionalParameters) Export
+    
+    If SelectedElement <> Undefined Then
+        
+        // TODO: Add possibility to use different versions of API.
+        FilterParameters = New Structure("APIVersion, Method", "1.0.0.0", 
+            SelectedElement.Value);
+            
+        FilterResult = Object.Methods.FindRows(FilterParameters);
+        If FilterResult.Count() = 0 Then
+            
+            Modified = True;
+            
+            NewMethod = Object.Methods.Add();
+            NewMethod.Method = SelectedElement.Value;
+            NewMethod.APIVersion = "1.0";
+            
+            UpdateMethodsView();
+                        
+        EndIf;
+        
+    EndIf;
+    
+EndProcedure // DoAfterChooseAvailableMethodToAdd() 
+
+// Deletes API method from ThisObject.
+//
+&AtClient
+Procedure DoAfterChooseCurrentMethodToDelete(SelectedElement, 
+    AdditionalParameters) Export
+    
+    If SelectedElement <> Undefined Then
+            
+        FilterResult = Object.Methods.FindRows(SelectedElement.Value);
+        If FilterResult.Count() > 0 Then
+            
+            Modified = True;
+            
+            Object.Methods.Delete(FilterResult[0]);
+            
+            UpdateMethodsView();
+            
+        EndIf;
+        
+    EndIf;
+    
+EndProcedure // DoAfterChooseCurrentMethodToDelete() 
+
+
+
+
+
+// See function Catalogs.IHL_Methods.UpdateMethodsView.
+//
+&AtServer
+Procedure UpdateMethodsView()
+    
+    Catalogs.IHL_ExchangeSettings.UpdateMethodsView(ThisObject);   
+    
+    LoadMethodSettings();
+    
+EndProcedure // UpdateMethodsView()
+
+&AtServer
+Procedure LoadMethodSettings()
+    
+    ResultTextDocument.Clear();
+    ResultSpreadsheetDocument.Clear();
+
+    //СохранитьИзмененияСхемыКомпоновкиДанных();
+        
+    CurrentPage = Items.MethodPages.CurrentPage;
+    If CurrentPage = Undefined And Items.MethodPages.ChildItems.Count() > 0 Then
+        CurrentPage = Items.MethodPages.ChildItems[0];    
+    EndIf;
+    
+    If CurrentPage <> Undefined Then
+       
+        RowMethod = CurrentPage.Name;
+        IHL_InteriorUse.MoveItemInItemFormCollection(Items, 
+            "HiddenGroupSettings", RowMethod);
+           
+    //    ТекущиеДанные = ТекущиеДанныеОбъектаОперации(ИдентификаторОперации);
+    //    ОперацияИспользуется 	  = ТекущиеДанные.Используется;
+    //    ОперацияФайловоеХранилище = НЕ ТекущиеДанные.ОтключитьФайловоеХранилище;
+    //    OutputType = CurrentData.OutputType;
+    //    
+    //    // Обновим отображение для операции
+    //    UpdateExpressНастройкиОбменов.ОбновитьОтображениеОперации(ЭтотОбъект,
+    //        ТекущиеДанные.Операция);
+    //    
+    //    // Загрузим схемы, если необходимо
+    //    Если ПустаяСтрока(ТекущиеДанные.АдресСхемыКомпоновкиДанных) Тогда
+    //        ТекущиеДанные.АдресСхемыКомпоновкиДанных = ПоместитьВоВременноеХранилище(
+    //            Новый СхемаКомпоновкиДанных, УникальныйИдентификатор);	
+    //    КонецЕсли;
+    //        
+    //    UpdateExpressКомпоновкаДанных.СкопироватьСхемуКомпоновкиДанных(
+    //        АдресРедактируемойСхемыКомпоновкиДанных,
+    //        ТекущиеДанные.АдресСхемыКомпоновкиДанных);
+    //        
+    //    UpdateExpressКомпоновкаДанных.ИнициализироватьКомпоновщикНастроек(
+    //        КомпоновщикНастроек, 
+    //        ТекущиеДанные.АдресСхемыКомпоновкиДанных, 
+    //        ТекущиеДанные.АдресНастроекКомпоновкиДанных);
+            
+    Else
+
+        RowMethod = Undefined;
+        RowOutputType = Undefined;
+    //    АдресРедактируемойСхемыКомпоновкиДанных = "";
+    //    КомпоновщикНастроек = Новый КомпоновщикНастроекКомпоновкиДанных;
+            
+    EndIf;    
+    
+EndProcedure // LoadMethodSettings()
+
+
+// See function Catalogs.IHL_Methods.AvailableMethods.
+//
+&AtServer
+Function AvailableMethods()
+    
+    Return Catalogs.IHL_Methods.AvailableMethods();
+    
+EndFunction // AvailableMethods()
+
+// Returns list of currently used methods.
+//
+&AtServer
+Function CurrentMethods()
+    
+    ValueList = New ValueList();
+    For Each Item In Object.Methods Do
+        ValueList.Add(New Structure("Method, APIVersion", Item.Method, Item.APIVersion), 
+            StrTemplate("%1, ver. %2", Item.Method, Item.APIVersion));   
+    EndDo;
+    
+    Return ValueList;
+    
+EndFunction // CurrentMethods()
+
+#EndRegion // Methods
 
 #EndRegion // ServiceProceduresAndFunctions
 
