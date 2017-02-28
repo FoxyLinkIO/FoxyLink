@@ -145,7 +145,9 @@
 			<Language>Russian</Language>
 			<Subsystem>IHL</Subsystem>
 			<CommonPicture>IHL_AddMethod</CommonPicture>
+			<CommonPicture>IHL_Copy</CommonPicture>
 			<CommonPicture>IHL_DeleteMethod</CommonPicture>
+			<CommonPicture>IHL_Edit</CommonPicture>
 			<CommonPicture>IHL_MethodSettingsInvalid</CommonPicture>
 			<CommonPicture>IHL_Settings</CommonPicture>
 			<CommonPicture>IHL_Testing</CommonPicture>

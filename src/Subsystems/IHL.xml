@@ -26,6 +26,8 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_DeleteMethod</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Settings</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Testing</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Edit</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Copy</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

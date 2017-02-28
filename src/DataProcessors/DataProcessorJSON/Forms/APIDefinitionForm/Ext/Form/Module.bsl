@@ -22,9 +22,22 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
+    Var APIDefinitionAddress;
+    
     MainObject = FormAttributeToValue("Object");
     Items.APIDefinitionType.ChoiceList.LoadValues(
         MainObject.SupportedTypes().UnloadValues());
+        
+    If Parameters.Property("APIDefinitionAddress", APIDefinitionAddress) Then
+        If IsTempStorageURL(APIDefinitionAddress) Then
+            
+            ValueTree = GetFromTempStorage(APIDefinitionAddress);
+            If TypeOf(ValueTree) = Type("ValueTree") Then
+                ValueToFormAttribute(ValueTree, "Object.APIDefinition");        
+            EndIf;
+            
+        EndIf;
+    EndIf;
     
 EndProcedure // OnCreateAtServer()
 
@@ -75,6 +88,13 @@ EndProcedure // APIDefinitionTypeChoiceProcessing()
 #EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
+
+&AtClient
+Procedure SaveAndClose(Command)
+    
+    Close(PutValueTreeToTempStorage(ThisObject.FormOwner.UUID));
+    
+EndProcedure // SaveAndClose()
 
 &AtClient
 Procedure AddRowToAPITable(Command)
@@ -165,6 +185,16 @@ EndProcedure // AddRowToAPITable()
 #EndRegion // FormCommandHandlers
 
 #Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+&AtServer
+Function PutValueTreeToTempStorage(Val OwnerUUID)
+    
+    ValueTree = FormAttributeToValue("Object.APIDefinition", Type("ValueTree"));
+    Return PutToTempStorage(ValueTree, OwnerUUID);
+    
+EndFunction // PutValueTreeToTempStorage()
 
 // Check if a type can have nested items.
 //
