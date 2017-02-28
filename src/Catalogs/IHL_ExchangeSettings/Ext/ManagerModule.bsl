@@ -34,7 +34,7 @@ Procedure OnCreateAtServer(ManagedForm) Export
         Return;
     EndIf;
     
-    LoadDCSchemaAndDCSettings(Object);    
+    LoadSettingsToTempStorage(Object);    
 
 EndProcedure // OnCreateAtServer()
 
@@ -130,7 +130,18 @@ Procedure UpdateMethodsView(ManagedForm) Export
     
 EndProcedure // UpdateMethodsView()
 
-
+// Helps to save untracked changes in catalog form.
+//
+// Parameters:
+//  ManagedForm   - ManagedForm                        - catalog form.
+//  CurrentObject - CatalogObject.IHL_ExchangeSettings - object that is used 
+//                  for reading, modifying, adding and deleting catalog items. 
+//
+Procedure BeforeWriteAtServer(ManagedForm, CurrentObject) Export
+    
+    ProcessBeforeWriteAtServer(ManagedForm.Object, CurrentObject);        
+    
+EndProcedure // BeforeWriteAtServer()
 
 
 // Returns available plugable formats.
@@ -227,7 +238,7 @@ EndFunction // NewFormatProcessor()
 
 // Only for internal use.
 //
-Procedure LoadDCSchemaAndDCSettings(Object)
+Procedure LoadSettingsToTempStorage(Object)
 
     Ref = Object.Ref;
     If ValueIsFilled(Ref) Then
@@ -246,34 +257,81 @@ Procedure LoadDCSchemaAndDCSettings(Object)
             
             DataCompositionSchema = FilterResult[0].DataCompositionSchema.Get();
             If DataCompositionSchema <> Undefined Then
-                Item.DataCompositionSchemaAddress = 
-                    PutToTempStorage(DataCompositionSchema, New UUID);
+                Item.DataCompositionSchemaAddress = PutToTempStorage(
+                    DataCompositionSchema, New UUID);
             EndIf;
             
             DataCompositionSettings = FilterResult[0].DataCompositionSettings.Get();
             If DataCompositionSettings <> Undefined Then
-                Item.DataCompositionSettingsAddress = 
-                    PutToTempStorage(DataCompositionSettings, New UUID);
+                Item.DataCompositionSettingsAddress = PutToTempStorage(
+                    DataCompositionSettings, New UUID);
+            EndIf;
+
+            APIDefinition = FilterResult[0].APIDefinition.Get();
+            If APIDefinition <> Undefined Then
+                Item.APIDefinitionAddress = PutToTempStorage(APIDefinition, 
+                    New UUID);
             EndIf;
             
         EndDo;
         
     EndIf;
         
-EndProcedure // LoadDCSchemaAndDCSettings()
+EndProcedure // LoadSettingsToTempStorage()
 
-
-// Добавляет страницу операции на форму.
+// Only for internal use.
 //
-// Параметры:
-//	Элементы    - ВсеЭлементы - коллекция элементов формы.
-//	ИмяОперации - Строка      - имя добавляемой операция.
-//  Картинка    - Картинка    - картинка, отображает статус операции.
+Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
+    
+    FMethods = FormObject.Methods;
+    CMethods = CurrentObject.Methods;
+    
+    FilterParameters = New Structure("Method, APIVersion");
+    
+    For Each FMethod In FMethods Do
+        
+        FillPropertyValues(FilterParameters, FMethod);
+        FilterResults = CMethods.FindRows(FilterParameters);
+        For Each FilterResult In FilterResults Do
+            
+            FillPropertyValues(FilterResult, FMethod, "OutputType"); 
+            
+            If IsTempStorageURL(FMethod.DataCompositionSchemaAddress) Then
+                FilterResult.DataCompositionSchema = New ValueStorage(
+                    GetFromTempStorage(FMethod.DataCompositionSchemaAddress));
+            Else
+                FilterResult.DataCompositionSchema = New ValueStorage(Undefined);
+            EndIf;
+            
+            If IsTempStorageURL(FMethod.DataCompositionSettingsAddress) Then
+                FilterResult.DataCompositionSettings = New ValueStorage(
+                    GetFromTempStorage(FMethod.DataCompositionSettingsAddress));
+            Else
+                FilterResult.DataCompositionSettings = New ValueStorage(Undefined);
+            EndIf;
+            
+            If IsTempStorageURL(FMethod.APIDefinitionAddress) Then
+                FilterResult.APIDefinition = New ValueStorage(
+                    GetFromTempStorage(FMethod.APIDefinitionAddress));
+            Else
+                FilterResult.APIDefinition = New ValueStorage(Undefined);
+            EndIf;
+            
+        EndDo;
+        
+    EndDo;
+    
+EndProcedure // ProcessBeforeWriteAtServer() 
+    
+// Add a new group page that corresponds to a method.
 //
-// Возвращаемое значение:
-//	ДекорацияФормы, ГруппаФормы, КнопкаФормы, ТаблицаФормы, ПолеФормы - новый элемент формы.	
+// Parameters:
+//  Items             - FormAllItems - collection of all managed form items.
+//  MethodDescription - String       - the method name.
+//  Description       - String       - the method description. 
+//  Picture           - Picture      - title picture.
 //
-Function AddMethodOnForm(Items, MethodDescription, Description, Picture)
+Procedure AddMethodOnForm(Items, MethodDescription, Description, Picture)
 
     BasicDescription = NStr(
         "en = 'Description is not available.';
@@ -297,11 +355,10 @@ Function AddMethodOnForm(Items, MethodDescription, Description, Picture)
     Parameters.Insert("ElementType", Тип("FormDecoration"));
     Parameters.Insert("TextColor", New Color(0, 0, 0));
     Parameters.Insert("Font", New Font(, , True));
-
-    Return IHL_InteriorUse.AddItemToItemFormCollection(Items, Parameters, 
+    IHL_InteriorUse.AddItemToItemFormCollection(Items, Parameters, 
         NewPage);
 
-EndFunction // AddMethodOnForm()
+EndProcedure // AddMethodOnForm()
 
 #EndRegion // ServiceProceduresAndFunctions
 
