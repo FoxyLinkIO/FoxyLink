@@ -1,7 +1,7 @@
 Integration happiness library (IHL): Output processor extension 
 =========
 
-[![Gitter](https://badges.gitter.im/UpdateExpress/OutputProcessorExtension.svg)](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![License LGPLv3](https://img.shields.io/badge/license-LGPLv3-green.svg)](http://www.gnu.org/licenses/lgpl-3.0.html)
+[![Gitter](https://badges.gitter.im/UpdateExpress/OutputProcessorExtension.svg)](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![License AGPLv3](https://img.shields.io/badge/license-AGPLv3-green.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
 ## Overview
 
