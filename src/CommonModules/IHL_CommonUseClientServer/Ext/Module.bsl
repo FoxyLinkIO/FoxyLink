@@ -301,4 +301,116 @@ EndFunction // IsCyrillicLetter()
 
 #EndRegion // StringOperations
 
+// Dissembles URI string and returns it as a structure.
+// Based on RFC 3986.
+//
+// Parameters:
+//  StringURI - String - reference to the resource in the format:
+//                          <schema>://<login>:<password>@<host>:<port>/<path>?<parameters>#<anchor>.
+//
+// Returns:
+//  Structure - with keys:
+//      * Schema       - String - schema.
+//      * Login        - String - user login.
+//      * Password     - String - user password.
+//      * ServerName   - String - part <host>:<port> from the StringURI.
+//      * Host         - String - host name.
+//      * Port         - Number - port number.
+//      * PathOnServer - String - part <path >?<parameters>#<anchor> from the StringURI.
+//      * Parameters   - Map    - parsed parameters from the StringURI. 
+//
+Function URIStructure(Val StringURI) Export
+
+    StringURI = TrimAll(StringURI);
+    Parameters = New Map;
+    
+    // Schema
+    Schema = "";
+    Position = StrFind(StringURI, "://");
+    If Position > 0 Then
+        Schema = Lower(Left(StringURI, Position - 1));
+        StringURI = Mid(StringURI, Position + 3);
+    EndIf;
+
+    // Connection string and path on the server.
+    ConnectionString = StringURI;
+    PathOnServer = "";
+    Position = StrFind(ConnectionString, "/");
+    If Position > 0 Then
+        PathOnServer = Mid(ConnectionString, Position + 1);
+        ConnectionString = Left(ConnectionString, Position - 1);
+    EndIf;
+    
+    // Parameters
+    Position = StrFind(PathOnServer, "?");
+    If Position > 0 Then
+        ParametersString = Mid(PathOnServer, Position + 1);        
+        ParametersArray = StrSplit(ParametersString, "&");
+        For Each Parameter In ParametersArray Do
+            Position = StrFind(Parameter, "=");
+            If Position > 1 Then
+                Parameters.Insert(Left(Parameter, Position - 1), Mid(Parameter, Position + 1));    
+            EndIf;    
+        EndDo;
+    EndIf;
+        
+    // User information and server name.
+    AuthorizeString = "";
+    ServerName = ConnectionString;
+    Position = StrFind(ConnectionString, "@");
+    If Position > 0 Then
+        AuthorizeString = Left(ConnectionString, Position - 1);
+        ServerName = Mid(ConnectionString, Position + 1);
+    EndIf;
+
+    // Login and password.
+    Login = AuthorizeString;
+    Password = "";
+    Position = StrFind(AuthorizeString, ":");
+    If Position > 0 Then
+        Login = Left(AuthorizeString, Position - 1);
+        Password = Mid(AuthorizeString, Position + 1);
+    EndIf;
+
+    // Host and port.
+    Host = ServerName;
+    Port = "";
+    Position = StrFind(ServerName, ":");
+    If Position > 0 Then
+        
+        Host = Left(ServerName, Position - 1);
+        Port = Mid(ServerName, Position + 1); 
+        For Index = 1 To StrLen(Port) Do
+            Symbol = Mid(Port, Index, 1);
+            If Not IsNumber(Symbol) Then
+                Port = "";
+                Break;    
+            EndIf;
+            
+        EndDo;
+        
+        If IsBlankString(Port) Then
+            If Schema = "http" Then
+                Port = "80";
+            ElsIf Schema = "https" Then
+                Port = "443";
+            EndIf;
+        EndIf;
+ 
+    EndIf;
+
+    Result = New Structure;
+    Result.Insert("Schema", Schema);
+    Result.Insert("Login", Login);
+    Result.Insert("Password", Password);
+    Result.Insert("ServerName", ServerName);
+    Result.Insert("Host", Host);
+    Result.Insert("Port", ?(IsBlankString(Port), Undefined, Number(Port)));
+    Result.Insert("PathOnServer", PathOnServer);
+    Result.Insert("Parameters", Parameters);
+
+    Return Result;
+
+EndFunction // URIStructure()
+
 #EndRegion // ProgramInterface
