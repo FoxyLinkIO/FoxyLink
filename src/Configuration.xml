@@ -148,8 +148,14 @@
 			<CommonPicture>IHL_Copy</CommonPicture>
 			<CommonPicture>IHL_DeleteMethod</CommonPicture>
 			<CommonPicture>IHL_Edit</CommonPicture>
+			<CommonPicture>IHL_EditSchema</CommonPicture>
+			<CommonPicture>IHL_Fields</CommonPicture>
+			<CommonPicture>IHL_Filter</CommonPicture>
 			<CommonPicture>IHL_MethodSettingsInvalid</CommonPicture>
+			<CommonPicture>IHL_Order</CommonPicture>
+			<CommonPicture>IHL_Parameters</CommonPicture>
 			<CommonPicture>IHL_Settings</CommonPicture>
+			<CommonPicture>IHL_Structure</CommonPicture>
 			<CommonPicture>IHL_Testing</CommonPicture>
 			<CommonPicture>StopProcessing</CommonPicture>
 			<CommonModule>IHL_CommonUse</CommonModule>

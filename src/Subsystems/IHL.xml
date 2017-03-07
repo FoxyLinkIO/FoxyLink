@@ -28,6 +28,12 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Testing</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Edit</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Copy</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Structure</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Parameters</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Fields</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Filter</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Order</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_EditSchema</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>
