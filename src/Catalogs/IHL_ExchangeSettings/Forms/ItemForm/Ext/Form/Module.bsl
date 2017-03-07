@@ -97,6 +97,87 @@ Procedure MethodPagesOnCurrentPageChange(Item, CurrentPage)
     
 EndProcedure // MethodPagesOnCurrentPageChange()
 
+
+#Region DataCompositionSettingsComposer
+
+&AtClient
+Procedure RowComposerSettingsSettingsOnChange(Item)
+    
+    Modified = True;
+    RowComposerSettingsModified = True;
+    
+EndProcedure // RowComposerSettingsSettingsOnChange()
+
+&AtClient
+Procedure RowComposerSettingsSettingsBeforeRowChange(Item, Cancel)
+    
+    Modified = True;
+    RowComposerSettingsModified = True;
+    
+EndProcedure // RowComposerSettingsSettingsBeforeRowChange()
+
+
+&AtClient
+Procedure RowComposerSettingsSettingsOutputParametersOnChange(Item)
+    
+    Modified = True;
+    RowComposerSettingsModified = True;
+    
+EndProcedure // RowComposerSettingsSettingsOutputParametersOnChange()
+
+
+&AtClient
+Procedure RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSelection(Item, SelectedRow, Field, StandardProcessing)
+    
+    Modified = True;
+    RowComposerSettingsModified = True;
+    
+EndProcedure // RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSelection()
+
+&AtClient
+Procedure RowComposerSettingsSettingsItemSelectionOnChange(Item)
+    
+    Modified = True;
+    RowComposerSettingsModified = True;
+    
+EndProcedure // RowComposerSettingsSettingsItemSelectionOnChange()
+
+
+&AtClient
+Procedure RowComposerSettingsSettingsFilterFilterAvailableFieldsSelection(Item, SelectedRow, Field, StandardProcessing)
+   
+    Modified = True;
+    RowComposerSettingsModified = True;
+    
+EndProcedure // RowComposerSettingsSettingsFilterFilterAvailableFieldsSelection()
+
+&AtClient
+Procedure RowComposerSettingsSettingsFilterOnChange(Item)
+    
+    Modified = True;
+    RowComposerSettingsModified = True;
+    
+EndProcedure // RowComposerSettingsSettingsFilterOnChange()
+
+
+&AtClient
+Procedure RowComposerSettingsSettingsOrderOrderAvailableFieldsSelection(Item, SelectedRow, Field, StandardProcessing)
+    
+    Modified = True;
+    RowComposerSettingsModified = True;
+    
+EndProcedure // RowComposerSettingsSettingsOrderOrderAvailableFieldsSelection()
+
+&AtClient
+Procedure RowComposerSettingsSettingsOrderOnChange(Item)
+    
+    Modified = True;
+    RowComposerSettingsModified = True;    
+    
+EndProcedure // RowComposerSettingsSettingsOrderOnChange()
+
+#EndRegion // DataCompositionSettingsComposer
+
 #EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
@@ -116,6 +197,31 @@ Procedure DeleteAPIMethod(Command)
         ThisObject), CurrentMethods(), Items.DeleteAPIMethod);
     
 EndProcedure // DeleteAPIMethod()
+
+
+&AtClient
+Procedure EditDataCompositionSchema(Command)
+    
+    #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then
+        
+        // Copy existing data composition schema.
+        DataCompositionSchema = XDTOSerializer.ReadXDTO(XDTOSerializer.WriteXDTO(
+            GetFromTempStorage(DataCompositionSchemaEditAddress)));
+        
+        Wizard = New DataCompositionSchemaWizard(DataCompositionSchema);
+        Wizard.Edit(ThisObject);
+        
+    #Else
+        
+        ShowMessageBox(Undefined,
+            NStr("en = 'To edit the layout scheme, run configuration in thick client mode.';
+                |ru = 'Для того, чтобы редактировать схему компоновки,  
+                |необходимо запустить конфигурацию в режиме толстого клиента.'"));
+        
+    #EndIf
+    
+EndProcedure // EditDataCompositionSchema()
+
 
 &AtClient
 Procedure DescribeAPI(Command)
@@ -380,13 +486,13 @@ Procedure LoadMethodSettings()
     //    // Обновим отображение для операции
     //    UpdateExpressНастройкиОбменов.ОбновитьОтображениеОперации(ЭтотОбъект,
     //        ТекущиеДанные.Операция);
-    //    
-    //    // Загрузим схемы, если необходимо
-    //    Если ПустаяСтрока(ТекущиеДанные.АдресСхемыКомпоновкиДанных) Тогда
-    //        ТекущиеДанные.АдресСхемыКомпоновкиДанных = ПоместитьВоВременноеХранилище(
-    //            Новый СхемаКомпоновкиДанных, УникальныйИдентификатор);	
-    //    КонецЕсли;
-    //        
+        
+        // Load schema, if needed
+        If IsBlankString(CurrentData.АдресСхемыКомпоновкиДанных) Then
+            ТекущиеДанные.АдресСхемыКомпоновкиДанных = ПоместитьВоВременноеХранилище(
+                New СхемаКомпоновкиДанных, УникальныйИдентификатор);
+        EndIf;
+            
     //    UpdateExpressКомпоновкаДанных.СкопироватьСхемуКомпоновкиДанных(
     //        АдресРедактируемойСхемыКомпоновкиДанных,
     //        ТекущиеДанные.АдресСхемыКомпоновкиДанных);
@@ -489,7 +595,7 @@ Function CurrentMethodData(Val RowMethod)
         
     Return CurrentData;    
 
-EndFunction // CurrentMethodData() 
+EndFunction // CurrentMethodData()  
 
 #EndRegion // Methods
 
