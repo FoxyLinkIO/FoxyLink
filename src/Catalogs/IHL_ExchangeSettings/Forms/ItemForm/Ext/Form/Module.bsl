@@ -2,18 +2,18 @@
 // This file is part of IHL (Integration happiness library).
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
-// IHL is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as 
-// published by the Free Software Foundation, either version 3 
-// of the License, or any later version.
-// 
-// IHL is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public 
-// License along with IHL. If not, see <http://www.gnu.org/licenses/>.
+// This program is free software: you can redistribute it and/or modify 
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the License,
+// or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful, 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of 
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License 
+// along with this program. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -44,6 +44,22 @@ Procedure OnOpen(Cancel)
     
     
 EndProcedure // OnOpen()
+
+&AtClient
+Procedure ChoiceProcessing(SelectedValue, ChoiceSource)
+    
+    #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then
+        
+    If TypeOf(ChoiceSource) = Type("DataCompositionSchemaWizard")
+        And TypeOf(SelectedValue) = Type("DataCompositionSchema") Then
+        
+        UpdateDataCompositionSchema(SelectedValue);    
+        
+    EndIf;
+        
+    #EndIf
+    
+EndProcedure // ChoiceProcessing() 
 
 &AtServer
 Procedure BeforeWriteAtServer(Cancel, CurrentObject, WriteParameters)
@@ -118,29 +134,29 @@ EndProcedure // RowComposerSettingsSettingsBeforeRowChange()
 
 
 &AtClient
-Procedure RowComposerSettingsSettingsOutputParametersOnChange(Item)
+Procedure RowComposerSettingsSettingsDataParametersOnChange(Item)
     
     Modified = True;
-    RowComposerSettingsModified = True;
+    RowComposerSettingsModified = True;    
     
-EndProcedure // RowComposerSettingsSettingsOutputParametersOnChange()
+EndProcedure // RowComposerSettingsSettingsDataParametersOnChange()
 
 
 &AtClient
-Procedure RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSelection(Item, SelectedRow, Field, StandardProcessing)
+Procedure RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSelection(Item, SelectedRow, Field, StandardProcessing)
     
     Modified = True;
     RowComposerSettingsModified = True;
     
-EndProcedure // RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSelection()
+EndProcedure // RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSelection()
 
 &AtClient
-Procedure RowComposerSettingsSettingsItemSelectionOnChange(Item)
+Procedure RowComposerSettingsSettingsSelectionOnChange(Item)
     
     Modified = True;
-    RowComposerSettingsModified = True;
+    RowComposerSettingsModified = True;    
     
-EndProcedure // RowComposerSettingsSettingsItemSelectionOnChange()
+EndProcedure // RowComposerSettingsSettingsSelectionOnChange() 
 
 
 &AtClient
@@ -221,6 +237,14 @@ Procedure EditDataCompositionSchema(Command)
     #EndIf
     
 EndProcedure // EditDataCompositionSchema()
+
+&AtClient
+Procedure GenerateSpreadsheetDocument(Command)
+    
+    GenerateSpreadsheetDocumentAtServer();
+    
+EndProcedure // GenerateSpreadsheetDocument()
+
 
 
 &AtClient
@@ -442,7 +466,12 @@ Procedure DoAfterChooseMethodToDelete(SelectedElement,
 EndProcedure // DoAfterChooseMethodToDelete() 
 
 
-
+&AtServer
+Procedure GenerateSpreadsheetDocumentAtServer()
+    
+    
+    
+EndProcedure // GenerateSpreadsheetDocumentAtServer()
 
 
 // See function Catalogs.IHL_Methods.UpdateMethodsView.
@@ -455,6 +484,36 @@ Procedure UpdateMethodsView()
     LoadMethodSettings();
     
 EndProcedure // UpdateMethodsView()
+
+// Applies changes to data composition schema.
+//
+// Parameters:
+//  DataCompositionSchema - DataCompositionSchema - updated data composition schema.
+//
+&AtServer
+Procedure UpdateDataCompositionSchema(DataCompositionSchema)
+
+    Changes = False;
+    IHL_DataComposition.CopyDataCompositionSchema(
+        DataCompositionSchemaEditAddress, 
+        DataCompositionSchema, 
+        True, 
+        Changes);
+
+    Modified = Modified Or Changes;
+    RowComposerSettingsModified = RowComposerSettingsModified Or Changes;
+    RowDataCompositionSchemaModified = RowDataCompositionSchemaModified Or Changes;
+        
+    If Changes = True Then
+        
+        // Init data composer by new data composition schema.
+        IHL_DataComposition.InitSettingsComposer(Undefined, // Reserved
+            RowComposerSettings, 
+            DataCompositionSchemaEditAddress);
+
+    Endif;
+
+EndProcedure // UpdateDataCompositionSchema() 
 
 &AtServer
 Procedure LoadMethodSettings()
@@ -479,36 +538,33 @@ Procedure LoadMethodSettings()
         RowAPIVersion = CurrentData.APIVersion;
         RowOutputType = CurrentData.OutputType;
         
-    //    ОперацияИспользуется = ТекущиеДанные.Используется;
-    //    ОперацияФайловоеХранилище = НЕ ТекущиеДанные.ОтключитьФайловоеХранилище;
         
-       
-    //    // Обновим отображение для операции
-    //    UpdateExpressНастройкиОбменов.ОбновитьОтображениеОперации(ЭтотОбъект,
-    //        ТекущиеДанные.Операция);
+        // Connect output or other plugins in future.
+        //UpdateExpressНастройкиОбменов.ОбновитьОтображениеОперации(ЭтотОбъект,
+        //ТекущиеДанные.Операция);
         
-        // Load schema, if needed
-        If IsBlankString(CurrentData.АдресСхемыКомпоновкиДанных) Then
-            ТекущиеДанные.АдресСхемыКомпоновкиДанных = ПоместитьВоВременноеХранилище(
-                New СхемаКомпоновкиДанных, УникальныйИдентификатор);
+        // Create schema, if needed.
+        If IsBlankString(CurrentData.DataCompositionSchemaAddress) Then
+            CurrentData.DataCompositionSchemaAddress = PutToTempStorage(
+                New DataCompositionSchema, UUID);
         EndIf;
             
-    //    UpdateExpressКомпоновкаДанных.СкопироватьСхемуКомпоновкиДанных(
-    //        АдресРедактируемойСхемыКомпоновкиДанных,
-    //        ТекущиеДанные.АдресСхемыКомпоновкиДанных);
-    //        
-    //    UpdateExpressКомпоновкаДанных.ИнициализироватьКомпоновщикНастроек(
-    //        КомпоновщикНастроек, 
-    //        ТекущиеДанные.АдресСхемыКомпоновкиДанных, 
-    //        ТекущиеДанные.АдресНастроекКомпоновкиДанных);
+        IHL_DataComposition.CopyDataCompositionSchema(
+            DataCompositionSchemaEditAddress,
+            CurrentData.DataCompositionSchemaAddress);
+            
+        IHL_DataComposition.InitSettingsComposer(Undefined, // Reserved
+            RowComposerSettings, 
+            CurrentData.DataCompositionSchemaAddress, 
+            CurrentData.DataCompositionSettingsAddress);
             
     Else
 
         RowMethod     = Undefined;
         RowAPIVersion = Undefined;
         RowOutputType = Undefined;
-    //    АдресРедактируемойСхемыКомпоновкиДанных = "";
-    //    КомпоновщикНастроек = Новый КомпоновщикНастроекКомпоновкиДанных;
+        DataCompositionSchemaEditAddress = "";
+        RowComposerSettings = New DataCompositionSettingsComposer;
             
     EndIf;    
     
@@ -526,9 +582,23 @@ Procedure SaveMethodSettings()
             ChangedData = CurrentMethodData(RowMethod);
             ChangedData.OutputType = RowOutputType;
             
+            If RowDataCompositionSchemaModified Then
+                IHL_DataComposition.CopyDataCompositionSchema(
+                    ChangedData.DataCompositionSchemaAddress, 
+                    DataCompositionSchemaEditAddress);
+            EndIf;
+
+            If RowComposerSettingsModified Then
+                ChangedData.DataCompositionSettingsAddress = PutToTempStorage(
+                    RowComposerSettings.GetSettings());
+            EndIf;
+          
         EndIf;
         
     EndIf;
+    
+    RowComposerSettingsModified = False;
+    RowDataCompositionSchemaModified = False;
 
 EndProcedure // SaveMethodSettings() 
 

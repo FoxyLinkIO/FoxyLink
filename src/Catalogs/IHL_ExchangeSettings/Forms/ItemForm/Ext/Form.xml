@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3">
 	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
+	<ScalingMode>Compact</ScalingMode>
 	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
 	<AutoCommandBar name="FormCommandBar" id="-1"/>
 	<Events>
+		<Event name="ChoiceProcessing">ChoiceProcessing</Event>
 		<Event name="AfterWriteAtServer">AfterWriteAtServer</Event>
 		<Event name="OnOpen">OnOpen</Event>
 		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
@@ -438,44 +440,45 @@
 									</Picture>
 									<ExtendedTooltip name="HiddenPageParametersExtendedTooltip" id="99"/>
 									<ChildItems>
-										<Table name="RowComposerSettingsSettingsOutputParameters" id="100">
+										<Table name="RowComposerSettingsSettingsDataParameters" id="199">
 											<Representation>Tree</Representation>
+											<TitleHeight>3</TitleHeight>
 											<Autofill>true</Autofill>
 											<Width>50</Width>
 											<InitialTreeView>ExpandAllLevels</InitialTreeView>
-											<DataPath>RowComposerSettings.Settings.OutputParameters</DataPath>
+											<DataPath>RowComposerSettings.Settings.DataParameters</DataPath>
 											<SearchStringLocation>None</SearchStringLocation>
 											<ViewStatusLocation>None</ViewStatusLocation>
 											<SearchControlLocation>None</SearchControlLocation>
-											<ContextMenu name="RowComposerSettingsSettingsOutputParametersContextMenu" id="101"/>
-											<AutoCommandBar name="RowComposerSettingsSettingsOutputParametersCommandBar" id="102"/>
-											<ExtendedTooltip name="RowComposerSettingsSettingsOutputParametersExtendedTooltip" id="103"/>
-											<SearchStringAddition name="RowComposerSettingsSettingsOutputParametersSearchString" id="104">
+											<ContextMenu name="RowComposerSettingsSettingsDataParametersContextMenu" id="200"/>
+											<AutoCommandBar name="RowComposerSettingsSettingsDataParametersCommandBar" id="201"/>
+											<ExtendedTooltip name="RowComposerSettingsSettingsDataParametersExtendedTooltip" id="202"/>
+											<SearchStringAddition name="RowComposerSettingsSettingsDataParametersSearchString" id="203">
 												<AdditionSource>
-													<Item>RowComposerSettingsSettingsOutputParameters</Item>
+													<Item>RowComposerSettingsSettingsDataParameters</Item>
 													<Type>SearchStringRepresentation</Type>
 												</AdditionSource>
-												<ContextMenu name="RowComposerSettingsSettingsOutputParametersSearchStringContextMenu" id="105"/>
-												<ExtendedTooltip name="RowComposerSettingsSettingsOutputParametersSearchStringExtendedTooltip" id="106"/>
+												<ContextMenu name="RowComposerSettingsSettingsDataParametersSearchStringContextMenu" id="204"/>
+												<ExtendedTooltip name="RowComposerSettingsSettingsDataParametersSearchStringExtendedTooltip" id="205"/>
 											</SearchStringAddition>
-											<ViewStatusAddition name="RowComposerSettingsSettingsOutputParametersViewStatus" id="107">
+											<ViewStatusAddition name="RowComposerSettingsSettingsDataParametersViewStatus" id="206">
 												<AdditionSource>
-													<Item>RowComposerSettingsSettingsOutputParameters</Item>
+													<Item>RowComposerSettingsSettingsDataParameters</Item>
 													<Type>ViewStatusRepresentation</Type>
 												</AdditionSource>
-												<ContextMenu name="RowComposerSettingsSettingsOutputParametersViewStatusContextMenu" id="108"/>
-												<ExtendedTooltip name="RowComposerSettingsSettingsOutputParametersViewStatusExtendedTooltip" id="109"/>
+												<ContextMenu name="RowComposerSettingsSettingsDataParametersViewStatusContextMenu" id="207"/>
+												<ExtendedTooltip name="RowComposerSettingsSettingsDataParametersViewStatusExtendedTooltip" id="208"/>
 											</ViewStatusAddition>
-											<SearchControlAddition name="RowComposerSettingsSettingsOutputParametersSearchControl" id="110">
+											<SearchControlAddition name="RowComposerSettingsSettingsDataParametersSearchControl" id="209">
 												<AdditionSource>
-													<Item>RowComposerSettingsSettingsOutputParameters</Item>
+													<Item>RowComposerSettingsSettingsDataParameters</Item>
 													<Type>SearchControl</Type>
 												</AdditionSource>
-												<ContextMenu name="RowComposerSettingsSettingsOutputParametersSearchControlContextMenu" id="111"/>
-												<ExtendedTooltip name="RowComposerSettingsSettingsOutputParametersSearchControlExtendedTooltip" id="112"/>
+												<ContextMenu name="RowComposerSettingsSettingsDataParametersSearchControlContextMenu" id="210"/>
+												<ExtendedTooltip name="RowComposerSettingsSettingsDataParametersSearchControlExtendedTooltip" id="211"/>
 											</SearchControlAddition>
 											<Events>
-												<Event name="OnChange">RowComposerSettingsSettingsOutputParametersOnChange</Event>
+												<Event name="OnChange">RowComposerSettingsSettingsDataParametersOnChange</Event>
 											</Events>
 										</Table>
 									</ChildItems>
@@ -508,7 +511,7 @@
 									<Group>Horizontal</Group>
 									<ExtendedTooltip name="HiddenPageFieldsExtendedTooltip" id="114"/>
 									<ChildItems>
-										<Table name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFields" id="115">
+										<Table name="RowComposerSettingsSettingsSelectionSelectionAvailableFields" id="212">
 											<Representation>Tree</Representation>
 											<Autofill>true</Autofill>
 											<Width>30</Width>
@@ -518,80 +521,77 @@
 											<VerticalLines>false</VerticalLines>
 											<EnableStartDrag>true</EnableStartDrag>
 											<EnableDrag>true</EnableDrag>
-											<DataPath>Items.RowComposerSettingsSettings.CurrentData.ItemSelection.SelectionAvailableFields</DataPath>
+											<DataPath>RowComposerSettings.Settings.Selection.SelectionAvailableFields</DataPath>
 											<SearchStringLocation>None</SearchStringLocation>
 											<ViewStatusLocation>None</ViewStatusLocation>
 											<SearchControlLocation>None</SearchControlLocation>
-											<ContextMenu name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsContextMenu" id="116"/>
-											<AutoCommandBar name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsCommandBar" id="117"/>
-											<ExtendedTooltip name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsExtendedTooltip" id="118"/>
-											<SearchStringAddition name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSearchString" id="119">
+											<ContextMenu name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsContextMenu" id="213"/>
+											<AutoCommandBar name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsCommandBar" id="214"/>
+											<ExtendedTooltip name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsExtendedTooltip" id="215"/>
+											<SearchStringAddition name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSearchString" id="216">
 												<AdditionSource>
-													<Item>RowComposerSettingsSettingsItemSelectionSelectionAvailableFields</Item>
+													<Item>RowComposerSettingsSettingsSelectionSelectionAvailableFields</Item>
 													<Type>SearchStringRepresentation</Type>
 												</AdditionSource>
-												<ContextMenu name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSearchStringContextMenu" id="120"/>
-												<ExtendedTooltip name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSearchStringExtendedTooltip" id="121"/>
+												<ContextMenu name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSearchStringContextMenu" id="217"/>
+												<ExtendedTooltip name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSearchStringExtendedTooltip" id="218"/>
 											</SearchStringAddition>
-											<ViewStatusAddition name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsViewStatus" id="122">
+											<ViewStatusAddition name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsViewStatus" id="219">
 												<AdditionSource>
-													<Item>RowComposerSettingsSettingsItemSelectionSelectionAvailableFields</Item>
+													<Item>RowComposerSettingsSettingsSelectionSelectionAvailableFields</Item>
 													<Type>ViewStatusRepresentation</Type>
 												</AdditionSource>
-												<ContextMenu name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsViewStatusContextMenu" id="123"/>
-												<ExtendedTooltip name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsViewStatusExtendedTooltip" id="124"/>
+												<ContextMenu name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsViewStatusContextMenu" id="220"/>
+												<ExtendedTooltip name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsViewStatusExtendedTooltip" id="221"/>
 											</ViewStatusAddition>
-											<SearchControlAddition name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSearchControl" id="125">
+											<SearchControlAddition name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSearchControl" id="222">
 												<AdditionSource>
-													<Item>RowComposerSettingsSettingsItemSelectionSelectionAvailableFields</Item>
+													<Item>RowComposerSettingsSettingsSelectionSelectionAvailableFields</Item>
 													<Type>SearchControl</Type>
 												</AdditionSource>
-												<ContextMenu name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSearchControlContextMenu" id="126"/>
-												<ExtendedTooltip name="RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSearchControlExtendedTooltip" id="127"/>
+												<ContextMenu name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSearchControlContextMenu" id="223"/>
+												<ExtendedTooltip name="RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSearchControlExtendedTooltip" id="224"/>
 											</SearchControlAddition>
 											<Events>
-												<Event name="Selection">RowComposerSettingsSettingsItemSelectionSelectionAvailableFieldsSelection</Event>
+												<Event name="Selection">RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSelection</Event>
 											</Events>
 										</Table>
-										<Table name="RowComposerSettingsSettingsItemSelection" id="128">
+										<Table name="RowComposerSettingsSettingsSelection" id="225">
 											<Representation>Tree</Representation>
 											<Autofill>true</Autofill>
 											<InitialTreeView>ExpandAllLevels</InitialTreeView>
 											<EnableStartDrag>true</EnableStartDrag>
 											<EnableDrag>true</EnableDrag>
-											<DataPath>Items.RowComposerSettingsSettings.CurrentData.ItemSelection</DataPath>
-											<SearchStringLocation>None</SearchStringLocation>
-											<ViewStatusLocation>None</ViewStatusLocation>
-											<SearchControlLocation>None</SearchControlLocation>
-											<ContextMenu name="RowComposerSettingsSettingsItemSelectionContextMenu" id="129"/>
-											<AutoCommandBar name="RowComposerSettingsSettingsItemSelectionCommandBar" id="130"/>
-											<ExtendedTooltip name="RowComposerSettingsSettingsItemSelectionExtendedTooltip" id="131"/>
-											<SearchStringAddition name="RowComposerSettingsSettingsItemSelectionSearchString" id="132">
+											<DataPath>RowComposerSettings.Settings.Selection</DataPath>
+											<ContextMenu name="RowComposerSettingsSettingsSelectionContextMenu" id="226"/>
+											<AutoCommandBar name="RowComposerSettingsSettingsSelectionCommandBar" id="227"/>
+											<ExtendedTooltip name="RowComposerSettingsSettingsSelectionExtendedTooltip" id="228"/>
+											<SearchStringAddition name="RowComposerSettingsSettingsSelectionSearchString" id="229">
 												<AdditionSource>
-													<Item>RowComposerSettingsSettingsItemSelection</Item>
+													<Item>RowComposerSettingsSettingsSelection</Item>
 													<Type>SearchStringRepresentation</Type>
 												</AdditionSource>
-												<ContextMenu name="RowComposerSettingsSettingsItemSelectionSearchStringContextMenu" id="133"/>
-												<ExtendedTooltip name="RowComposerSettingsSettingsItemSelectionSearchStringExtendedTooltip" id="134"/>
+												<ContextMenu name="RowComposerSettingsSettingsSelectionSearchStringContextMenu" id="230"/>
+												<ExtendedTooltip name="RowComposerSettingsSettingsSelectionSearchStringExtendedTooltip" id="231"/>
 											</SearchStringAddition>
-											<ViewStatusAddition name="RowComposerSettingsSettingsItemSelectionViewStatus" id="135">
+											<ViewStatusAddition name="RowComposerSettingsSettingsSelectionViewStatus" id="232">
 												<AdditionSource>
-													<Item>RowComposerSettingsSettingsItemSelection</Item>
+													<Item>RowComposerSettingsSettingsSelection</Item>
 													<Type>ViewStatusRepresentation</Type>
 												</AdditionSource>
-												<ContextMenu name="RowComposerSettingsSettingsItemSelectionViewStatusContextMenu" id="136"/>
-												<ExtendedTooltip name="RowComposerSettingsSettingsItemSelectionViewStatusExtendedTooltip" id="137"/>
+												<ContextMenu name="RowComposerSettingsSettingsSelectionViewStatusContextMenu" id="233"/>
+												<ExtendedTooltip name="RowComposerSettingsSettingsSelectionViewStatusExtendedTooltip" id="234"/>
 											</ViewStatusAddition>
-											<SearchControlAddition name="RowComposerSettingsSettingsItemSelectionSearchControl" id="138">
+											<SearchControlAddition name="RowComposerSettingsSettingsSelectionSearchControl" id="235">
 												<AdditionSource>
-													<Item>RowComposerSettingsSettingsItemSelection</Item>
+													<Item>RowComposerSettingsSettingsSelection</Item>
 													<Type>SearchControl</Type>
 												</AdditionSource>
-												<ContextMenu name="RowComposerSettingsSettingsItemSelectionSearchControlContextMenu" id="139"/>
-												<ExtendedTooltip name="RowComposerSettingsSettingsItemSelectionSearchControlExtendedTooltip" id="140"/>
+												<ContextMenu name="RowComposerSettingsSettingsSelectionSearchControlContextMenu" id="236"/>
+												<ExtendedTooltip name="RowComposerSettingsSettingsSelectionSearchControlExtendedTooltip" id="237"/>
 											</SearchControlAddition>
 											<Events>
-												<Event name="OnChange">RowComposerSettingsSettingsItemSelectionOnChange</Event>
+												<Event name="OnChange">RowComposerSettingsSettingsSelectionOnChange</Event>
 											</Events>
 										</Table>
 									</ChildItems>
@@ -745,7 +745,7 @@
 										<Table name="RowComposerSettingsSettingsOrderOrderAvailableFields" id="171">
 											<Representation>Tree</Representation>
 											<Autofill>true</Autofill>
-											<Width>30</Width>
+											<Width>29</Width>
 											<HeightInTableRows>15</HeightInTableRows>
 											<ChoiceMode>true</ChoiceMode>
 											<HorizontalLines>false</HorizontalLines>
@@ -790,6 +790,7 @@
 										<Table name="RowComposerSettingsSettingsOrder" id="184">
 											<Representation>List</Representation>
 											<Autofill>true</Autofill>
+											<InitialTreeView>ExpandAllLevels</InitialTreeView>
 											<EnableStartDrag>true</EnableStartDrag>
 											<EnableDrag>true</EnableDrag>
 											<DataPath>RowComposerSettings.Settings.Order</DataPath>
@@ -856,6 +857,18 @@
 									</Picture>
 									<ExtendedTooltip name="HiddenPageTestingExtendedTooltip" id="69"/>
 									<ChildItems>
+										<UsualGroup name="HiddenGroupTestingCommands" id="238">
+											<Representation>None</Representation>
+											<ShowTitle>false</ShowTitle>
+											<ExtendedTooltip name="HiddenGroupTestingCommandsExtendedTooltip" id="239"/>
+											<ChildItems>
+												<Button name="GeneratesSpreadsheetDocument" id="240">
+													<Type>UsualButton</Type>
+													<CommandName>Form.Command.GenerateSpreadsheetDocument</CommandName>
+													<ExtendedTooltip name="GeneratesSpreadsheetDocumentExtendedTooltip" id="241"/>
+												</Button>
+											</ChildItems>
+										</UsualGroup>
 										<UsualGroup name="HiddenGroupTestingSpreadsheetDocument" id="70">
 											<ShowTitle>false</ShowTitle>
 											<ExtendedTooltip name="HiddenGroupTestingSpreadsheetDocumentExtendedTooltip" id="71"/>
@@ -1192,6 +1205,21 @@
 				</v8:StringQualifiers>
 			</Type>
 		</Attribute>
+		<Attribute name="RowDataCompositionSchemaModified" id="17">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Data composition schema modified</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Схема компоновки данных модифицированность</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:boolean</v8:Type>
+			</Type>
+		</Attribute>
 	</Attributes>
 	<Commands>
 		<Command name="AddAPIMethod" id="1">
@@ -1324,6 +1352,30 @@
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
 			<Action>EditDataCompositionSchema</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="GenerateSpreadsheetDocument" id="6">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Generate (spreadsheet document)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Сформировать (табличный документ)</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Generate spreadsheet document</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.IHL_Generate</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>GenerateSpreadsheetDocument</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>

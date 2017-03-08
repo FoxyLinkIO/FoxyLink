@@ -214,7 +214,7 @@ Procedure InitSettingsComposer(Mediator, SettingsComposer,
             
         Raise ErrorMessage;
         
-    КонецЕсли;
+    EndIf;
 
     SettingsComposer.Refresh(
         DataCompositionSettingsRefreshMethod.CheckAvailability);

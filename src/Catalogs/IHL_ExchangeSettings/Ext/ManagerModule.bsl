@@ -2,18 +2,18 @@
 // This file is part of IHL (Integration happiness library).
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
-// IHL is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as 
-// published by the Free Software Foundation, either version 3 
-// of the License, or any later version.
-// 
-// IHL is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public 
-// License along with IHL. If not, see <http://www.gnu.org/licenses/>.
+// This program is free software: you can redistribute it and/or modify 
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the License,
+// or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful, 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of 
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License 
+// along with this program. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -52,12 +52,6 @@ Procedure UpdateMethodsView(ManagedForm) Export
     For Each Item In Methods Do
         
         MethodDescription = Item.Method.Description;
-        //РезультатПоиска = Catalogs.IHL_Methods.НайтиПоКоду(Операция.ИмяОперации);
-        //Если РезультатПоиска.Пустая() = Ложь Тогда
-        //    Операция.Операция = РезультатПоиска.Ссылка;
-        //    Операция.Описание = РезультатПоиска.Описание;
-        //    Операция.ИмяОперации = РезультатПоиска.Код;
-        //КонецЕсли;
         
         SearchResult = Items.Find(MethodDescription);
         If SearchResult <> Undefined Then
@@ -89,44 +83,7 @@ Procedure UpdateMethodsView(ManagedForm) Export
     EndDo;
     
     // Hide or unhide delete method button.
-    Items.DeleteAPIMethod.Visible = Methods.Count() > 0;         
-
-
-    // Добавляем операции из справочника
-    //Запрос = Новый Запрос;
-    //Запрос.Текст = ТекстЗапросаОперации();
-    //ВыборкаОперации = Запрос.Выполнить().Выбрать();
-    //Пока ВыборкаОперации.Следующий() Цикл
-    //    
-    //    Если ВыборкаОперации.Используется = Ложь Тогда
-    //        Продолжить;	
-    //    КонецЕсли;
-    //    
-    //    ЭлементФормы = Элементы.Найти(ВыборкаОперации.ИмяОперации);
-    //    Если ЭлементФормы <> Неопределено Тогда
-    //        
-    //        ЭлементФормы.Картинка = БиблиотекаКартинок.UpdateExpressДействующий;
-    //        
-    //    Иначе
-    //        
-    //        ЭлементФормы = ДобавитьСтраницуОперацииНаФорму(Элементы, 
-    //            ВыборкаОперации.ИмяОперации, 
-    //            ВыборкаОперации.Описание, 
-    //            БиблиотекаКартинок.UpdateExpressДействующий);
-    //            
-    //        ЗаполнитьЗначенияСвойств(Операции.Добавить(), ВыборкаОперации, , "Используется");
-    //        
-    //    КонецЕсли;
-    //    
-    //    Если ПустаяСтрока(Объект.ПолноеИмяОбъектаМетаданных)
-    //       И ВыборкаОперации.СвязанСОбъектомМетаданных Тогда
-    //        ЭлементФормы.Доступность = Ложь;
-    //    Иначе
-    //        ЭлементФормы.Доступность = Истина;		
-    //    КонецЕсли;
-    //    
-    //КонецЦикла;
-    
+    Items.DeleteAPIMethod.Visible = Methods.Count() > 0;   
     
 EndProcedure // UpdateMethodsView()
 

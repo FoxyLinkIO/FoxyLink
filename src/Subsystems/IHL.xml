@@ -34,6 +34,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Filter</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Order</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_EditSchema</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Generate</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>
