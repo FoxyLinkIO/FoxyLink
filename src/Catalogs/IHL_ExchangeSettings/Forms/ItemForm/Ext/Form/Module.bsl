@@ -245,6 +245,12 @@ Procedure GenerateSpreadsheetDocument(Command)
     
 EndProcedure // GenerateSpreadsheetDocument()
 
+&AtClient
+Procedure GenerateSpecificDocument(Command)
+    
+    GenerateSpecificDocumentAtServer();   
+         
+EndProcedure // GenerateSpecificDocument() 
 
 
 &AtClient
@@ -324,8 +330,11 @@ Procedure LoadBasicFormatInfo()
     
     FPMetadata = FormatProcessor.Metadata();
     SearchResult = FPMetadata.Forms.Find("APIDefinitionForm");
+    
     Items.CopyAPI.Visible = SearchResult <> Undefined;
     Items.DescribeAPI.Visible = SearchResult <> Undefined;
+    Items.GenerateSpecificDocument.Title = StrTemplate("Generate (%1, ver. %2)", 
+        FormatProcessor.FormatShortName(), FormatProcessor.Version());
     
 EndProcedure // LoadBasicFormatInfo() 
 
@@ -486,8 +495,49 @@ Procedure GenerateSpreadsheetDocumentAtServer()
     
     IHL_DataComposition.OutputInSpreadsheetDocument(Undefined, // Reserved
         ResultSpreadsheetDocument, OutputParameters);     
-    
+        
+    Items.HiddenPageTestingResults.CurrentPage = 
+        Items.HiddenPageTestingSpreadsheetDocument;
+        
 EndProcedure // GenerateSpreadsheetDocumentAtServer()
+
+&AtServer
+Procedure GenerateSpecificDocumentAtServer()
+
+    ResultTextDocument.Clear();
+    
+    DataCompositionSchema = GetFromTempStorage(
+        DataCompositionSchemaEditAddress);     
+    DataCompositionSettings = RowComposerSettings.GetSettings();
+
+    DataCompositionTemplate = IHL_DataComposition
+        .NewDataCompositionTemplateParameters();
+    DataCompositionTemplate.Schema   = DataCompositionSchema;
+    DataCompositionTemplate.Template = DataCompositionSettings;
+
+    OutputParameters = IHL_DataComposition.NewOutputParameters();
+    OutputParameters.DCTParameters = DataCompositionTemplate;
+    OutputParameters.CanUseExternalFunctions = True;
+    
+    StreamObject = Catalogs.IHL_ExchangeSettings.NewFormatProcessor(
+        FormatProcessorName, Object.BasicFormatGuid);
+    StreamObject.Initialize();    
+    
+    // TODO: Need to be resolved with API definition or automatic.
+    StreamObject.WriteStartObject();
+    
+    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, 
+        RowOutputType);
+        
+    // TODO: Need to be resolved with API definition or automatic.
+    StreamObject.WriteEndObject();
+    Result = StreamObject.Close();
+    
+    ResultTextDocument.AddLine(Result);
+    Items.HiddenPageTestingResults.CurrentPage = 
+        Items.HiddenPageTestingTextDocument;
+    
+EndProcedure // GenerateSpecificDocumentAtServer() 
 
 
 // See function Catalogs.IHL_Methods.UpdateMethodsView.

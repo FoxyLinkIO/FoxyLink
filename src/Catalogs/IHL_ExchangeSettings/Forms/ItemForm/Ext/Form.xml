@@ -217,6 +217,7 @@
 			</Events>
 		</Pages>
 		<UsualGroup name="HiddenGroup" id="39">
+			<Visible>false</Visible>
 			<ShowTitle>false</ShowTitle>
 			<ExtendedTooltip name="HiddenGroupExtendedTooltip" id="40"/>
 			<ChildItems>
@@ -300,6 +301,10 @@
 																		<v8:lang>en</v8:lang>
 																		<v8:content>Fast</v8:content>
 																	</v8:item>
+																	<v8:item>
+																		<v8:lang>ru</v8:lang>
+																		<v8:content>Быстрый</v8:content>
+																	</v8:item>
 																</Presentation>
 																<Value xsi:type="xs:decimal">0</Value>
 															</xr:Value>
@@ -312,6 +317,10 @@
 																	<v8:item>
 																		<v8:lang>en</v8:lang>
 																		<v8:content>Sequential</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>ru</v8:lang>
+																		<v8:content>Последовательный</v8:content>
 																	</v8:item>
 																</Presentation>
 																<Value xsi:type="xs:decimal">1</Value>
@@ -867,20 +876,42 @@
 													<CommandName>Form.Command.GenerateSpreadsheetDocument</CommandName>
 													<ExtendedTooltip name="GeneratesSpreadsheetDocumentExtendedTooltip" id="241"/>
 												</Button>
+												<Button name="GenerateSpecificDocument" id="242">
+													<Type>UsualButton</Type>
+													<CommandName>Form.Command.GenerateSpecificDocument</CommandName>
+													<ExtendedTooltip name="GenerateSpecificDocumentExtendedTooltip" id="243"/>
+												</Button>
 											</ChildItems>
 										</UsualGroup>
-										<UsualGroup name="HiddenGroupTestingSpreadsheetDocument" id="70">
-											<ShowTitle>false</ShowTitle>
-											<ExtendedTooltip name="HiddenGroupTestingSpreadsheetDocumentExtendedTooltip" id="71"/>
+										<Pages name="HiddenPageTestingResults" id="244">
+											<PagesRepresentation>None</PagesRepresentation>
+											<ExtendedTooltip name="HiddenPageTestingResultsExtendedTooltip" id="245"/>
 											<ChildItems>
-												<SpreadSheetDocumentField name="ResultSpreadsheetDocument" id="72">
-													<DataPath>ResultSpreadsheetDocument</DataPath>
-													<TitleLocation>None</TitleLocation>
-													<ContextMenu name="ResultSpreadsheetDocumentContextMenu" id="73"/>
-													<ExtendedTooltip name="ResultSpreadsheetDocumentExtendedTooltip" id="74"/>
-												</SpreadSheetDocumentField>
+												<Page name="HiddenPageTestingSpreadsheetDocument" id="70">
+													<Group>HorizontalIfPossible</Group>
+													<ExtendedTooltip name="HiddenPageTestingSpreadsheetDocumentExtendedTooltip" id="71"/>
+													<ChildItems>
+														<SpreadSheetDocumentField name="ResultSpreadsheetDocument" id="72">
+															<DataPath>ResultSpreadsheetDocument</DataPath>
+															<TitleLocation>None</TitleLocation>
+															<ContextMenu name="ResultSpreadsheetDocumentContextMenu" id="73"/>
+															<ExtendedTooltip name="ResultSpreadsheetDocumentExtendedTooltip" id="74"/>
+														</SpreadSheetDocumentField>
+													</ChildItems>
+												</Page>
+												<Page name="HiddenPageTestingTextDocument" id="246">
+													<ExtendedTooltip name="HiddenPageTestingTextDocumentExtendedTooltip" id="247"/>
+													<ChildItems>
+														<TextDocumentField name="ResultTextDocument" id="248">
+															<DataPath>ResultTextDocument</DataPath>
+															<TitleLocation>None</TitleLocation>
+															<ContextMenu name="ResultTextDocumentContextMenu" id="249"/>
+															<ExtendedTooltip name="ResultTextDocumentExtendedTooltip" id="250"/>
+														</TextDocumentField>
+													</ChildItems>
+												</Page>
 											</ChildItems>
-										</UsualGroup>
+										</Pages>
 									</ChildItems>
 								</Page>
 							</ChildItems>
@@ -1375,6 +1406,34 @@
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
 			<Action>GenerateSpreadsheetDocument</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="GenerateSpecificDocument" id="7">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Generate</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Сформировать</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Generate specific document</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Сформировать специализированный документ</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.IHL_Generate</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>GenerateSpecificDocument</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>
