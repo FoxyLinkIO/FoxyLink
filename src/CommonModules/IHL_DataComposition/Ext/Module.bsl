@@ -2,18 +2,18 @@
 // This file is part of IHL (Integration happiness library).
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
-// IHL is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as 
-// published by the Free Software Foundation, either version 3 
-// of the License, or any later version.
-// 
-// IHL is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public 
-// License along with IHL. If not, see <http://www.gnu.org/licenses/>.
+// This program is free software: you can redistribute it and/or modify 
+// it under the terms of the GNU Affero General Public License as 
+// published by the Free Software Foundation, either version 3 of the License,
+// or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful, 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of 
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License 
+// along with this program. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -103,18 +103,48 @@ EndProcedure // Output()
 
 // Copies data composition schema(DCS) from the source address to the destination address.
 //
-// Paramaters:
-//  DestinationAddress - String - the address to copy DCS in.
-//  SourceAddress      - String - the address to copy DCS from.
+// Parameters:
+//  DestinationAddress - String                - the address to copy DCS in.
+//  SourceAddress      - String                - the address to copy DCS from.
+//                     - DataCompositionSchema - the source DCS to copy from.
+//  CheckForChanges    - Boolean               - if value is 'True', source and destination 
+//                                              address is checked for changes.
+//                          Default value: False.
+//  Changed            - Boolean               - out parameter for the result of comparation
+//                                              source and destination data for changes.
+//                          Default value: False.
 //
-Procedure CopyDataCompositionSchema(DestinationAddress, SourceAddress) Export
+Procedure CopyDataCompositionSchema(DestinationAddress, SourceAddress,
+    CheckForChanges = False, Changed = False) Export
 
-    DataCompositionSchema = GetFromTempStorage(SourceAddress);
+    If IsTempStorageURL(SourceAddress) Then
+        DataCompositionSchema = GetFromTempStorage(SourceAddress);
+    Else
+        DataCompositionSchema = SourceAddress;
+    EndIf;
+    
     If TypeOf(DataCompositionSchema) = Type("DataCompositionSchema") Then
         DataCompositionSchema = XDTOSerializer.ReadXDTO(
             XDTOSerializer.WriteXDTO(DataCompositionSchema));
     Else
         DataCompositionSchema = New DataCompositionSchema;
+    EndIf;
+    
+    If CheckForChanges = True Then
+        Changed = False;
+        If IsTempStorageURL(DestinationAddress) Then
+            
+            CurrentDCS = GetFromTempStorage(DestinationAddress);
+            If TypeOf(CurrentDCS) = Type("DataCompositionSchema") Then
+                Changed = IHL_CommonUseClientServer.SerializeToXML(CurrentDCS) <> 
+                    IHL_CommonUseClientServer.SerializeToXML(DataCompositionSchema);
+            Else
+                Changed = True;
+            EndIf;
+            
+        Else
+            Changed = True; 
+        Endif;
     EndIf;
 
     If IsTempStorageURL(DestinationAddress) Then
