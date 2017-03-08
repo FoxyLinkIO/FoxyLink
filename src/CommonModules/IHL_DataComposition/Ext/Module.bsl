@@ -99,9 +99,44 @@ EndProcedure // Output()
 
 #EndRegion // ProgramInterface
 
-#Region ServiceProgramInterface
+#Region ServiceInterface
 
-// Currently is used in tests.
+// Copies data composition schema(DCS) from the source address to the destination address.
+//
+// Paramaters:
+//  DestinationAddress - String - the address to copy DCS in.
+//  SourceAddress      - String - the address to copy DCS from.
+//
+Procedure CopyDataCompositionSchema(DestinationAddress, SourceAddress) Export
+
+    DataCompositionSchema = GetFromTempStorage(SourceAddress);
+    If TypeOf(DataCompositionSchema) = Type("DataCompositionSchema") Then
+        DataCompositionSchema = XDTOSerializer.ReadXDTO(
+            XDTOSerializer.WriteXDTO(DataCompositionSchema));
+    Else
+        DataCompositionSchema = New DataCompositionSchema;
+    EndIf;
+
+    If IsTempStorageURL(DestinationAddress) Then
+        PutToTempStorage(DataCompositionSchema, DestinationAddress);
+    Else
+        DestinationAddress = PutToTempStorage(DataCompositionSchema, New UUID);
+    EndIf;
+
+EndProcedure // CopyDataCompositionSchema()
+
+// Initializes data composition settings composer by data compostion schema and
+// data composition settings.
+//
+// Parameters:
+//  Mediator         - Arbitrary - reserved, currently not in use.
+//  SettingsComposer - DataCompositionSettingsComposer   -
+//  DataCompositionSchemaURL   - String                  - the address in temp storage.
+//                             - DataCompositionSchema   - data composition schame.
+//  DataCompositionSettingsURL - String                  - the address in temp storage.
+//                             - DataCompositionSettings - data composition settings.
+//                                  Default value: Undefined.
+//
 Procedure InitSettingsComposer(Mediator, SettingsComposer, 
     DataCompositionSchemaURL, DataCompositionSettingsURL = Undefined) Export
 
@@ -126,8 +161,7 @@ Procedure InitSettingsComposer(Mediator, SettingsComposer,
         
         ErrorMessage = StrTemplate(NStr(
                 "en = 'Error: Failed to initialize data composition settings composer. %1.';
-                |ru = 'Ошибка: Не удалось инициализировать компоновщик настроек компоновки данных. %1.';
-                |uk = 'Помилка: Не вдалось ініціалізувати компоновщик налаштувань компоновки данних. %1.'"),
+                |ru = 'Ошибка: Не удалось инициализировать компоновщик настроек компоновки данных. %1.'"),
             ErrorDescription());
             
         Raise ErrorMessage;
@@ -146,8 +180,7 @@ Procedure InitSettingsComposer(Mediator, SettingsComposer,
         
         ErrorMessage = NStr(
             "en = 'Error: Failed to find data composition settings';
-            |ru = 'Ошибка: Не удалось найти настроки компоновки данных.';
-            |uk = 'Помилка: Не вдалось знайти налаштування компоновки данних.'");
+            |ru = 'Ошибка: Не удалось найти настроки компоновки данных.'");
             
         Raise ErrorMessage;
         
@@ -251,7 +284,7 @@ Function NewDataCompositionTemplateParameters() Export
     
 EndFunction // NewDataCompositionTemplateParameters()
 
-#EndRegion // ServiceProgramInterface
+#EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
 
