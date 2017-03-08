@@ -151,6 +151,7 @@
 			<CommonPicture>IHL_EditSchema</CommonPicture>
 			<CommonPicture>IHL_Fields</CommonPicture>
 			<CommonPicture>IHL_Filter</CommonPicture>
+			<CommonPicture>IHL_Generate</CommonPicture>
 			<CommonPicture>IHL_MethodSettingsInvalid</CommonPicture>
 			<CommonPicture>IHL_Order</CommonPicture>
 			<CommonPicture>IHL_Parameters</CommonPicture>
@@ -158,7 +159,6 @@
 			<CommonPicture>IHL_Structure</CommonPicture>
 			<CommonPicture>IHL_Testing</CommonPicture>
 			<CommonPicture>StopProcessing</CommonPicture>
-			<CommonPicture>IHL_Generate</CommonPicture>
 			<CommonModule>IHL_CommonUse</CommonModule>
 			<CommonModule>IHL_CommonUseClientServer</CommonModule>
 			<CommonModule>IHL_DataComposition</CommonModule>

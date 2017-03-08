@@ -19,7 +19,7 @@
 
 #Region ProgramInterface
 
-// Outputs the result of the data composition scheme in the stream object.
+// Outputs the result of the data composition schema in the stream object.
 //
 // Parameters:
 //  Mediator         - Arbitrary - reserved, currently not in use.
@@ -97,6 +97,46 @@ Procedure Output(Mediator, StreamObject, OutputParameters,
     
 EndProcedure // Output()
 
+// Outputs the result of the data composition schema in the spreadsheet document.
+//
+// Parameters:
+//  Mediator            - Arbitrary           - reserved, currently not in use.
+//  SpreadsheetDocument - SpreadsheetDocument - spreadsheet document.
+//  OutputParameters    - Structure           - see function IHL_DataComposition.NewOutputParameters.
+//
+Procedure OutputInSpreadsheetDocument(Mediator, SpreadsheetDocument, 
+    OutputParameters) Export
+       
+    // TODO: Check output parameters
+    
+    // TODO: Mediator.Logger (Trace, Debug, Warning+)
+    DCTParameters = IHL_CommonUseClientServer.CopyStructure(
+        OutputParameters.DCTParameters);
+        
+    // Verify, that supported type of generator is in use.
+    DCTParameters.GeneratorType = Type("DataCompositionTemplateGenerator");
+    
+    // TODO: Mediator.Logger (Trace, Debug, Warning+)
+    // TODO: Mediator.Performance (APDEX, OPDEX)
+    // Create data composition template.
+    DataCompositionTemplate = NewDataCompositionTemplate(DCTParameters);
+
+    // TODO: Mediator.Logger (Trace, Debug, Warning+)
+    // TODO: Mediator.Performance (APDEX, OPDEX)
+    // Init data composition processor.
+    DataCompositionProcessor = New DataCompositionProcessor;
+    DataCompositionProcessor.Initialize(DataCompositionTemplate, 
+        OutputParameters.ExternalDataSets, 
+        OutputParameters.DetailsData, 
+        OutputParameters.CanUseExternalFunctions);
+
+    // Output result
+    OutputProcessor = New DataCompositionResultSpreadsheetDocumentOutputProcessor;
+    OutputProcessor.SetDocument(SpreadsheetDocument);
+    OutputProcessor.Output(DataCompositionProcessor);    
+    
+EndProcedure // OutputInSpreadsheetDocument()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
@@ -147,12 +187,9 @@ Procedure CopyDataCompositionSchema(DestinationAddress, SourceAddress,
         Endif;
     EndIf;
 
-    If IsTempStorageURL(DestinationAddress) Then
-        PutToTempStorage(DataCompositionSchema, DestinationAddress);
-    Else
-        DestinationAddress = PutToTempStorage(DataCompositionSchema, New UUID);
-    EndIf;
-
+    IHL_CommonUseClientServer.PutSerializedValueToTempStorage(
+        DataCompositionSchema, DestinationAddress, New UUID);
+    
 EndProcedure // CopyDataCompositionSchema()
 
 // Initializes data composition settings composer by data compostion schema and

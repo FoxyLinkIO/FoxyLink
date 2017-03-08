@@ -469,7 +469,23 @@ EndProcedure // DoAfterChooseMethodToDelete()
 &AtServer
 Procedure GenerateSpreadsheetDocumentAtServer()
     
+    ResultSpreadsheetDocument.Clear();
     
+    DataCompositionSchema = GetFromTempStorage(
+        DataCompositionSchemaEditAddress);     
+    DataCompositionSettings = RowComposerSettings.GetSettings();
+
+    DataCompositionTemplate = IHL_DataComposition
+        .NewDataCompositionTemplateParameters();
+    DataCompositionTemplate.Schema   = DataCompositionSchema;
+    DataCompositionTemplate.Template = DataCompositionSettings;
+
+    OutputParameters = IHL_DataComposition.NewOutputParameters();
+    OutputParameters.DCTParameters = DataCompositionTemplate;
+    OutputParameters.CanUseExternalFunctions = True;
+    
+    IHL_DataComposition.OutputInSpreadsheetDocument(Undefined, // Reserved
+        ResultSpreadsheetDocument, OutputParameters);     
     
 EndProcedure // GenerateSpreadsheetDocumentAtServer()
 
@@ -546,7 +562,7 @@ Procedure LoadMethodSettings()
         // Create schema, if needed.
         If IsBlankString(CurrentData.DataCompositionSchemaAddress) Then
             CurrentData.DataCompositionSchemaAddress = PutToTempStorage(
-                New DataCompositionSchema, UUID);
+                New DataCompositionSchema, ThisObject.UUID);
         EndIf;
             
         IHL_DataComposition.CopyDataCompositionSchema(
@@ -583,14 +599,20 @@ Procedure SaveMethodSettings()
             ChangedData.OutputType = RowOutputType;
             
             If RowDataCompositionSchemaModified Then
+                
                 IHL_DataComposition.CopyDataCompositionSchema(
                     ChangedData.DataCompositionSchemaAddress, 
                     DataCompositionSchemaEditAddress);
+                    
             EndIf;
 
             If RowComposerSettingsModified Then
-                ChangedData.DataCompositionSettingsAddress = PutToTempStorage(
-                    RowComposerSettings.GetSettings());
+                
+                IHL_CommonUseClientServer.PutSerializedValueToTempStorage(
+                    RowComposerSettings.GetSettings(), 
+                    ChangedData.DataCompositionSettingsAddress, 
+                    ThisObject.UUID);
+                    
             EndIf;
           
         EndIf;

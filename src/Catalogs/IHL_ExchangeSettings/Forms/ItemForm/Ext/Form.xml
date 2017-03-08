@@ -876,7 +876,6 @@
 												<SpreadSheetDocumentField name="ResultSpreadsheetDocument" id="72">
 													<DataPath>ResultSpreadsheetDocument</DataPath>
 													<TitleLocation>None</TitleLocation>
-													<ShowGrid>true</ShowGrid>
 													<ContextMenu name="ResultSpreadsheetDocumentContextMenu" id="73"/>
 													<ExtendedTooltip name="ResultSpreadsheetDocumentExtendedTooltip" id="74"/>
 												</SpreadSheetDocumentField>
