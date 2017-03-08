@@ -74,6 +74,33 @@ Procedure NotifyUser(Val Text, Val DataKey = Undefined, Val Field = "",
 EndProcedure // NotifyUser()
 
 
+
+// Saves a serialized value to a temporary storage.
+//
+// Parameters:
+//  SerializedValue - Arbitrary - data that should be placed in the temporary storage.
+//  Address         - String    - an address in the temporary storage where the data should be placed.
+//  TTL             - UUID      - If you transfer UUID forms or address to a repository, the value will be 
+//                                  automatically removed after closing the form.
+//                                If you transfer UUIDwhich is not a unique form identifier, the value will be 
+//                                  removed after the user session is completed.
+//                                If the parameter is not specified, the placed value is deleted after the next 
+//                                  server request from the common module, during a context or non-context server
+//                                  call from a form, server call from a command module or when obtaining a form.
+//                      Default value: Undefined.
+//
+Procedure PutSerializedValueToTempStorage(SerializedValue, Address, 
+    TTL = Undefined) Export
+    
+    If IsTempStorageURL(Address) Then
+        PutToTempStorage(SerializedValue, Address);
+    Else
+        Address = PutToTempStorage(SerializedValue, TTL);
+    EndIf;
+    
+EndProcedure // PutDataToTempStorage()
+    
+
 // Serializes the value into XML string representation.
 //
 // Parameters:
@@ -90,6 +117,7 @@ Function SerializeToXML(Value) Export
     Return XMLWriter.Close();
 
 EndFunction // SerializeToXML()
+
 
 
 // Creates an instance copy of the specified object.
