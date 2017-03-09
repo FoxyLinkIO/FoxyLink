@@ -222,9 +222,9 @@
 					<xr:MinValue xsi:nil="true"/>
 					<xr:Synonym/>
 					<xr:Comment/>
-					<xr:FullTextSearch>Use</xr:FullTextSearch>
+					<xr:FullTextSearch>DontUse</xr:FullTextSearch>
 					<xr:ChoiceParameterLinks/>
-					<xr:FillValue xsi:nil="true"/>
+					<xr:FillValue xsi:type="xr:DesignTimeRef">Catalog.IHL_ExchangeSettings.EmptyRef</xr:FillValue>
 					<xr:Mask/>
 					<xr:ChoiceParameters/>
 				</xr:StandardAttribute>
@@ -256,7 +256,7 @@
 						</v8:item>
 					</xr:Synonym>
 					<xr:Comment/>
-					<xr:FullTextSearch>Use</xr:FullTextSearch>
+					<xr:FullTextSearch>DontUse</xr:FullTextSearch>
 					<xr:ChoiceParameterLinks/>
 					<xr:FillValue xsi:nil="true"/>
 					<xr:Mask/>
