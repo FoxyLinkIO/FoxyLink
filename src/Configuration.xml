@@ -147,6 +147,7 @@
 			<CommonPicture>IHL_AddMethod</CommonPicture>
 			<CommonPicture>IHL_Copy</CommonPicture>
 			<CommonPicture>IHL_DeleteMethod</CommonPicture>
+			<CommonPicture>IHL_Download</CommonPicture>
 			<CommonPicture>IHL_Edit</CommonPicture>
 			<CommonPicture>IHL_EditSchema</CommonPicture>
 			<CommonPicture>IHL_Fields</CommonPicture>
@@ -158,11 +159,14 @@
 			<CommonPicture>IHL_Settings</CommonPicture>
 			<CommonPicture>IHL_Structure</CommonPicture>
 			<CommonPicture>IHL_Testing</CommonPicture>
+			<CommonPicture>IHL_Update</CommonPicture>
 			<CommonPicture>StopProcessing</CommonPicture>
 			<CommonModule>IHL_CommonUse</CommonModule>
 			<CommonModule>IHL_CommonUseClientServer</CommonModule>
 			<CommonModule>IHL_DataComposition</CommonModule>
+			<CommonModule>IHL_EncryptionClientServer</CommonModule>
 			<CommonModule>IHL_InteriorUse</CommonModule>
+			<Catalog>IHL_AuthenticationAndAuthorization</Catalog>
 			<Catalog>IHL_ExchangeSettings</Catalog>
 			<Catalog>IHL_Methods</Catalog>
 			<Enum>IHL_RESTMethods</Enum>
