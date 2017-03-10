@@ -37,11 +37,11 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Generate</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHL_ExchangeSettings</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHL_Methods</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHL_AuthenticationAndAuthorization</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Update</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Download</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.IHL_EncryptionClientServer</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.IHL_Encryption</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.IHL_InteriorUse</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_Export</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

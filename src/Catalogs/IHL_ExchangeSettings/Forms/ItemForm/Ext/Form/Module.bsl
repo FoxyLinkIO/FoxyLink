@@ -216,6 +216,17 @@ EndProcedure // DeleteAPIMethod()
 
 
 &AtClient
+Procedure AddExchangeChannel(Command)
+    
+    NewChannel = Object.Channels.Add(); 
+    //NewChannel.
+    //Pic = New Picture(Base64Value(Base64String(PictureLib.AccumulationRegister.GetBinaryData())
+    //    + Base64String(PictureLib.AccountingRegister.GetBinaryData())));
+    //Pic.Write("C:\Users\pbazelyuk\Downloads\Downloaded\1.png")
+EndProcedure // AddExchangeChannel()
+
+
+&AtClient
 Procedure EditDataCompositionSchema(Command)
     
     #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then

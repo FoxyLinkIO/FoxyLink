@@ -217,7 +217,6 @@
 			</Events>
 		</Pages>
 		<UsualGroup name="HiddenGroup" id="39">
-			<Visible>false</Visible>
 			<ShowTitle>false</ShowTitle>
 			<ExtendedTooltip name="HiddenGroupExtendedTooltip" id="40"/>
 			<ChildItems>
@@ -344,6 +343,112 @@
 														</Title>
 													</ExtendedTooltip>
 												</RadioButtonField>
+											</ChildItems>
+										</UsualGroup>
+										<UsualGroup name="HiddenGroupChannels" id="253">
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Exchange channels</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Каналы обмена</v8:content>
+												</v8:item>
+											</Title>
+											<ToolTip>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Exchange channels</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Каналы обмена</v8:content>
+												</v8:item>
+											</ToolTip>
+											<VerticalStretch>false</VerticalStretch>
+											<Group>Vertical</Group>
+											<Behavior>Collapsible</Behavior>
+											<ControlRepresentation>Picture</ControlRepresentation>
+											<ExtendedTooltip name="HiddenGroupChannelsExtendedTooltip" id="254"/>
+											<ChildItems>
+												<Button name="AddExchangeChannel" id="251">
+													<Type>UsualButton</Type>
+													<CommandName>Form.Command.AddExchangeChannel</CommandName>
+													<ExtendedTooltip name="AddExchangeChannelExtendedTooltip" id="252"/>
+												</Button>
+												<Table name="Channels" id="255">
+													<ReadOnly>true</ReadOnly>
+													<ChangeRowSet>false</ChangeRowSet>
+													<ChangeRowOrder>false</ChangeRowOrder>
+													<AutoInsertNewRow>true</AutoInsertNewRow>
+													<EnableStartDrag>true</EnableStartDrag>
+													<EnableDrag>true</EnableDrag>
+													<DataPath>Object.Channels</DataPath>
+													<SearchStringLocation>None</SearchStringLocation>
+													<ViewStatusLocation>None</ViewStatusLocation>
+													<SearchControlLocation>None</SearchControlLocation>
+													<RowFilter xsi:nil="true"/>
+													<ContextMenu name="ChannelsContextMenu" id="256"/>
+													<AutoCommandBar name="ChannelsCommandBar" id="257">
+														<Autofill>false</Autofill>
+													</AutoCommandBar>
+													<ExtendedTooltip name="ChannelsExtendedTooltip" id="258"/>
+													<SearchStringAddition name="ChannelsSearchString" id="259">
+														<AdditionSource>
+															<Item>Channels</Item>
+															<Type>SearchStringRepresentation</Type>
+														</AdditionSource>
+														<ContextMenu name="ChannelsSearchStringContextMenu" id="260"/>
+														<ExtendedTooltip name="ChannelsSearchStringExtendedTooltip" id="261"/>
+													</SearchStringAddition>
+													<ViewStatusAddition name="ChannelsViewStatus" id="262">
+														<AdditionSource>
+															<Item>Channels</Item>
+															<Type>ViewStatusRepresentation</Type>
+														</AdditionSource>
+														<ContextMenu name="ChannelsViewStatusContextMenu" id="263"/>
+														<ExtendedTooltip name="ChannelsViewStatusExtendedTooltip" id="264"/>
+													</ViewStatusAddition>
+													<SearchControlAddition name="ChannelsSearchControl" id="265">
+														<AdditionSource>
+															<Item>Channels</Item>
+															<Type>SearchControl</Type>
+														</AdditionSource>
+														<ContextMenu name="ChannelsSearchControlContextMenu" id="266"/>
+														<ExtendedTooltip name="ChannelsSearchControlExtendedTooltip" id="267"/>
+													</SearchControlAddition>
+													<ChildItems>
+														<PictureField name="ChannelsPictutre" id="292">
+															<DataPath>Object.Channels.LineNumber</DataPath>
+															<TitleLocation>None</TitleLocation>
+															<EditMode>EnterOnInput</EditMode>
+															<Width>2</Width>
+															<HorizontalStretch>false</HorizontalStretch>
+															<ContextMenu name="ChannelsPictutreContextMenu" id="293"/>
+															<ExtendedTooltip name="ChannelsPictutreExtendedTooltip" id="294"/>
+														</PictureField>
+														<CheckBoxField name="ChannelsValid" id="289">
+															<DataPath>Object.Channels.Valid</DataPath>
+															<EditMode>EnterOnInput</EditMode>
+															<CheckBoxType>Auto</CheckBoxType>
+															<ContextMenu name="ChannelsValidContextMenu" id="290"/>
+															<ExtendedTooltip name="ChannelsValidExtendedTooltip" id="291"/>
+														</CheckBoxField>
+														<InputField name="ChannelsShortName" id="286">
+															<DataPath>Object.Channels.ShortName</DataPath>
+															<EditMode>EnterOnInput</EditMode>
+															<ContextMenu name="ChannelsShortNameContextMenu" id="287"/>
+															<ExtendedTooltip name="ChannelsShortNameExtendedTooltip" id="288"/>
+														</InputField>
+														<InputField name="ChannelsFullName" id="280">
+															<DataPath>Object.Channels.FullName</DataPath>
+															<EditMode>EnterOnInput</EditMode>
+															<ContextMenu name="ChannelsFullNameContextMenu" id="281"/>
+															<ExtendedTooltip name="ChannelsFullNameExtendedTooltip" id="282"/>
+														</InputField>
+													</ChildItems>
+												</Table>
 											</ChildItems>
 										</UsualGroup>
 									</ChildItems>
@@ -1434,6 +1539,34 @@
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
 			<Action>GenerateSpecificDocument</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="AddExchangeChannel" id="8">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add exchange channel</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить канал обмена</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add exchange channel</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить канал обмена</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.IHL_Export</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>AddExchangeChannel</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>

@@ -21,8 +21,8 @@
 			<Content/>
 		</Properties>
 		<ChildObjects>
-			<Subsystem>PlugableFormats</Subsystem>
-			<Subsystem>PlugableAuthorizationModules</Subsystem>
+			<Subsystem>Formats</Subsystem>
+			<Subsystem>Channels</Subsystem>
 		</ChildObjects>
 	</Subsystem>
 </MetaDataObject>

@@ -21,7 +21,7 @@
 			<Content>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHL_ExchangeSettings</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHL_Methods</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHL_AuthenticationAndAuthorization</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">69ad9171-54e4-4562-aa1b-299c3696ec03</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>
