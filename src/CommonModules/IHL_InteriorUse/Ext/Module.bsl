@@ -149,12 +149,12 @@ Function PlugableFormatsSubsystem() Export
         
     EndIf;
     
-    PlugableFormats = PluginsSubsystem.Subsystems.Find("PlugableFormats");
+    PlugableFormats = PluginsSubsystem.Subsystems.Find("Formats");
     If PlugableFormats = Undefined Then
         
         ErrorMessage = NStr(
-            "en = 'Failed to find [IHL -> Plugins -> PlugableFormats] subsystem.';
-            |ru = 'Не удалось найти подсистему [IHL -> Plugins -> PlugableFormats].'");
+            "en = 'Failed to find [IHL -> Plugins -> Formats] subsystem.';
+            |ru = 'Не удалось найти подсистему [IHL -> Plugins -> Formats].'");
         Raise ErrorMessage;
         
     EndIf;
@@ -162,6 +162,47 @@ Function PlugableFormatsSubsystem() Export
     Return PlugableFormats;
     
 EndFunction // PlugableFormatsSubsystem() 
+
+// Returns metadata object: plugable channels subsystem.
+//
+// Returns:
+//  MetadataObject: Subsystem - plugable channels subsystem.  
+//
+Function PlugableChannelsSubsystem() Export
+    
+    MainSubsystem = Metadata.Subsystems.Find("IHL");
+    If MainSubsystem = Undefined Then
+        
+        ErrorMessage = NStr(
+            "en = 'Failed to find main subsystem [IHL].';
+            |ru = 'Не удалось найти основную подсистему [IHL].'");
+        Raise ErrorMessage;
+        
+    EndIf;
+    
+    PluginsSubsystem = MainSubsystem.Subsystems.Find("Plugins");
+    If PluginsSubsystem = Undefined Then
+        
+        ErrorMessage = NStr(
+            "en = 'Failed to find [IHL -> Plugins] subsystem.';
+            |ru = 'Не удалось найти подсистему [IHL -> Plugins].'");
+        Raise ErrorMessage;
+        
+    EndIf;
+    
+    PlugableChannels = PluginsSubsystem.Subsystems.Find("Channels");
+    If PlugableChannels = Undefined Then
+        
+        ErrorMessage = NStr(
+            "en = 'Failed to find [IHL -> Plugins -> Channels] subsystem.';
+            |ru = 'Не удалось найти подсистему [IHL -> Plugins -> Channels].'");
+        Raise ErrorMessage;
+        
+    EndIf;
+    
+    Return PlugableChannels;
+    
+EndFunction // PlugableChannelsSubsystem() 
 
 #EndRegion // ProgramInterface
 
