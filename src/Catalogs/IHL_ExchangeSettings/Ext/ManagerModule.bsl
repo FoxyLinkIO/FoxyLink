@@ -189,6 +189,84 @@ Function NewFormatProcessor(FormatProcessorName, Val LibraryGuid) Export
     
 EndFunction // NewFormatProcessor()
 
+
+// Returns available plugable channels.
+//
+// Returns:
+//  ValueList - with values:
+//      * Value - String - channel library guid.
+//
+Function AvailableChannels() Export
+    
+    ValueList = New ValueList;
+
+    PlugableChannels = IHL_InteriorUse.PlugableChannelsSubsystem(); 
+    For Each Item In PlugableChannels.Content Do
+        
+        If Metadata.DataProcessors.Contains(Item) Then
+            
+            Try
+            
+                DataProcessor = DataProcessors[Item.Name].Create();                
+                ValueList.Add(DataProcessor.LibraryGuid(),
+                    StrTemplate("%1 (ver. %2)", 
+                        DataProcessor.ChannelFullName(),
+                        DataProcessor.Version()));
+            
+            Except
+                
+                IHL_CommonUseClientServer.NotifyUser(ErrorDescription());
+                Continue;
+                
+            EndTry;
+            
+        EndIf;
+        
+    EndDo;
+    
+    Return ValueList;
+    
+EndFunction // AvailableChannels()
+
+// Returns new channel data processor for every server call.
+//
+// Parameters:
+//  LibraryGuid - String - library guid which is used to identify 
+//                         different implementations of specific channel.
+//
+// Returns:
+//  DataProcessorObject.<Data processor name> - channel data processor.
+//
+Function NewChannelProcessor(Val LibraryGuid) Export
+    
+    PlugableChannels = IHL_InteriorUse.PlugableChannelsSubsystem();
+    For Each Item In PlugableChannels.Content Do
+        
+        If Metadata.DataProcessors.Contains(Item) Then
+            
+            Try
+            
+                ChannelProcessor = DataProcessors[Item.Name].Create();
+                If ChannelProcessor.LibraryGuid() = LibraryGuid Then
+                    ChannelProcessorName = Item.Name;
+                    Break;
+                EndIf;
+            
+            Except
+                
+                IHL_CommonUseClientServer.NotifyUser(ErrorDescription());
+                Continue;
+                
+            EndTry;
+            
+        EndIf;
+        
+    EndDo;
+            
+    Return ChannelProcessor;
+    
+EndFunction // NewChannelProcessor()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
@@ -251,7 +329,7 @@ Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
         FilterResults = CMethods.FindRows(FilterParameters);
         For Each FilterResult In FilterResults Do
             
-            FillPropertyValues(FilterResult, FMethod, "OutputType"); 
+            FillPropertyValues(FilterResult, FMethod, "OutputType, CanUseExternalFunctions"); 
             
             If IsTempStorageURL(FMethod.DataCompositionSchemaAddress) Then
                 FilterResult.DataCompositionSchema = New ValueStorage(

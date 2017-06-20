@@ -114,6 +114,29 @@ Procedure MethodPagesOnCurrentPageChange(Item, CurrentPage)
 EndProcedure // MethodPagesOnCurrentPageChange()
 
 
+
+&AtClient
+Procedure ChannelsSelection(Item, SelectedRow, Field, StandardProcessing)
+    
+    StandardProcessing = False;
+    SelectedRow = Object.Channels.FindByID(SelectedRow);
+    
+    ChannelParameters = ChannelParameters(SelectedRow.BasicChannelGuid, "ConsoleForm"); 
+    ChannelParameters.Parameters.Insert("EncryptedData", Object.EncryptedData);
+    ChannelParameters.Parameters.Insert("ChannelGuid", SelectedRow.ChannelGuid);
+        
+    OpenForm(ChannelParameters.FormName, 
+            ChannelParameters.Parameters, 
+            ThisObject,
+            New UUID, 
+            , 
+            , 
+            , 
+            FormWindowOpeningMode.LockOwnerWindow);
+    
+EndProcedure // ChannelsSelection()
+
+
 #Region DataCompositionSettingsComposer
 
 &AtClient
@@ -218,12 +241,26 @@ EndProcedure // DeleteAPIMethod()
 &AtClient
 Procedure AddExchangeChannel(Command)
     
-    NewChannel = Object.Channels.Add(); 
-    //NewChannel.
-    //Pic = New Picture(Base64Value(Base64String(PictureLib.AccumulationRegister.GetBinaryData())
-    //    + Base64String(PictureLib.AccountingRegister.GetBinaryData())));
-    //Pic.Write("C:\Users\pbazelyuk\Downloads\Downloaded\1.png")
+    ShowChooseFromList(New NotifyDescription("DoAfterChooseChannelToAdd",
+        ThisObject), AvailableChannels(), Items.AddExchangeChannel);
+        
 EndProcedure // AddExchangeChannel()
+
+&AtClient
+Procedure DeleteExchangeChannel(Command)
+    
+    CurrentData = Items.Channels.CurrentData;
+    If CurrentData <> Undefined Then
+        
+        ShowQueryBox(New NotifyDescription("DoAfterChooseChannelToDelete", 
+            ThisObject, New Structure("Identifier ", CurrentData.GetID())),
+            NStr("en = 'Are you sure that you want to permanently delete the selected channel?';
+                 |ru = 'Вы действительно уверены, что хотите удалить выбранный канал?'"),
+            QuestionDialogMode.YesNo, , DialogReturnCode.No);     
+        
+    EndIf;
+    
+EndProcedure // DeleteExchangeChannel()
 
 
 &AtClient
@@ -266,7 +303,7 @@ EndProcedure // GenerateSpecificDocument()
 
 &AtClient
 Procedure DescribeAPI(Command)
-    
+           
     DescribeAPIData = DescribeAPIParameters();
     OpenForm(DescribeAPIData.FormName, 
         DescribeAPIData.Parameters, 
@@ -298,7 +335,7 @@ Procedure DoAfterBeginRunningApplication(CodeReturn, AdditionalParameters) Expor
     
     // TODO: Some checks   
     
-EndProcedure // DoAfterChooseAvailableFormat() 
+EndProcedure // DoAfterBeginRunningApplication() 
 
 &AtServer
 Procedure DoAfterCloseAPIDefinitionForm(ClosureResult, AdditionalParameters) Export
@@ -371,10 +408,9 @@ Function DescribeAPIParameters()
         FormatProcessorName, Object.BasicFormatGuid);      
     FPMetadata = FormatProcessor.Metadata();
 
-    DescribeAPIData = NewDescribeAPIData();
-    // TODO: ИмяБазовогоТипаПоОбъектуМетаданных. 
+    DescribeAPIData = NewDescribeAPIData(); 
     DescribeAPIData.FormName = StrTemplate("%1.%2.Form.APIDefinitionForm",
-        "DataProcessor", FPMetadata.Name);    
+        IHL_CommonUse.BaseTypeNameByMetadataObject(FPMetadata), FPMetadata.Name);    
     DescribeAPIData.Parameters.APIDefinitionAddress = 
         CurrentMethodData(RowMethod).APIDefinitionAddress; 
     
@@ -407,7 +443,7 @@ Procedure DoAfterChooseMethodToAdd(SelectedElement,
     If SelectedElement <> Undefined Then
         
         // TODO: Add possibility to use different versions of API.
-        FilterParameters = New Structure("APIVersion, Method", "1.0.0.0", 
+        FilterParameters = New Structure("APIVersion, Method", "1.0.0", 
             SelectedElement.Value);
             
         FilterResult = Object.Methods.FindRows(FilterParameters);
@@ -417,7 +453,7 @@ Procedure DoAfterChooseMethodToAdd(SelectedElement,
             
             NewMethod = Object.Methods.Add();
             NewMethod.Method = SelectedElement.Value;
-            NewMethod.APIVersion = "1.0";
+            NewMethod.APIVersion = "1.0.0";
             
             UpdateMethodsView();
                         
@@ -491,6 +527,10 @@ Procedure GenerateSpreadsheetDocumentAtServer()
     
     ResultSpreadsheetDocument.Clear();
     
+     // Start measuring.
+    StartTime = CurrentUniversalDateInMilliseconds();
+    
+    
     DataCompositionSchema = GetFromTempStorage(
         DataCompositionSchemaEditAddress);     
     DataCompositionSettings = RowComposerSettings.GetSettings();
@@ -507,6 +547,10 @@ Procedure GenerateSpreadsheetDocumentAtServer()
     IHL_DataComposition.OutputInSpreadsheetDocument(Undefined, // Reserved
         ResultSpreadsheetDocument, OutputParameters);     
         
+        
+    // End measuring.
+    TestingExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
+        
     Items.HiddenPageTestingResults.CurrentPage = 
         Items.HiddenPageTestingSpreadsheetDocument;
         
@@ -516,6 +560,10 @@ EndProcedure // GenerateSpreadsheetDocumentAtServer()
 Procedure GenerateSpecificDocumentAtServer()
 
     ResultTextDocument.Clear();
+    
+    // Start measuring.
+    StartTime = CurrentUniversalDateInMilliseconds();
+    
     
     DataCompositionSchema = GetFromTempStorage(
         DataCompositionSchemaEditAddress);     
@@ -528,21 +576,20 @@ Procedure GenerateSpecificDocumentAtServer()
 
     OutputParameters = IHL_DataComposition.NewOutputParameters();
     OutputParameters.DCTParameters = DataCompositionTemplate;
-    OutputParameters.CanUseExternalFunctions = True;
+    OutputParameters.CanUseExternalFunctions = RowCanUseExternalFunctions;
     
     StreamObject = Catalogs.IHL_ExchangeSettings.NewFormatProcessor(
         FormatProcessorName, Object.BasicFormatGuid);
     StreamObject.Initialize();    
     
-    // TODO: Need to be resolved with API definition or automatic.
-    StreamObject.WriteStartObject();
-    
     IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, 
         RowOutputType);
         
-    // TODO: Need to be resolved with API definition or automatic.
-    StreamObject.WriteEndObject();
     Result = StreamObject.Close();
+    
+    
+    // End measuring.
+    TestingExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
     
     ResultTextDocument.AddLine(Result);
     Items.HiddenPageTestingResults.CurrentPage = 
@@ -614,11 +661,10 @@ Procedure LoadMethodSettings()
         CurrentData = CurrentMethodData(RowMethod);
         RowAPIVersion = CurrentData.APIVersion;
         RowOutputType = CurrentData.OutputType;
+        RowCanUseExternalFunctions = CurrentData.CanUseExternalFunctions;
         
         
-        // Connect output or other plugins in future.
-        //UpdateExpressНастройкиОбменов.ОбновитьОтображениеОперации(ЭтотОбъект,
-        //ТекущиеДанные.Операция);
+        UpdateMethodView(ThisObject, CurrentData);
         
         // Create schema, if needed.
         If IsBlankString(CurrentData.DataCompositionSchemaAddress) Then
@@ -637,9 +683,10 @@ Procedure LoadMethodSettings()
             
     Else
 
-        RowMethod     = Undefined;
+        RowMethod = Undefined;
         RowAPIVersion = Undefined;
         RowOutputType = Undefined;
+        RowCanUseExternalFunctions = Undefined;
         DataCompositionSchemaEditAddress = "";
         RowComposerSettings = New DataCompositionSettingsComposer;
             
@@ -658,6 +705,7 @@ Procedure SaveMethodSettings()
         
             ChangedData = CurrentMethodData(RowMethod);
             ChangedData.OutputType = RowOutputType;
+            ChangedData.CanUseExternalFunctions = RowCanUseExternalFunctions;
             
             If RowDataCompositionSchemaModified Then
                 
@@ -750,9 +798,160 @@ Function CurrentMethodData(Val RowMethod)
 
 EndFunction // CurrentMethodData()  
 
+
+// Updates the view of the method on the form.
+//
+// Parameters:
+//  ThisObject  - ManagedForm            - catalog form.
+//  CurrentData - FormDataCollectionItem - the current method data.
+// 
+&AtServerNoContext
+Procedure UpdateMethodView(ThisObject, CurrentData)
+
+    Items = ThisObject.Items;
+    Items.Channels.RowFilter = New FixedStructure("Method, APIVersion", 
+        CurrentData.Method, CurrentData.APIVersion);  
+
+EndProcedure // UpdateMethodView() 
+
 #EndRegion // Methods
 
+#Region Channels
+
+// Adds new channel to API method to ThisObject.
+//
+&AtClient
+Procedure DoAfterChooseChannelToAdd(SelectedElement, 
+    AdditionalParameters) Export
+    
+    If SelectedElement <> Undefined Then
+        
+        ChannelParameters = ChannelParameters(SelectedElement.Value);
+        OpenForm(ChannelParameters.FormName, 
+            ChannelParameters.Parameters, 
+            ThisObject,
+            New UUID, 
+            , 
+            , 
+            New NotifyDescription("DoAfterCloseChannelForm", ThisObject, 
+                ChannelParameters), 
+            FormWindowOpeningMode.LockOwnerWindow);
+                    
+    EndIf;
+    
+EndProcedure // DoAfterChooseChannelToAdd() 
+
+&AtClient
+Procedure DoAfterChooseChannelToDelete(QuestionResult, 
+    AdditionalParameters) Export
+    
+    Var Identifier;
+    
+    If QuestionResult = DialogReturnCode.Yes Then
+        If TypeOf(AdditionalParameters) = Type("Structure")
+            And AdditionalParameters.Property("Identifier", Identifier) Then
+            
+            SearchResult = Object.Channels.FindByID(Identifier);
+            If SearchResult <> Undefined Then
+                
+                ChannelGuid = SearchResult.ChannelGuid;
+                Object.Channels.Delete(SearchResult);
+                
+                FilterResult = Object.EncryptedData.FindRows(
+                    New Structure("ChannelGuid", ChannelGuid));
+                For Each RowItem In FilterResult Do     
+                    Object.EncryptedData.Delete(RowItem);        
+                EndDo;
+                
+                Modified = True;
+                
+            EndIf;
+            
+        EndIf; 
+    EndIf;
+    
+EndProcedure // DoAfterChooseChannelToDelete()
+
+&AtServer
+Procedure DoAfterCloseChannelForm(ClosureResult, AdditionalParameters) Export
+    
+    If ClosureResult <> Undefined Then
+        
+        If TypeOf(ClosureResult) = Type("FormDataCollection") Then
+            
+            Modified = True;
+            
+            ChannelGuid = String(New UUID);
+            CurrentData = CurrentMethodData(RowMethod);
+            
+            NewChannel = Object.Channels.Add(); 
+            NewChannel.ChannelGuid = ChannelGuid;
+            FillPropertyValues(NewChannel, CurrentData, "Method, APIVersion");
+            FillPropertyValues(NewChannel, AdditionalParameters);
+            
+            For Each Item In ClosureResult Do
+                NewData = Object.EncryptedData.Add();        
+                NewData.ChannelGuid = ChannelGuid;
+                FillPropertyValues(NewData, Item);
+            EndDo;
+            
+        EndIf;
+        
+    EndIf;
+    
+EndProcedure // DoAfterCloseChannelForm()
+
+
+
+
+
+// See function Catalogs.IHL_ExchangeSettings.AvailableChannels.
+//
+&AtServer
+Function AvailableChannels()
+    
+    Return Catalogs.IHL_ExchangeSettings.AvailableChannels();
+    
+EndFunction // AvailableChannels()
+
+// Only for internal use.
+//
+&AtServer
+Function ChannelParameters(Val LibraryGuid, Val FormName = "ChannelForm")
+    
+    ChannelProcessor = Catalogs.IHL_ExchangeSettings.NewChannelProcessor(
+        LibraryGuid);      
+    CPMetadata = ChannelProcessor.Metadata();
+
+    ChannelParameters = NewChannelParameters(); 
+    ChannelParameters.FormName = StrTemplate("%1.%2.Form.%3",
+        IHL_CommonUse.BaseTypeNameByMetadataObject(CPMetadata), 
+        CPMetadata.Name, 
+        FormName);        
+    ChannelParameters.FullName = ChannelProcessor.ChannelFullName();
+    ChannelParameters.ShortName = ChannelProcessor.ChannelShortName();
+    ChannelParameters.BasicChannelGuid = LibraryGuid;
+       
+    Return ChannelParameters;
+ 
+EndFunction // ChannelParameters() 
+
+// Only for internal use.
+//
+&AtServerNoContext
+Function NewChannelParameters()
+    
+    Parameters = New Structure;
+    Parameters.Insert("Valid", True);
+    Parameters.Insert("FormName");
+    Parameters.Insert("FullName");
+    Parameters.Insert("ShortName");
+    Parameters.Insert("BasicChannelGuid");
+    Parameters.Insert("Parameters", New Structure());
+    Return Parameters;     
+    
+EndFunction // NewChannelParameters()
+
+#EndRegion // Channels
+
 #EndRegion // ServiceProceduresAndFunctions
-
-
-
