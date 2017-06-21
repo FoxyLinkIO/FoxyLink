@@ -311,7 +311,7 @@ Procedure DescribeAPI(Command)
         New UUID, 
         , 
         , 
-        New NotifyDescription("DoAfterCloseAPIDefinitionForm", ThisObject), 
+        New NotifyDescription("DoAfterCloseAPICreationForm", ThisObject), 
         FormWindowOpeningMode.LockOwnerWindow);
          
 EndProcedure // DescribeAPI()
@@ -338,7 +338,7 @@ Procedure DoAfterBeginRunningApplication(CodeReturn, AdditionalParameters) Expor
 EndProcedure // DoAfterBeginRunningApplication() 
 
 &AtServer
-Procedure DoAfterCloseAPIDefinitionForm(ClosureResult, AdditionalParameters) Export
+Procedure DoAfterCloseAPICreationForm(ClosureResult, AdditionalParameters) Export
     
     If ClosureResult <> Undefined Then
         If IsTempStorageURL(ClosureResult) Then
@@ -349,14 +349,14 @@ Procedure DoAfterCloseAPIDefinitionForm(ClosureResult, AdditionalParameters) Exp
                 Modified = True;
                 
                 CurrentData = CurrentMethodData(RowMethod);
-                CurrentData.APIDefinitionAddress = ClosureResult;
+                CurrentData.APISchemaAddress = ClosureResult;
                     
             EndIf;
             
         EndIf;
     EndIf;
     
-EndProcedure // DoAfterCloseAPIDefinitionForm()
+EndProcedure // DoAfterCloseAPICreationForm()
 
 
 // Fills basic format info.
@@ -377,7 +377,7 @@ Procedure LoadBasicFormatInfo()
     FormatPluginVersion = FormatProcessor.Version();
     
     FPMetadata = FormatProcessor.Metadata();
-    SearchResult = FPMetadata.Forms.Find("APIDefinitionForm");
+    SearchResult = FPMetadata.Forms.Find("APICreationForm");
     
     Items.CopyAPI.Visible = SearchResult <> Undefined;
     Items.DescribeAPI.Visible = SearchResult <> Undefined;
@@ -408,27 +408,27 @@ Function DescribeAPIParameters()
         FormatProcessorName, Object.BasicFormatGuid);      
     FPMetadata = FormatProcessor.Metadata();
 
-    DescribeAPIData = NewDescribeAPIData(); 
-    DescribeAPIData.FormName = StrTemplate("%1.%2.Form.APIDefinitionForm",
+    APISchemaData = NewAPISchemaData(); 
+    APISchemaData.FormName = StrTemplate("%1.%2.Form.APICreationForm",
         IHL_CommonUse.BaseTypeNameByMetadataObject(FPMetadata), FPMetadata.Name);    
-    DescribeAPIData.Parameters.APIDefinitionAddress = 
-        CurrentMethodData(RowMethod).APIDefinitionAddress; 
+    APISchemaData.Parameters.APISchemaAddress = CurrentMethodData(RowMethod)
+        .APISchemaAddress; 
     
-    Return DescribeAPIData;
+    Return APISchemaData;
     
 EndFunction // DescribeAPIParameters()
 
 // Only for internal use.
 //
 &AtServer
-Function NewDescribeAPIData()
+Function NewAPISchemaData()
     
-    DescribeAPIData = New Structure;
-    DescribeAPIData.Insert("FormName");
-    DescribeAPIData.Insert("Parameters", New Structure("APIDefinitionAddress"));
-    Return DescribeAPIData;
+    APICreationData = New Structure;
+    APICreationData.Insert("FormName");
+    APICreationData.Insert("Parameters", New Structure("APISchemaAddress"));
+    Return APICreationData;
     
-EndFunction // NewDescribeAPIData()
+EndFunction // NewAPISchemaData()
 
 #EndRegion // Formats 
 
@@ -482,8 +482,8 @@ Procedure DoAfterChooseMethodAPIToCopy(SelectedElement,
                 ThisObject,
                 New UUID, 
                 , 
-                , 
-                New NotifyDescription("DoAfterCloseAPIDefinitionForm", ThisObject), 
+                ,                      
+                New NotifyDescription("DoAfterCloseAPICreationForm", ThisObject), 
                 FormWindowOpeningMode.LockOwnerWindow);
                 
         EndIf;
@@ -676,11 +676,21 @@ Procedure LoadMethodSettings()
             DataCompositionSchemaEditAddress,
             CurrentData.DataCompositionSchemaAddress);
             
-        IHL_DataComposition.InitSettingsComposer(Undefined, // Reserved
-            RowComposerSettings, 
-            CurrentData.DataCompositionSchemaAddress, 
-            CurrentData.DataCompositionSettingsAddress);
+        // It isn't error, we have to continue loading catalog form to fix bugs
+        // if configuration is changed.
+        Try
             
+            IHL_DataComposition.InitSettingsComposer(Undefined, // Reserved
+                RowComposerSettings, 
+                CurrentData.DataCompositionSchemaAddress, 
+                CurrentData.DataCompositionSettingsAddress);
+                
+        Except
+            
+            IHL_CommonUseClientServer.NotifyUser(ErrorDescription());    
+            
+        EndTry; 
+             
     Else
 
         RowMethod = Undefined;

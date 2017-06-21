@@ -1235,15 +1235,15 @@
 				<ChildObjects>
 					<Attribute uuid="043b37de-81fc-4645-8f32-504932545e95">
 						<Properties>
-							<Name>APIDefinition</Name>
+							<Name>APISchema</Name>
 							<Synonym>
 								<v8:item>
 									<v8:lang>en</v8:lang>
-									<v8:content>API definition</v8:content>
+									<v8:content>API schema</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>ru</v8:lang>
-									<v8:content>Описание API</v8:content>
+									<v8:content>Схема API</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>

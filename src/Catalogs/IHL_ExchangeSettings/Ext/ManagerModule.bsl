@@ -302,9 +302,9 @@ Procedure LoadSettingsToTempStorage(Object)
                     DataCompositionSettings, New UUID);
             EndIf;
 
-            APIDefinition = FilterResult[0].APIDefinition.Get();
-            If APIDefinition <> Undefined Then
-                Item.APIDefinitionAddress = PutToTempStorage(APIDefinition, 
+            APISchema = FilterResult[0].APISchema.Get();
+            If APISchema <> Undefined Then
+                Item.APISchemaAddress = PutToTempStorage(APISchema, 
                     New UUID);
             EndIf;
             
@@ -345,11 +345,11 @@ Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
                 FilterResult.DataCompositionSettings = New ValueStorage(Undefined);
             EndIf;
             
-            If IsTempStorageURL(FMethod.APIDefinitionAddress) Then
-                FilterResult.APIDefinition = New ValueStorage(
-                    GetFromTempStorage(FMethod.APIDefinitionAddress));
+            If IsTempStorageURL(FMethod.APISchemaAddress) Then
+                FilterResult.APISchema = New ValueStorage(
+                    GetFromTempStorage(FMethod.APISchemaAddress));
             Else
-                FilterResult.APIDefinition = New ValueStorage(Undefined);
+                FilterResult.APISchema = New ValueStorage(Undefined);
             EndIf;
             
         EndDo;

@@ -391,11 +391,11 @@
 											<Title>
 												<v8:item>
 													<v8:lang>en</v8:lang>
-													<v8:content>Exchange events</v8:content>
+													<v8:content>Events</v8:content>
 												</v8:item>
 												<v8:item>
 													<v8:lang>ru</v8:lang>
-													<v8:content>События обмена</v8:content>
+													<v8:content>События</v8:content>
 												</v8:item>
 											</Title>
 											<ToolTip>
@@ -473,11 +473,11 @@
 											<Title>
 												<v8:item>
 													<v8:lang>en</v8:lang>
-													<v8:content>Exchange channels</v8:content>
+													<v8:content>Channels</v8:content>
 												</v8:item>
 												<v8:item>
 													<v8:lang>ru</v8:lang>
-													<v8:content>Каналы обмена</v8:content>
+													<v8:content>Каналы</v8:content>
 												</v8:item>
 											</Title>
 											<ToolTip>
@@ -1217,11 +1217,15 @@
 							</v8:StringQualifiers>
 						</Type>
 					</Column>
-					<Column name="APIDefinitionAddress" id="3">
+					<Column name="APISchemaAddress" id="3">
 						<Title>
 							<v8:item>
 								<v8:lang>en</v8:lang>
-								<v8:content>APIDefinition address</v8:content>
+								<v8:content>API schema address</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>ru</v8:lang>
+								<v8:content>Адрес схемы API</v8:content>
 							</v8:item>
 						</Title>
 						<Type>
