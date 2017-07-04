@@ -553,12 +553,20 @@ EndProcedure // GenerateSpreadsheetDocumentAtServer()
 &AtServer
 Procedure GenerateSpecificDocumentAtServer()
 
+    Var APISchema;
+    
     ResultTextDocument.Clear();
     
     // Start measuring.
     StartTime = CurrentUniversalDateInMilliseconds();
     
+    // Read API schema from temp storage address.
+    CurrentData = CurrentMethodData(RowMethod);
+    If IsTempStorageURL(CurrentData.APISchemaAddress) Then
+        APISchema = GetFromTempStorage(CurrentData.APISchemaAddress);    
+    EndIf;
     
+     
     DataCompositionSchema = GetFromTempStorage(
         DataCompositionSchemaEditAddress);     
     DataCompositionSettings = RowComposerSettings.GetSettings();
@@ -574,7 +582,7 @@ Procedure GenerateSpecificDocumentAtServer()
     
     StreamObject = Catalogs.IHL_ExchangeSettings.NewFormatProcessor(
         FormatProcessorName, Object.BasicFormatGuid);
-    StreamObject.Initialize();    
+    StreamObject.Initialize(APISchema);    
     
     IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, 
         RowOutputType);

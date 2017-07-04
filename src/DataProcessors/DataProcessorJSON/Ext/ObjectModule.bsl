@@ -127,18 +127,32 @@ EndFunction // TypeCanHaveNestedItems()
 // Constructor of stream object.
 //
 // Parameters:
-//  OpenFile - String - output filename.
-//             Default value: Empty string.
+//  APISchema - Arbitrary - user defined API schema.
+//                  Default value: Undefined.
+//  OpenFile  - String    - output filename.
+//                  Default value: Undefined.
 //
-Procedure Initialize(OpenFile = "") Export
+Procedure Initialize(APISchema = Undefined, OpenFile = Undefined) Export
     
     RefTypesCache = New Map;
     
+    If APISchema <> Undefined Then
+        If TypeOf(ThisObject.APISchema) = TypeOf(APISchema) Then
+            
+            ThisObject.APISchema = APISchema;
+            
+        Else
+            
+            // Old version schema support could be implemented at this place.
+            
+        EndIf;
+    EndIf;
+    
     StreamWriter = New JSONWriter;
-    If IsBlankString(OpenFile) Then 
-        StreamWriter.SetString();
+    If OpenFile <> Undefined Then 
+            
     Else
-        
+        StreamWriter.SetString();    
     EndIf;
     
 EndProcedure // Initialize()
