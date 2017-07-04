@@ -5,7 +5,7 @@ Integration happiness library (IHL): Output processor extension
 
 ## Overview
 
-Incredibly easy way to output result from DataCompositionSchema into json, xml, etc format. Output result is arranged in the same way as SpreadsheetDocument. It's easy to start using it with any configuration on "1C:Enterprise 8" platform (version 8.3.6 and higher).
+Incredibly easy way to output result from DataCompositionSchema into json, xml, etc format. Output result is arranged in the same way as SpreadsheetDocument. It's easy to start using it with any configuration on "1C:Enterprise 8" platform (version 8.3.10.2252 and higher).
 
 You can start with a simple setup. Main usage scenarios: 
 
@@ -44,11 +44,9 @@ Function OutputInJSON(DataCompositionSchema, DataCompositionSettings)
     
     StreamObject = DataProcessors.DataProcessorJSON.Create();
     StreamObject.Initialize();
-    StreamObject.WriteStartObject();
 	
     IHLDataComposition.Output(Undefined, StreamObject, OutputParameters, False);
     
-    StreamObject.WriteEndObject();
     Result = StreamObject.Close();
 	
     Return Result;
@@ -73,11 +71,9 @@ Function OutputInJSON(DataCompositionSchema, DataCompositionSettings)
     
     StreamObject = DataProcessors.DataProcessorJSON.Create();
     StreamObject.Initialize();
-    StreamObject.WriteStartObject();
 	
     IHLDataComposition.Output(Undefined, StreamObject, OutputParameters, True);
     
-    StreamObject.WriteEndObject();
     Result = StreamObject.Close();
 	
     Return Result;
