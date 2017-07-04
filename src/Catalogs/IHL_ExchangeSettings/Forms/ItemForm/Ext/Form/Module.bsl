@@ -585,7 +585,7 @@ Procedure GenerateSpecificDocumentAtServer()
     StreamObject.Initialize(APISchema);    
     
     IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, 
-        RowOutputType);
+        RowOutputType = 1); // Convert to boolean type (sequential output).
         
     Result = StreamObject.Close();
     
