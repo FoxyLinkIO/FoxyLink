@@ -454,6 +454,11 @@ EndProcedure // FastOutput()
 
 #Region ExternalDataProcessorInfo
 
+// Returns object version.
+//
+// Returns:
+//  String - object version.
+//
 Function Version() Export
     
     Return "0.0.2.0";

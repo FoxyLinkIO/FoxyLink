@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ConfigDumpInfo xmlns="http://v8.1c.ru/8.3/xcf/dumpinfo" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" format="Hierarchical" version="2.4">
 	<ConfigVersions>
-		<Metadata name="Catalog.IHL_ExchangeSettings" id="9b3b6531-40b3-4d67-9d44-48e7b63ab437" configVersion="da5e8eaa4b9d05449d2435528288c71500000000">
+		<Metadata name="Catalog.IHL_ExchangeSettings" id="9b3b6531-40b3-4d67-9d44-48e7b63ab437" configVersion="c21c5cdd2745a3468500d5ae8774050d00000000">
 			<Metadata name="Catalog.IHL_ExchangeSettings.Attribute.BasicFormatGuid" id="02d86f6a-e05c-4dca-ab60-bc1321fbd1a1"/>
 			<Metadata name="Catalog.IHL_ExchangeSettings.TabularSection.Methods.Attribute.APISchema" id="043b37de-81fc-4645-8f32-504932545e95"/>
 			<Metadata name="Catalog.IHL_ExchangeSettings.TabularSection.Methods.Attribute.APIVersion" id="0af76dad-c712-4e34-82b4-b49253b582c4"/>
@@ -32,102 +32,87 @@
 			<Metadata name="Catalog.IHL_ExchangeSettings.TabularSection.Channels.Attribute.BasicChannelGuid" id="edd57df5-f717-43b4-bd67-380736083f07"/>
 			<Metadata name="Catalog.IHL_ExchangeSettings.TabularSection.Methods.Attribute.OperationDescription" id="f5c25349-7375-4858-a56f-7e5fff30f337"/>
 		</Metadata>
-		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm" id="671ce7ea-507e-4710-bdbb-dca09c963892" configVersion="b2b83afb9f9955438b1704a73e160ad800000000"/>
-		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm.Form" id="671ce7ea-507e-4710-bdbb-dca09c963892.0" configVersion="802752c8c953a3488c1abd6c5b5b750b00000000"/>
-		<Metadata name="Catalog.IHL_ExchangeSettings.ManagerModule" id="9b3b6531-40b3-4d67-9d44-48e7b63ab437.3" configVersion="37c20dcb595f8740852f1e68c85ba63400000000"/>
-		<Metadata name="Catalog.IHL_Methods" id="614effcc-67bb-42af-a18f-2c35946cac11" configVersion="0e836547f8f76e41b79cf6ee586198da00000000">
+		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm" id="671ce7ea-507e-4710-bdbb-dca09c963892" configVersion="13f9a71ea364894b8794747e7b19b31e00000000"/>
+		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm.Form" id="671ce7ea-507e-4710-bdbb-dca09c963892.0" configVersion="233a818a4cac6d428c7568753e291c0100000000"/>
+		<Metadata name="Catalog.IHL_ExchangeSettings.ManagerModule" id="9b3b6531-40b3-4d67-9d44-48e7b63ab437.3" configVersion="da54716bb91c71419f2ab201f8566b0a00000000"/>
+		<Metadata name="Catalog.IHL_Methods" id="614effcc-67bb-42af-a18f-2c35946cac11" configVersion="83144baa8cd0544bbcff7f6e07150db900000000">
 			<Metadata name="Catalog.IHL_Methods.Attribute.CRUDMethod" id="1524a548-cdf0-4343-b0ee-0ff1575c21ae"/>
 			<Metadata name="Catalog.IHL_Methods.Attribute.RESTMethod" id="e0bc364e-778b-4670-b542-852aed76558d"/>
 		</Metadata>
-		<Metadata name="Catalog.IHL_Methods.Form.MethodForm" id="6b78bcd8-c104-46b7-86cd-a2fbcf587ff4" configVersion="9aa4c6ee5ecfee419c47baa7ba361bfe00000000"/>
-		<Metadata name="Catalog.IHL_Methods.Form.MethodForm.Form" id="6b78bcd8-c104-46b7-86cd-a2fbcf587ff4.0" configVersion="f56b580a4a108141bcce5c476624d73c00000000"/>
-		<Metadata name="Catalog.IHL_Methods.ManagerModule" id="614effcc-67bb-42af-a18f-2c35946cac11.3" configVersion="1b0af463e0acab4eb334314bf83f878100000000"/>
-		<Metadata name="Catalog.IHL_Methods.ObjectModule" id="614effcc-67bb-42af-a18f-2c35946cac11.0" configVersion="386d788e2426b548bd51aa2d791ea1d000000000"/>
-		<Metadata name="CommonModule.IHL_CommonUse" id="d08eb8d5-b5d4-4817-850b-3227847d0743" configVersion="7b82edc3b14ba74984f45935485d64e400000000"/>
-		<Metadata name="CommonModule.IHL_CommonUse.Module" id="d08eb8d5-b5d4-4817-850b-3227847d0743.0" configVersion="e439411686586a45b0a062231b1342fb00000000"/>
-		<Metadata name="CommonModule.IHL_CommonUseClientServer" id="0999b4b3-2d4a-42ef-b641-2826a33ef74e" configVersion="f6136f625ead4f4ebca87a0f121d7d9800000000"/>
-		<Metadata name="CommonModule.IHL_CommonUseClientServer.Module" id="0999b4b3-2d4a-42ef-b641-2826a33ef74e.0" configVersion="f8dfaae1c3b2cd478163c3ea0266caa000000000"/>
-		<Metadata name="CommonModule.IHL_DataComposition" id="55ea697a-b5cf-4f2d-944e-58625713ff98" configVersion="4481a0c14e35724caa84e498e5a2f8f600000000"/>
-		<Metadata name="CommonModule.IHL_DataComposition.Module" id="55ea697a-b5cf-4f2d-944e-58625713ff98.0" configVersion="e9b01170dad97244b247adb983dc184b00000000"/>
-		<Metadata name="CommonModule.IHL_Encryption" id="837a6e10-d078-46f1-9322-ef88d4649f13" configVersion="e905e2947f623644ba9746359cb216af00000000"/>
-		<Metadata name="CommonModule.IHL_Encryption.Module" id="837a6e10-d078-46f1-9322-ef88d4649f13.0" configVersion="8eb5393696f9a742a2716682c2993e8300000000"/>
-		<Metadata name="CommonModule.IHL_InteriorUse" id="a2966db9-58fa-440a-9d0b-66ebf191b030" configVersion="ba106ff969aafb49a467caf84e9b284500000000"/>
-		<Metadata name="CommonModule.IHL_InteriorUse.Module" id="a2966db9-58fa-440a-9d0b-66ebf191b030.0" configVersion="bb99f576524aeb4281db79e9e770e78d00000000"/>
-		<Metadata name="CommonPicture.IHL_AddChannel" id="5e392509-9dfc-428d-a65e-ab10aa7643c2" configVersion="47e6f33e07aeef4994cd2f59b53b17fa00000000"/>
-		<Metadata name="CommonPicture.IHL_AddChannel.Picture" id="5e392509-9dfc-428d-a65e-ab10aa7643c2.0" configVersion="a7d3f4bdb9f1e74681f0985c13fcf17700000000"/>
-		<Metadata name="CommonPicture.IHL_AddMethod" id="4d633cca-d905-4ef5-a2f0-d6033cc81d4b" configVersion="e714ec5fcb02fb4e9f76c2f92f5de71200000000"/>
-		<Metadata name="CommonPicture.IHL_AddMethod.Picture" id="4d633cca-d905-4ef5-a2f0-d6033cc81d4b.0" configVersion="9378ec1b38c18242a2940db37d848d9300000000"/>
-		<Metadata name="CommonPicture.IHL_Copy" id="4a9145b6-1bb6-4adf-b43e-91571e2f4ba4" configVersion="6038d131204ec44db330244ae29d509e00000000"/>
-		<Metadata name="CommonPicture.IHL_Copy.Picture" id="4a9145b6-1bb6-4adf-b43e-91571e2f4ba4.0" configVersion="f53d8fb498a2894dbf7dccad1d96757100000000"/>
-		<Metadata name="CommonPicture.IHL_DeleteChannel" id="da8cc921-1789-43c1-94a2-2917c75c243b" configVersion="7ac153a00a4a8845a9e182f8b8f60ecb00000000"/>
-		<Metadata name="CommonPicture.IHL_DeleteChannel.Picture" id="da8cc921-1789-43c1-94a2-2917c75c243b.0" configVersion="62c57866a8f78c48938660a015c02cd300000000"/>
-		<Metadata name="CommonPicture.IHL_DeleteMethod" id="79324f48-d6d8-4839-99c3-d0b6b748a3c5" configVersion="f80e846bf5643a4eb7fa406132b06b3600000000"/>
-		<Metadata name="CommonPicture.IHL_DeleteMethod.Picture" id="79324f48-d6d8-4839-99c3-d0b6b748a3c5.0" configVersion="b8831f6e29b3c8429445962fa81b776f00000000"/>
-		<Metadata name="CommonPicture.IHL_Download" id="d0d9c72f-50cf-48d0-a4d7-c5b92d7fce85" configVersion="a6691b5c671e03418ca87048a6b838aa00000000"/>
-		<Metadata name="CommonPicture.IHL_Download.Picture" id="d0d9c72f-50cf-48d0-a4d7-c5b92d7fce85.0" configVersion="bb69e7736ba4024ba2adce7c884ef80100000000"/>
-		<Metadata name="CommonPicture.IHL_Edit" id="0bcc29ca-05ad-4fcc-a9d1-14c45088c94b" configVersion="d5a504a61d2f3341936f854f0645a78600000000"/>
-		<Metadata name="CommonPicture.IHL_Edit.Picture" id="0bcc29ca-05ad-4fcc-a9d1-14c45088c94b.0" configVersion="cc3250428114524c9a7fd724c6ebdedb00000000"/>
-		<Metadata name="CommonPicture.IHL_EditSchema" id="fd7e3e84-36ec-4b34-a743-50dc94dfb612" configVersion="441a203bdb63454f8068b672091344f500000000"/>
-		<Metadata name="CommonPicture.IHL_EditSchema.Picture" id="fd7e3e84-36ec-4b34-a743-50dc94dfb612.0" configVersion="faabb37fac163740a170e87f6825ca6b00000000"/>
-		<Metadata name="CommonPicture.IHL_Export" id="cbfb22d2-ad0b-473c-8826-2ce16eb96a41" configVersion="fdc7eccc1f419342aa9e5924d94fea1b00000000"/>
-		<Metadata name="CommonPicture.IHL_Export.Picture" id="cbfb22d2-ad0b-473c-8826-2ce16eb96a41.0" configVersion="bede24a37ac8144796b3d4038b4e9c6300000000"/>
-		<Metadata name="CommonPicture.IHL_Fields" id="1aa28cb8-0945-4115-8085-35f5fc058933" configVersion="7b558a314e2e45428e6cb1a6fb7752ec00000000"/>
-		<Metadata name="CommonPicture.IHL_Fields.Picture" id="1aa28cb8-0945-4115-8085-35f5fc058933.0" configVersion="b7f480ed44c171468936c8af9e16406800000000"/>
-		<Metadata name="CommonPicture.IHL_Filter" id="8d7a4015-5f81-4c8a-bf82-1743576bf953" configVersion="3286763cb12fae49a43dec4b07f028a100000000"/>
-		<Metadata name="CommonPicture.IHL_Filter.Picture" id="8d7a4015-5f81-4c8a-bf82-1743576bf953.0" configVersion="4167171a8cf53243837e0b8b9a15b4e200000000"/>
-		<Metadata name="CommonPicture.IHL_Generate" id="f6377828-0de6-4283-85f5-e862f0c0454d" configVersion="5008e7cd90afc9418d79fa8a7552271200000000"/>
-		<Metadata name="CommonPicture.IHL_Generate.Picture" id="f6377828-0de6-4283-85f5-e862f0c0454d.0" configVersion="4d37d9ffffa12e4aaaea3bdcf436907300000000"/>
-		<Metadata name="CommonPicture.IHL_HierarchyImageCollection" id="bd95ae56-22a2-4ce8-a3b2-8aa81ea7ab3f" configVersion="edf2f6530667cd4da8cae447f1f2680600000000"/>
-		<Metadata name="CommonPicture.IHL_HierarchyImageCollection.Picture" id="bd95ae56-22a2-4ce8-a3b2-8aa81ea7ab3f.0" configVersion="d6aa570fb643a14989d60d8b9d59dba000000000"/>
-		<Metadata name="CommonPicture.IHL_MethodSettingsInvalid" id="9f77cdb1-2c87-4a96-bdea-3dfba65455b7" configVersion="2b4a1c183d5b5143a5d0cf1433e83a0300000000"/>
-		<Metadata name="CommonPicture.IHL_MethodSettingsInvalid.Picture" id="9f77cdb1-2c87-4a96-bdea-3dfba65455b7.0" configVersion="938f28923a13664093f8bd85f6d7227700000000"/>
-		<Metadata name="CommonPicture.IHL_MethodSettingsValid" id="71420c33-fbed-4e8e-8015-76bc7a0dbd19" configVersion="1e958c0a33b10f4f84394cbc6eebd03f00000000"/>
-		<Metadata name="CommonPicture.IHL_MethodSettingsValid.Picture" id="71420c33-fbed-4e8e-8015-76bc7a0dbd19.0" configVersion="78b6e1e8a82b0945bbcd0022de78cddf00000000"/>
-		<Metadata name="CommonPicture.IHL_Order" id="58fbb570-f755-4c79-b19f-7d4ee1b5c002" configVersion="db7e6471bc9c4d4c9d175573b1e8a4d300000000"/>
-		<Metadata name="CommonPicture.IHL_Order.Picture" id="58fbb570-f755-4c79-b19f-7d4ee1b5c002.0" configVersion="d71173b763c4654c9f004aec1c1279e000000000"/>
-		<Metadata name="CommonPicture.IHL_Parameters" id="88689a17-b9b1-47aa-baed-effd375dd556" configVersion="90a1623a4d5ccd4a97caedb09c405d6d00000000"/>
-		<Metadata name="CommonPicture.IHL_Parameters.Picture" id="88689a17-b9b1-47aa-baed-effd375dd556.0" configVersion="925b5ec5ba1e4e47b987e2234c9212c700000000"/>
-		<Metadata name="CommonPicture.IHL_Settings" id="2a0a4e57-6478-468b-b4a6-9bee72dc6bb8" configVersion="ebac7f7e118f714f988416a95c4a227c00000000"/>
-		<Metadata name="CommonPicture.IHL_Settings.Picture" id="2a0a4e57-6478-468b-b4a6-9bee72dc6bb8.0" configVersion="6bd3ea10588c7349b197122b2b97241300000000"/>
-		<Metadata name="CommonPicture.IHL_Structure" id="8bd897af-de02-4e9a-87b6-7c974f5f16ce" configVersion="3c66fdb6f45b3d418d8e89ea3f5297a200000000"/>
-		<Metadata name="CommonPicture.IHL_Structure.Picture" id="8bd897af-de02-4e9a-87b6-7c974f5f16ce.0" configVersion="f90b65345d301e4db646d7990da78d0900000000"/>
-		<Metadata name="CommonPicture.IHL_Testing" id="bba79107-e0b7-4eba-8afc-9a1e074b2150" configVersion="cf106473b2470b4ca2a83ac8869d54af00000000"/>
-		<Metadata name="CommonPicture.IHL_Testing.Picture" id="bba79107-e0b7-4eba-8afc-9a1e074b2150.0" configVersion="cf440059e122f4458cc814ee9044c7a700000000"/>
-		<Metadata name="CommonPicture.IHL_Update" id="80fcdb52-533a-4157-964d-356e13919eac" configVersion="f335e568a5ebec48a89290c4d364e6b800000000"/>
-		<Metadata name="CommonPicture.IHL_Update.Picture" id="80fcdb52-533a-4157-964d-356e13919eac.0" configVersion="25aa31b66a6a8649884f94597a1aa02400000000"/>
-		<Metadata name="CommonPicture.StopProcessing" id="3bb6fb28-4589-454f-9f89-9a62a461e9bc" configVersion="35f19a7f87123249acfc46bb763c67da00000000"/>
-		<Metadata name="CommonPicture.StopProcessing.Picture" id="3bb6fb28-4589-454f-9f89-9a62a461e9bc.0" configVersion="6bdc9489b080f4488e7adbc6bf05aabb00000000"/>
-		<Metadata name="Configuration.IntegrationHappinessLibrary" id="fb6e805b-87df-4ac7-ab3a-615dfdeeea8a" configVersion="8cb9ec97373e134091c4c3dee2b7b53800000000"/>
-		<Metadata name="DataProcessor.DataProcessorCSV" id="31c58ae0-ad45-408b-abc1-919060aad9cc" configVersion="fea9402e5ac55f47942292d1520c9a3d00000000"/>
-		<Metadata name="DataProcessor.DataProcessorCSV.ObjectModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.0" configVersion="01db524656907b4fbabd704ce0a3755700000000"/>
-		<Metadata name="DataProcessor.DataProcessorJSON" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7" configVersion="df54046339bc7643b6fae2fc3b4ba23d00000000">
+		<Metadata name="Catalog.IHL_Methods.Form.MethodForm" id="6b78bcd8-c104-46b7-86cd-a2fbcf587ff4" configVersion="2b6bd68ecf359145bea7b6c9337821bf00000000"/>
+		<Metadata name="Catalog.IHL_Methods.Form.MethodForm.Form" id="6b78bcd8-c104-46b7-86cd-a2fbcf587ff4.0" configVersion="1c8fe215f32378478e7d1b593abd6a5600000000"/>
+		<Metadata name="Catalog.IHL_Methods.ManagerModule" id="614effcc-67bb-42af-a18f-2c35946cac11.3" configVersion="b8d2de9289c72b4080375e887585544e00000000"/>
+		<Metadata name="Catalog.IHL_Methods.ObjectModule" id="614effcc-67bb-42af-a18f-2c35946cac11.0" configVersion="d9ec6b9f99dbbe459931cdb16dd4df5c00000000"/>
+		<Metadata name="CommonModule.IHL_CommonUse" id="d08eb8d5-b5d4-4817-850b-3227847d0743" configVersion="84d4ae14af650d489d558cf6c84e35eb00000000"/>
+		<Metadata name="CommonModule.IHL_CommonUse.Module" id="d08eb8d5-b5d4-4817-850b-3227847d0743.0" configVersion="a183f512d4696142a3f5877905f9a97d00000000"/>
+		<Metadata name="CommonModule.IHL_CommonUseClientServer" id="0999b4b3-2d4a-42ef-b641-2826a33ef74e" configVersion="c945ae6f73cc0a48bedc54d62aa19a1d00000000"/>
+		<Metadata name="CommonModule.IHL_CommonUseClientServer.Module" id="0999b4b3-2d4a-42ef-b641-2826a33ef74e.0" configVersion="4f05332270e55b4a99947b71a3c9772000000000"/>
+		<Metadata name="CommonModule.IHL_DataComposition" id="55ea697a-b5cf-4f2d-944e-58625713ff98" configVersion="0e2d7518e2df5249b231b65c6f2eee3500000000"/>
+		<Metadata name="CommonModule.IHL_DataComposition.Module" id="55ea697a-b5cf-4f2d-944e-58625713ff98.0" configVersion="7e29f0756e5292439e888b83d895db7f00000000"/>
+		<Metadata name="CommonModule.IHL_InteriorUse" id="a2966db9-58fa-440a-9d0b-66ebf191b030" configVersion="3615e6d646a4ba4d97f3c8861f29c9c900000000"/>
+		<Metadata name="CommonModule.IHL_InteriorUse.Module" id="a2966db9-58fa-440a-9d0b-66ebf191b030.0" configVersion="cd6454116ede15408c2384022513a7c600000000"/>
+		<Metadata name="CommonPicture.IHL_AddChannel" id="5e392509-9dfc-428d-a65e-ab10aa7643c2" configVersion="39b47018b6daec4ab229769422885de200000000"/>
+		<Metadata name="CommonPicture.IHL_AddChannel.Picture" id="5e392509-9dfc-428d-a65e-ab10aa7643c2.0" configVersion="a17fdec3db3abd44950a844b26a1fc6700000000"/>
+		<Metadata name="CommonPicture.IHL_AddMethod" id="4d633cca-d905-4ef5-a2f0-d6033cc81d4b" configVersion="8330881856061745ab04ee77275b2e1e00000000"/>
+		<Metadata name="CommonPicture.IHL_AddMethod.Picture" id="4d633cca-d905-4ef5-a2f0-d6033cc81d4b.0" configVersion="0467c448e053e24784c3ec69b8c4696a00000000"/>
+		<Metadata name="CommonPicture.IHL_Copy" id="4a9145b6-1bb6-4adf-b43e-91571e2f4ba4" configVersion="e950d868883e7a47969c2604ff46668c00000000"/>
+		<Metadata name="CommonPicture.IHL_Copy.Picture" id="4a9145b6-1bb6-4adf-b43e-91571e2f4ba4.0" configVersion="7e73cdb846a03a4395800f5bb040f2fa00000000"/>
+		<Metadata name="CommonPicture.IHL_DeleteChannel" id="da8cc921-1789-43c1-94a2-2917c75c243b" configVersion="9b2badc0df5e2844a92c32f17619292700000000"/>
+		<Metadata name="CommonPicture.IHL_DeleteChannel.Picture" id="da8cc921-1789-43c1-94a2-2917c75c243b.0" configVersion="ca852078678d404b81ad3f10734cf95100000000"/>
+		<Metadata name="CommonPicture.IHL_DeleteMethod" id="79324f48-d6d8-4839-99c3-d0b6b748a3c5" configVersion="6ca2ee4f1090fe4eb16444da660daf0c00000000"/>
+		<Metadata name="CommonPicture.IHL_DeleteMethod.Picture" id="79324f48-d6d8-4839-99c3-d0b6b748a3c5.0" configVersion="d6d540fcae356b40abed49147e89bf7f00000000"/>
+		<Metadata name="CommonPicture.IHL_Download" id="d0d9c72f-50cf-48d0-a4d7-c5b92d7fce85" configVersion="b9a80ffc3fa1894cb93544e15511ca4600000000"/>
+		<Metadata name="CommonPicture.IHL_Download.Picture" id="d0d9c72f-50cf-48d0-a4d7-c5b92d7fce85.0" configVersion="019b8e9c895ad148a6ba6f7e75fee66e00000000"/>
+		<Metadata name="CommonPicture.IHL_Edit" id="0bcc29ca-05ad-4fcc-a9d1-14c45088c94b" configVersion="549c2ad50e7e1a45809e5944b26852fb00000000"/>
+		<Metadata name="CommonPicture.IHL_Edit.Picture" id="0bcc29ca-05ad-4fcc-a9d1-14c45088c94b.0" configVersion="de914ea43a362b49bf366216c1d2ff9f00000000"/>
+		<Metadata name="CommonPicture.IHL_EditSchema" id="fd7e3e84-36ec-4b34-a743-50dc94dfb612" configVersion="0d1e9f27a552804a85747b75acd98c8400000000"/>
+		<Metadata name="CommonPicture.IHL_EditSchema.Picture" id="fd7e3e84-36ec-4b34-a743-50dc94dfb612.0" configVersion="4932795bd99ef341beef3f4a1951a16a00000000"/>
+		<Metadata name="CommonPicture.IHL_Export" id="cbfb22d2-ad0b-473c-8826-2ce16eb96a41" configVersion="6d0d8b64db8b2c46871433837f3882ed00000000"/>
+		<Metadata name="CommonPicture.IHL_Export.Picture" id="cbfb22d2-ad0b-473c-8826-2ce16eb96a41.0" configVersion="fd742bd26d0bc04e92db63c3ad1c518400000000"/>
+		<Metadata name="CommonPicture.IHL_Fields" id="1aa28cb8-0945-4115-8085-35f5fc058933" configVersion="bff4d0945e455a4b80034c456a22a9e000000000"/>
+		<Metadata name="CommonPicture.IHL_Fields.Picture" id="1aa28cb8-0945-4115-8085-35f5fc058933.0" configVersion="a368a2ce2b961e469c6620b31cc35be400000000"/>
+		<Metadata name="CommonPicture.IHL_Filter" id="8d7a4015-5f81-4c8a-bf82-1743576bf953" configVersion="fa577cd60ae71a469a555873dfa046eb00000000"/>
+		<Metadata name="CommonPicture.IHL_Filter.Picture" id="8d7a4015-5f81-4c8a-bf82-1743576bf953.0" configVersion="a048f51ce998a440b3560c813531c96200000000"/>
+		<Metadata name="CommonPicture.IHL_Generate" id="f6377828-0de6-4283-85f5-e862f0c0454d" configVersion="cf3f0fb513a0424bb163def05fc5cdf500000000"/>
+		<Metadata name="CommonPicture.IHL_Generate.Picture" id="f6377828-0de6-4283-85f5-e862f0c0454d.0" configVersion="751ccf87fa6bb24e8589bbeb66b9fd6100000000"/>
+		<Metadata name="CommonPicture.IHL_HierarchyImageCollection" id="bd95ae56-22a2-4ce8-a3b2-8aa81ea7ab3f" configVersion="e72822d6a162404ea1644c719b64f65b00000000"/>
+		<Metadata name="CommonPicture.IHL_HierarchyImageCollection.Picture" id="bd95ae56-22a2-4ce8-a3b2-8aa81ea7ab3f.0" configVersion="771251a54a88864c94b079e030d0835300000000"/>
+		<Metadata name="CommonPicture.IHL_MethodSettingsInvalid" id="9f77cdb1-2c87-4a96-bdea-3dfba65455b7" configVersion="517d2a7a1a219e4685e206283f373a4e00000000"/>
+		<Metadata name="CommonPicture.IHL_MethodSettingsInvalid.Picture" id="9f77cdb1-2c87-4a96-bdea-3dfba65455b7.0" configVersion="a5c12b18c19e3f46ae1adc6af729014a00000000"/>
+		<Metadata name="CommonPicture.IHL_MethodSettingsValid" id="71420c33-fbed-4e8e-8015-76bc7a0dbd19" configVersion="2a059b89f77d2b47b70468ee985fe4f200000000"/>
+		<Metadata name="CommonPicture.IHL_MethodSettingsValid.Picture" id="71420c33-fbed-4e8e-8015-76bc7a0dbd19.0" configVersion="2f50665c19b89441951fe9d010c309e700000000"/>
+		<Metadata name="CommonPicture.IHL_Order" id="58fbb570-f755-4c79-b19f-7d4ee1b5c002" configVersion="fddfe65290fa8746a76c6e3772edbdf400000000"/>
+		<Metadata name="CommonPicture.IHL_Order.Picture" id="58fbb570-f755-4c79-b19f-7d4ee1b5c002.0" configVersion="886d6edb66e2204fb97eede8eff6471d00000000"/>
+		<Metadata name="CommonPicture.IHL_Parameters" id="88689a17-b9b1-47aa-baed-effd375dd556" configVersion="4d3563ec0bf16a4988f20fcb15a4b46e00000000"/>
+		<Metadata name="CommonPicture.IHL_Parameters.Picture" id="88689a17-b9b1-47aa-baed-effd375dd556.0" configVersion="c97bf0d04c638249918142fbf65da4e200000000"/>
+		<Metadata name="CommonPicture.IHL_Settings" id="2a0a4e57-6478-468b-b4a6-9bee72dc6bb8" configVersion="0a50fbef4ff2fe4ea9562187d5a682f700000000"/>
+		<Metadata name="CommonPicture.IHL_Settings.Picture" id="2a0a4e57-6478-468b-b4a6-9bee72dc6bb8.0" configVersion="1ab694bd51851b448eb7afcf0386d45900000000"/>
+		<Metadata name="CommonPicture.IHL_Structure" id="8bd897af-de02-4e9a-87b6-7c974f5f16ce" configVersion="1b24fdc8a2ddf241a55de1812ff29d5d00000000"/>
+		<Metadata name="CommonPicture.IHL_Structure.Picture" id="8bd897af-de02-4e9a-87b6-7c974f5f16ce.0" configVersion="a08df7351c4edb4e84060e319da6046d00000000"/>
+		<Metadata name="CommonPicture.IHL_Testing" id="bba79107-e0b7-4eba-8afc-9a1e074b2150" configVersion="683b6391cb32af4e99d2553c1d61992f00000000"/>
+		<Metadata name="CommonPicture.IHL_Testing.Picture" id="bba79107-e0b7-4eba-8afc-9a1e074b2150.0" configVersion="ad7e91be5c81a0478526a17c3bd4040700000000"/>
+		<Metadata name="CommonPicture.IHL_Update" id="80fcdb52-533a-4157-964d-356e13919eac" configVersion="7f49d638a0da6a478f2793adce27adfe00000000"/>
+		<Metadata name="CommonPicture.IHL_Update.Picture" id="80fcdb52-533a-4157-964d-356e13919eac.0" configVersion="77bcf2f0c06dd445a36d626faa86b86800000000"/>
+		<Metadata name="CommonPicture.StopProcessing" id="3bb6fb28-4589-454f-9f89-9a62a461e9bc" configVersion="df1c33cef45a194b9b1d570520a183e500000000"/>
+		<Metadata name="CommonPicture.StopProcessing.Picture" id="3bb6fb28-4589-454f-9f89-9a62a461e9bc.0" configVersion="059a318f8a80824796d27dc540a10afa00000000"/>
+		<Metadata name="Configuration.IntegrationHappinessLibrary" id="7e51c6e8-c0b2-42d3-aa24-a4b393e81ba4" configVersion="a95994271df7d14b9c60861382c0063d00000000"/>
+		<Metadata name="DataProcessor.DataProcessorCSV" id="31c58ae0-ad45-408b-abc1-919060aad9cc" configVersion="8dc80b1142d33e4fae231174fc66b3c000000000"/>
+		<Metadata name="DataProcessor.DataProcessorCSV.ObjectModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.0" configVersion="9e662719b0e6d6408cf9c07c7399be3e00000000"/>
+		<Metadata name="DataProcessor.DataProcessorJSON" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7" configVersion="552adaf181896c468956a935b97f2c2200000000">
 			<Metadata name="DataProcessor.DataProcessorJSON.Attribute.APISchema" id="dc2d71a8-91dd-40cc-b5b7-00eb5729f1f8"/>
 		</Metadata>
-		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98" configVersion="08c76ebd70773441a3bdccbbe50aabcc00000000"/>
-		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm.Form" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98.0" configVersion="6149b47058339f45a61ad669e700b20400000000"/>
-		<Metadata name="DataProcessor.DataProcessorJSON.ObjectModule" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7.0" configVersion="17f4d6f57abc9e41a2906d8958cb56f100000000"/>
-		<Metadata name="DataProcessor.DataProcessorXML" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685" configVersion="9cc3dfad9866a04fa97cf9288106522f00000000"/>
-		<Metadata name="DataProcessor.DataProcessorXML.ObjectModule" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685.0" configVersion="2f908f6da54eb04d8b0fac497a07c5a200000000"/>
-		<Metadata name="DataProcessor.IHL_QuickBooksChannel" id="95115fcd-dd16-4038-a3f8-cd6547cd3192" configVersion="b4db071c8a824842b920e2434693fd2e00000000">
-			<Metadata name="DataProcessor.IHL_QuickBooksChannel.TabularSection.EncryptedData.Attribute.FieldValue" id="05b8f012-88f5-4a32-9926-cf308827ca44"/>
-			<Metadata name="DataProcessor.IHL_QuickBooksChannel.TabularSection.EncryptedData.Attribute.EncryptNumber" id="289af8c8-1876-44c5-8190-0ff4531c73a6"/>
-			<Metadata name="DataProcessor.IHL_QuickBooksChannel.TabularSection.EncryptedData" id="68ae9b87-878b-4bd7-a4ec-84f53f7d8d92"/>
-			<Metadata name="DataProcessor.IHL_QuickBooksChannel.TabularSection.EncryptedData.Attribute.FieldName" id="b7b22fb1-7807-4398-8640-9a8081a96fb5"/>
-		</Metadata>
-		<Metadata name="DataProcessor.IHL_QuickBooksChannel.Form.AuthorizeForm" id="691cd1dd-998a-4afa-a10c-46a0aa685090" configVersion="809111edde8b2b4eb2a5eebf33c98c7d00000000"/>
-		<Metadata name="DataProcessor.IHL_QuickBooksChannel.Form.AuthorizeForm.Form" id="691cd1dd-998a-4afa-a10c-46a0aa685090.0" configVersion="7549ec84c1da364cb4c283468663cc5200000000"/>
-		<Metadata name="DataProcessor.IHL_QuickBooksChannel.Form.ChannelForm" id="04eb7c12-b3fa-4f61-8481-12c86c7f7e12" configVersion="9b4051612758aa42b250bda62dbd9d9100000000"/>
-		<Metadata name="DataProcessor.IHL_QuickBooksChannel.Form.ChannelForm.Form" id="04eb7c12-b3fa-4f61-8481-12c86c7f7e12.0" configVersion="d556a3d2f0cb0a40a369bea11b68dcca00000000"/>
-		<Metadata name="DataProcessor.IHL_QuickBooksChannel.Form.ConsoleForm" id="46676d7a-7c5b-458b-ad8d-42e4c9b5445f" configVersion="480f5ce86ac0e143a752d020fec934f000000000"/>
-		<Metadata name="DataProcessor.IHL_QuickBooksChannel.Form.ConsoleForm.Form" id="46676d7a-7c5b-458b-ad8d-42e4c9b5445f.0" configVersion="e8281a47a418dc479a59aab7b6fc70a500000000"/>
-		<Metadata name="DataProcessor.IHL_QuickBooksChannel.ObjectModule" id="95115fcd-dd16-4038-a3f8-cd6547cd3192.0" configVersion="9c7fefdfb38a4b45bb24ba1a6eef4bb800000000"/>
-		<Metadata name="Enum.IHL_CRUDMethods" id="1db01cd3-394b-4ac7-bbc7-1fbe7b8953fc" configVersion="0988b337c6562146a1ef1ee16b29237300000000">
+		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98" configVersion="d5b32e5c1d1dff4d8a91c7c6c572ddbe00000000"/>
+		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm.Form" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98.0" configVersion="2dfedc6202f5be4eb67e2021082ea8da00000000"/>
+		<Metadata name="DataProcessor.DataProcessorJSON.ObjectModule" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7.0" configVersion="4d975661cdb0d544a6668712027e8b9c00000000"/>
+		<Metadata name="DataProcessor.DataProcessorXML" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685" configVersion="50551b37eded474aa9a642b0403fbf3900000000"/>
+		<Metadata name="DataProcessor.DataProcessorXML.ObjectModule" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685.0" configVersion="333f2d6d53fde740b833d0fd0d63a9a300000000"/>
+		<Metadata name="Enum.IHL_CRUDMethods" id="1db01cd3-394b-4ac7-bbc7-1fbe7b8953fc" configVersion="c0237ecb5d978c4cb5a317096eab74ec00000000">
 			<Metadata name="Enum.IHL_CRUDMethods.EnumValue.READ" id="39e7ab57-7f3d-4ea4-8bd0-e0aba3037d3d"/>
 			<Metadata name="Enum.IHL_CRUDMethods.EnumValue.CREATE" id="ac30b318-c993-40b6-af1c-728e8946f3fa"/>
 			<Metadata name="Enum.IHL_CRUDMethods.EnumValue.UPDATE" id="bd54a05a-672e-458a-b9c9-d3789b2948ac"/>
 			<Metadata name="Enum.IHL_CRUDMethods.EnumValue.DELETE" id="f62705e9-8dbe-402c-91e1-e55fda4f7dca"/>
 		</Metadata>
-		<Metadata name="Enum.IHL_RESTMethods" id="026724d6-4ece-4769-8e1a-2f326f04ec07" configVersion="94d11ebc2bee914fb1b3cf1f0060d2a000000000">
+		<Metadata name="Enum.IHL_RESTMethods" id="026724d6-4ece-4769-8e1a-2f326f04ec07" configVersion="576503085b2c084393042267cca8a0b300000000">
 			<Metadata name="Enum.IHL_RESTMethods.EnumValue.PATCH" id="386d93ed-a56d-4c08-9f9d-53435c1c016b"/>
 			<Metadata name="Enum.IHL_RESTMethods.EnumValue.POST" id="45bc16db-d919-4ab3-a790-20f136d67d3d"/>
 			<Metadata name="Enum.IHL_RESTMethods.EnumValue.DELETE" id="48100d6e-1742-41f5-890b-abfbbfdc3958"/>
@@ -135,11 +120,11 @@
 			<Metadata name="Enum.IHL_RESTMethods.EnumValue.HEAD" id="74acef0b-da19-4c92-94cc-9621636e1be3"/>
 			<Metadata name="Enum.IHL_RESTMethods.EnumValue.PUT" id="be414e1b-dcae-45f4-bd74-ebb65c1f0199"/>
 		</Metadata>
-		<Metadata name="Language.English" id="8547d3fd-8d4b-4601-b71d-c79f6f9ec6c0" configVersion="5156a425d3f78e45a04b5a34c31df64900000000"/>
-		<Metadata name="Language.Russian" id="6796182f-b4a2-4ad9-8ec8-f49ba4ab5bfd" configVersion="fbd4c4570c54a64593110a7b0b04163f00000000"/>
-		<Metadata name="Subsystem.IHL" id="9966ecee-1ccc-493e-94d3-e780545214fc" configVersion="41f7d961a5e02846b20e52dda0ebc2b700000000"/>
-		<Metadata name="Subsystem.IHL.Subsystem.Plugins" id="2c24fa32-a19d-44d4-a5a4-1e9daa2bb265" configVersion="94f50bb30ab1a04cb44d035ad6e8577e00000000"/>
-		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="00d35cbfa1270e4992585ec7dbea558d00000000"/>
-		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="2876ae2876a6784cbe27e0c4c0948c8000000000"/>
+		<Metadata name="Language.English" id="56a3b934-0a0f-40cd-b317-2b7aa86d2b77" configVersion="0659f4bc3a7f464494a9c3c5b1f8b20500000000"/>
+		<Metadata name="Language.Russian" id="6796182f-b4a2-4ad9-8ec8-f49ba4ab5bfd" configVersion="f5b0187ac3d41e42990da3156c9714aa00000000"/>
+		<Metadata name="Subsystem.IHL" id="9966ecee-1ccc-493e-94d3-e780545214fc" configVersion="a5deca78dd4f9e46a46a9f9eab9c80f800000000"/>
+		<Metadata name="Subsystem.IHL.Subsystem.Plugins" id="2c24fa32-a19d-44d4-a5a4-1e9daa2bb265" configVersion="f8d498b91ba9ef40aa6f2a732b144cef00000000"/>
+		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="0f1f2d855f5b3443a55b563e4362e22d00000000"/>
+		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="3b597946cfde854a8eee86542a2c46ff00000000"/>
 	</ConfigVersions>
 </ConfigDumpInfo>

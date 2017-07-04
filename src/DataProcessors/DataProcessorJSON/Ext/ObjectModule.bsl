@@ -241,6 +241,11 @@ Procedure MemorySavingOutput(Item, DataCompositionProcessor, TemplateColumns,
     
     Var Level; 
 
+    // It is used when API format is not provided.
+    If APISchema.Rows.Count() = 0 Then
+        StreamWriter.WriteStartObject();    
+    EndIf;
+    
     End = DataCompositionResultItemType.End;
     Begin = DataCompositionResultItemType.Begin;
     BeginAndEnd = DataCompositionResultItemType.BeginAndEnd;
@@ -258,7 +263,7 @@ Procedure MemorySavingOutput(Item, DataCompositionProcessor, TemplateColumns,
                 
                 Item = DataCompositionProcessor.Next();
                 If Item.ItemType = BeginAndEnd Then
-                    
+                   
                     // It works better for complicated hierarchy.
                     Level = ?(Level = Undefined, 0, Level + 1);
                     
@@ -284,7 +289,7 @@ Procedure MemorySavingOutput(Item, DataCompositionProcessor, TemplateColumns,
                     Level = ?(Level - 1 < 0, Undefined, Level - 1);
                     
                     StreamWriter.WriteEndArray();
-                                   
+                    
                 // ElsIf Not IsBlankString(Item.Template) Then
                     
                     // It is impossible to get here due to structure of output.
@@ -309,6 +314,11 @@ Procedure MemorySavingOutput(Item, DataCompositionProcessor, TemplateColumns,
         
     EndDo;
     
+    // It is used when API format is not provided.
+    If APISchema.Rows.Count() = 0 Then
+        StreamWriter.WriteEndObject();        
+    EndIf;
+    
 EndProcedure // MemorySavingOutput()
 
 // Outputs fast result of the data composition shema into stream object.
@@ -326,6 +336,11 @@ Procedure FastOutput(Item, DataCompositionProcessor, TemplateColumns,
     GroupNames) Export 
     
     Var CurrentRow;
+    
+    // It is used when API format is not provided.
+    If APISchema.Rows.Count() = 0 Then
+        StreamWriter.WriteStartObject();    
+    EndIf;
     
     OutputTree = New ValueTree;
     OutputTree.Columns.Add("Array");
@@ -408,6 +423,11 @@ Procedure FastOutput(Item, DataCompositionProcessor, TemplateColumns,
         WriteJSON(StreamWriter, KeyAndValue.Value, , "ConvertFunction", ThisObject);    
     EndDo;
     
+    // It is used when API format is not provided.
+    If APISchema.Rows.Count() = 0 Then
+        StreamWriter.WriteEndObject();        
+    EndIf;
+    
 EndProcedure // FastOutput()
 
 // This function is called for all properties if their types do not support direct conversion to JSON format.
@@ -443,12 +463,22 @@ EndFunction // ConvertFunction()
 
 #Region ExternalDataProcessorInfo
 
+// Returns object version.
+//
+// Returns:
+//  String - object version.
+//
 Function Version() Export
     
     Return "0.5.0.0";
     
 EndFunction // Version()
 
+// Returns base object description.
+//
+// Returns:
+//  String - base object description.
+//
 Function BaseDescription() Export
     
     BaseDescription = NStr("en = 'JSON (%1) format data processor, ver. %2'; 

@@ -18,9 +18,7 @@
 			<IncludeInCommandInterface>false</IncludeInCommandInterface>
 			<Explanation/>
 			<Picture/>
-			<Content>
-				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.IHL_QuickBooksChannel</xr:Item>
-			</Content>
+			<Content/>
 		</Properties>
 		<ChildObjects/>
 	</Subsystem>
