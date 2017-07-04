@@ -343,15 +343,9 @@ Procedure DoAfterCloseAPICreationForm(ClosureResult, AdditionalParameters) Expor
     If ClosureResult <> Undefined Then
         If IsTempStorageURL(ClosureResult) Then
             
-            ValueTree = GetFromTempStorage(ClosureResult);
-            If TypeOf(ValueTree) = Type("ValueTree") Then
-                
-                Modified = True;
-                
-                CurrentData = CurrentMethodData(RowMethod);
-                CurrentData.APISchemaAddress = ClosureResult;
-                    
-            EndIf;
+            Modified = True;
+            CurrentData = CurrentMethodData(RowMethod);
+            CurrentData.APISchemaAddress = ClosureResult;
             
         EndIf;
     EndIf;

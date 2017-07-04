@@ -32,8 +32,8 @@
 			<Metadata name="Catalog.IHL_ExchangeSettings.TabularSection.Channels.Attribute.BasicChannelGuid" id="edd57df5-f717-43b4-bd67-380736083f07"/>
 			<Metadata name="Catalog.IHL_ExchangeSettings.TabularSection.Methods.Attribute.OperationDescription" id="f5c25349-7375-4858-a56f-7e5fff30f337"/>
 		</Metadata>
-		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm" id="671ce7ea-507e-4710-bdbb-dca09c963892" configVersion="13f9a71ea364894b8794747e7b19b31e00000000"/>
-		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm.Form" id="671ce7ea-507e-4710-bdbb-dca09c963892.0" configVersion="233a818a4cac6d428c7568753e291c0100000000"/>
+		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm" id="671ce7ea-507e-4710-bdbb-dca09c963892" configVersion="87005400ab8d854d909bc066ab4d3fd000000000"/>
+		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm.Form" id="671ce7ea-507e-4710-bdbb-dca09c963892.0" configVersion="50239d95f2dc64418de482342facb32500000000"/>
 		<Metadata name="Catalog.IHL_ExchangeSettings.ManagerModule" id="9b3b6531-40b3-4d67-9d44-48e7b63ab437.3" configVersion="da54716bb91c71419f2ab201f8566b0a00000000"/>
 		<Metadata name="Catalog.IHL_Methods" id="614effcc-67bb-42af-a18f-2c35946cac11" configVersion="83144baa8cd0544bbcff7f6e07150db900000000">
 			<Metadata name="Catalog.IHL_Methods.Attribute.CRUDMethod" id="1524a548-cdf0-4343-b0ee-0ff1575c21ae"/>
