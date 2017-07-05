@@ -32,8 +32,8 @@
 			<Metadata name="Catalog.IHL_ExchangeSettings.TabularSection.Channels.Attribute.BasicChannelGuid" id="edd57df5-f717-43b4-bd67-380736083f07"/>
 			<Metadata name="Catalog.IHL_ExchangeSettings.TabularSection.Methods.Attribute.OperationDescription" id="f5c25349-7375-4858-a56f-7e5fff30f337"/>
 		</Metadata>
-		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm" id="671ce7ea-507e-4710-bdbb-dca09c963892" configVersion="87005400ab8d854d909bc066ab4d3fd000000000"/>
-		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm.Form" id="671ce7ea-507e-4710-bdbb-dca09c963892.0" configVersion="50239d95f2dc64418de482342facb32500000000"/>
+		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm" id="671ce7ea-507e-4710-bdbb-dca09c963892" configVersion="b69fcb2fd742814380553d78e8ffacd100000000"/>
+		<Metadata name="Catalog.IHL_ExchangeSettings.Form.ItemForm.Form" id="671ce7ea-507e-4710-bdbb-dca09c963892.0" configVersion="ebe23266f33ded4da03c8111b3c7f24000000000"/>
 		<Metadata name="Catalog.IHL_ExchangeSettings.ManagerModule" id="9b3b6531-40b3-4d67-9d44-48e7b63ab437.3" configVersion="da54716bb91c71419f2ab201f8566b0a00000000"/>
 		<Metadata name="Catalog.IHL_Methods" id="614effcc-67bb-42af-a18f-2c35946cac11" configVersion="83144baa8cd0544bbcff7f6e07150db900000000">
 			<Metadata name="Catalog.IHL_Methods.Attribute.CRUDMethod" id="1524a548-cdf0-4343-b0ee-0ff1575c21ae"/>
@@ -47,8 +47,8 @@
 		<Metadata name="CommonModule.IHL_CommonUse.Module" id="d08eb8d5-b5d4-4817-850b-3227847d0743.0" configVersion="a183f512d4696142a3f5877905f9a97d00000000"/>
 		<Metadata name="CommonModule.IHL_CommonUseClientServer" id="0999b4b3-2d4a-42ef-b641-2826a33ef74e" configVersion="c945ae6f73cc0a48bedc54d62aa19a1d00000000"/>
 		<Metadata name="CommonModule.IHL_CommonUseClientServer.Module" id="0999b4b3-2d4a-42ef-b641-2826a33ef74e.0" configVersion="4f05332270e55b4a99947b71a3c9772000000000"/>
-		<Metadata name="CommonModule.IHL_DataComposition" id="55ea697a-b5cf-4f2d-944e-58625713ff98" configVersion="0e2d7518e2df5249b231b65c6f2eee3500000000"/>
-		<Metadata name="CommonModule.IHL_DataComposition.Module" id="55ea697a-b5cf-4f2d-944e-58625713ff98.0" configVersion="7e29f0756e5292439e888b83d895db7f00000000"/>
+		<Metadata name="CommonModule.IHL_DataComposition" id="55ea697a-b5cf-4f2d-944e-58625713ff98" configVersion="4a70256aa50f5f4692242c81ceef91e200000000"/>
+		<Metadata name="CommonModule.IHL_DataComposition.Module" id="55ea697a-b5cf-4f2d-944e-58625713ff98.0" configVersion="03f18ade8bb83e4aadaaf99b413fc69100000000"/>
 		<Metadata name="CommonModule.IHL_InteriorUse" id="a2966db9-58fa-440a-9d0b-66ebf191b030" configVersion="3615e6d646a4ba4d97f3c8861f29c9c900000000"/>
 		<Metadata name="CommonModule.IHL_InteriorUse.Module" id="a2966db9-58fa-440a-9d0b-66ebf191b030.0" configVersion="cd6454116ede15408c2384022513a7c600000000"/>
 		<Metadata name="CommonPicture.IHL_AddChannel" id="5e392509-9dfc-428d-a65e-ab10aa7643c2" configVersion="39b47018b6daec4ab229769422885de200000000"/>
@@ -98,12 +98,12 @@
 		<Metadata name="Configuration.IntegrationHappinessLibrary" id="7e51c6e8-c0b2-42d3-aa24-a4b393e81ba4" configVersion="a95994271df7d14b9c60861382c0063d00000000"/>
 		<Metadata name="DataProcessor.DataProcessorCSV" id="31c58ae0-ad45-408b-abc1-919060aad9cc" configVersion="8dc80b1142d33e4fae231174fc66b3c000000000"/>
 		<Metadata name="DataProcessor.DataProcessorCSV.ObjectModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.0" configVersion="9e662719b0e6d6408cf9c07c7399be3e00000000"/>
-		<Metadata name="DataProcessor.DataProcessorJSON" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7" configVersion="552adaf181896c468956a935b97f2c2200000000">
+		<Metadata name="DataProcessor.DataProcessorJSON" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7" configVersion="5c210f419e686f4eabbdfb122bb9824800000000">
 			<Metadata name="DataProcessor.DataProcessorJSON.Attribute.APISchema" id="dc2d71a8-91dd-40cc-b5b7-00eb5729f1f8"/>
 		</Metadata>
 		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98" configVersion="d5b32e5c1d1dff4d8a91c7c6c572ddbe00000000"/>
 		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm.Form" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98.0" configVersion="2dfedc6202f5be4eb67e2021082ea8da00000000"/>
-		<Metadata name="DataProcessor.DataProcessorJSON.ObjectModule" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7.0" configVersion="4d975661cdb0d544a6668712027e8b9c00000000"/>
+		<Metadata name="DataProcessor.DataProcessorJSON.ObjectModule" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7.0" configVersion="8e088e8741befe4aaffe349ffeda58d700000000"/>
 		<Metadata name="DataProcessor.DataProcessorXML" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685" configVersion="50551b37eded474aa9a642b0403fbf3900000000"/>
 		<Metadata name="DataProcessor.DataProcessorXML.ObjectModule" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685.0" configVersion="333f2d6d53fde740b833d0fd0d63a9a300000000"/>
 		<Metadata name="Enum.IHL_CRUDMethods" id="1db01cd3-394b-4ac7-bbc7-1fbe7b8953fc" configVersion="c0237ecb5d978c4cb5a317096eab74ec00000000">
@@ -122,9 +122,9 @@
 		</Metadata>
 		<Metadata name="Language.English" id="56a3b934-0a0f-40cd-b317-2b7aa86d2b77" configVersion="0659f4bc3a7f464494a9c3c5b1f8b20500000000"/>
 		<Metadata name="Language.Russian" id="6796182f-b4a2-4ad9-8ec8-f49ba4ab5bfd" configVersion="f5b0187ac3d41e42990da3156c9714aa00000000"/>
-		<Metadata name="Subsystem.IHL" id="9966ecee-1ccc-493e-94d3-e780545214fc" configVersion="a5deca78dd4f9e46a46a9f9eab9c80f800000000"/>
+		<Metadata name="Subsystem.IHL" id="9966ecee-1ccc-493e-94d3-e780545214fc" configVersion="ce39cbc024f5db4b973184f0906aed1d00000000"/>
 		<Metadata name="Subsystem.IHL.Subsystem.Plugins" id="2c24fa32-a19d-44d4-a5a4-1e9daa2bb265" configVersion="f8d498b91ba9ef40aa6f2a732b144cef00000000"/>
-		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="0f1f2d855f5b3443a55b563e4362e22d00000000"/>
+		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="af38aed2cd1d164792d39ec75f4f994d00000000"/>
 		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="3b597946cfde854a8eee86542a2c46ff00000000"/>
 	</ConfigVersions>
 </ConfigDumpInfo>

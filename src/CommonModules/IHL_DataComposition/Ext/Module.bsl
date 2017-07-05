@@ -243,6 +243,28 @@ Procedure InitSettingsComposer(Mediator, SettingsComposer,
         
         SettingsComposer.LoadSettings(DataCompositionSchema.DefaultSettings);
         
+        
+        // Platform bug is here! We have to copy DefaultSettings.Selection.Items 
+        // titles from DataCompositionSchema to SettingsComposer.Settings.Selection.Items.
+        Items = SettingsComposer.Settings.Selection.Items;
+        DefaultItems = DataCompositionSchema.DefaultSettings.Selection.Items;
+        
+        MapSelection = New Map;
+        For Each Item In Items Do
+            MapSelection.Insert(Item.Field, Item);                
+        EndDo;
+        
+        For Each Item In DefaultItems Do 
+            If IsBlankString(Item.Title) = False Then
+                
+                Value = MapSelection[Item.Field]; 
+                If Value <> Undefined Then
+                    Value.Title = Item.Title;     
+                EndIf;
+                
+            EndIf; 
+        EndDo;
+        
     Else
         
         ErrorMessage = NStr(
@@ -252,6 +274,9 @@ Procedure InitSettingsComposer(Mediator, SettingsComposer,
         Raise ErrorMessage;
         
     EndIf;
+    
+    
+    
 
     SettingsComposer.Refresh(
         DataCompositionSettingsRefreshMethod.CheckAvailability);
@@ -608,15 +633,18 @@ Function NewColumnsCache(DataCompositionTemplate)
             EndIf;
             
             
-            If IsBlankString(Cell.Column) Then
-                Value = NormalizeColumnName(MainTemplateCells[Index].Name);
+            CellFromMain = MainTemplateCells[Index];
+            If IsBlankString(CellFromMain.Title) = False Then
+                Value = NormalizeColumnName(CellFromMain.Title);    
+            ElsIf IsBlankString(Cell.Column) = False Then
+                Value = NormalizeColumnName(Cell.Column);    
             Else
-                Value = NormalizeColumnName(Cell.Column);
+                Value = NormalizeColumnName(CellFromMain.Name);    
             EndIf;
             
             TemplateColumnCache.Insert(String(Cell.Value), Value); 
             
-        КонецЦикла;
+        EndDo;
         
         ColumnsCache.Insert(Template.Name, TemplateColumnCache);
     
