@@ -98,12 +98,12 @@
 		<Metadata name="Configuration.IntegrationHappinessLibrary" id="7e51c6e8-c0b2-42d3-aa24-a4b393e81ba4" configVersion="a95994271df7d14b9c60861382c0063d00000000"/>
 		<Metadata name="DataProcessor.DataProcessorCSV" id="31c58ae0-ad45-408b-abc1-919060aad9cc" configVersion="8dc80b1142d33e4fae231174fc66b3c000000000"/>
 		<Metadata name="DataProcessor.DataProcessorCSV.ObjectModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.0" configVersion="9e662719b0e6d6408cf9c07c7399be3e00000000"/>
-		<Metadata name="DataProcessor.DataProcessorJSON" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7" configVersion="5c210f419e686f4eabbdfb122bb9824800000000">
+		<Metadata name="DataProcessor.DataProcessorJSON" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7" configVersion="12e61600596c3b428698dd0291211b0300000000">
 			<Metadata name="DataProcessor.DataProcessorJSON.Attribute.APISchema" id="dc2d71a8-91dd-40cc-b5b7-00eb5729f1f8"/>
 		</Metadata>
 		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98" configVersion="d5b32e5c1d1dff4d8a91c7c6c572ddbe00000000"/>
 		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm.Form" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98.0" configVersion="2dfedc6202f5be4eb67e2021082ea8da00000000"/>
-		<Metadata name="DataProcessor.DataProcessorJSON.ObjectModule" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7.0" configVersion="8e088e8741befe4aaffe349ffeda58d700000000"/>
+		<Metadata name="DataProcessor.DataProcessorJSON.ObjectModule" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7.0" configVersion="dc14c4b33782b14c812064c0b8132ade00000000"/>
 		<Metadata name="DataProcessor.DataProcessorXML" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685" configVersion="50551b37eded474aa9a642b0403fbf3900000000"/>
 		<Metadata name="DataProcessor.DataProcessorXML.ObjectModule" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685.0" configVersion="333f2d6d53fde740b833d0fd0d63a9a300000000"/>
 		<Metadata name="Enum.IHL_CRUDMethods" id="1db01cd3-394b-4ac7-bbc7-1fbe7b8953fc" configVersion="c0237ecb5d978c4cb5a317096eab74ec00000000">

@@ -256,7 +256,7 @@ Procedure MemorySavingOutput(Item, DataCompositionProcessor, TemplateColumns,
     Var Level; 
 
     // It is used when API format is not provided.
-    If APISchema.Rows.Count() <> 0 Then
+    If APISchema.Rows.Count() = 0 Then
         StreamWriter.WriteStartObject();    
     EndIf;
     
@@ -329,7 +329,7 @@ Procedure MemorySavingOutput(Item, DataCompositionProcessor, TemplateColumns,
     EndDo;
     
     // It is used when API format is not provided.
-    If APISchema.Rows.Count() <> 0 Then
+    If APISchema.Rows.Count() = 0 Then
         StreamWriter.WriteEndObject();        
     EndIf;
     
