@@ -21,8 +21,8 @@
 			<Content/>
 		</Properties>
 		<ChildObjects>
-			<Subsystem>Formats</Subsystem>
 			<Subsystem>Channels</Subsystem>
+			<Subsystem>Formats</Subsystem>
 		</ChildObjects>
 	</Subsystem>
 </MetaDataObject>

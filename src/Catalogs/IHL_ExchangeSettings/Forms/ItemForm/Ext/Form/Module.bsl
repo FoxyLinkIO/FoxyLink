@@ -254,8 +254,8 @@ Procedure DeleteExchangeChannel(Command)
         
         ShowQueryBox(New NotifyDescription("DoAfterChooseChannelToDelete", 
             ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en = 'Are you sure that you want to permanently delete the selected channel?';
-                 |ru = 'Вы действительно уверены, что хотите удалить выбранный канал?'"),
+            NStr("en = 'Permanently delete the selected channel?';
+                 |ru = 'Удалить выбранный канал?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);     
         
     EndIf;

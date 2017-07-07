@@ -17,8 +17,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-Var RefTypesCache;
-Var StreamWriter;
+#Region VariablesDescription
+
+Var RefTypesCache; // Types cache for ConvertFunction.
+Var StreamWriter; // It is used to write JSON objects and texts. 
+
+#EndRegion // VariablesDescription
 
 #Region FormatDescription
 
@@ -198,7 +202,7 @@ Procedure WriteStartObject() Export
     StreamWriter.WriteStartObject();    
 EndProcedure // WriteStartObject() 
 
-//Records the end of a JSON object.
+// Records the end of a JSON object.
 //
 Procedure WriteEndObject() Export
     StreamWriter.WriteEndObject();  
@@ -500,17 +504,7 @@ Procedure APISchemaMemorySavingOutput(Item, DataCompositionProcessor,
     Var Level, CurrentLevel, HasNestedItems; 
     
     // It is needed to verify duplicate property names.
-    ParamListed = New Map;
-    
-    // Do not change, column could be cached.
-    If APISchema.Columns.Find("ParamName") = Undefined Then
-        
-        // It is needed to check if a parameter has been listed in the 
-        // StreamObject at that level of hierarchy.
-        APISchema.Columns.Add("ParamName", New TypeDescription("String"));
-        
-    EndIf;
-    
+    ParamListed = New Map;    
     FillParamName(GroupNames, TemplateColumns);
     
     
@@ -533,11 +527,13 @@ Procedure APISchemaMemorySavingOutput(Item, DataCompositionProcessor,
                 Item = DataCompositionProcessor.Next();
                 If Item.ItemType = BeginAndEnd Then
                     
-                    GroupName = GroupNames[Item.Template];
+                    //GroupName = GroupNames[Item.Template];
                     If CurrentLevel = Undefined Then
-                        CurrentLevel = APISchema.Rows.Find(GroupName);
+                        //CurrentLevel = APISchema.Rows.Find(GroupName);
+                        CurrentLevel = APISchema.Rows.Find(Item.Template, "Template");
                     Else
-                        CurrentLevel = CurrentLevel.Rows.Find(GroupName);        
+                        //CurrentLevel = CurrentLevel.Rows.Find(GroupName);
+                        CurrentLevel = CurrentLevel.Rows.Find(Item.Template, "Template");
                     EndIf;
                     
                     
@@ -546,7 +542,7 @@ Procedure APISchemaMemorySavingOutput(Item, DataCompositionProcessor,
                         ErrorMessage = StrTemplate(NStr(
                                 "en = 'Error: Failed to find property with name: %1.';
                                 |ru = 'Ошибка: Не удалось найти свойство с именем: %1.'"),
-                            GroupName);
+                            GroupNames[Item.Template]);
                         Raise ErrorMessage;
                         
                     EndIf;
@@ -658,10 +654,29 @@ EndProcedure // APISchemaMemorySavingOutput()
 //
 Procedure FillParamName(GroupNames, TemplateColumns)
     
+    // Do not change, column could be cached.
+    If APISchema.Columns.Find("Template") = Undefined Then
+        
+        // It is needed to check if a template has been listed in the 
+        // StreamObject at that level of hierarchy.
+        APISchema.Columns.Add("Template", New TypeDescription("String"));
+        
+    EndIf;
+
+    // Do not change, column could be cached.
+    If APISchema.Columns.Find("Parameter") = Undefined Then
+        
+        // It is needed to check if a parameter has been listed in the 
+        // StreamObject at that level of hierarchy.
+        APISchema.Columns.Add("Parameter", New TypeDescription("String"));
+        
+    EndIf;
+
+    
     // Inverted group cache.
     APIGroupNames = New Map;
     For Each Item In GroupNames Do
-        APIGroupNames.Insert(Item.Value, Item.Key);
+        APIGroupNames.Insert(Upper(Item.Value), Item.Key);
     EndDo;  
     
     // Inverted columns cache.
@@ -670,7 +685,7 @@ Procedure FillParamName(GroupNames, TemplateColumns)
         APIColumnsCache = New Map;
         APITemplateColumns.Insert(Item.Key, APIColumnsCache);
         For Each CItem In Item.Value Do
-            APIColumnsCache.Insert(CItem.Value, CItem.Key);        
+            APIColumnsCache.Insert(Upper(CItem.Value), CItem.Key);        
         EndDo;
     EndDo; 
     
@@ -685,32 +700,36 @@ Procedure FillParamNameRecursively(Rows, APIGroupNames, APITemplateColumns)
     For Each Row In Rows Do
         
         HasNestedItems = TypeCanHaveNestedItems(Row.Type);
-        If HasNestedItems = True Then
-            TemplateItem = APIGroupNames[Row.Name];
-        ElsIf Row.Parent = Undefined Then
-            TemplateItem = APIGroupNames[Row.Name];
+        If HasNestedItems = True Or Row.Parent = Undefined Then
+            
+            TemplateItem = APIGroupNames[Upper(Row.Name)]; 
+            If ValueIsFilled(TemplateItem) = False Then
+                ErrorMessage = StrTemplate(NStr(
+                        "en = 'Error: Failed to find grouping in DataCompositionSchema with name: ''%1''.';
+                        |ru = 'Ошибка: Не удалось найти группировку в СхемеКомпоновкиДанных с именем: ''%1''.'"),
+                    Row.Name);
+                Raise ErrorMessage;
+            EndIf;
+            
+            Row.Template = TemplateItem;
+            
         Else
-            TemplateItem = Row.Parent.ParamName;    
+            
+            TemplateItem = Row.Parent.Template;
+            
         EndIf;
         
-        If TemplateItem = Undefined Then
-            ErrorMessage = StrTemplate(NStr(
-                    "en = 'Error: Failed to find grouping in DataCompositionSchema with name: ''%1''.';
-                    |ru = 'Ошибка: Не удалось найти группировку в СхемеКомпоновкиДанных с именем: ''%1''.'"),
-                Row.Name);
-            Raise ErrorMessage;        
-        EndIf;
         
-        ColumnItem = APITemplateColumns[TemplateItem][Row.Name];
+        ColumnItem = APITemplateColumns[TemplateItem][Upper(Row.Name)];
         If ColumnItem = Undefined And HasNestedItems = False Then
             ErrorMessage = StrTemplate(NStr(
                     "en = 'Error: Failed to find field in DataCompositionSchema with name: ''%1'', grouping: ''%2''.';
                     |ru = 'Ошибка: Не удалось найти поле в СхемеКомпоновкиДанных с именем: ''%1'', группировка: ''%2''.'"),
-                Row.Name, TemplateItem);
+                Row.Name, ?(Row.Parent = Undefined, Row.Name, Row.Parent.Name));
             Raise ErrorMessage;        
         EndIf;
         
-        Row.ParamName = ColumnItem;
+        Row.Parameter = ColumnItem;    
             
         If Row.Rows.Count() > 0 Then
             FillParamNameRecursively(Row.Rows, APIGroupNames, 

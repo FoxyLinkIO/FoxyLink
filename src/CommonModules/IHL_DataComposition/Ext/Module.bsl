@@ -244,7 +244,7 @@ Procedure InitSettingsComposer(Mediator, SettingsComposer,
         SettingsComposer.LoadSettings(DataCompositionSchema.DefaultSettings);
         
         
-        // Platform bug is here! We have to copy DefaultSettings.Selection.Items 
+        // Platform bug is here. We have to copy DefaultSettings.Selection.Items 
         // titles from DataCompositionSchema to SettingsComposer.Settings.Selection.Items.
         Items = SettingsComposer.Settings.Selection.Items;
         DefaultItems = DataCompositionSchema.DefaultSettings.Selection.Items;
@@ -598,12 +598,12 @@ Function NewColumnsCache(DataCompositionTemplate)
     ColumnsCache = New Structure;
     
     // Interesting, it has other dependency then script variant.
-    //ScriptVariant = Metadata.ObjectProperties.ScriptVariant;
-    //If (Metadata.ScriptVariant = ScriptVariant.English) Then
+    // ScriptVariant = Metadata.ObjectProperties.ScriptVariant;
+    // If (Metadata.ScriptVariant = ScriptVariant.English) Then
     //    MainTemplate = DataCompositionTemplate.Templates.Find("Template1");
-    //ElsIf (Metadata.ScriptVariant = ScriptVariant.Russian) Then 
+    // ElsIf (Metadata.ScriptVariant = ScriptVariant.Russian) Then 
     //    MainTemplate = DataCompositionTemplate.Templates.Find("Макет1");    
-    //EndIf;
+    // EndIf;
     
     MainTemplate = DataCompositionTemplate.Templates.Find("Template1");
     If MainTemplate = Undefined Then

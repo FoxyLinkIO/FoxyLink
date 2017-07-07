@@ -191,8 +191,8 @@ Procedure DeleteRowAPITable(Command)
         ShowQueryBox(New NotifyDescription("DoAfterChooseRowToDelete", 
             ThisObject, 
             New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en = 'Are you sure that you want to permanently delete the selected row?';
-                 |ru = 'Вы действительно уверены, что хотите удалить выбранную строку?'"),
+            NStr("en = 'Delete the selected row?';
+                 |ru = 'Удалить выбранную строку?'"),
             QuestionDialogMode.YesNo, 
             , 
             DialogReturnCode.No);
