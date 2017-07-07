@@ -23,7 +23,7 @@ EndProcedure // ЗаполнитьНаборТестов()
 
 Procedure Fact_CommonModuleIHLCommonUse() Export
         
-    Result = Metadata.CommonModules.Find("IHLCommonUse");
+    Result = Metadata.CommonModules.Find("IHL_CommonUse");
 
     Assertions.ПроверитьТип(Result, "MetadataObject");
      
@@ -44,7 +44,7 @@ EndProcedure // Fact_CommonModuleIHLCommonUse()
 
 Procedure Fact_CommonModuleIHLDataComposition() Export
 
-    Result = Metadata.CommonModules.Find("IHLDataComposition");
+    Result = Metadata.CommonModules.Find("IHL_DataComposition");
 
     Assertions.ПроверитьТип(Result, "MetadataObject");
      
@@ -66,7 +66,7 @@ EndProcedure // Fact_CommonModuleIHLDataComposition()
 
 Procedure Fact_CommonModuleIHLCommonUseClientServer() Export
         
-    Result = Metadata.CommonModules.Find("IHLCommonUseClientServer");
+    Result = Metadata.CommonModules.Find("IHL_CommonUseClientServer");
 
     Assertions.ПроверитьТип(Result, "MetadataObject");
      

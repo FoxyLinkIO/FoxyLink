@@ -30,21 +30,19 @@ Procedure Fact_EmptyDataCompositionSchema() Export
     
     DataCompositionSchema = New DataCompositionSchema;
     
-    DataCompositionTemplate = IHLDataComposition.NewDataCompositionTemplateParameters();
+    DataCompositionTemplate = IHL_DataComposition.NewDataCompositionTemplateParameters();
     DataCompositionTemplate.Schema   = DataCompositionSchema;
     DataCompositionTemplate.Template = DataCompositionSchema.DefaultSettings;
     
-    OutputParameters = IHLDataComposition.NewOutputParameters();
+    OutputParameters = IHL_DataComposition.NewOutputParameters();
     OutputParameters.DCTParameters = DataCompositionTemplate;
     OutputParameters.CanUseExternalFunctions = True;
     
     StreamObject = DataProcessors.DataProcessorJSON.Create();
     StreamObject.Initialize();
-    StreamObject.WriteStartObject();
     
-    IHLDataComposition.Output(Undefined, StreamObject, OutputParameters, True);
+    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, True);
     
-    StreamObject.WriteEndObject();
     Result = StreamObject.Close();
     
     Assertions.ПроверитьРавенство(Result, "{}");
@@ -52,12 +50,10 @@ Procedure Fact_EmptyDataCompositionSchema() Export
     
     StreamObject = DataProcessors.DataProcessorJSON.Create();
     StreamObject.Initialize();
-    StreamObject.WriteStartObject();
     
-    IHLDataComposition.Output(Undefined, StreamObject, OutputParameters, False);
+    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, False);
     
-    StreamObject.WriteEndObject();
-    Result = StreamObject.Close();;
+    Result = StreamObject.Close();
 
     Assertions.ПроверитьРавенство(Result, "{}");
     
@@ -494,26 +490,24 @@ Procedure VerifyAssertion(CatalogRefName, CommandName, BenchmarkData)
         
     DataCompositionSchema = QuerySettings.СхемаКомпоновкиДанных.Get();
     SettingsComposer = New DataCompositionSettingsComposer;
-    IHLDataComposition.InitSettingsComposer(Undefined, SettingsComposer, 
+    IHL_DataComposition.InitSettingsComposer(Undefined, SettingsComposer, 
         DataCompositionSchema, 
         PutToTempStorage(QuerySettings.НастройкиКомпоновкиДанных.Get()));
         
     
-    DataCompositionTemplate = IHLDataComposition.NewDataCompositionTemplateParameters();
+    DataCompositionTemplate = IHL_DataComposition.NewDataCompositionTemplateParameters();
     DataCompositionTemplate.Schema   = DataCompositionSchema;
     DataCompositionTemplate.Template = SettingsComposer.GetSettings();
     
-    OutputParameters = IHLDataComposition.NewOutputParameters();
+    OutputParameters = IHL_DataComposition.NewOutputParameters();
     OutputParameters.DCTParameters = DataCompositionTemplate;
     OutputParameters.CanUseExternalFunctions = True;
     
     StreamObject = DataProcessors.DataProcessorJSON.Create();
     StreamObject.Initialize();
-    StreamObject.WriteStartObject();
     
-    IHLDataComposition.Output(Undefined, StreamObject, OutputParameters, True);
+    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, True);
     
-    StreamObject.WriteEndObject();
     Result = StreamObject.Close();
     
     Assertions.ПроверитьРавенство(DeleteCRLF(Result), DeleteCRLF(BenchmarkData));
@@ -521,12 +515,10 @@ Procedure VerifyAssertion(CatalogRefName, CommandName, BenchmarkData)
     
     StreamObject = DataProcessors.DataProcessorJSON.Create();
     StreamObject.Initialize();
-    StreamObject.WriteStartObject();
     
-    IHLDataComposition.Output(Undefined, StreamObject, OutputParameters, False);
+    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, False);
     
-    StreamObject.WriteEndObject();
-    Result = StreamObject.Close();;
+    Result = StreamObject.Close();
 
     Assertions.ПроверитьРавенство(DeleteCRLF(Result), DeleteCRLF(BenchmarkData));
        

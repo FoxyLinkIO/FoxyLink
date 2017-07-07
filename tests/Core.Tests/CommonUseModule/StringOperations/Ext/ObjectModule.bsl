@@ -42,95 +42,95 @@ EndProcedure // ЗаполнитьНаборТестов()
 
 Procedure Fact_IsSpecSymbol_Code_0() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsSpecialSymbol(Char(0)));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsSpecialSymbol(Char(0)));
     
 EndProcedure // Fact_IsSymbol_Code_0()
 
 Procedure Fact_IsSpecSymbol_Code_33() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsSpecialSymbol(Char(33)));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsSpecialSymbol(Char(33)));
     
 EndProcedure // Fact_IsSymbol_Code_33()
 
 Procedure Fact_IsSpecSymbol_Code_256() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsSpecialSymbol(Char(256)));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsSpecialSymbol(Char(256)));
     
 EndProcedure // Fact_IsSpecSymbol_Code_256()
 
 
 Procedure Fact_IsNumber_0() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsNumber("0"));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsNumber("0"));
     
 EndProcedure // Fact_IsNumber_0()
 
 Procedure Fact_IsNumber_9() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsNumber("9"));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsNumber("9"));
     
 EndProcedure // Fact_IsNumber_9()
 
 
 Procedure Fact_IsLatinLetter_A() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsLatinLetter("A"));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsLatinLetter("A"));
     
 EndProcedure // Fact_IsLatinLetter_A()
 
 Procedure Fact_IsLatinLetter_smallA() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsLatinLetter("a"));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsLatinLetter("a"));
     
 EndProcedure // Fact_IsLatinLetter_smallA()
 
 Procedure Fact_IsLatinLetter_Z() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsLatinLetter("Z"));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsLatinLetter("Z"));
     
 EndProcedure // Fact_IsLatinLetter_Z()
 
 Procedure Fact_IsLatinLetter_smallZ() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsLatinLetter("z"));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsLatinLetter("z"));
     
 EndProcedure // Fact_IsLatinLetter_smallZ()
 
 
 Procedure Fact_IsCyrillicLetter_А() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsCyrillicLetter("А"));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsCyrillicLetter("А"));
     
 EndProcedure // Fact_IsCyrillicLetter_А()
 
 Procedure Fact_IsCyrillicLetter_smallЯ() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsCyrillicLetter("я"));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsCyrillicLetter("я"));
     
 EndProcedure // Fact_IsCyrillicLetter_smallЯ()
 
 
 Procedure Fact_IsIncorrectVariableName_1() Export
     
-    Assertions.ПроверитьЛожь(IHLCommonUseClientServer.IsCorrectVariableName("Гаt_#sd1"));
+    Assertions.ПроверитьЛожь(IHL_CommonUseClientServer.IsCorrectVariableName("Гаt_#sd1"));
     
 EndProcedure // Fact_IsIncorrectVariableName_1()
 
 Procedure Fact_IsIncorrectVariableName_2() Export
     
-    Assertions.ПроверитьЛожь(IHLCommonUseClientServer.IsCorrectVariableName("1fABb"));
+    Assertions.ПроверитьЛожь(IHL_CommonUseClientServer.IsCorrectVariableName("1fABb"));
     
 EndProcedure // Fact_IsIncorrectVariableName_2()
 
 Procedure Fact_IsIncorrectVariableName_3() Export
     
-    Assertions.ПроверитьЛожь(IHLCommonUseClientServer.IsCorrectVariableName("_1 x"));
+    Assertions.ПроверитьЛожь(IHL_CommonUseClientServer.IsCorrectVariableName("_1 x"));
     
 EndProcedure // Fact_IsIncorrectVariableName_3()
 
 Procedure Fact_IsCorrectVariableName() Export
     
-    Assertions.ПроверитьИстину(IHLCommonUseClientServer.IsCorrectVariableName("_1_hFФа"));
+    Assertions.ПроверитьИстину(IHL_CommonUseClientServer.IsCorrectVariableName("_1_hFФа"));
     
 EndProcedure // Fact_IsCorrectVariableName()
 
