@@ -253,86 +253,20 @@ EndFunction // Close()
 Procedure MemorySavingOutput(Item, DataCompositionProcessor, TemplateColumns, 
     GroupNames) Export
     
-    Var Level; 
+    If APISchema.Rows.Count() = 0 Then
+        
+        // It is used when API format is not provided.
+        BasicMemorySavingOutput(Item, DataCompositionProcessor, 
+            TemplateColumns, GroupNames);
+            
+    Else
 
-    // It is used when API format is not provided.
-    If APISchema.Rows.Count() = 0 Then
-        StreamWriter.WriteStartObject();    
+        // It is used when API format is provided.
+        APISchemaMemorySavingOutput(Item, DataCompositionProcessor, 
+            TemplateColumns, GroupNames);
+            
     EndIf;
-    
-    End = DataCompositionResultItemType.End;
-    Begin = DataCompositionResultItemType.Begin;
-    BeginAndEnd = DataCompositionResultItemType.BeginAndEnd;
-    
-    While True Do
         
-        If Item = Undefined Then
-            Break;
-        EndIf;
-        
-        If Item.ItemType = Begin Then
-            
-            Item = DataCompositionProcessor.Next();
-            If Item.ItemType = Begin Then
-                
-                Item = DataCompositionProcessor.Next();
-                If Item.ItemType = BeginAndEnd Then
-                   
-                    // It works better for complicated hierarchy.
-                    Level = ?(Level = Undefined, 0, Level + 1);
-                    
-                    StreamWriter.WritePropertyName(GroupNames[Item.Template]);
-                    StreamWriter.WriteStartArray();
-                    
-                EndIf;
-                
-            EndIf;
-            
-        EndIf;
-        
-        If Level <> Undefined Then
-            
-            If Item.ItemType = End Then
-                
-                StreamWriter.WriteEndObject();
-                
-                Item = DataCompositionProcessor.Next();
-                If Item.ItemType = End Then
-                    
-                    // It works better for complicated hierarchy.
-                    Level = ?(Level - 1 < 0, Undefined, Level - 1);
-                    
-                    StreamWriter.WriteEndArray();
-                    
-                // ElsIf Not IsBlankString(Item.Template) Then
-                    
-                    // It is impossible to get here due to structure of output.
-                    
-                EndIf;
-                
-            ElsIf Not IsBlankString(Item.Template) Then
-                
-                ColumnNames = TemplateColumns[Item.Template];
-                
-                StreamWriter.WriteStartObject();
-                For Each ColumnName In ColumnNames Do
-                    StreamWriter.WritePropertyName(ColumnName.Value);
-                    WriteJSON(StreamWriter, Item.ParameterValues[ColumnName.Key].Value, , "ConvertFunction", ThisObject);
-                EndDo;
-                
-            EndIf;
-            
-        EndIf;
-        
-        Item = DataCompositionProcessor.Next();
-        
-    EndDo;
-    
-    // It is used when API format is not provided.
-    If APISchema.Rows.Count() = 0 Then
-        StreamWriter.WriteEndObject();        
-    EndIf;
-    
 EndProcedure // MemorySavingOutput()
 
 // Outputs fast result of the data composition shema into stream object.
@@ -474,6 +408,320 @@ Function ConvertFunction(Property, Value, AdditionalParameters, Cancel) Export
 EndFunction // ConvertFunction()
 
 #EndRegion // ServiceProgramInterface
+
+#Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+// 
+Procedure BasicMemorySavingOutput(Item, DataCompositionProcessor, 
+    TemplateColumns, GroupNames)
+    
+    Var Level; 
+    
+    End = DataCompositionResultItemType.End;
+    Begin = DataCompositionResultItemType.Begin;
+    BeginAndEnd = DataCompositionResultItemType.BeginAndEnd;
+    
+    StreamWriter.WriteStartObject();
+    
+    While True Do
+        
+        If Item = Undefined Then
+            Break;
+        EndIf;
+        
+        If Item.ItemType = Begin Then
+            
+            Item = DataCompositionProcessor.Next();
+            If Item.ItemType = Begin Then
+                
+                Item = DataCompositionProcessor.Next();
+                If Item.ItemType = BeginAndEnd Then
+                   
+                    // It works better for complicated hierarchy.
+                    Level = ?(Level = Undefined, 0, Level + 1);
+                    
+                    StreamWriter.WritePropertyName(GroupNames[Item.Template]);
+                    StreamWriter.WriteStartArray();
+                    
+                EndIf;
+                
+            EndIf;
+            
+        EndIf;
+        
+        If Level <> Undefined Then
+            
+            If Item.ItemType = End Then
+                
+                StreamWriter.WriteEndObject();
+                
+                Item = DataCompositionProcessor.Next();
+                If Item.ItemType = End Then
+                    
+                    // It works better for complicated hierarchy.
+                    Level = ?(Level - 1 < 0, Undefined, Level - 1);
+                    
+                    StreamWriter.WriteEndArray();
+                    
+                // ElsIf Not IsBlankString(Item.Template) Then
+                    
+                    // It is impossible to get here due to structure of output.
+                    
+                EndIf;
+                
+            ElsIf Not IsBlankString(Item.Template) Then
+                
+                ColumnNames = TemplateColumns[Item.Template];
+                
+                StreamWriter.WriteStartObject();
+                For Each ColumnName In ColumnNames Do
+                    StreamWriter.WritePropertyName(ColumnName.Value);
+                    WriteJSON(StreamWriter, Item.ParameterValues[ColumnName.Key].Value, , "ConvertFunction", ThisObject);
+                EndDo;
+                
+            EndIf;
+            
+        EndIf;
+        
+        Item = DataCompositionProcessor.Next();
+        
+    EndDo;
+    
+    StreamWriter.WriteEndObject();        
+    
+EndProcedure // BasicMemorySavingOutput() 
+
+// Only for internal use.
+//
+Procedure APISchemaMemorySavingOutput(Item, DataCompositionProcessor, 
+    TemplateColumns, GroupNames)
+    
+    Var Level, CurrentLevel, HasNestedItems; 
+    
+    // It is needed to verify duplicate property names.
+    ParamListed = New Map;
+    
+    // Do not change, column could be cached.
+    If APISchema.Columns.Find("ParamName") = Undefined Then
+        
+        // It is needed to check if a parameter has been listed in the 
+        // StreamObject at that level of hierarchy.
+        APISchema.Columns.Add("ParamName", New TypeDescription("String"));
+        
+    EndIf;
+    
+    FillParamName(GroupNames, TemplateColumns);
+    
+    
+    
+    Begin = DataCompositionResultItemType.Begin;
+    BeginAndEnd = DataCompositionResultItemType.BeginAndEnd;
+    End = DataCompositionResultItemType.End;
+    
+    While True Do
+        
+        If Item = Undefined Then
+            Break;
+        EndIf;
+        
+        If Item.ItemType = Begin Then
+            
+            Item = DataCompositionProcessor.Next();
+            If Item.ItemType = Begin Then
+                
+                Item = DataCompositionProcessor.Next();
+                If Item.ItemType = BeginAndEnd Then
+                    
+                    GroupName = GroupNames[Item.Template];
+                    If CurrentLevel = Undefined Then
+                        CurrentLevel = APISchema.Rows.Find(GroupName);
+                    Else
+                        CurrentLevel = CurrentLevel.Rows.Find(GroupName);        
+                    EndIf;
+                    
+                    
+                    If CurrentLevel = Undefined Then
+                        
+                        ErrorMessage = StrTemplate(NStr(
+                                "en = 'Error: Failed to find property with name: %1.';
+                                |ru = 'Ошибка: Не удалось найти свойство с именем: %1.'"),
+                            GroupName);
+                        Raise ErrorMessage;
+                        
+                    EndIf;
+                    
+                    // It works better for complicated hierarchy.
+                    Level = ?(Level = Undefined, 0, Level + 1);
+                    
+                    HasNestedItems = TypeCanHaveNestedItems(CurrentLevel.Type);
+                    
+                    If Level = 0 Then
+                        
+                        // Уровень 0, может ли иметь вложенные элементы?
+                        // Да/Нет
+                        If CurrentLevel.Type = "Object" Then
+                            StreamWriter.WriteStartObject();
+                        ElsIf CurrentLevel.Type = "Array" Then
+                            StreamWriter.WriteStartArray(); 
+                        EndIf;
+                        
+                    Else
+                        
+                        
+                        
+                    EndIf;
+                    
+                    ////StreamWriter.WritePropertyName(GroupNames[Item.Template]);
+                    ////StreamWriter.WriteStartArray();
+                    
+                EndIf;
+                
+            EndIf;
+            
+        EndIf;
+        
+        If Level <> Undefined Then
+            
+            If Item.ItemType = End Then
+                
+                ////StreamWriter.WriteEndObject();
+                
+                Item = DataCompositionProcessor.Next();
+                If Item.ItemType = End Then
+                    
+                    // It works better for complicated hierarchy.
+                    Level = ?(Level - 1 < 0, Undefined, Level - 1);
+                    
+                    If CurrentLevel.Type = "Object" Then
+                        StreamWriter.WriteEndObject();
+                    ElsIf CurrentLevel.Type = "Array" Then
+                        StreamWriter.WriteEndArray();        
+                    EndIf; 
+                    
+                    ////StreamWriter.WriteEndArray();
+                    
+                // ElsIf Not IsBlankString(Item.Template) Then
+                    
+                    // It is impossible to get here due to structure of output.
+                    
+                EndIf;
+                
+            ElsIf Not IsBlankString(Item.Template) Then
+                
+                ColumnNames = TemplateColumns[Item.Template];
+                
+                //StreamWriter.WriteStartObject();
+                For Each ColumnName In ColumnNames Do
+                    
+                    If ParamListed.Get(ColumnName.Value) = Undefined Then
+                        
+                        ParamListed.Insert(ColumnName.Value, True);
+                        
+                        // Вложенные элементы = Да, записываем имя свойста,
+                        // Нет, не записываем имя свойства
+                        If HasNestedItems = True Then 
+                            StreamWriter.WritePropertyName(ColumnName.Value);
+                        EndIf;
+                        
+                        WriteJSON(StreamWriter, 
+                            Item.ParameterValues[ColumnName.Key].Value, 
+                            , 
+                            "ConvertFunction", 
+                            ThisObject);
+                            
+                    Else
+
+                        ErrorMessage = StrTemplate(NStr(
+                                "en = 'SyntaxError: Duplicate property with name: ''%1''.';
+                                |ru = 'СинтаксическаяОшибка: Дублируемое свойство с именем: ''%1''.'"),
+                            ColumnName.Value);
+                        Raise ErrorMessage;
+                            
+                    EndIf;
+                    
+                EndDo;
+                
+            EndIf;
+            
+        EndIf;
+        
+        Item = DataCompositionProcessor.Next();
+        
+    EndDo;
+    
+EndProcedure // APISchemaMemorySavingOutput()
+
+
+
+// Only for internal use.
+//
+Procedure FillParamName(GroupNames, TemplateColumns)
+    
+    // Inverted group cache.
+    APIGroupNames = New Map;
+    For Each Item In GroupNames Do
+        APIGroupNames.Insert(Item.Value, Item.Key);
+    EndDo;  
+    
+    // Inverted columns cache.
+    APITemplateColumns = New Structure;
+    For Each Item In TemplateColumns Do
+        APIColumnsCache = New Map;
+        APITemplateColumns.Insert(Item.Key, APIColumnsCache);
+        For Each CItem In Item.Value Do
+            APIColumnsCache.Insert(CItem.Value, CItem.Key);        
+        EndDo;
+    EndDo; 
+    
+    FillParamNameRecursively(APISchema.Rows, APIGroupNames, APITemplateColumns);
+    
+EndProcedure // FillParamName()
+
+// Only for internal use.
+//
+Procedure FillParamNameRecursively(Rows, APIGroupNames, APITemplateColumns)
+    
+    For Each Row In Rows Do
+        
+        HasNestedItems = TypeCanHaveNestedItems(Row.Type);
+        If HasNestedItems = True Then
+            TemplateItem = APIGroupNames[Row.Name];
+        ElsIf Row.Parent = Undefined Then
+            TemplateItem = APIGroupNames[Row.Name];
+        Else
+            TemplateItem = Row.Parent.ParamName;    
+        EndIf;
+        
+        If TemplateItem = Undefined Then
+            ErrorMessage = StrTemplate(NStr(
+                    "en = 'Error: Failed to find grouping in DataCompositionSchema with name: ''%1''.';
+                    |ru = 'Ошибка: Не удалось найти группировку в СхемеКомпоновкиДанных с именем: ''%1''.'"),
+                Row.Name);
+            Raise ErrorMessage;        
+        EndIf;
+        
+        ColumnItem = APITemplateColumns[TemplateItem][Row.Name];
+        If ColumnItem = Undefined And HasNestedItems = False Then
+            ErrorMessage = StrTemplate(NStr(
+                    "en = 'Error: Failed to find field in DataCompositionSchema with name: ''%1'', grouping: ''%2''.';
+                    |ru = 'Ошибка: Не удалось найти поле в СхемеКомпоновкиДанных с именем: ''%1'', группировка: ''%2''.'"),
+                Row.Name, TemplateItem);
+            Raise ErrorMessage;        
+        EndIf;
+        
+        Row.ParamName = ColumnItem;
+            
+        If Row.Rows.Count() > 0 Then
+            FillParamNameRecursively(Row.Rows, APIGroupNames, 
+                APITemplateColumns);        
+        EndIf;  
+                            
+    EndDo;
+    
+EndProcedure // FillParamNameRecursively()
+
+#EndRegion // ServiceProceduresAndFunctions 
 
 #Region ExternalDataProcessorInfo
 
