@@ -97,7 +97,7 @@ Procedure SaveAndClose(Command)
 EndProcedure // SaveAndClose()
 
 &AtClient
-Procedure AddRowToAPITable(Command)
+Procedure AddRowAPITable(Command)
     
     CurrentData = Items.APISchema.CurrentData;
     If CurrentData = Undefined Then
@@ -182,9 +182,52 @@ Procedure AddRowToAPITable(Command)
     
 EndProcedure // AddRowToAPITable()
 
+&AtClient
+Procedure DeleteRowAPITable(Command)
+    
+    CurrentData = Items.APISchema.CurrentData;
+    If CurrentData <> Undefined Then
+    
+        ShowQueryBox(New NotifyDescription("DoAfterChooseRowToDelete", 
+            ThisObject, 
+            New Structure("Identifier ", CurrentData.GetID())),
+            NStr("en = 'Are you sure that you want to permanently delete the selected row?';
+                 |ru = 'Вы действительно уверены, что хотите удалить выбранную строку?'"),
+            QuestionDialogMode.YesNo, 
+            , 
+            DialogReturnCode.No);
+            
+    EndIf;
+    
+EndProcedure // DeleteRowAPITable()
+
 #EndRegion // FormCommandHandlers
 
 #Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+&AtClient
+Procedure DoAfterChooseRowToDelete(QuestionResult, 
+    AdditionalParameters) Export
+    
+    Var Identifier;
+    
+    If QuestionResult = DialogReturnCode.Yes Then
+        If TypeOf(AdditionalParameters) = Type("Structure")
+            And AdditionalParameters.Property("Identifier", Identifier) Then
+            
+            SearchResult = Object.APISchema.FindByID(Identifier);
+            If SearchResult <> Undefined Then
+                SearchResult.GetParent().GetItems().Delete(SearchResult);     
+                Modified = True;     
+            EndIf;
+                        
+        EndIf; 
+    EndIf;
+    
+EndProcedure // DoAfterChooseRowToDelete()
+
 
 // Only for internal use.
 //

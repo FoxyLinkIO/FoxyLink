@@ -101,8 +101,8 @@
 		<Metadata name="DataProcessor.DataProcessorJSON" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7" configVersion="4d1ae4aac5fb044b952de1778ed6fda800000000">
 			<Metadata name="DataProcessor.DataProcessorJSON.Attribute.APISchema" id="dc2d71a8-91dd-40cc-b5b7-00eb5729f1f8"/>
 		</Metadata>
-		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98" configVersion="d5b32e5c1d1dff4d8a91c7c6c572ddbe00000000"/>
-		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm.Form" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98.0" configVersion="2dfedc6202f5be4eb67e2021082ea8da00000000"/>
+		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98" configVersion="3521b2b687c029438157ff3a56f1b7d300000000"/>
+		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm.Form" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98.0" configVersion="9257417f461d70408c6fc8a5a1e9bf2b00000000"/>
 		<Metadata name="DataProcessor.DataProcessorJSON.ObjectModule" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7.0" configVersion="9d97de17c4ee6c45a3ebb77c6c23624500000000"/>
 		<Metadata name="DataProcessor.DataProcessorXML" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685" configVersion="50551b37eded474aa9a642b0403fbf3900000000"/>
 		<Metadata name="DataProcessor.DataProcessorXML.ObjectModule" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685.0" configVersion="333f2d6d53fde740b833d0fd0d63a9a300000000"/>
@@ -122,9 +122,9 @@
 		</Metadata>
 		<Metadata name="Language.English" id="56a3b934-0a0f-40cd-b317-2b7aa86d2b77" configVersion="0659f4bc3a7f464494a9c3c5b1f8b20500000000"/>
 		<Metadata name="Language.Russian" id="6796182f-b4a2-4ad9-8ec8-f49ba4ab5bfd" configVersion="f5b0187ac3d41e42990da3156c9714aa00000000"/>
-		<Metadata name="Subsystem.IHL" id="9966ecee-1ccc-493e-94d3-e780545214fc" configVersion="ce39cbc024f5db4b973184f0906aed1d00000000"/>
+		<Metadata name="Subsystem.IHL" id="9966ecee-1ccc-493e-94d3-e780545214fc" configVersion="612c8a1f2e1b054cb5768f8117d8009900000000"/>
 		<Metadata name="Subsystem.IHL.Subsystem.Plugins" id="2c24fa32-a19d-44d4-a5a4-1e9daa2bb265" configVersion="f8d498b91ba9ef40aa6f2a732b144cef00000000"/>
-		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="af38aed2cd1d164792d39ec75f4f994d00000000"/>
+		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="792772ab7c3272489a95a197161aa21b00000000"/>
 		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="3b597946cfde854a8eee86542a2c46ff00000000"/>
 	</ConfigVersions>
 </ConfigDumpInfo>

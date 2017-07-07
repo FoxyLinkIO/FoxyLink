@@ -1,18 +1,20 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+	<Title>
+		<v8:item>
+			<v8:lang>en</v8:lang>
+			<v8:content>API schema constructor</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>ru</v8:lang>
+			<v8:content>Конструктор схемы API</v8:content>
+		</v8:item>
+	</Title>
 	<AutoTitle>false</AutoTitle>
 	<Customizable>false</Customizable>
 	<ScalingMode>Compact</ScalingMode>
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
-		<ChildItems>
-			<Button name="FormSaveAndClose" id="41">
-				<Type>CommandBarButton</Type>
-				<DefaultButton>true</DefaultButton>
-				<CommandName>Form.Command.SaveAndClose</CommandName>
-				<ExtendedTooltip name="FormSaveAndCloseExtendedTooltip" id="42"/>
-			</Button>
-		</ChildItems>
 	</AutoCommandBar>
 	<Events>
 		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
@@ -53,27 +55,55 @@
 						<ChildItems>
 							<Button name="ContextMenuAdd" id="27">
 								<Type>CommandBarButton</Type>
-								<CommandName>Form.Command.AddRowToAPITable</CommandName>
+								<CommandName>Form.Command.AddRowAPITable</CommandName>
 								<ExtendedTooltip name="ContextMenuAddExtendedTooltip" id="28"/>
 							</Button>
-							<Button name="ContextMenuMoveUp" id="43">
+							<Button name="ContextMenuDelete" id="53">
 								<Type>CommandBarButton</Type>
-								<CommandName>Form.Item.APISchema.StandardCommand.MoveUp</CommandName>
-								<ExtendedTooltip name="ContextMenuMoveUpExtendedTooltip" id="44"/>
+								<CommandName>Form.Command.DeleteRowAPITable</CommandName>
+								<ExtendedTooltip name="ContextMenuDeleteExtendedTooltip" id="54"/>
 							</Button>
-							<Button name="ContextMenuMoveDown" id="45">
-								<Type>CommandBarButton</Type>
-								<CommandName>Form.Item.APISchema.StandardCommand.MoveDown</CommandName>
-								<ExtendedTooltip name="ContextMenuMoveDownExtendedTooltip" id="46"/>
-							</Button>
+							<ButtonGroup name="ContextMenuGroup1" id="55">
+								<Title>
+									<v8:item>
+										<v8:lang>en</v8:lang>
+										<v8:content>Context menu group1</v8:content>
+									</v8:item>
+								</Title>
+								<ToolTip>
+									<v8:item>
+										<v8:lang>en</v8:lang>
+										<v8:content>Context menu group1</v8:content>
+									</v8:item>
+								</ToolTip>
+								<ExtendedTooltip name="ContextMenuGroup1ExtendedTooltip" id="56"/>
+								<ChildItems>
+									<Button name="ContextMenuMoveUp" id="43">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Item.APISchema.StandardCommand.MoveUp</CommandName>
+										<ExtendedTooltip name="ContextMenuMoveUpExtendedTooltip" id="44"/>
+									</Button>
+									<Button name="ContextMenuMoveDown" id="45">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Item.APISchema.StandardCommand.MoveDown</CommandName>
+										<ExtendedTooltip name="ContextMenuMoveDownExtendedTooltip" id="46"/>
+									</Button>
+								</ChildItems>
+							</ButtonGroup>
 						</ChildItems>
 					</ContextMenu>
 					<AutoCommandBar name="APISchemaCommandBar" id="3">
 						<Autofill>false</Autofill>
 						<ChildItems>
+							<Button name="FormSaveAndClose" id="41">
+								<Type>CommandBarButton</Type>
+								<DefaultButton>true</DefaultButton>
+								<CommandName>Form.Command.SaveAndClose</CommandName>
+								<ExtendedTooltip name="FormSaveAndCloseExtendedTooltip" id="42"/>
+							</Button>
 							<Button name="AddRowToAPITable" id="25">
 								<Type>CommandBarButton</Type>
-								<CommandName>Form.Command.AddRowToAPITable</CommandName>
+								<CommandName>Form.Command.AddRowAPITable</CommandName>
 								<ExtendedTooltip name="AddRowToAPITableExtendedTooltip" id="26"/>
 							</Button>
 						</ChildItems>
@@ -512,7 +542,7 @@
 		</ConditionalAppearance>
 	</Attributes>
 	<Commands>
-		<Command name="AddRowToAPITable" id="1">
+		<Command name="AddRowAPITable" id="1">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
@@ -537,7 +567,7 @@
 				<xr:Ref>StdPicture.CreateListItem</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>AddRowToAPITable</Action>
+			<Action>AddRowAPITable</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 		<Command name="SaveAndClose" id="2">
@@ -558,6 +588,34 @@
 				</v8:item>
 			</ToolTip>
 			<Action>SaveAndClose</Action>
+		</Command>
+		<Command name="DeleteRowAPITable" id="3">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Delete</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Удалить</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Delete row in API table</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Удалить строку в таблице API</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>StdPicture.Delete</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>DeleteRowAPITable</Action>
+			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>
 </Form>
