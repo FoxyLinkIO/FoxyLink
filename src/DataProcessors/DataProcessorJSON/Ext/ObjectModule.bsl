@@ -283,99 +283,20 @@ EndProcedure // MemorySavingOutput()
 Procedure FastOutput(Item, DataCompositionProcessor, TemplateColumns, 
     GroupNames) Export 
     
-    Var CurrentRow;
-    
-    // It is used when API format is not provided.
     If APISchema.Rows.Count() = 0 Then
-        StreamWriter.WriteStartObject();    
+        
+        // It is used when API format is not provided.
+        BasicFastOutput(Item, DataCompositionProcessor, 
+            TemplateColumns, GroupNames);
+            
+    Else
+
+        // It is used when API format is provided.
+        APISchemaFastOutput(Item, DataCompositionProcessor, 
+            TemplateColumns, GroupNames);
+            
     EndIf;
-    
-    OutputTree = New ValueTree;
-    OutputTree.Columns.Add("Array");
-    OutputTree.Columns.Add("Structure");
-    
-    OutputStructure = New Structure;
-    
-    End = DataCompositionResultItemType.End;
-    Begin = DataCompositionResultItemType.Begin;
-    BeginAndEnd = DataCompositionResultItemType.BeginAndEnd;
-    
-    While True Do
-        
-        If Item = Undefined Then
-            Break;
-        EndIf;
-        
-        If Item.ItemType = Begin Then
-            
-            Item = DataCompositionProcessor.Next();
-            If Item.ItemType = Begin Then
-                
-                Item = DataCompositionProcessor.Next();
-                If Item.ItemType = BeginAndEnd Then
-                
-                    Array = New Array;
-                    If CurrentRow = Undefined Then
-                        OutputStructure.Insert(GroupNames[Item.Template], Array);
-                        CurrentRow = OutputTree.Rows.Add();
-                    Else
-                        CurrentRow.Structure.Insert(GroupNames[Item.Template], Array);
-                        CurrentRow = CurrentRow.Rows.Add();
-                    EndIf;
-                    
-                    CurrentRow.Array = Array;
-                    
-                EndIf;
-                
-            EndIf;
-            
-        EndIf;
-        
-        If CurrentRow <> Undefined Then
-            
-            If Item.ItemType = End Then
-                
-                CurrentRow = CurrentRow.Parent;
-                
-                Item = DataCompositionProcessor.Next();
-                If Item.ItemType = End Then
-                    CurrentRow = CurrentRow.Parent;
-                // ElsIf Not IsBlankString(Item.Template) Then
-                    
-                    // It is impossible to get here due to structure of output.
-                    
-                EndIf;
-    
-            ElsIf Not IsBlankString(Item.Template) Then
-                
-                Structure = New Structure;
-                CurrentRow.Array.Add(Structure);
-                CurrentRow = CurrentRow.Rows.Add();
-                CurrentRow.Structure = Structure;
-                
-                ColumnNames = TemplateColumns[Item.Template];
-                For Each ColumnName In ColumnNames Do
-                    Structure.Insert(ColumnName.Value, Item.ParameterValues[ColumnName.Key].Value);
-                EndDo;
-                
-            EndIf;
-            
-        EndIf;
-        
-        Item = DataCompositionProcessor.Next();
-        
-    EndDo;
-    
-    For Each KeyAndValue In OutputStructure Do 
-        StreamWriter.WritePropertyName(KeyAndValue.Key);
-        WriteJSON(StreamWriter, KeyAndValue.Value, , "ConvertFunction", ThisObject);    
-    EndDo;
-    
-    // It is used when API format is not provided.
-    If APISchema.Rows.Count() = 0 Then
-        StreamWriter.WriteEndObject();        
-    EndIf;
-    
+     
 EndProcedure // FastOutput()
 
 // This function is called for all properties if their types do not support direct conversion to JSON format.
@@ -623,6 +544,107 @@ Procedure APISchemaMemorySavingOutput(Item, DataCompositionProcessor,
     EndDo;
     
 EndProcedure // APISchemaMemorySavingOutput()
+
+// Only for internal use.
+// 
+Procedure BasicFastOutput(Item, DataCompositionProcessor, 
+    TemplateColumns, GroupNames)
+
+    Var CurrentRow;
+    
+    OutputTree = New ValueTree;
+    OutputTree.Columns.Add("Array");
+    OutputTree.Columns.Add("Structure");
+    
+    OutputStructure = New Structure;
+    
+    End = DataCompositionResultItemType.End;
+    Begin = DataCompositionResultItemType.Begin;
+    BeginAndEnd = DataCompositionResultItemType.BeginAndEnd;
+    
+    StreamWriter.WriteStartObject();
+    
+    While True Do
+        
+        If Item = Undefined Then
+            Break;
+        EndIf;
+        
+        If Item.ItemType = Begin Then
+            
+            Item = DataCompositionProcessor.Next();
+            If Item.ItemType = Begin Then
+                
+                Item = DataCompositionProcessor.Next();
+                If Item.ItemType = BeginAndEnd Then
+                
+                    Array = New Array;
+                    If CurrentRow = Undefined Then
+                        OutputStructure.Insert(GroupNames[Item.Template], Array);
+                        CurrentRow = OutputTree.Rows.Add();
+                    Else
+                        CurrentRow.Structure.Insert(GroupNames[Item.Template], Array);
+                        CurrentRow = CurrentRow.Rows.Add();
+                    EndIf;
+                    
+                    CurrentRow.Array = Array;
+                    
+                EndIf;
+                
+            EndIf;
+            
+        EndIf;
+        
+        If CurrentRow <> Undefined Then
+            
+            If Item.ItemType = End Then
+                
+                CurrentRow = CurrentRow.Parent;
+                
+                Item = DataCompositionProcessor.Next();
+                If Item.ItemType = End Then
+                    CurrentRow = CurrentRow.Parent;
+                // ElsIf Not IsBlankString(Item.Template) Then
+                    
+                    // It is impossible to get here due to structure of output.
+                    
+                EndIf;
+    
+            ElsIf Not IsBlankString(Item.Template) Then
+                
+                Structure = New Structure;
+                CurrentRow.Array.Add(Structure);
+                CurrentRow = CurrentRow.Rows.Add();
+                CurrentRow.Structure = Structure;
+                
+                ColumnNames = TemplateColumns[Item.Template];
+                For Each ColumnName In ColumnNames Do
+                    Structure.Insert(ColumnName.Value, Item.ParameterValues[ColumnName.Key].Value);
+                EndDo;
+                
+            EndIf;
+            
+        EndIf;
+        
+        Item = DataCompositionProcessor.Next();
+        
+    EndDo;
+    
+    For Each KeyAndValue In OutputStructure Do 
+        StreamWriter.WritePropertyName(KeyAndValue.Key);
+        WriteJSON(StreamWriter, KeyAndValue.Value, , "ConvertFunction", ThisObject);    
+    EndDo;
+    
+    StreamWriter.WriteEndObject();        
+    
+EndProcedure // BasicFastOutput() 
+
+// Only for internal use.
+//
+Procedure APISchemaFastOutput(Item, DataCompositionProcessor, 
+    TemplateColumns, GroupNames)
+    
+EndProcedure // APISchemaFastOutput()
 
 
 
