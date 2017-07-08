@@ -219,7 +219,11 @@ Procedure DoAfterChooseRowToDelete(QuestionResult,
             
             SearchResult = Object.APISchema.FindByID(Identifier);
             If SearchResult <> Undefined Then
-                SearchResult.GetParent().GetItems().Delete(SearchResult);     
+                TreeItem = SearchResult.GetParent();
+                If TreeItem = Undefined Then
+                    TreeItem = Object.APISchema;             
+                EndIf;
+                TreeItem.GetItems().Delete(SearchResult);
                 Modified = True;     
             EndIf;
                         
