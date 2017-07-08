@@ -141,14 +141,10 @@ Procedure Initialize(APISchema = Undefined, OpenFile = Undefined) Export
     RefTypesCache = New Map;
     
     If APISchema <> Undefined Then
-        If TypeOf(ThisObject.APISchema) = TypeOf(APISchema) Then
-            
-            ThisObject.APISchema = APISchema;
-            
+        If TypeOf(ThisObject.APISchema) = TypeOf(APISchema) Then    
+            ThisObject.APISchema = APISchema.Copy();
         Else
-            
             // Old version schema support could be implemented at this place.
-            
         EndIf;
     EndIf;
     
@@ -501,12 +497,9 @@ EndProcedure // BasicMemorySavingOutput()
 Procedure APISchemaMemorySavingOutput(Item, DataCompositionProcessor, 
     TemplateColumns, GroupNames)
     
-    Var Level, CurrentLevel, HasNestedItems; 
-    
-    // It is needed to verify duplicate property names.
-    ParamListed = New Map;    
+    Var CurrentLevel, HasNestedItems; 
+       
     FillParamName(GroupNames, TemplateColumns);
-    
     
     
     Begin = DataCompositionResultItemType.Begin;
@@ -527,67 +520,54 @@ Procedure APISchemaMemorySavingOutput(Item, DataCompositionProcessor,
                 Item = DataCompositionProcessor.Next();
                 If Item.ItemType = BeginAndEnd Then
                     
-                    //GroupName = GroupNames[Item.Template];
                     If CurrentLevel = Undefined Then
-                        //CurrentLevel = APISchema.Rows.Find(GroupName);
                         CurrentLevel = APISchema.Rows.Find(Item.Template, "Template");
                     Else
-                        //CurrentLevel = CurrentLevel.Rows.Find(GroupName);
                         CurrentLevel = CurrentLevel.Rows.Find(Item.Template, "Template");
                     EndIf;
                     
                     
-                    If CurrentLevel = Undefined Then
-                        
+                    If CurrentLevel <> Undefined Then
+                        If TypeOf(CurrentLevel.Listed) = Type("Undefined") Then
+                            CurrentLevel.Listed = New Map;
+                        EndIf;
+                    Else     
                         ErrorMessage = StrTemplate(NStr(
                                 "en = 'Error: Failed to find property with name: %1.';
                                 |ru = 'Ошибка: Не удалось найти свойство с именем: %1.'"),
                             GroupNames[Item.Template]);
                         Raise ErrorMessage;
-                        
                     EndIf;
-                    
-                    // It works better for complicated hierarchy.
-                    Level = ?(Level = Undefined, 0, Level + 1);
                     
                     HasNestedItems = TypeCanHaveNestedItems(CurrentLevel.Type);
                     
-                    If Level = 0 Then
+                    If CurrentLevel.Parent <> Undefined Then
                         
-                        // Уровень 0, может ли иметь вложенные элементы?
-                        // Да/Нет
-                        If CurrentLevel.Type = "Object" Then
-                            StreamWriter.WriteStartObject();
-                        ElsIf CurrentLevel.Type = "Array" Then
-                            StreamWriter.WriteStartArray(); 
-                        EndIf;
+                        CheckDublicateProperty(CurrentLevel.Listed, 
+                            CurrentLevel.Name, CurrentLevel.Parent.Name);
                         
-                    Else
-                        
-                        
+                        StreamWriter.WritePropertyName(CurrentLevel.Name);
                         
                     EndIf;
-                    
-                    ////StreamWriter.WritePropertyName(GroupNames[Item.Template]);
-                    ////StreamWriter.WriteStartArray();
-                    
+                        
+                    If CurrentLevel.Type = "Object" Then
+                        StreamWriter.WriteStartObject();
+                    ElsIf CurrentLevel.Type = "Array" Then
+                        StreamWriter.WriteStartArray(); 
+                    EndIf;
+                                            
                 EndIf;
                 
             EndIf;
             
         EndIf;
         
-        If Level <> Undefined Then
+        If CurrentLevel <> Undefined Then
             
             If Item.ItemType = End Then
                 
-                ////StreamWriter.WriteEndObject();
-                
                 Item = DataCompositionProcessor.Next();
                 If Item.ItemType = End Then
-                    
-                    // It works better for complicated hierarchy.
-                    Level = ?(Level - 1 < 0, Undefined, Level - 1);
                     
                     If CurrentLevel.Type = "Object" Then
                         StreamWriter.WriteEndObject();
@@ -595,49 +575,45 @@ Procedure APISchemaMemorySavingOutput(Item, DataCompositionProcessor,
                         StreamWriter.WriteEndArray();        
                     EndIf; 
                     
-                    ////StreamWriter.WriteEndArray();
-                    
-                // ElsIf Not IsBlankString(Item.Template) Then
-                    
-                    // It is impossible to get here due to structure of output.
-                    
+                    CurrentLevel = CurrentLevel.Parent;
+                                                            
                 EndIf;
                 
             ElsIf Not IsBlankString(Item.Template) Then
                 
-                ColumnNames = TemplateColumns[Item.Template];
-                
-                //StreamWriter.WriteStartObject();
-                For Each ColumnName In ColumnNames Do
+                If HasNestedItems = True Then 
                     
-                    If ParamListed.Get(ColumnName.Value) = Undefined Then
+                    For Each Row In CurrentLevel.Rows Do
                         
-                        ParamListed.Insert(ColumnName.Value, True);
-                        
-                        // Вложенные элементы = Да, записываем имя свойста,
-                        // Нет, не записываем имя свойства
-                        If HasNestedItems = True Then 
-                            StreamWriter.WritePropertyName(ColumnName.Value);
+                        If TypeCanHaveNestedItems(Row.Type) = False Then
+                            
+                            CheckDublicateProperty(CurrentLevel.Listed, 
+                                Row.Name, CurrentLevel.Name);
+                            
+                            StreamWriter.WritePropertyName(Row.Name);
+                            WriteJSON(StreamWriter, 
+                                Item.ParameterValues[Row.Parameter].Value, 
+                                , 
+                                "ConvertFunction", 
+                                ThisObject);    
+                            
                         EndIf;
                         
-                        WriteJSON(StreamWriter, 
-                            Item.ParameterValues[ColumnName.Key].Value, 
-                            , 
-                            "ConvertFunction", 
-                            ThisObject);
-                            
-                    Else
-
-                        ErrorMessage = StrTemplate(NStr(
-                                "en = 'SyntaxError: Duplicate property with name: ''%1''.';
-                                |ru = 'СинтаксическаяОшибка: Дублируемое свойство с именем: ''%1''.'"),
-                            ColumnName.Value);
-                        Raise ErrorMessage;
-                            
-                    EndIf;
+                    EndDo;
                     
-                EndDo;
-                
+                Else
+                    
+                    CheckDublicateProperty(CurrentLevel.Listed, 
+                        CurrentLevel.Name, CurrentLevel.Name);
+                    
+                    WriteJSON(StreamWriter, 
+                        Item.ParameterValues[CurrentLevel.Parameter].Value, 
+                        , 
+                        "ConvertFunction", 
+                        ThisObject);        
+                    
+                EndIf;
+                                
             EndIf;
             
         EndIf;
@@ -654,25 +630,14 @@ EndProcedure // APISchemaMemorySavingOutput()
 //
 Procedure FillParamName(GroupNames, TemplateColumns)
     
-    // Do not change, column could be cached.
-    If APISchema.Columns.Find("Template") = Undefined Then
-        
-        // It is needed to check if a template has been listed in the 
-        // StreamObject at that level of hierarchy.
-        APISchema.Columns.Add("Template", New TypeDescription("String"));
-        
-    EndIf;
-
-    // Do not change, column could be cached.
-    If APISchema.Columns.Find("Parameter") = Undefined Then
-        
-        // It is needed to check if a parameter has been listed in the 
-        // StreamObject at that level of hierarchy.
-        APISchema.Columns.Add("Parameter", New TypeDescription("String"));
-        
-    EndIf;
-
+    // It is needed to verify duplicate property names.
+    APISchema.Columns.Add("Listed");
     
+    // It is needed to check if a parameter has been listed in the 
+    // StreamObject at that level of hierarchy.
+    APISchema.Columns.Add("Template", New TypeDescription("String"));
+    APISchema.Columns.Add("Parameter", New TypeDescription("String")); 
+
     // Inverted group cache.
     APIGroupNames = New Map;
     For Each Item In GroupNames Do
@@ -739,6 +704,22 @@ Procedure FillParamNameRecursively(Rows, APIGroupNames, APITemplateColumns)
     EndDo;
     
 EndProcedure // FillParamNameRecursively()
+
+// Only for internal use.
+//
+Procedure CheckDublicateProperty(Listed, Name, Group)
+    
+    If Listed.Get(Name) = Undefined Then
+        Listed.Insert(Name, True);    
+    Else
+        ErrorMessage = StrTemplate(NStr(
+                "en = 'SyntaxError: Duplicate property with name: ''%1'', grouping: ''%2''.';
+                |ru = 'СинтаксическаяОшибка: Дублируемое свойство с именем: ''%1'', группировка: ''%2''.'"),
+            Name, Group);
+        Raise ErrorMessage;     
+    EndIf;
+    
+EndProcedure // CheckDublicateProperty()
 
 #EndRegion // ServiceProceduresAndFunctions 
 

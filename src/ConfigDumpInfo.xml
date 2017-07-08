@@ -95,15 +95,15 @@
 		<Metadata name="CommonPicture.IHL_Update.Picture" id="80fcdb52-533a-4157-964d-356e13919eac.0" configVersion="25aa31b66a6a8649884f94597a1aa02400000000"/>
 		<Metadata name="CommonPicture.StopProcessing" id="3bb6fb28-4589-454f-9f89-9a62a461e9bc" configVersion="35f19a7f87123249acfc46bb763c67da00000000"/>
 		<Metadata name="CommonPicture.StopProcessing.Picture" id="3bb6fb28-4589-454f-9f89-9a62a461e9bc.0" configVersion="6bdc9489b080f4488e7adbc6bf05aabb00000000"/>
-		<Metadata name="Configuration.IntegrationHappinessLibrary" id="fb6e805b-87df-4ac7-ab3a-615dfdeeea8a" configVersion="33bb20fbea6822479f3bf6b24fd6292300000000"/>
+		<Metadata name="Configuration.IntegrationHappinessLibrary" id="fb6e805b-87df-4ac7-ab3a-615dfdeeea8a" configVersion="62cab48d90b5d94cabb000cfb217777200000000"/>
 		<Metadata name="DataProcessor.DataProcessorCSV" id="31c58ae0-ad45-408b-abc1-919060aad9cc" configVersion="fea9402e5ac55f47942292d1520c9a3d00000000"/>
 		<Metadata name="DataProcessor.DataProcessorCSV.ObjectModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.0" configVersion="01db524656907b4fbabd704ce0a3755700000000"/>
-		<Metadata name="DataProcessor.DataProcessorJSON" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7" configVersion="5bcc1f6b97d73c48861f5c9ba5cd305b00000000">
+		<Metadata name="DataProcessor.DataProcessorJSON" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7" configVersion="525aade9e5d2e9448e9bcca97b14783300000000">
 			<Metadata name="DataProcessor.DataProcessorJSON.Attribute.APISchema" id="dc2d71a8-91dd-40cc-b5b7-00eb5729f1f8"/>
 		</Metadata>
 		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98" configVersion="878e6913c406b5409cc1dec3ac9dff9900000000"/>
 		<Metadata name="DataProcessor.DataProcessorJSON.Form.APICreationForm.Form" id="6d1eebf8-9d6b-4c52-9158-c6b9f3992c98.0" configVersion="f84cacf758f51d4fadff8042c21dce4900000000"/>
-		<Metadata name="DataProcessor.DataProcessorJSON.ObjectModule" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7.0" configVersion="2e9c3b9aa6989644860344694e31ac5d00000000"/>
+		<Metadata name="DataProcessor.DataProcessorJSON.ObjectModule" id="0c03e301-a70a-4bc0-9e8c-c1a67cb539e7.0" configVersion="88b4f2d56481f84ab04761cc589c65fd00000000"/>
 		<Metadata name="DataProcessor.DataProcessorXML" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685" configVersion="9cc3dfad9866a04fa97cf9288106522f00000000"/>
 		<Metadata name="DataProcessor.DataProcessorXML.ObjectModule" id="b2dd01f7-8ff9-43c6-a9f3-7319d0f2d685.0" configVersion="2f908f6da54eb04d8b0fac497a07c5a200000000"/>
 		<Metadata name="Enum.IHL_CRUDMethods" id="1db01cd3-394b-4ac7-bbc7-1fbe7b8953fc" configVersion="2a5f4cb6f0dbcc49bd6d0e374f95dea600000000">
@@ -122,9 +122,9 @@
 		</Metadata>
 		<Metadata name="Language.English" id="8547d3fd-8d4b-4601-b71d-c79f6f9ec6c0" configVersion="5156a425d3f78e45a04b5a34c31df64900000000"/>
 		<Metadata name="Language.Russian" id="6796182f-b4a2-4ad9-8ec8-f49ba4ab5bfd" configVersion="fbd4c4570c54a64593110a7b0b04163f00000000"/>
-		<Metadata name="Subsystem.IHL" id="9966ecee-1ccc-493e-94d3-e780545214fc" configVersion="ff76b320e25d1349b2b0ad291a26704200000000"/>
+		<Metadata name="Subsystem.IHL" id="9966ecee-1ccc-493e-94d3-e780545214fc" configVersion="0dde3af2bfb8c4448fe899d2ccce8db300000000"/>
 		<Metadata name="Subsystem.IHL.Subsystem.Plugins" id="2c24fa32-a19d-44d4-a5a4-1e9daa2bb265" configVersion="23742f5490077b4081c8fac5e156467d00000000"/>
-		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="4df8e9bccbca4e49bf6d6188fdc6d91300000000"/>
+		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="306b4df3418535438d9d9c427e1ce30b00000000"/>
 		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="2876ae2876a6784cbe27e0c4c0948c8000000000"/>
 	</ConfigVersions>
 </ConfigDumpInfo>
