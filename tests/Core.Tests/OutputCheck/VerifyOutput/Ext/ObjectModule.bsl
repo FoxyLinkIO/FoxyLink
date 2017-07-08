@@ -64,19 +64,20 @@ Procedure Fact_OneLevelDetailRecord() Export
     BenchmarkData = "{
         |""Data"": [
         |{
-        |""ЭтоXMLСтрока"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
-        |""Код"": 1,
-        |""ИмяПредопределенныхДанных"": ""ПредопределенноеЗначение1"",
-        |""Наименование"": ""Предопределенное значение"",
-        |""ПометкаУдаления"": false,
-        |""РеквизитБулево"": false,
-        |""Предопределенный"": true,
-        |""РеквизитПеречисление"": """"
+        |""Predefined"": true,
+        |""PredefinedObjectName"": ""ПредопределенноеЗначение1"",
+        |""DeletionMark"": false,
+        |""Code"": 1,
+        |""Description"": ""Предопределенное значение"",
+        |""XMLString"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
+        |""BooleanAttribute"": false,
+        |""EnumAttribute"": """"
         |}
         |]
-        |}";
+        |}
+        |";
 
-    VerifyAssertion("Тест_Одна_Дет_Запись", "transfer", BenchmarkData);
+    VerifyAssertion("OneLevelDetailedRecord", "READ", BenchmarkData);
     
 EndProcedure // Fact_OneLevelDetailRecord()
 
@@ -85,23 +86,40 @@ Procedure Fact_OneLevelDetailRecords() Export
     BenchmarkData = "{
         |""Data"": [
         |{
-        |""Наименование"": ""Предопределенное значение"",
-        |""ПометкаУдаления"": false,
-        |""РеквизитБулево"": false,
-        |""Код"": 1,
-        |""Ссылка"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61""
+        |""Predefined"": true,
+        |""PredefinedObjectName"": ""ПредопределенноеЗначение1"",
+        |""DeletionMark"": false,
+        |""Code"": 1,
+        |""Description"": ""Предопределенное значение"",
+        |""XMLString"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
+        |""BooleanAttribute"": false,
+        |""EnumAttribute"": """"
         |},
         |{
-        |""Наименование"": ""Простое значение №1"",
-        |""ПометкаУдаления"": false,
-        |""РеквизитБулево"": true,
-        |""Код"": 2,
-        |""Ссылка"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61""
+        |""Predefined"": false,
+        |""PredefinedObjectName"": """",
+        |""DeletionMark"": false,
+        |""Code"": 2,
+        |""Description"": ""Простое значение №1"",
+        |""XMLString"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61"",
+        |""BooleanAttribute"": true,
+        |""EnumAttribute"": ""ЗначениеПеречисления2""
+        |},
+        |{
+        |""Predefined"": false,
+        |""PredefinedObjectName"": """",
+        |""DeletionMark"": false,
+        |""Code"": 3,
+        |""Description"": ""Наименование #2"",
+        |""XMLString"": ""85bb650f-a4f5-11e6-830d-ac220b83ed61"",
+        |""BooleanAttribute"": false,
+        |""EnumAttribute"": """"
         |}
         |]
-        |}";
+        |}
+        |";
         
-    VerifyAssertion("Тест_Две_Дет_Записи", "transfer", BenchmarkData);
+    VerifyAssertion("OneLevelDetailedRecords", "READ", BenchmarkData);
 
 EndProcedure // Fact_OneLevelDetailRecords()
 
@@ -111,44 +129,44 @@ Procedure Fact_OLDetailRecord_SLDeatailRecord() Export
         |""Data"": [
         |{
         |""СтрокаXML"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
-        |""Код"": 1,
-        |""Наименование"": ""Предопределенное значение"",
-        |""Предопределенный"": true,
+        |""Code"": 1,
+        |""Description"": ""Предопределенное значение"",
+        |""Predefined"": true,
         |""РеквизитБулево"": false,
-        |""ПометкаУдаления"": false,
+        |""DeletionMark"": false,
         |""Group"": [
         |{
         |""СтрокаXML"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
-        |""Код"": 1,
-        |""Наименование"": ""Предопределенное значение"",
-        |""Предопределенный"": true,
+        |""Code"": 1,
+        |""Description"": ""Предопределенное значение"",
+        |""Predefined"": true,
         |""РеквизитБулево"": false,
-        |""ПометкаУдаления"": false
+        |""DeletionMark"": false
         |}
         |]
         |},
         |{
         |""СтрокаXML"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61"",
-        |""Код"": 2,
-        |""Наименование"": ""Простое значение №1"",
-        |""Предопределенный"": false,
+        |""Code"": 2,
+        |""Description"": ""Простое значение №1"",
+        |""Predefined"": false,
         |""РеквизитБулево"": true,
-        |""ПометкаУдаления"": false,
+        |""DeletionMark"": false,
         |""Group"": [
         |{
         |""СтрокаXML"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61"",
-        |""Код"": 2,
-        |""Наименование"": ""Простое значение №1"",
-        |""Предопределенный"": false,
+        |""Code"": 2,
+        |""Description"": ""Простое значение №1"",
+        |""Predefined"": false,
         |""РеквизитБулево"": true,
-        |""ПометкаУдаления"": false
+        |""DeletionMark"": false
         |}
         |]
         |}
         |]
         |}";
         
-    VerifyAssertion("Тест_Иерархия_Дет_Записей", "transfer", BenchmarkData);
+    VerifyAssertion("TwoLevelDetailRecords", "READ", BenchmarkData);
         
 EndProcedure // Fact_OLDetailRecord_SLDeatailRecord()
 
@@ -157,15 +175,15 @@ Procedure Fact_OneLevelGrouping() Export
     BenchmarkData = "{
         |""Data"": [
         |{
-        |""Ссылка"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61""
+        |""Reference"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61""
         |},
         |{
-        |""Ссылка"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61""
+        |""Reference"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61""
         |}
         |]
         |}";
         
-    VerifyAssertion("Тест_Одна_Группировка", "transfer", BenchmarkData);
+    VerifyAssertion("OneLevelGrouping", "READ", BenchmarkData);
 
 EndProcedure // Fact_OneLevelGrouping()
 
@@ -177,11 +195,11 @@ Procedure Fact_OLGrouping_SLDetailRecords() Export
         |""СсылкаUUID"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
         |""Details"": [
         |{
-        |""ИмяПредопределенныхДанных"": ""ПредопределенноеЗначение1"",
-        |""Код"": 1,
-        |""Наименование"": ""Предопределенное значение"",
-        |""ПометкаУдаления"": false,
-        |""Предопределенный"": true,
+        |""PredefinedObjectName"": ""ПредопределенноеЗначение1"",
+        |""Code"": 1,
+        |""Description"": ""Предопределенное значение"",
+        |""DeletionMark"": false,
+        |""Predefined"": true,
         |""РеквизитБулево"": false
         |}
         |]
@@ -190,11 +208,11 @@ Procedure Fact_OLGrouping_SLDetailRecords() Export
         |""СсылкаUUID"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61"",
         |""Details"": [
         |{
-        |""ИмяПредопределенныхДанных"": """",
-        |""Код"": 2,
-        |""Наименование"": ""Простое значение №1"",
-        |""ПометкаУдаления"": false,
-        |""Предопределенный"": false,
+        |""PredefinedObjectName"": """",
+        |""Code"": 2,
+        |""Description"": ""Простое значение №1"",
+        |""DeletionMark"": false,
+        |""Predefined"": false,
         |""РеквизитБулево"": true
         |}
         |]
@@ -202,7 +220,7 @@ Procedure Fact_OLGrouping_SLDetailRecords() Export
         |]
         |}";
 
-    VerifyAssertion("Тест_Группировка_И_Дет", "transfer", BenchmarkData);
+    VerifyAssertion("L1Group-L2DetailedRecords", "READ", BenchmarkData);
         
 EndProcedure // Fact_OLGrouping_SLDetailRecords()
 
@@ -212,27 +230,27 @@ Procedure Fact_OLGrouping_SLDetailRecords_SLGrouping_ThirdLevelDetailRecords() E
         |""Data"": [
         |{
         |""СсылкаUUID"": ""85bb650f-a4f5-11e6-830d-ac220b83ed61"",
-        |""Ссылка"": ""85bb650f-a4f5-11e6-830d-ac220b83ed61"",
+        |""Reference"": ""85bb650f-a4f5-11e6-830d-ac220b83ed61"",
         |""Details"": [
         |{
-        |""ИмяПредопределенныхДанных"": """",
-        |""Код"": 3,
-        |""Наименование"": ""Наименование #2"",
-        |""ПометкаУдаления"": false,
-        |""Предопределенный"": false,
+        |""PredefinedObjectName"": """",
+        |""Code"": 3,
+        |""Description"": ""Наименование #2"",
+        |""DeletionMark"": false,
+        |""Predefined"": false,
         |""РеквизитБулево"": false
         |}
         |],
-        |""Reference"": [
+        |""ReferenceGroup"": [
         |{
-        |""Ссылка"": ""85bb650f-a4f5-11e6-830d-ac220b83ed61"",
-        |""Наименование"": ""Наименование #2"",
+        |""Reference"": ""85bb650f-a4f5-11e6-830d-ac220b83ed61"",
+        |""Description"": ""Наименование #2"",
         |""RefDetails"": [
         |{
-        |""ИмяПредопределенныхДанных"": """",
-        |""Код"": 3,
-        |""ПометкаУдаления"": false,
-        |""Предопределенный"": false,
+        |""PredefinedObjectName"": """",
+        |""Code"": 3,
+        |""DeletionMark"": false,
+        |""Predefined"": false,
         |""РеквизитБулево"": false
         |}
         |]
@@ -241,27 +259,27 @@ Procedure Fact_OLGrouping_SLDetailRecords_SLGrouping_ThirdLevelDetailRecords() E
         |},
         |{
         |""СсылкаUUID"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
-        |""Ссылка"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
+        |""Reference"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
         |""Details"": [
         |{
-        |""ИмяПредопределенныхДанных"": ""ПредопределенноеЗначение1"",
-        |""Код"": 1,
-        |""Наименование"": ""Предопределенное значение"",
-        |""ПометкаУдаления"": false,
-        |""Предопределенный"": true,
+        |""PredefinedObjectName"": ""ПредопределенноеЗначение1"",
+        |""Code"": 1,
+        |""Description"": ""Предопределенное значение"",
+        |""DeletionMark"": false,
+        |""Predefined"": true,
         |""РеквизитБулево"": false
         |}
         |],
-        |""Reference"": [
+        |""ReferenceGroup"": [
         |{
-        |""Ссылка"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
-        |""Наименование"": ""Предопределенное значение"",
+        |""Reference"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
+        |""Description"": ""Предопределенное значение"",
         |""RefDetails"": [
         |{
-        |""ИмяПредопределенныхДанных"": ""ПредопределенноеЗначение1"",
-        |""Код"": 1,
-        |""ПометкаУдаления"": false,
-        |""Предопределенный"": true,
+        |""PredefinedObjectName"": ""ПредопределенноеЗначение1"",
+        |""Code"": 1,
+        |""DeletionMark"": false,
+        |""Predefined"": true,
         |""РеквизитБулево"": false
         |}
         |]
@@ -270,27 +288,27 @@ Procedure Fact_OLGrouping_SLDetailRecords_SLGrouping_ThirdLevelDetailRecords() E
         |},
         |{
         |""СсылкаUUID"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61"",
-        |""Ссылка"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61"",
+        |""Reference"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61"",
         |""Details"": [
         |{
-        |""ИмяПредопределенныхДанных"": """",
-        |""Код"": 2,
-        |""Наименование"": ""Простое значение №1"",
-        |""ПометкаУдаления"": false,
-        |""Предопределенный"": false,
+        |""PredefinedObjectName"": """",
+        |""Code"": 2,
+        |""Description"": ""Простое значение №1"",
+        |""DeletionMark"": false,
+        |""Predefined"": false,
         |""РеквизитБулево"": true
         |}
         |],
-        |""Reference"": [
+        |""ReferenceGroup"": [
         |{
-        |""Ссылка"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61"",
-        |""Наименование"": ""Простое значение №1"",
+        |""Reference"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61"",
+        |""Description"": ""Простое значение №1"",
         |""RefDetails"": [
         |{
-        |""ИмяПредопределенныхДанных"": """",
-        |""Код"": 2,
-        |""ПометкаУдаления"": false,
-        |""Предопределенный"": false,
+        |""PredefinedObjectName"": """",
+        |""Code"": 2,
+        |""DeletionMark"": false,
+        |""Predefined"": false,
         |""РеквизитБулево"": true
         |}
         |]
@@ -300,7 +318,7 @@ Procedure Fact_OLGrouping_SLDetailRecords_SLGrouping_ThirdLevelDetailRecords() E
         |]
         |}";
         
-    VerifyAssertion("Тест_Груп2_Дет_Груп_Дет", "transfer", BenchmarkData);
+    VerifyAssertion("Lv1G-Lv2D-Lv2G-Lv3D", "READ", BenchmarkData);
 
 EndProcedure // Fact_OLGrouping_SLDetailRecords_SLGrouping_ThirdLevelDetailRecords()
 
@@ -413,7 +431,7 @@ Procedure Fact_OLGrouping_SLDetailRecords_TLGrouping_WithResource() Export
         |]
         |}";
 
-    VerifyAssertion("Тест_Рес_Гр1_Дет11_Гр111", "transfer", BenchmarkData);
+    VerifyAssertion("Resources+Lv1G-Lv2D-Lv3G", "READ", BenchmarkData);
 
 EndProcedure // Fact_OLGrouping_SLDetailRecords_TLGrouping_WithResource()
 
@@ -458,7 +476,7 @@ Procedure Fact_OLGrouping_SLGrouping_TLDetailRecords_NestedResource() Export
         |]
         |}";
 
-    VerifyAssertion("Тест_РесурсВложенВТаблицу", "transfer", BenchmarkData);
+    VerifyAssertion("ResInTable-Lv1G-Lv2G-Lv3D", "READ", BenchmarkData);
 
 EndProcedure // Fact_OLGrouping_SLGrouping_TLDetailRecords_NestedResource()
 
@@ -466,33 +484,35 @@ EndProcedure // Fact_OLGrouping_SLGrouping_TLDetailRecords_NestedResource()
 
 #Region ServiceProceduresAndFunctions
 
-Procedure VerifyAssertion(CatalogRefName, CommandName, BenchmarkData)
+Procedure VerifyAssertion(CatalogRefName, MethodName, BenchmarkData)
     
     Query = New Query;
     Query.Text = "
         |SELECT
-        |  UpdateExpressНастройкиОбменовКоманды.СхемаКомпоновкиДанных AS СхемаКомпоновкиДанных,
-        |  UpdateExpressНастройкиОбменовКоманды.НастройкиКомпоновкиДанных AS НастройкиКомпоновкиДанных,
-        |  UpdateExpressНастройкиОбменовКоманды.Наименование AS Наименование,
-        |  UpdateExpressНастройкиОбменов.Description AS Description
+        |  IHL_ExchangeSettingsMethods.DataCompositionSchema AS DataCompositionSchema,
+        |  IHL_ExchangeSettingsMethods.DataCompositionSettings AS DataCompositionSettings,
+        |  IHL_ExchangeSettingsMethods.CanUseExternalFunctions AS CanUseExternalFunctions,
+        |  IHL_ExchangeSettings.Description AS Description
         |FROM
-        |  Catalog.UpdateExpressНастройкиОбменов AS UpdateExpressНастройкиОбменов
-        |      LEFT JOIN Catalog.UpdateExpressНастройкиОбменов.Команды AS UpdateExpressНастройкиОбменовКоманды
-        |      ON UpdateExpressНастройкиОбменов.Команды.Ref = UpdateExpressНастройкиОбменовКоманды.Ref
+        |  Catalog.IHL_ExchangeSettings AS IHL_ExchangeSettings
+        |      
+        |LEFT JOIN Catalog.IHL_ExchangeSettings.Methods AS IHL_ExchangeSettingsMethods
+        |ON  IHL_ExchangeSettingsMethods.Ref    = IHL_ExchangeSettings.Ref
+        |AND IHL_ExchangeSettingsMethods.Method = &Method
+        |
         |WHERE
-        |  UpdateExpressНастройкиОбменовКоманды.Наименование = &CommandName
-        |  AND UpdateExpressНастройкиОбменов.Description = &Description
+        |   IHL_ExchangeSettings.Description = &Description
         |";
+    Query.SetParameter("Method", Catalogs.IHL_Methods.FindByDescription(MethodName));
     Query.SetParameter("Description", CatalogRefName);
-    Query.SetParameter("CommandName", CommandName);
     QuerySettings = Query.Execute().Select();
     QuerySettings.Next();
         
-    DataCompositionSchema = QuerySettings.СхемаКомпоновкиДанных.Get();
+    DataCompositionSchema = QuerySettings.DataCompositionSchema.Get();
     SettingsComposer = New DataCompositionSettingsComposer;
     IHL_DataComposition.InitSettingsComposer(Undefined, SettingsComposer, 
         DataCompositionSchema, 
-        PutToTempStorage(QuerySettings.НастройкиКомпоновкиДанных.Get()));
+        PutToTempStorage(QuerySettings.DataCompositionSettings.Get()));
         
     
     DataCompositionTemplate = IHL_DataComposition.NewDataCompositionTemplateParameters();
@@ -501,7 +521,7 @@ Procedure VerifyAssertion(CatalogRefName, CommandName, BenchmarkData)
     
     OutputParameters = IHL_DataComposition.NewOutputParameters();
     OutputParameters.DCTParameters = DataCompositionTemplate;
-    OutputParameters.CanUseExternalFunctions = True;
+    OutputParameters.CanUseExternalFunctions = QuerySettings.CanUseExternalFunctions;
     
     StreamObject = DataProcessors.DataProcessorJSON.Create();
     StreamObject.Initialize();
