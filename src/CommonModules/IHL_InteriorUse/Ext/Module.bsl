@@ -71,8 +71,8 @@ Function AddItemToItemFormCollection(Items, Parameters, Parent = Undefined) Expo
     If TypeOf(Parameters) <> Type("Structure") Then
         
         ErrorMessage = StrTemplate(NStr(
-            "en = 'Parameter(2) failed to convert. Expected type [%1] and received type is [%2].';
-            |ru = 'Параметр(2) не удалось преобразовать. Ожидался тип [%1], а получили тип [%2].'"),
+            "en = 'Parameter(2) failed to convert. Expected type ''%1'' and received type is ''%2''.';
+            |ru = 'Параметр(2) не удалось преобразовать. Ожидался тип ''%1'', а получили тип ''%2''.'"),
             String(Type("Structure")),
             String(TypeOf(Parameters)));
 
@@ -98,8 +98,8 @@ Function AddItemToItemFormCollection(Items, Parameters, Parent = Undefined) Expo
         And TypeOf(Parent) <> Type("ManagedForm") Then
            
             ErrorMessage = StrTemplate(NStr(
-                "en = 'Error: Parameter(3) failed to convert. Expected type [%1, %2, %3] and received type is [%4].';
-                |ru = 'Ошибка: Тип параметра(3) не удалось преобразовать. Ожидался тип [%1, %2, %3], а получили тип [%4].'"),
+                "en = 'Error: Parameter(3) failed to convert. Expected type ''%1'', ''%2'', ''%3'' and received type is ''%4''.';
+                |ru = 'Ошибка: Тип параметра(3) не удалось преобразовать. Ожидался тип ''%1'', ''%2'', ''%3'', а получили тип ''%4''.'"),
                 String(Type("ManagedForm")),
                 String(Type("FormGroup")),
                 String(Type("FormTable")),
@@ -133,8 +133,8 @@ Function PlugableFormatsSubsystem() Export
     If MainSubsystem = Undefined Then
         
         ErrorMessage = NStr(
-            "en = 'Failed to find main subsystem [IHL].';
-            |ru = 'Не удалось найти основную подсистему [IHL].'");
+            "en = 'Failed to find main subsystem ''IHL''.';
+            |ru = 'Не удалось найти основную подсистему ''IHL''.'");
         Raise ErrorMessage;
         
     EndIf;
@@ -143,8 +143,8 @@ Function PlugableFormatsSubsystem() Export
     If PluginsSubsystem = Undefined Then
         
         ErrorMessage = NStr(
-            "en = 'Failed to find [IHL -> Plugins] subsystem.';
-            |ru = 'Не удалось найти подсистему [IHL -> Plugins].'");
+            "en = 'Failed to find ''IHL -> Plugins'' subsystem.';
+            |ru = 'Не удалось найти подсистему ''IHL -> Plugins''.'");
         Raise ErrorMessage;
         
     EndIf;
@@ -153,8 +153,8 @@ Function PlugableFormatsSubsystem() Export
     If PlugableFormats = Undefined Then
         
         ErrorMessage = NStr(
-            "en = 'Failed to find [IHL -> Plugins -> Formats] subsystem.';
-            |ru = 'Не удалось найти подсистему [IHL -> Plugins -> Formats].'");
+            "en = 'Failed to find ''IHL -> Plugins -> Formats'' subsystem.';
+            |ru = 'Не удалось найти подсистему ''IHL -> Plugins -> Formats''.'");
         Raise ErrorMessage;
         
     EndIf;
@@ -174,8 +174,8 @@ Function PlugableChannelsSubsystem() Export
     If MainSubsystem = Undefined Then
         
         ErrorMessage = NStr(
-            "en = 'Failed to find main subsystem [IHL].';
-            |ru = 'Не удалось найти основную подсистему [IHL].'");
+            "en = 'Failed to find main subsystem ''IHL''.';
+            |ru = 'Не удалось найти основную подсистему ''IHL''.'");
         Raise ErrorMessage;
         
     EndIf;
@@ -184,8 +184,8 @@ Function PlugableChannelsSubsystem() Export
     If PluginsSubsystem = Undefined Then
         
         ErrorMessage = NStr(
-            "en = 'Failed to find [IHL -> Plugins] subsystem.';
-            |ru = 'Не удалось найти подсистему [IHL -> Plugins].'");
+            "en = 'Failed to find ''IHL -> Plugins'' subsystem.';
+            |ru = 'Не удалось найти подсистему ''IHL -> Plugins''.'");
         Raise ErrorMessage;
         
     EndIf;
@@ -194,8 +194,8 @@ Function PlugableChannelsSubsystem() Export
     If PlugableChannels = Undefined Then
         
         ErrorMessage = NStr(
-            "en = 'Failed to find [IHL -> Plugins -> Channels] subsystem.';
-            |ru = 'Не удалось найти подсистему [IHL -> Plugins -> Channels].'");
+            "en = 'Failed to find ''IHL -> Plugins -> Channels'' subsystem.';
+            |ru = 'Не удалось найти подсистему ''IHL -> Plugins -> Channels''.'");
         Raise ErrorMessage;
         
     EndIf;
