@@ -267,6 +267,48 @@ Function NewChannelProcessor(Val LibraryGuid) Export
     
 EndFunction // NewChannelProcessor()
 
+
+
+// Returns exchange settings.
+//
+// Parameters:
+//  ExchangeName - String - name of the IHL_ExchangeSettings catalog.
+//  MethodName   - String - name of the IHL_Methods catalog.
+//
+// Returns:
+//  FixedStructure  - exchange settings. 
+//  String          - error description. 
+//
+Function GetExchangeSettings(Val ExchangeName, Val MethodName) Export
+
+    Query = New Query;
+    Query.Text = TextQueryExchangeSettings();
+    Query.SetParameter("ExchangeName", ExchangeName);
+    Query.SetParameter("MethodName", MethodName);
+
+    QueryResult = Query.Execute();
+    If QueryResult.IsEmpty() Then
+        ErrorMessage = StrReplace(Nstr(
+                "en = 'Error: Exchange settings ''%1'' and/or method ''%2'' not found.'; 
+                |ru = 'Ошибка: Настройки обмена ''%1'' и/или метод ''%2'' не найдены.'"),
+            ExchangeName, MethodName);    
+        Return ErrorMessage;
+    EndIf;
+
+    ValueTable = QueryResult.Unload();
+    If ValueTable.Count() > 1 Then
+        ErrorMessage = StrReplace(Nstr(
+                "en = 'Error: Duplicated records of exchange settings ''%1'' and method ''%2'' are found.'; 
+                |ru = 'Ошибка: Обнаружены дублирующиеся настройки обмена ''%1'' и метод ''%2''.'"),
+            ExchangeName, MethodName);
+        Return ErrorMessage;     
+    EndIf;
+
+    ExchangeSettings = IHL_CommonUse.ValueTableRowIntoStructure(ValueTable[0]);         
+    Return New FixedStructure(ExchangeSettings);
+
+EndFunction // GetExchangeSettings()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
@@ -394,6 +436,47 @@ Procedure AddMethodOnForm(Items, MethodDescription, Description, Picture)
         NewPage);
 
 EndProcedure // AddMethodOnForm()
+
+
+// Only for internal use.
+//
+Function TextQueryExchangeSettings()
+
+    QueryText = "
+        |SELECT
+        |   ExchangeSettings.Ref         AS Ref,
+        |   ExchangeSettings.Description AS Description,
+        |   ExchangeSettings.InUse       AS InUse,
+        |
+        |   ExchangeSettingsMethods.APIVersion              AS APIVersion,
+        |   ExchangeSettingsMethods.APISchema               AS APISchema,
+        |   ExchangeSettingsMethods.DataCompositionSchema   AS DataCompositionSchema,
+        |   ExchangeSettingsMethods.DataCompositionSettings AS DataCompositionSettings,
+        |   ExchangeSettingsMethods.CanUseExternalFunctions AS CanUseExternalFunctions,
+        |   ExchangeSettingsMethods.OutputType              AS OutputType,
+        |   ExchangeSettingsMethods.OperationDescription    AS MethodDescription,
+        |
+        |   IHL_Methods.Ref         AS Method,
+        |   IHL_Methods.RESTMethod  AS RESTMethod,
+        |   IHL_Methods.CRUDMethod  AS CRUDMethod
+        |
+        |FROM
+        |   Catalog.IHL_ExchangeSettings AS ExchangeSettings
+        |   
+        |INNER JOIN Catalog.IHL_ExchangeSettings.Methods AS ExchangeSettingsMethods
+        |ON  ExchangeSettingsMethods.Ref = ExchangeSettings.Ref
+        |   
+        |INNER JOIN Catalog.IHL_Methods AS IHL_Methods
+        |ON  IHL_Methods.Description = &MethodName
+        |AND IHL_Methods.Ref         = ExchangeSettingsMethods.Method
+        |   
+        |WHERE
+        |   ExchangeSettings.Description = &ExchangeName
+        |AND ExchangeSettings.DeletionMark = FALSE
+        |";  
+    Return QueryText;
+
+EndFunction // TextQueryExchangeSettings()
 
 #EndRegion // ServiceProceduresAndFunctions
 
