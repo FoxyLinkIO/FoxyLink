@@ -19,6 +19,27 @@
 
 #Region ProgramInterface
 
+// Creates a structure with properties named as value table row columns and 
+// sets the values of these properties from the values table row.
+//
+// Parameters:
+//  ValueTableRow - ValueTableRow - value table row.
+//
+// Returns:
+//  Structure.
+//
+Function ValueTableRowIntoStructure(ValueTableRow) Export
+
+    Structure = New Structure;
+    For Each Column In ValueTableRow.Owner().Columns Do
+        Structure.Insert(Column.Name, ValueTableRow[Column.Name]);
+    EndDo;
+    
+    Return Structure;
+
+EndFunction // ValueTableRowIntoStructure()
+
+
 // Check if the passed type is a reference data type.
 // 
 // Parameters: 
