@@ -49,6 +49,9 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_AddChannel</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_DeleteChannel</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.IHL_MethodSettingsValid</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">aa0e46a8-713c-49b7-808e-043cb2d8fcec</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHL_ExchangeChannels</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.IHL_ExchangeMessages</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

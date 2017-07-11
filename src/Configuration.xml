@@ -179,6 +179,8 @@
 			<CommonModule>IHL_CommonUseClientServer</CommonModule>
 			<CommonModule>IHL_DataComposition</CommonModule>
 			<CommonModule>IHL_InteriorUse</CommonModule>
+			<Catalog>IHL_ExchangeChannels</Catalog>
+			<Catalog>IHL_ExchangeMessages</Catalog>
 			<Catalog>IHL_ExchangeSettings</Catalog>
 			<Catalog>IHL_Methods</Catalog>
 			<Enum>IHL_CRUDMethods</Enum>
