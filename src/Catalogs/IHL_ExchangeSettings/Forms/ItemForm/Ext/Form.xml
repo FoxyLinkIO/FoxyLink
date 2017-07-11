@@ -1107,6 +1107,7 @@
 									<ExtendedTooltip name="HiddenPageTestingExtendedTooltip" id="69"/>
 									<ChildItems>
 										<UsualGroup name="HiddenGroupTestingCommands" id="238">
+											<Group>Horizontal</Group>
 											<Representation>None</Representation>
 											<ShowTitle>false</ShowTitle>
 											<ExtendedTooltip name="HiddenGroupTestingCommandsExtendedTooltip" id="239"/>
