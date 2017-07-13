@@ -3,7 +3,47 @@
 	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
 	<ScalingMode>Compact</ScalingMode>
 	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
-	<AutoCommandBar name="FormCommandBar" id="-1"/>
+	<AutoCommandBar name="FormCommandBar" id="-1">
+		<Autofill>false</Autofill>
+		<ChildItems>
+			<Button name="SaveAndClose" id="337">
+				<Type>CommandBarButton</Type>
+				<DefaultButton>true</DefaultButton>
+				<CommandName>Form.StandardCommand.WriteAndClose</CommandName>
+				<Title>
+					<v8:item>
+						<v8:lang>en</v8:lang>
+						<v8:content>Save and close</v8:content>
+					</v8:item>
+					<v8:item>
+						<v8:lang>ru</v8:lang>
+						<v8:content>Сохранить и закрыть</v8:content>
+					</v8:item>
+				</Title>
+				<ExtendedTooltip name="SaveAndCloseExtendedTooltip" id="338"/>
+			</Button>
+			<Button name="Save" id="339">
+				<Type>CommandBarButton</Type>
+				<Representation>PictureAndText</Representation>
+				<CommandName>Form.StandardCommand.Write</CommandName>
+				<Picture>
+					<xr:Ref>CommonPicture.IHL_Save</xr:Ref>
+					<xr:LoadTransparent>true</xr:LoadTransparent>
+				</Picture>
+				<Title>
+					<v8:item>
+						<v8:lang>en</v8:lang>
+						<v8:content>Save</v8:content>
+					</v8:item>
+					<v8:item>
+						<v8:lang>ru</v8:lang>
+						<v8:content>Сохранить</v8:content>
+					</v8:item>
+				</Title>
+				<ExtendedTooltip name="SaveExtendedTooltip" id="340"/>
+			</Button>
+		</ChildItems>
+	</AutoCommandBar>
 	<Events>
 		<Event name="ChoiceProcessing">ChoiceProcessing</Event>
 		<Event name="AfterWriteAtServer">AfterWriteAtServer</Event>
@@ -34,7 +74,11 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Header group left</v8:content>
+							<v8:content>Basic information</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Базовая информация</v8:content>
 						</v8:item>
 					</Title>
 					<ToolTip>
@@ -44,12 +88,13 @@
 						</v8:item>
 					</ToolTip>
 					<Group>Vertical</Group>
-					<ShowTitle>false</ShowTitle>
+					<Representation>StrongSeparation</Representation>
 					<ExtendedTooltip name="HeaderGroupLeftExtendedTooltip" id="10"/>
 					<ChildItems>
 						<InputField name="Description" id="4">
 							<DataPath>Object.Description</DataPath>
 							<EditMode>EnterOnInput</EditMode>
+							<HorizontalStretch>false</HorizontalStretch>
 							<ContextMenu name="DescriptionContextMenu" id="5"/>
 							<ExtendedTooltip name="DescriptionExtendedTooltip" id="6"/>
 						</InputField>
@@ -103,12 +148,6 @@
 									<v8:content>Базовый формат</v8:content>
 								</v8:item>
 							</Title>
-							<ToolTip>
-								<v8:item>
-									<v8:lang>en</v8:lang>
-									<v8:content>Header page basic format</v8:content>
-								</v8:item>
-							</ToolTip>
 							<Group>HorizontalIfPossible</Group>
 							<ExtendedTooltip name="HeaderPageBasicFormatExtendedTooltip" id="26"/>
 							<ChildItems>
@@ -116,11 +155,11 @@
 									<Title>
 										<v8:item>
 											<v8:lang>en</v8:lang>
-											<v8:content>Basic format info</v8:content>
+											<v8:content>Format plugin description</v8:content>
 										</v8:item>
 										<v8:item>
 											<v8:lang>ru</v8:lang>
-											<v8:content>Описание базового формата</v8:content>
+											<v8:content>Описание формата плагина</v8:content>
 										</v8:item>
 									</Title>
 									<ToolTip>
