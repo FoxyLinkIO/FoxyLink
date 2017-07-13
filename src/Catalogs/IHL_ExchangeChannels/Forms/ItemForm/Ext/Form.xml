@@ -3,7 +3,47 @@
 	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
 	<ScalingMode>Compact</ScalingMode>
 	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
-	<AutoCommandBar name="FormCommandBar" id="-1"/>
+	<AutoCommandBar name="FormCommandBar" id="-1">
+		<Autofill>false</Autofill>
+		<ChildItems>
+			<Button name="SaveAndClose" id="41">
+				<Type>CommandBarButton</Type>
+				<DefaultButton>true</DefaultButton>
+				<CommandName>Form.StandardCommand.WriteAndClose</CommandName>
+				<Title>
+					<v8:item>
+						<v8:lang>en</v8:lang>
+						<v8:content>Save and close</v8:content>
+					</v8:item>
+					<v8:item>
+						<v8:lang>ru</v8:lang>
+						<v8:content>Сохранить и закрыть</v8:content>
+					</v8:item>
+				</Title>
+				<ExtendedTooltip name="SaveAndCloseExtendedTooltip" id="42"/>
+			</Button>
+			<Button name="Save" id="43">
+				<Type>CommandBarButton</Type>
+				<Representation>PictureAndText</Representation>
+				<CommandName>Form.StandardCommand.Write</CommandName>
+				<Picture>
+					<xr:Ref>CommonPicture.IHL_Save</xr:Ref>
+					<xr:LoadTransparent>true</xr:LoadTransparent>
+				</Picture>
+				<Title>
+					<v8:item>
+						<v8:lang>en</v8:lang>
+						<v8:content>Save</v8:content>
+					</v8:item>
+					<v8:item>
+						<v8:lang>ru</v8:lang>
+						<v8:content>Сохранить</v8:content>
+					</v8:item>
+				</Title>
+				<ExtendedTooltip name="SaveExtendedTooltip" id="44"/>
+			</Button>
+		</ChildItems>
+	</AutoCommandBar>
 	<Events>
 		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
 	</Events>
@@ -30,17 +70,25 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Header group left</v8:content>
+							<v8:content>Channel information</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Информация об канале</v8:content>
 						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Header group left</v8:content>
+							<v8:content>Channel information</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Информация об канале</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Group>Vertical</Group>
-					<ShowTitle>false</ShowTitle>
+					<Representation>StrongSeparation</Representation>
 					<ExtendedTooltip name="HeaderGroupLeftExtendedTooltip" id="4"/>
 					<ChildItems>
 						<InputField name="Description" id="5">
@@ -49,23 +97,25 @@
 							<ContextMenu name="DescriptionContextMenu" id="6"/>
 							<ExtendedTooltip name="DescriptionExtendedTooltip" id="7"/>
 						</InputField>
-						<CheckBoxField name="Connected" id="8">
-							<DataPath>Object.Connected</DataPath>
-							<CheckBoxType>Auto</CheckBoxType>
-							<EditFormat>
-								<v8:item>
-									<v8:lang>en</v8:lang>
-									<v8:content>BF=OFF; BT=On</v8:content>
-								</v8:item>
-							</EditFormat>
-							<ContextMenu name="ConnectedContextMenu" id="9"/>
-							<ExtendedTooltip name="ConnectedExtendedTooltip" id="10"/>
-						</CheckBoxField>
 						<UsualGroup name="HeaderGroupCommandsLeft" id="11">
 							<Group>Horizontal</Group>
 							<Representation>None</Representation>
 							<ShowTitle>false</ShowTitle>
 							<ExtendedTooltip name="HeaderGroupCommandsLeftExtendedTooltip" id="12"/>
+							<ChildItems>
+								<Button name="Connect" id="37">
+									<Type>UsualButton</Type>
+									<Visible>false</Visible>
+									<CommandName>Form.Command.Connect</CommandName>
+									<ExtendedTooltip name="ConnectExtendedTooltip" id="38"/>
+								</Button>
+								<Button name="Disconnect" id="39">
+									<Type>UsualButton</Type>
+									<Visible>false</Visible>
+									<CommandName>Form.Command.Disconnect</CommandName>
+									<ExtendedTooltip name="DisconnectExtendedTooltip" id="40"/>
+								</Button>
+							</ChildItems>
 						</UsualGroup>
 					</ChildItems>
 				</UsualGroup>
@@ -93,21 +143,21 @@
 									<Title>
 										<v8:item>
 											<v8:lang>en</v8:lang>
-											<v8:content>Basic channel info</v8:content>
+											<v8:content>Plugin description</v8:content>
 										</v8:item>
 										<v8:item>
 											<v8:lang>ru</v8:lang>
-											<v8:content>Описание базового канала</v8:content>
+											<v8:content>Описание плагина</v8:content>
 										</v8:item>
 									</Title>
 									<ToolTip>
 										<v8:item>
 											<v8:lang>en</v8:lang>
-											<v8:content>Basic channel info</v8:content>
+											<v8:content>Plugin description</v8:content>
 										</v8:item>
 										<v8:item>
 											<v8:lang>ru</v8:lang>
-											<v8:content>Описание базового канала</v8:content>
+											<v8:content>Описание плагина</v8:content>
 										</v8:item>
 									</ToolTip>
 									<Group>Vertical</Group>
@@ -276,19 +326,58 @@
 		</Attribute>
 	</Attributes>
 	<Commands>
-		<Command name="SaveAndClose" id="1">
+		<Command name="Connect" id="2">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Save and close</v8:content>
+					<v8:content>Connect</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Соединить</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Save and close</v8:content>
+					<v8:content>Establish a connection</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Установить соединение</v8:content>
 				</v8:item>
 			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.IHL_Link</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="Disconnect" id="3">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Disconnect</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Отсоединить</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Delete connection</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Удалить соединение</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.IHL_DeleteLink</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
 			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>
