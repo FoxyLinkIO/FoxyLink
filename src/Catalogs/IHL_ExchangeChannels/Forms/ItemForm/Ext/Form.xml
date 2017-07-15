@@ -239,6 +239,105 @@
 				</Pages>
 			</ChildItems>
 		</UsualGroup>
+		<UsualGroup name="MainGroup" id="45">
+			<Representation>None</Representation>
+			<ShowTitle>false</ShowTitle>
+			<ExtendedTooltip name="MainGroupExtendedTooltip" id="46"/>
+			<ChildItems>
+				<UsualGroup name="GroupMethods" id="47">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Supported methods</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Поддерживаемые методы</v8:content>
+						</v8:item>
+					</Title>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Supported methods</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Поддерживаемые методы</v8:content>
+						</v8:item>
+					</ToolTip>
+					<Group>Horizontal</Group>
+					<Behavior>Collapsible</Behavior>
+					<ControlRepresentation>Picture</ControlRepresentation>
+					<Representation>StrongSeparation</Representation>
+					<ExtendedTooltip name="GroupMethodsExtendedTooltip" id="48"/>
+					<ChildItems>
+						<Table name="Methods" id="49">
+							<ChangeRowSet>false</ChangeRowSet>
+							<ChangeRowOrder>false</ChangeRowOrder>
+							<HorizontalScrollBar>DontUse</HorizontalScrollBar>
+							<VerticalScrollBar>DontUse</VerticalScrollBar>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<DataPath>Object.Methods</DataPath>
+							<SearchStringLocation>None</SearchStringLocation>
+							<ViewStatusLocation>None</ViewStatusLocation>
+							<SearchControlLocation>None</SearchControlLocation>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="MethodsContextMenu" id="50">
+								<Autofill>false</Autofill>
+							</ContextMenu>
+							<AutoCommandBar name="MethodsCommandBar" id="51">
+								<Autofill>false</Autofill>
+							</AutoCommandBar>
+							<ExtendedTooltip name="MethodsExtendedTooltip" id="52"/>
+							<SearchStringAddition name="MethodsSearchString" id="53">
+								<AdditionSource>
+									<Item>Methods</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="MethodsSearchStringContextMenu" id="54"/>
+								<ExtendedTooltip name="MethodsSearchStringExtendedTooltip" id="55"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="MethodsViewStatus" id="56">
+								<AdditionSource>
+									<Item>Methods</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="MethodsViewStatusContextMenu" id="57"/>
+								<ExtendedTooltip name="MethodsViewStatusExtendedTooltip" id="58"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="MethodsSearchControl" id="59">
+								<AdditionSource>
+									<Item>Methods</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="MethodsSearchControlContextMenu" id="60"/>
+								<ExtendedTooltip name="MethodsSearchControlExtendedTooltip" id="61"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<InputField name="MethodsMethod" id="68">
+									<DataPath>Object.Methods.Method</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="MethodsMethodContextMenu" id="69"/>
+									<ExtendedTooltip name="MethodsMethodExtendedTooltip" id="70"/>
+								</InputField>
+								<InputField name="MethodsCRUD" id="65">
+									<DataPath>Object.Methods.CRUD</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="MethodsCRUDContextMenu" id="66"/>
+									<ExtendedTooltip name="MethodsCRUDExtendedTooltip" id="67"/>
+								</InputField>
+								<InputField name="MethodsREST" id="71">
+									<DataPath>Object.Methods.REST</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="MethodsRESTContextMenu" id="72"/>
+									<ExtendedTooltip name="MethodsRESTExtendedTooltip" id="73"/>
+								</InputField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</UsualGroup>
+			</ChildItems>
+		</UsualGroup>
 	</ChildItems>
 	<Attributes>
 		<Attribute name="Object" id="1">

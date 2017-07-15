@@ -13,8 +13,8 @@
 			<Metadata name="Catalog.IHL_ExchangeChannels.TabularSection.Methods.Attribute.Method" id="ecbec0c2-691e-4991-966e-1753c4b9b473"/>
 			<Metadata name="Catalog.IHL_ExchangeChannels.Attribute.BasicChannelGuid" id="f2bdad43-d25d-4ed8-9a10-c1f3cf3eb186"/>
 		</Metadata>
-		<Metadata name="Catalog.IHL_ExchangeChannels.Form.ItemForm" id="75f266af-0c9b-48cb-a956-d3c8547d7004" configVersion="09f77656cc3d7849925ac3d62e37a31500000000"/>
-		<Metadata name="Catalog.IHL_ExchangeChannels.Form.ItemForm.Form" id="75f266af-0c9b-48cb-a956-d3c8547d7004.0" configVersion="ac20b2e6dc114e409574da8e10f643a300000000"/>
+		<Metadata name="Catalog.IHL_ExchangeChannels.Form.ItemForm" id="75f266af-0c9b-48cb-a956-d3c8547d7004" configVersion="e1fa15cd0e375649b7b68f842ff8a8db00000000"/>
+		<Metadata name="Catalog.IHL_ExchangeChannels.Form.ItemForm.Form" id="75f266af-0c9b-48cb-a956-d3c8547d7004.0" configVersion="1f339e6c1a14b5428cdc4b68860e161f00000000"/>
 		<Metadata name="Catalog.IHL_ExchangeChannels.ManagerModule" id="5412ecfb-b772-434d-9128-0a8e29964987.3" configVersion="fed3c6e7ee47c642b85fcde6bd69976300000000"/>
 		<Metadata name="Catalog.IHL_ExchangeMessages" id="83d109a0-741e-40d3-86aa-fa3bf87e41d7" configVersion="f6582c88fb1fe54cb1b4de003fd08a6900000000"/>
 		<Metadata name="Catalog.IHL_ExchangeSettings" id="9b3b6531-40b3-4d67-9d44-48e7b63ab437" configVersion="3e4fc9d6956d234984eeee4063c2d7e500000000">
@@ -144,9 +144,9 @@
 		</Metadata>
 		<Metadata name="Language.English" id="8547d3fd-8d4b-4601-b71d-c79f6f9ec6c0" configVersion="5156a425d3f78e45a04b5a34c31df64900000000"/>
 		<Metadata name="Language.Russian" id="6796182f-b4a2-4ad9-8ec8-f49ba4ab5bfd" configVersion="fbd4c4570c54a64593110a7b0b04163f00000000"/>
-		<Metadata name="Subsystem.IHL" id="9966ecee-1ccc-493e-94d3-e780545214fc" configVersion="694b719064e437469ee1a391abe9397e00000000"/>
+		<Metadata name="Subsystem.IHL" id="9966ecee-1ccc-493e-94d3-e780545214fc" configVersion="3e5e0973141ae84caa93b7c2c801c65900000000"/>
 		<Metadata name="Subsystem.IHL.Subsystem.Plugins" id="2c24fa32-a19d-44d4-a5a4-1e9daa2bb265" configVersion="23742f5490077b4081c8fac5e156467d00000000"/>
-		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="917a069b1dae7a418dc2a3cca265bd0700000000"/>
+		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="6d50cba03b1fa543b5daa347eb27544400000000"/>
 		<Metadata name="Subsystem.IHL.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="2876ae2876a6784cbe27e0c4c0948c8000000000"/>
 	</ConfigVersions>
 </ConfigDumpInfo>

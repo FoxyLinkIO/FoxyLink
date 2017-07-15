@@ -27,6 +27,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
             FillPropertyValues(Items.BasicChannelGuid.ChoiceList.Add(), Channel);    
         EndDo;
         Items.HeaderPagesChannel.CurrentPage = Items.HeaderPageSelectChannel;
+        Items.MainGroup.Visible = False;
         Items.HeaderGroupLeft.Visible = False;
     Else
         LoadBasicChannelInfo();    
@@ -75,6 +76,7 @@ EndProcedure // DoAfterBeginRunningApplication()
 &AtServer
 Procedure LoadBasicChannelInfo()
 
+    Items.MainGroup.Visible = True;
     Items.HeaderGroupLeft.Visible = True;
     Items.HeaderPagesChannel.CurrentPage = Items.HeaderPageBasicChannel;
     ChannelProcessor = Catalogs.IHL_ExchangeChannels.NewChannelProcessor(
