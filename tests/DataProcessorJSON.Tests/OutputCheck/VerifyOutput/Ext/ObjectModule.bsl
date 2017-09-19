@@ -41,22 +41,12 @@ Procedure Fact_EmptyDataCompositionSchema() Export
     StreamObject = DataProcessors.DataProcessorJSON.Create();
     StreamObject.Initialize();
     
-    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, True);
+    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
     
     Result = StreamObject.Close();
     
     Assertions.ПроверитьРавенство(Result, "{}");
-    
-    
-    StreamObject = DataProcessors.DataProcessorJSON.Create();
-    StreamObject.Initialize();
-    
-    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, False);
-    
-    Result = StreamObject.Close();
-
-    Assertions.ПроверитьРавенство(Result, "{}");
-    
+        
 EndProcedure // Fact_EmptyDataCompositionSchema() 
 
 Procedure Fact_OneLevelDetailRecord() Export
@@ -526,22 +516,12 @@ Procedure VerifyAssertion(CatalogRefName, MethodName, BenchmarkData)
     StreamObject = DataProcessors.DataProcessorJSON.Create();
     StreamObject.Initialize();
     
-    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, True);
+    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
     
     Result = StreamObject.Close();
     
     Assertions.ПроверитьРавенство(DeleteCRLF(Result), DeleteCRLF(BenchmarkData));
-    
-    
-    StreamObject = DataProcessors.DataProcessorJSON.Create();
-    StreamObject.Initialize();
-    
-    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, False);
-    
-    Result = StreamObject.Close();
-
-    Assertions.ПроверитьРавенство(DeleteCRLF(Result), DeleteCRLF(BenchmarkData));
-       
+        
 EndProcedure // VerifyAssertion()
 
 Function DeleteCRLF(Val String)

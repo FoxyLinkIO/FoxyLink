@@ -10,18 +10,12 @@ EndProcedure // Инициализация()
 
 Procedure ЗаполнитьНаборТестов(TestsSet) Export
     
-    TestsSet.Добавить("Fact_FastOutputStringValue");
-    TestsSet.Добавить("Fact_SequentialOutputStringValue");
-    TestsSet.Добавить("Fact_FastOutputNumberValue");
-    TestsSet.Добавить("Fact_SequentialOutputNumberValue");
-    TestsSet.Добавить("Fact_FastOutputTrueValue");
-    TestsSet.Добавить("Fact_SequentialOutputTrueValue");
-    TestsSet.Добавить("Fact_FastOutputFalseValue");
-    TestsSet.Добавить("Fact_SequentialOutputFalseValue");
-    TestsSet.Добавить("Fact_FastOutputNullValue");
-    TestsSet.Добавить("Fact_SequentialOutputNullValue");
-    TestsSet.Добавить("Fact_FastOutputObjectValue");
-    TestsSet.Добавить("Fact_SequentialOutputObjectValue");
+    TestsSet.Добавить("Fact_OutputStringValue");
+    TestsSet.Добавить("Fact_OutputNumberValue");
+    TestsSet.Добавить("Fact_OutputTrueValue");
+    TestsSet.Добавить("Fact_OutputFalseValue");
+    TestsSet.Добавить("Fact_OutputNullValue");
+    TestsSet.Добавить("Fact_OutputObjectValue");
 
 EndProcedure // ЗаполнитьНаборТестов()
 
@@ -29,111 +23,47 @@ EndProcedure // ЗаполнитьНаборТестов()
 
 #Region TestCases
 
-Procedure Fact_FastOutputStringValue() Export
-    
-    BenchmarkData = """This is string value""";
-
-    VerifyAssertion("StringValueOutput", "READ", BenchmarkData, False);
-    
-EndProcedure // Fact_FastOutputStringValue()
-
-Procedure Fact_SequentialOutputStringValue() Export
+Procedure Fact_OutputStringValue() Export
     
     BenchmarkData = """This is string value""";
 
     VerifyAssertion("StringValueOutput", "READ", BenchmarkData, True);
     
-EndProcedure // Fact_SequentialOutputStringValue()
+EndProcedure // Fact_OutputStringValue()
 
-Procedure Fact_FastOutputNumberValue() Export
-    
-    BenchmarkData = 15.6464669489979796464313546498;
-
-    VerifyAssertion("NumberValueOutput", "READ", BenchmarkData, False);
-    
-EndProcedure // Fact_FastOutputNumberValue()
-
-Procedure Fact_SequentialOutputNumberValue() Export
+Procedure Fact_OutputNumberValue() Export
     
     BenchmarkData = 15.6464669489979796464313546498;
 
     VerifyAssertion("NumberValueOutput", "READ", BenchmarkData, True);
     
-EndProcedure // Fact_SequentialOutputNumberValue()
+EndProcedure // Fact_OutputNumberValue()
 
-Procedure Fact_FastOutputTrueValue() Export
-    
-    BenchmarkData = True;
-
-    VerifyAssertion("TrueValueOutput", "READ", BenchmarkData, False);
-    
-EndProcedure // Fact_FastOutputTrueValue()
-
-Procedure Fact_SequentialOutputTrueValue() Export
+Procedure Fact_OutputTrueValue() Export
     
     BenchmarkData = True;
 
     VerifyAssertion("TrueValueOutput", "READ", BenchmarkData, True);
     
-EndProcedure // Fact_SequentialOutputTrueValue()
+EndProcedure // Fact_OutputTrueValue()
 
-Procedure Fact_FastOutputFalseValue() Export
-    
-    BenchmarkData = False;
-
-    VerifyAssertion("FalseValueOutput", "READ", BenchmarkData, False);
-    
-EndProcedure // Fact_FastOutputFalseValue()
-
-Procedure Fact_SequentialOutputFalseValue() Export
+Procedure Fact_OutputFalseValue() Export
     
     BenchmarkData = False;
 
     VerifyAssertion("FalseValueOutput", "READ", BenchmarkData, True);
     
-EndProcedure // Fact_SequentialOutputFalseValue()
+EndProcedure // Fact_OutputFalseValue()
 
-Procedure Fact_FastOutputNullValue() Export
-    
-    BenchmarkData = Null;
-
-    VerifyAssertion("NullValueOutput", "READ", BenchmarkData, False);
-    
-EndProcedure // Fact_FastOutputNullValue()
-
-Procedure Fact_SequentialOutputNullValue() Export
+Procedure Fact_OutputNullValue() Export
     
     BenchmarkData = Null;
 
     VerifyAssertion("NullValueOutput", "READ", BenchmarkData, True);
     
-EndProcedure // Fact_SequentialOutputNullValue()
+EndProcedure // Fact_OutputNullValue()
 
-Procedure Fact_FastOutputObjectValue() Export
-    
-    BenchmarkData = "{
-        |""Id"": ""1231"",
-        |""SyncToken"": ""SyncToken"",
-        |""Name"": ""Garden Supplies"",
-        |""Sku"": ""01254001"",
-        |""ItemCategoryType"": ""Goods"",
-        |""PurchaseCost"": 101,
-        |""MetaData"": {
-        |""CreateTime"": ""2013-05-05T00:00:00"",
-        |""LastUpdate"": ""2017-05-05T00:00:00""
-        |},
-        |""IncomeAccountRef"": {
-        |""value"": 12313,
-        |""name"": ""pikabu""
-        |}
-        |}
-        |";
-
-    VerifyAssertion("ObjectValueOutput", "READ", BenchmarkData, False);
-    
-EndProcedure // Fact_FastOutputObjectValue()
-
-Procedure Fact_SequentialOutputObjectValue() Export
+Procedure Fact_OutputObjectValue() Export
     
     BenchmarkData = "{
         |""Id"": ""1231"",
@@ -155,51 +85,7 @@ Procedure Fact_SequentialOutputObjectValue() Export
 
     VerifyAssertion("ObjectValueOutput", "READ", BenchmarkData, True);
     
-EndProcedure // Fact_SequentialOutputObjectValue()
-
-
-
-//Procedure Fact_OneLevelDetailRecords() Export
-
-//    BenchmarkData = "{
-//        |""Data"": [
-//        |{
-//        |""Predefined"": true,
-//        |""PredefinedObjectName"": ""ПредопределенноеЗначение1"",
-//        |""DeletionMark"": false,
-//        |""Code"": 1,
-//        |""Description"": ""Предопределенное значение"",
-//        |""XMLString"": ""3c4fbca9-a4ec-11e6-830d-ac220b83ed61"",
-//        |""BooleanAttribute"": false,
-//        |""EnumAttribute"": """"
-//        |},
-//        |{
-//        |""Predefined"": false,
-//        |""PredefinedObjectName"": """",
-//        |""DeletionMark"": false,
-//        |""Code"": 2,
-//        |""Description"": ""Простое значение №1"",
-//        |""XMLString"": ""85bb6509-a4f5-11e6-830d-ac220b83ed61"",
-//        |""BooleanAttribute"": true,
-//        |""EnumAttribute"": ""ЗначениеПеречисления2""
-//        |},
-//        |{
-//        |""Predefined"": false,
-//        |""PredefinedObjectName"": """",
-//        |""DeletionMark"": false,
-//        |""Code"": 3,
-//        |""Description"": ""Наименование #2"",
-//        |""XMLString"": ""85bb650f-a4f5-11e6-830d-ac220b83ed61"",
-//        |""BooleanAttribute"": false,
-//        |""EnumAttribute"": """"
-//        |}
-//        |]
-//        |}
-//        |";
-//        
-//    VerifyAssertion("OneLevelDetailedRecords", "READ", BenchmarkData);
-
-//EndProcedure // Fact_OneLevelDetailRecords()
+EndProcedure // Fact_OutputObjectValue()
 
 #EndRegion // TestCases
 
@@ -249,7 +135,7 @@ Procedure VerifyAssertion(CatalogRefName, MethodName, BenchmarkData,
     StreamObject = DataProcessors.DataProcessorJSON.Create();
     StreamObject.Initialize(QuerySettings.APISchema.Get());
     
-    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters, SaveResources);
+    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
     
     Result = StreamObject.Close();
     
