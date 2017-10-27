@@ -30,18 +30,18 @@ Procedure Fact_EmptyDataCompositionSchema() Export
     
     DataCompositionSchema = New DataCompositionSchema;
     
-    DataCompositionTemplate = IHL_DataComposition.NewDataCompositionTemplateParameters();
+    DataCompositionTemplate = FL_DataComposition.NewDataCompositionTemplateParameters();
     DataCompositionTemplate.Schema   = DataCompositionSchema;
     DataCompositionTemplate.Template = DataCompositionSchema.DefaultSettings;
     
-    OutputParameters = IHL_DataComposition.NewOutputParameters();
+    OutputParameters = FL_DataComposition.NewOutputParameters();
     OutputParameters.DCTParameters = DataCompositionTemplate;
     OutputParameters.CanUseExternalFunctions = True;
     
-    StreamObject = DataProcessors.DataProcessorJSON.Create();
+    StreamObject = DataProcessors.FL_DataProcessorJSON.Create();
     StreamObject.Initialize();
     
-    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
+    FL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
     
     Result = StreamObject.Close();
     
@@ -476,51 +476,14 @@ EndProcedure // Fact_OLGrouping_SLGrouping_TLDetailRecords_NestedResource()
 
 Procedure VerifyAssertion(CatalogRefName, MethodName, BenchmarkData)
     
-    Query = New Query;
-    Query.Text = "
-        |SELECT
-        |  IHL_ExchangeSettingsMethods.DataCompositionSchema AS DataCompositionSchema,
-        |  IHL_ExchangeSettingsMethods.DataCompositionSettings AS DataCompositionSettings,
-        |  IHL_ExchangeSettingsMethods.CanUseExternalFunctions AS CanUseExternalFunctions,
-        |  IHL_ExchangeSettings.Description AS Description
-        |FROM
-        |  Catalog.IHL_ExchangeSettings AS IHL_ExchangeSettings
-        |      
-        |LEFT JOIN Catalog.IHL_ExchangeSettings.Methods AS IHL_ExchangeSettingsMethods
-        |ON  IHL_ExchangeSettingsMethods.Ref    = IHL_ExchangeSettings.Ref
-        |AND IHL_ExchangeSettingsMethods.Method = &Method
-        |
-        |WHERE
-        |   IHL_ExchangeSettings.Description = &Description
-        |";
-    Query.SetParameter("Method", Catalogs.IHL_Methods.FindByDescription(MethodName));
-    Query.SetParameter("Description", CatalogRefName);
-    QuerySettings = Query.Execute().Select();
-    QuerySettings.Next();
+    ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
+        Catalogs.FL_Exchanges.FindByDescription(CatalogRefName), 
+        Catalogs.FL_Methods.FindByDescription(MethodName)); 
         
-    DataCompositionSchema = QuerySettings.DataCompositionSchema.Get();
-    SettingsComposer = New DataCompositionSettingsComposer;
-    IHL_DataComposition.InitSettingsComposer(Undefined, SettingsComposer, 
-        DataCompositionSchema, 
-        PutToTempStorage(QuerySettings.DataCompositionSettings.Get()));
-        
+    ResultMessage = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined, 
+        ExchangeSettings);
     
-    DataCompositionTemplate = IHL_DataComposition.NewDataCompositionTemplateParameters();
-    DataCompositionTemplate.Schema   = DataCompositionSchema;
-    DataCompositionTemplate.Template = SettingsComposer.GetSettings();
-    
-    OutputParameters = IHL_DataComposition.NewOutputParameters();
-    OutputParameters.DCTParameters = DataCompositionTemplate;
-    OutputParameters.CanUseExternalFunctions = QuerySettings.CanUseExternalFunctions;
-    
-    StreamObject = DataProcessors.DataProcessorJSON.Create();
-    StreamObject.Initialize();
-    
-    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
-    
-    Result = StreamObject.Close();
-    
-    Assertions.ПроверитьРавенство(DeleteCRLF(Result), DeleteCRLF(BenchmarkData));
+    Assertions.ПроверитьРавенство(DeleteCRLF(ResultMessage), DeleteCRLF(BenchmarkData));
         
 EndProcedure // VerifyAssertion()
 

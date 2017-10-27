@@ -10,12 +10,14 @@ EndProcedure // Инициализация()
 
 Procedure ЗаполнитьНаборТестов(TestsSet) Export
     
-    TestsSet.Добавить("Fact_OutputStringValue");
-    TestsSet.Добавить("Fact_OutputNumberValue");
-    TestsSet.Добавить("Fact_OutputTrueValue");
-    TestsSet.Добавить("Fact_OutputFalseValue");
-    TestsSet.Добавить("Fact_OutputNullValue");
-    TestsSet.Добавить("Fact_OutputObjectValue");
+    TestsSet.Добавить("Fact_StringValue");
+    TestsSet.Добавить("Fact_NumberValue");
+    TestsSet.Добавить("Fact_TrueValue");
+    TestsSet.Добавить("Fact_FalseValue");
+    TestsSet.Добавить("Fact_NullValue");
+    TestsSet.Добавить("Fact_EmptyObjectValue");
+    TestsSet.Добавить("Fact_EmptyArrayValue");
+    TestsSet.Добавить("Fact_ObjectValue");
 
 EndProcedure // ЗаполнитьНаборТестов()
 
@@ -23,47 +25,61 @@ EndProcedure // ЗаполнитьНаборТестов()
 
 #Region TestCases
 
-Procedure Fact_OutputStringValue() Export
+Procedure Fact_StringValue() Export
     
     BenchmarkData = """This is string value""";
 
-    VerifyAssertion("StringValueOutput", "READ", BenchmarkData, True);
+    VerifyAssertion("StringValueOutput", "READ", BenchmarkData);
     
-EndProcedure // Fact_OutputStringValue()
+EndProcedure // Fact_StringValue()
 
-Procedure Fact_OutputNumberValue() Export
+Procedure Fact_NumberValue() Export
     
     BenchmarkData = 15.6464669489979796464313546498;
 
-    VerifyAssertion("NumberValueOutput", "READ", BenchmarkData, True);
+    VerifyAssertion("NumberValueOutput", "READ", BenchmarkData);
     
-EndProcedure // Fact_OutputNumberValue()
+EndProcedure // Fact_NumberValue()
 
-Procedure Fact_OutputTrueValue() Export
+Procedure Fact_TrueValue() Export
     
     BenchmarkData = True;
 
-    VerifyAssertion("TrueValueOutput", "READ", BenchmarkData, True);
+    VerifyAssertion("TrueValueOutput", "READ", BenchmarkData);
     
-EndProcedure // Fact_OutputTrueValue()
+EndProcedure // Fact_TrueValue()
 
-Procedure Fact_OutputFalseValue() Export
+Procedure Fact_FalseValue() Export
     
     BenchmarkData = False;
 
-    VerifyAssertion("FalseValueOutput", "READ", BenchmarkData, True);
+    VerifyAssertion("FalseValueOutput", "READ", BenchmarkData);
     
-EndProcedure // Fact_OutputFalseValue()
+EndProcedure // Fact_FalseValue()
 
-Procedure Fact_OutputNullValue() Export
+Procedure Fact_NullValue() Export
     
     BenchmarkData = Null;
 
-    VerifyAssertion("NullValueOutput", "READ", BenchmarkData, True);
+    VerifyAssertion("NullValueOutput", "READ", BenchmarkData);
     
-EndProcedure // Fact_OutputNullValue()
+EndProcedure // Fact_NullValue()
 
-Procedure Fact_OutputObjectValue() Export
+Procedure Fact_EmptyObjectValue() Export
+    
+    BenchmarkData = "{}";
+    VerifyAssertion("EmptyObjectValueOutput", "READ", BenchmarkData);
+
+EndProcedure // Fact_EmptyObjectValue() 
+
+Procedure Fact_EmptyArrayValue() Export
+    
+    BenchmarkData = "[]";
+    VerifyAssertion("EmptyArrayValueOutput", "READ", BenchmarkData);
+
+EndProcedure // Fact_EmptyArrayValue() 
+
+Procedure Fact_ObjectValue() Export
     
     BenchmarkData = "{
         |""Id"": ""1231"",
@@ -83,72 +99,33 @@ Procedure Fact_OutputObjectValue() Export
         |}
         |";
 
-    VerifyAssertion("ObjectValueOutput", "READ", BenchmarkData, True);
+    VerifyAssertion("ObjectValueOutput", "READ", BenchmarkData);
     
-EndProcedure // Fact_OutputObjectValue()
+EndProcedure // Fact_ObjectValue()
 
 #EndRegion // TestCases
 
 #Region ServiceProceduresAndFunctions
 
-Procedure VerifyAssertion(CatalogRefName, MethodName, BenchmarkData, 
-    SaveResources)
+Procedure VerifyAssertion(CatalogRefName, MethodName, BenchmarkData)
     
-    Query = New Query;
-    Query.Text = "
-        |SELECT
-        |   IHL_ExchangeSettingsMethods.APISchema               AS APISchema,
-        |   IHL_ExchangeSettingsMethods.DataCompositionSchema   AS DataCompositionSchema,
-        |   IHL_ExchangeSettingsMethods.DataCompositionSettings AS DataCompositionSettings,
-        |   IHL_ExchangeSettingsMethods.CanUseExternalFunctions AS CanUseExternalFunctions,
-        |   IHL_ExchangeSettings.Description AS Description
-        |FROM
-        |   Catalog.IHL_ExchangeSettings AS IHL_ExchangeSettings
-        |      
-        |LEFT JOIN Catalog.IHL_ExchangeSettings.Methods AS IHL_ExchangeSettingsMethods
-        |ON  IHL_ExchangeSettingsMethods.Ref    = IHL_ExchangeSettings.Ref
-        |AND IHL_ExchangeSettingsMethods.Method = &Method
-        |
-        |WHERE
-        |   IHL_ExchangeSettings.Description = &Description
-        |";
-    Query.SetParameter("Method", Catalogs.IHL_Methods.FindByDescription(MethodName));
-    Query.SetParameter("Description", CatalogRefName);
-    QuerySettings = Query.Execute().Select();
-    QuerySettings.Next();
+    ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
+        Catalogs.FL_Exchanges.FindByDescription(CatalogRefName), 
+        Catalogs.FL_Methods.FindByDescription(MethodName)); 
         
-    DataCompositionSchema = QuerySettings.DataCompositionSchema.Get();
-    SettingsComposer = New DataCompositionSettingsComposer;
-    IHL_DataComposition.InitSettingsComposer(Undefined, SettingsComposer, 
-        DataCompositionSchema, 
-        PutToTempStorage(QuerySettings.DataCompositionSettings.Get()));
-        
-    
-    DataCompositionTemplate = IHL_DataComposition.NewDataCompositionTemplateParameters();
-    DataCompositionTemplate.Schema   = DataCompositionSchema;
-    DataCompositionTemplate.Template = SettingsComposer.GetSettings();
-    
-    OutputParameters = IHL_DataComposition.NewOutputParameters();
-    OutputParameters.DCTParameters = DataCompositionTemplate;
-    OutputParameters.CanUseExternalFunctions = QuerySettings.CanUseExternalFunctions;
-    
-    StreamObject = DataProcessors.DataProcessorJSON.Create();
-    StreamObject.Initialize(QuerySettings.APISchema.Get());
-    
-    IHL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
-    
-    Result = StreamObject.Close();
-    
+    ResultMessage = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined, 
+        ExchangeSettings);
+
     If TypeOf(BenchmarkData) = Type("Number") Then
-        Assertions.ПроверитьРавенство(Number(Result), BenchmarkData);       
+        Assertions.ПроверитьРавенство(Number(ResultMessage), BenchmarkData);       
     ElsIf TypeOf(BenchmarkData) = Type("String") Then
-        Assertions.ПроверитьРавенство(DeleteCRLF(Result), DeleteCRLF(BenchmarkData));
+        Assertions.ПроверитьРавенство(DeleteCRLF(ResultMessage), DeleteCRLF(BenchmarkData));
     ElsIf TypeOf(BenchmarkData) = Type("Boolean") Then
-        Assertions.ПроверитьРавенство(Boolean(Result), BenchmarkData);
+        Assertions.ПроверитьРавенство(Boolean(ResultMessage), BenchmarkData);
     ElsIf BenchmarkData = Null Then
-        Assertions.ПроверитьРавенство(?(Result = "null", Null, Result), BenchmarkData);
+        Assertions.ПроверитьРавенство(?(ResultMessage = "null", Null, ResultMessage), BenchmarkData);
     Else
-        Assertions.ПроверитьРавенство(Result, BenchmarkData)    
+        Assertions.ПроверитьРавенство(ResultMessage, BenchmarkData)    
     EndIf;
        
 EndProcedure // VerifyAssertion()
