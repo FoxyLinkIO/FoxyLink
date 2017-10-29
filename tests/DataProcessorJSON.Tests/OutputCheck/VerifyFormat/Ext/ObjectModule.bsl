@@ -15,10 +15,14 @@ Procedure ЗаполнитьНаборТестов(TestsSet) Export
     TestsSet.Добавить("Fact_TrueValue");
     TestsSet.Добавить("Fact_FalseValue");
     TestsSet.Добавить("Fact_NullValue");
+    
     TestsSet.Добавить("Fact_EmptyObjectValue");
-    TestsSet.Добавить("Fact_EmptyArrayValue");
+    TestsSet.Добавить("Fact_TwoEmptyInnerObjectValue");
+    TestsSet.Добавить("Fact_TwoInnerObjectValue");
     TestsSet.Добавить("Fact_ObjectValue");
-
+    
+    TestsSet.Добавить("Fact_EmptyArrayValue");
+    
 EndProcedure // ЗаполнитьНаборТестов()
 
 #EndRegion // ServiceInterface
@@ -78,6 +82,37 @@ Procedure Fact_EmptyArrayValue() Export
     VerifyAssertion("EmptyArrayValueOutput", "READ", BenchmarkData);
 
 EndProcedure // Fact_EmptyArrayValue() 
+
+Procedure Fact_TwoEmptyInnerObjectValue() Export
+    
+    BenchmarkData = "
+        |{
+        |""name"": {},
+        |""addr"": {}
+        |}
+        |";
+
+    VerifyAssertion("{ """": { }, """": { } }", "READ", BenchmarkData);
+    
+EndProcedure // Fact_TwoEmptyInnerObjectValue()
+
+Procedure Fact_TwoInnerObjectValue() Export
+    
+    BenchmarkData = "
+        |{
+        |""Identity"": {
+        |""Name"": ""Dana"",
+        |""Surname"": ""Balana""
+        |},
+        |""Passport"": {
+        |""Id"": ""CH 890112""
+        |}
+        |}
+        |";
+
+    VerifyAssertion("{ """": {F,F}, """": {F} }", "READ", BenchmarkData);
+    
+EndProcedure // Fact_TwoInnerObjectValue()
 
 Procedure Fact_ObjectValue() Export
     
