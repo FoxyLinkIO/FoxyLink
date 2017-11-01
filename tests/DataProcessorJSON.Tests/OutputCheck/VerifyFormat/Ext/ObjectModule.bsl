@@ -15,13 +15,21 @@ Procedure ЗаполнитьНаборТестов(TestsSet) Export
     TestsSet.Добавить("Fact_TrueValue");
     TestsSet.Добавить("Fact_FalseValue");
     TestsSet.Добавить("Fact_NullValue");
-    
     TestsSet.Добавить("Fact_EmptyObjectValue");
-    TestsSet.Добавить("Fact_TwoEmptyInnerObjectValue");
+    TestsSet.Добавить("Fact_EmptyArrayValue");
+    
+    TestsSet.Добавить("Fact_TwoEmptyObjectValue");
+    TestsSet.Добавить("Fact_TwoEmptyObjectStringValue");
+    TestsSet.Добавить("Fact_TwoEmptyArrayValue");
+    TestsSet.Добавить("Fact_TwoEmptyArrayStringValue");
+    TestsSet.Добавить("Fact_TwoEmptyArrayInArray");
+    TestsSet.Добавить("Fact_TwoEmptyArrayStringInArray");
+    
+    
     TestsSet.Добавить("Fact_TwoInnerObjectValue");
     TestsSet.Добавить("Fact_ObjectValue");
     
-    TestsSet.Добавить("Fact_EmptyArrayValue");
+    TestsSet.Добавить("Fact_ComplexHierarchy_1");
     
 EndProcedure // ЗаполнитьНаборТестов()
 
@@ -83,7 +91,8 @@ Procedure Fact_EmptyArrayValue() Export
 
 EndProcedure // Fact_EmptyArrayValue() 
 
-Procedure Fact_TwoEmptyInnerObjectValue() Export
+
+Procedure Fact_TwoEmptyObjectValue() Export
     
     BenchmarkData = "
         |{
@@ -94,7 +103,76 @@ Procedure Fact_TwoEmptyInnerObjectValue() Export
 
     VerifyAssertion("{ """": { }, """": { } }", "READ", BenchmarkData);
     
-EndProcedure // Fact_TwoEmptyInnerObjectValue()
+EndProcedure // Fact_TwoEmptyObjectValue()
+
+Procedure Fact_TwoEmptyObjectStringValue() Export
+    
+    BenchmarkData = "
+        |{
+        |""string"": ""This is a string value."",
+        |""name"": {},
+        |""addr"": {}
+        |}
+        |";
+
+    VerifyAssertion("{ """": {}, """": {}, """": """"}", "READ", BenchmarkData);
+    
+EndProcedure // Fact_TwoEmptyObjectStringValue()
+
+Procedure Fact_TwoEmptyArrayValue() Export
+    
+    BenchmarkData = "
+        |{
+        |""name"": [],
+        |""addr"": []
+        |}
+        |";
+
+    VerifyAssertion("{ """": [ ], """": [ ] }", "READ", BenchmarkData);
+    
+EndProcedure // Fact_TwoEmptyArrayValue()
+
+Procedure Fact_TwoEmptyArrayStringValue() Export
+    
+    BenchmarkData = "
+        |{
+        |""string"": ""This is a string value."",
+        |""name"": [],
+        |""addr"": []
+        |}
+        |";
+
+    VerifyAssertion("{ """": [], """": [], """": """"}", "READ", BenchmarkData);
+    
+EndProcedure // Fact_TwoEmptyArrayStringValue()
+
+Procedure Fact_TwoEmptyArrayInArray() Export
+    
+    BenchmarkData = "
+        |[
+        |[],
+        |[]
+        |]
+        |";
+
+    VerifyAssertion("[ [ ], [ ] ]", "READ", BenchmarkData);
+    
+EndProcedure // Fact_TwoEmptyArrayInArray()
+
+Procedure Fact_TwoEmptyArrayStringInArray() Export
+    
+    BenchmarkData = "
+        |[
+        |""This is a string value."",
+        |[],
+        |[]
+        |]
+        |";
+
+    VerifyAssertion("[ """", [ ], [ ] ]", "READ", BenchmarkData);
+    
+EndProcedure // Fact_TwoEmptyArrayStringInArray()
+
 
 Procedure Fact_TwoInnerObjectValue() Export
     
@@ -137,6 +215,29 @@ Procedure Fact_ObjectValue() Export
     VerifyAssertion("ObjectValueOutput", "READ", BenchmarkData);
     
 EndProcedure // Fact_ObjectValue()
+
+
+Procedure Fact_ComplexHierarchy_1() Export
+    
+    BenchmarkData = "[
+        |[
+        |{}
+        |],
+        |[
+        |{
+        |""Foo"": false,
+        |""Bar"": {
+        |""Foo"": ""Bar""
+        |}
+        |}
+        |]
+        |]
+        |";
+
+    VerifyAssertion("[[{}],[{:,{:}}]]", "READ", BenchmarkData);
+    
+EndProcedure // Fact_ComplexHierarchy_1()
+
 
 #EndRegion // TestCases
 
