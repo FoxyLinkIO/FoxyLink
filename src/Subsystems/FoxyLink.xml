@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+	<Subsystem uuid="9966ecee-1ccc-493e-94d3-e780545214fc">
+		<Properties>
+			<Name>FoxyLink</Name>
+			<Synonym>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>FoxyLink</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>FoxyLink</v8:content>
+				</v8:item>
+			</Synonym>
+			<Comment/>
+			<IncludeHelpInContents>true</IncludeHelpInContents>
+			<IncludeInCommandInterface>false</IncludeInCommandInterface>
+			<Explanation/>
+			<Picture/>
+			<Content>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_DataComposition</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_CommonUse</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_CommonUseClientServer</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_RESTMethods</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_CRUDMethods</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_MethodSettingsInvalid</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Settings</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Untested</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Edit</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Copy</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Structure</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Parameters</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Fields</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Filter</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Order</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Generate</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Exchanges</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Methods</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Update</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Download</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">837a6e10-d078-46f1-9322-ef88d4649f13</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUse</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Export</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Prototype</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_MethodSettingsValid</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Channels</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Jobs</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Link</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_LinkDelete</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Save</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_LinkBroken</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsBeforeWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsOnWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_MetadataObjects</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Select</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Events</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Processing</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_ProcessingWarning</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_ProcessingError</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_ErrorsClientServer</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Response</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_LinkAdd</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Add</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Delete</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_SaveAndClose</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Form</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_RowAdd</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_RowDelete</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonForm.FL_ResponseHandlerForm</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_DeleteFile</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_RunInSafeMode</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_CommonUseReUse</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype16</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Fire</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype32</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_JobServer</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_States</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_JobServerID</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobServer</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Stop</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype64</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonTemplate.FL_LICENSE</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Tasks</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_LicenseAccepted</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">FunctionalOption.FL_LicenseAccepted</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_TasksHeartbeat</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_WorkerCount</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_RetryAttempts</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_AccumulationRegistersOnWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_GenerateAll</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_CodeFile</xr:Item>
+			</Content>
+		</Properties>
+		<ChildObjects>
+			<Subsystem>Plugins</Subsystem>
+			<Subsystem>Tasks</Subsystem>
+		</ChildObjects>
+	</Subsystem>
+</MetaDataObject>

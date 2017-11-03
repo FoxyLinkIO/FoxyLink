@@ -1,42 +1,42 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
-	<Configuration uuid="fb6e805b-87df-4ac7-ab3a-615dfdeeea8a">
+	<Configuration uuid="9bbbe9e6-1774-4203-b2b5-acb27e665492">
 		<InternalInfo>
 			<xr:ContainedObject>
 				<xr:ClassId>9cd510cd-abfc-11d4-9434-004095e12fc7</xr:ClassId>
-				<xr:ObjectId>171c6190-0d8f-4e58-8ea4-f9c981362f4a</xr:ObjectId>
+				<xr:ObjectId>d93db53b-5a84-46dd-b01b-c5c745936a50</xr:ObjectId>
 			</xr:ContainedObject>
 			<xr:ContainedObject>
 				<xr:ClassId>9fcd25a0-4822-11d4-9414-008048da11f9</xr:ClassId>
-				<xr:ObjectId>df88e651-6b01-4f68-90af-32d81b71513a</xr:ObjectId>
+				<xr:ObjectId>e07d2a00-b7e0-49b1-82ad-70d86b3e19da</xr:ObjectId>
 			</xr:ContainedObject>
 			<xr:ContainedObject>
 				<xr:ClassId>e3687481-0a87-462c-a166-9f34594f9bba</xr:ClassId>
-				<xr:ObjectId>7eb914ef-79cc-4823-ae12-ca3717117cfe</xr:ObjectId>
+				<xr:ObjectId>77e9153f-b42e-4505-981a-a9d4858de36d</xr:ObjectId>
 			</xr:ContainedObject>
 			<xr:ContainedObject>
 				<xr:ClassId>9de14907-ec23-4a07-96f0-85521cb6b53b</xr:ClassId>
-				<xr:ObjectId>4ecca2c2-1a44-413b-8e5d-1dd1d04ea9ff</xr:ObjectId>
+				<xr:ObjectId>11b323f9-2015-4f18-9ef6-2fa79d8aa3c6</xr:ObjectId>
 			</xr:ContainedObject>
 			<xr:ContainedObject>
 				<xr:ClassId>51f2d5d8-ea4d-4064-8892-82951750031e</xr:ClassId>
-				<xr:ObjectId>f86fee89-e3f5-4167-a0eb-a6ec37453e88</xr:ObjectId>
+				<xr:ObjectId>2ec57e89-6b83-4be2-9f4b-6a59183bf513</xr:ObjectId>
 			</xr:ContainedObject>
 			<xr:ContainedObject>
 				<xr:ClassId>e68182ea-4237-4383-967f-90c1e3370bc7</xr:ClassId>
-				<xr:ObjectId>f3a02b62-9304-4360-8227-e27d153adfdf</xr:ObjectId>
+				<xr:ObjectId>2e326ccd-997a-4541-b9cd-3a48c760d516</xr:ObjectId>
 			</xr:ContainedObject>
 		</InternalInfo>
 		<Properties>
-			<Name>IntegrationHappinessLibrary</Name>
+			<Name>FoxyLink</Name>
 			<Synonym>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Integration Happiness Library</v8:content>
+					<v8:content>FoxyLink</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Библиотека интеграционного счастья</v8:content>
+					<v8:content>FoxyLink</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
@@ -49,7 +49,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.8.0.0</Version>
+			<Version>0.9.2.3</Version>
 			<UpdateCatalogAddress>https://github.com/pbazeliuk/IHL/</UpdateCatalogAddress>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -115,11 +115,11 @@
 			<BriefInformation>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Integration Happiness Library</v8:content>
+					<v8:content>FoxyLink, version 1.0</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Библиотека интеграционного счастья</v8:content>
+					<v8:content>FoxyLink, версия 1.0</v8:content>
 				</v8:item>
 			</BriefInformation>
 			<DetailedInformation>
@@ -131,13 +131,21 @@
 			<Copyright>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Copyright © Petro Bazeliuk, 2016-2017. All rights reserved</v8:content>
+					<v8:content>Copyright © Petro Bazeliuk, 2016-2018. All rights reserved</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Копирайт © Петр Базелюк, 2016-2018. Все права защищены</v8:content>
 				</v8:item>
 			</Copyright>
 			<VendorInformationAddress>
 				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>https://pbazeliuk.com</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>https://update.express</v8:content>
+					<v8:content>https://pbazeliuk.com</v8:content>
 				</v8:item>
 			</VendorInformationAddress>
 			<ConfigurationInformationAddress/>
@@ -145,52 +153,88 @@
 			<ObjectAutonumerationMode>NotAutoFree</ObjectAutonumerationMode>
 			<ModalityUseMode>DontUse</ModalityUseMode>
 			<SynchronousPlatformExtensionAndAddInCallUseMode>DontUse</SynchronousPlatformExtensionAndAddInCallUseMode>
-			<InterfaceCompatibilityMode>TaxiEnableVersion8_2</InterfaceCompatibilityMode>
+			<InterfaceCompatibilityMode>Taxi</InterfaceCompatibilityMode>
 			<CompatibilityMode>Version8_3_7</CompatibilityMode>
 			<DefaultConstantsForm/>
 		</Properties>
 		<ChildObjects>
 			<Language>English</Language>
 			<Language>Russian</Language>
-			<Subsystem>IHL</Subsystem>
-			<CommonPicture>IHL_AddChannel</CommonPicture>
-			<CommonPicture>IHL_AddMethod</CommonPicture>
-			<CommonPicture>IHL_Copy</CommonPicture>
-			<CommonPicture>IHL_DeleteChannel</CommonPicture>
-			<CommonPicture>IHL_DeleteLink</CommonPicture>
-			<CommonPicture>IHL_DeleteMethod</CommonPicture>
-			<CommonPicture>IHL_Download</CommonPicture>
-			<CommonPicture>IHL_Edit</CommonPicture>
-			<CommonPicture>IHL_EditSchema</CommonPicture>
-			<CommonPicture>IHL_Export</CommonPicture>
-			<CommonPicture>IHL_Fields</CommonPicture>
-			<CommonPicture>IHL_Filter</CommonPicture>
-			<CommonPicture>IHL_Generate</CommonPicture>
-			<CommonPicture>IHL_HierarchyImageCollection</CommonPicture>
-			<CommonPicture>IHL_Link</CommonPicture>
-			<CommonPicture>IHL_MethodSettingsInvalid</CommonPicture>
-			<CommonPicture>IHL_MethodSettingsValid</CommonPicture>
-			<CommonPicture>IHL_Order</CommonPicture>
-			<CommonPicture>IHL_Parameters</CommonPicture>
-			<CommonPicture>IHL_Save</CommonPicture>
-			<CommonPicture>IHL_Settings</CommonPicture>
-			<CommonPicture>IHL_Structure</CommonPicture>
-			<CommonPicture>IHL_Testing</CommonPicture>
-			<CommonPicture>IHL_Update</CommonPicture>
-			<CommonPicture>StopProcessing</CommonPicture>
-			<CommonModule>IHL_CommonUse</CommonModule>
-			<CommonModule>IHL_CommonUseClientServer</CommonModule>
-			<CommonModule>IHL_DataComposition</CommonModule>
-			<CommonModule>IHL_InteriorUse</CommonModule>
-			<Catalog>IHL_ExchangeChannels</Catalog>
-			<Catalog>IHL_ExchangeMessages</Catalog>
-			<Catalog>IHL_ExchangeSettings</Catalog>
-			<Catalog>IHL_Methods</Catalog>
-			<Enum>IHL_CRUDMethods</Enum>
-			<Enum>IHL_RESTMethods</Enum>
-			<DataProcessor>DataProcessorJSON</DataProcessor>
-			<DataProcessor>DataProcessorXML</DataProcessor>
-			<DataProcessor>DataProcessorCSV</DataProcessor>
+			<Subsystem>FoxyLink</Subsystem>
+			<CommonPicture>FL_Add</CommonPicture>
+			<CommonPicture>FL_CodeFile</CommonPicture>
+			<CommonPicture>FL_Copy</CommonPicture>
+			<CommonPicture>FL_Delete</CommonPicture>
+			<CommonPicture>FL_DeleteFile</CommonPicture>
+			<CommonPicture>FL_Download</CommonPicture>
+			<CommonPicture>FL_Edit</CommonPicture>
+			<CommonPicture>FL_Export</CommonPicture>
+			<CommonPicture>FL_Fields</CommonPicture>
+			<CommonPicture>FL_Filter</CommonPicture>
+			<CommonPicture>FL_Fire</CommonPicture>
+			<CommonPicture>FL_Form</CommonPicture>
+			<CommonPicture>FL_Generate</CommonPicture>
+			<CommonPicture>FL_GenerateAll</CommonPicture>
+			<CommonPicture>FL_Link</CommonPicture>
+			<CommonPicture>FL_LinkAdd</CommonPicture>
+			<CommonPicture>FL_LinkBroken</CommonPicture>
+			<CommonPicture>FL_LinkDelete</CommonPicture>
+			<CommonPicture>FL_Logotype16</CommonPicture>
+			<CommonPicture>FL_Logotype32</CommonPicture>
+			<CommonPicture>FL_Logotype64</CommonPicture>
+			<CommonPicture>FL_MetadataObjects</CommonPicture>
+			<CommonPicture>FL_MethodSettingsInvalid</CommonPicture>
+			<CommonPicture>FL_MethodSettingsValid</CommonPicture>
+			<CommonPicture>FL_Order</CommonPicture>
+			<CommonPicture>FL_Parameters</CommonPicture>
+			<CommonPicture>FL_Processing</CommonPicture>
+			<CommonPicture>FL_ProcessingError</CommonPicture>
+			<CommonPicture>FL_ProcessingWarning</CommonPicture>
+			<CommonPicture>FL_Prototype</CommonPicture>
+			<CommonPicture>FL_Response</CommonPicture>
+			<CommonPicture>FL_RowAdd</CommonPicture>
+			<CommonPicture>FL_RowDelete</CommonPicture>
+			<CommonPicture>FL_Save</CommonPicture>
+			<CommonPicture>FL_SaveAndClose</CommonPicture>
+			<CommonPicture>FL_Select</CommonPicture>
+			<CommonPicture>FL_Settings</CommonPicture>
+			<CommonPicture>FL_Stop</CommonPicture>
+			<CommonPicture>FL_Structure</CommonPicture>
+			<CommonPicture>FL_Untested</CommonPicture>
+			<CommonPicture>FL_Update</CommonPicture>
+			<CommonTemplate>FL_LICENSE</CommonTemplate>
+			<CommonModule>FL_BackgroundJob</CommonModule>
+			<CommonModule>FL_BatchJob</CommonModule>
+			<CommonModule>FL_CommonUse</CommonModule>
+			<CommonModule>FL_CommonUseClientServer</CommonModule>
+			<CommonModule>FL_CommonUseReUse</CommonModule>
+			<CommonModule>FL_DataComposition</CommonModule>
+			<CommonModule>FL_ErrorsClientServer</CommonModule>
+			<CommonModule>FL_Events</CommonModule>
+			<CommonModule>FL_InteriorUse</CommonModule>
+			<CommonModule>FL_JobServer</CommonModule>
+			<CommonModule>FL_RecurringJob</CommonModule>
+			<CommonModule>FL_RunInSafeMode</CommonModule>
+			<CommonModule>FL_Tasks</CommonModule>
+			<EventSubscription>FL_AccumulationRegistersOnWrite</EventSubscription>
+			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
+			<EventSubscription>FL_CatalogsOnWrite</EventSubscription>
+			<ScheduledJob>FL_JobServer</ScheduledJob>
+			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
+			<Constant>FL_JobServerID</Constant>
+			<Constant>FL_LicenseAccepted</Constant>
+			<Constant>FL_RetryAttempts</Constant>
+			<Constant>FL_WorkerCount</Constant>
+			<CommonForm>FL_ResponseHandlerForm</CommonForm>
+			<Catalog>FL_Channels</Catalog>
+			<Catalog>FL_Exchanges</Catalog>
+			<Catalog>FL_Jobs</Catalog>
+			<Catalog>FL_Methods</Catalog>
+			<Catalog>FL_States</Catalog>
+			<Enum>FL_CRUDMethods</Enum>
+			<Enum>FL_RESTMethods</Enum>
+			<DataProcessor>FL_DataProcessorJSON</DataProcessor>
+			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
 		</ChildObjects>
 	</Configuration>
 </MetaDataObject>

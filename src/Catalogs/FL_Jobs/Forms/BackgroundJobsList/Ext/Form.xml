@@ -1,0 +1,418 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+	<Title>
+		<v8:item>
+			<v8:lang>en</v8:lang>
+			<v8:content>Exchange messages list</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>ru</v8:lang>
+			<v8:content>Список сообщений обмена</v8:content>
+		</v8:item>
+	</Title>
+	<AutoTitle>false</AutoTitle>
+	<Customizable>false</Customizable>
+	<ScalingMode>Compact</ScalingMode>
+	<CommandSet>
+		<ExcludedCommand>Create</ExcludedCommand>
+	</CommandSet>
+	<ShowTitle>false</ShowTitle>
+	<AutoCommandBar name="FormCommandBar" id="-1">
+		<Autofill>false</Autofill>
+	</AutoCommandBar>
+	<Events>
+		<Event name="OnOpen">OnOpen</Event>
+		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
+	</Events>
+	<ChildItems>
+		<UsualGroup name="GroupJobServer" id="50">
+			<Group>Horizontal</Group>
+			<Representation>None</Representation>
+			<ShowTitle>false</ShowTitle>
+			<ExtendedTooltip name="GroupJobServerExtendedTooltip" id="51"/>
+			<ChildItems>
+				<Pages name="GroupJobServerPages" id="58">
+					<PagesRepresentation>None</PagesRepresentation>
+					<ExtendedTooltip name="GroupJobServerPagesExtendedTooltip" id="59"/>
+					<ChildItems>
+						<Page name="GroupJobServerStopped" id="54">
+							<Group>HorizontalIfPossible</Group>
+							<ExtendedTooltip name="GroupJobServerStoppedExtendedTooltip" id="55"/>
+							<ChildItems>
+								<Button name="StartJobServer" id="56">
+									<Type>UsualButton</Type>
+									<GroupVerticalAlign>Center</GroupVerticalAlign>
+									<CommandName>Form.Command.StartJobServer</CommandName>
+									<ExtendedTooltip name="StartJobServerExtendedTooltip" id="57"/>
+								</Button>
+							</ChildItems>
+						</Page>
+						<Page name="GroupJobServerRunning" id="52">
+							<Group>HorizontalIfPossible</Group>
+							<ExtendedTooltip name="GroupJobServerRunningExtendedTooltip" id="53"/>
+							<ChildItems>
+								<Button name="StopJobServer" id="60">
+									<Type>UsualButton</Type>
+									<CommandName>Form.Command.StopJobServer</CommandName>
+									<ExtendedTooltip name="StopJobServerExtendedTooltip" id="61"/>
+								</Button>
+							</ChildItems>
+						</Page>
+					</ChildItems>
+				</Pages>
+			</ChildItems>
+		</UsualGroup>
+		<UsualGroup name="GroupCommandBar" id="37">
+			<ToolTip>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Group command bar</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Group>Horizontal</Group>
+			<Representation>None</Representation>
+			<ShowTitle>false</ShowTitle>
+			<ExtendedTooltip name="GroupCommandBarExtendedTooltip" id="38"/>
+			<ChildItems>
+				<UsualGroup name="GroupJobServerHeartbeat" id="65">
+					<Group>Horizontal</Group>
+					<Representation>None</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ThroughAlign>Use</ThroughAlign>
+					<ExtendedTooltip name="GroupJobServerHeartbeatExtendedTooltip" id="66"/>
+					<ChildItems>
+						<LabelDecoration name="Heartbeat" id="62">
+							<TextColor>#000000</TextColor>
+							<Font ref="style:NormalTextFont" bold="true" italic="false" underline="false" strikeout="false" kind="StyleItem"/>
+							<Title formatted="false">
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Состояние сервера:</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Server heartbeat:</v8:content>
+								</v8:item>
+							</Title>
+							<ContextMenu name="HeartbeatContextMenu" id="63"/>
+							<ExtendedTooltip name="HeartbeatExtendedTooltip" id="64"/>
+						</LabelDecoration>
+						<PictureDecoration name="ServerStatus" id="47">
+							<Width>2</Width>
+							<Height>1</Height>
+							<Title formatted="false">
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Server status</v8:content>
+								</v8:item>
+							</Title>
+							<ContextMenu name="ServerStatusContextMenu" id="48"/>
+							<ExtendedTooltip name="ServerStatusExtendedTooltip" id="49"/>
+						</PictureDecoration>
+					</ChildItems>
+				</UsualGroup>
+				<LabelField name="StatusBar" id="42">
+					<DataPath>StatusBar</DataPath>
+					<TitleLocation>None</TitleLocation>
+					<ContextMenu name="StatusBarContextMenu" id="43"/>
+					<ExtendedTooltip name="StatusBarExtendedTooltip" id="44"/>
+				</LabelField>
+			</ChildItems>
+		</UsualGroup>
+		<Table name="List" id="3">
+			<Representation>List</Representation>
+			<CommandBarLocation>None</CommandBarLocation>
+			<DefaultItem>true</DefaultItem>
+			<MultipleChoice>true</MultipleChoice>
+			<UseAlternationRowColor>true</UseAlternationRowColor>
+			<InitialTreeView>ExpandTopLevel</InitialTreeView>
+			<EnableStartDrag>true</EnableStartDrag>
+			<DataPath>List</DataPath>
+			<RowPictureDataPath>List.DefaultPicture</RowPictureDataPath>
+			<SearchStringLocation>None</SearchStringLocation>
+			<ViewStatusLocation>None</ViewStatusLocation>
+			<SearchControlLocation>None</SearchControlLocation>
+			<AutoRefresh>false</AutoRefresh>
+			<AutoRefreshPeriod>60</AutoRefreshPeriod>
+			<Period>
+				<v8:variant xsi:type="v8:StandardPeriodVariant">Custom</v8:variant>
+				<v8:startDate>0001-01-01T00:00:00</v8:startDate>
+				<v8:endDate>0001-01-01T00:00:00</v8:endDate>
+			</Period>
+			<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
+			<RestoreCurrentRow>false</RestoreCurrentRow>
+			<TopLevelParent xsi:nil="true"/>
+			<ShowRoot>true</ShowRoot>
+			<AllowRootChoice>false</AllowRootChoice>
+			<UpdateOnDataChange>Auto</UpdateOnDataChange>
+			<UserSettingsGroup>1:02023637-7868-4a5f-8576-835a76e0c9ba</UserSettingsGroup>
+			<ContextMenu name="ListContextMenu" id="4">
+				<Autofill>false</Autofill>
+				<ChildItems>
+					<Button name="UpdateList" id="79">
+						<Type>CommandBarButton</Type>
+						<CommandName>Form.Item.List.StandardCommand.Refresh</CommandName>
+						<ExtendedTooltip name="UpdateListExtendedTooltip" id="80"/>
+					</Button>
+					<Button name="ProcessSelectedMessages" id="67">
+						<Type>CommandBarButton</Type>
+						<CommandName>Form.Command.ProcessSelectedMessages</CommandName>
+						<ExtendedTooltip name="ProcessSelectedMessagesExtendedTooltip" id="68"/>
+					</Button>
+					<ButtonGroup name="ListContextMenuGroup1" id="71">
+						<ExtendedTooltip name="ListContextMenuGroup1ExtendedTooltip" id="72"/>
+						<ChildItems>
+							<Button name="ProcessMessages" id="69">
+								<Type>CommandBarButton</Type>
+								<CommandName>Form.Command.ProcessMessages</CommandName>
+								<ExtendedTooltip name="ProcessMessagesExtendedTooltip" id="70"/>
+							</Button>
+						</ChildItems>
+					</ButtonGroup>
+				</ChildItems>
+			</ContextMenu>
+			<AutoCommandBar name="ListCommandBar" id="5">
+				<Autofill>false</Autofill>
+			</AutoCommandBar>
+			<ExtendedTooltip name="ListExtendedTooltip" id="6"/>
+			<SearchStringAddition name="ListSearchString" id="7">
+				<AdditionSource>
+					<Item>List</Item>
+					<Type>SearchStringRepresentation</Type>
+				</AdditionSource>
+				<ContextMenu name="ListSearchStringContextMenu" id="8"/>
+				<ExtendedTooltip name="ListSearchStringExtendedTooltip" id="9"/>
+			</SearchStringAddition>
+			<ViewStatusAddition name="ListViewStatus" id="10">
+				<AdditionSource>
+					<Item>List</Item>
+					<Type>ViewStatusRepresentation</Type>
+				</AdditionSource>
+				<ContextMenu name="ListViewStatusContextMenu" id="11"/>
+				<ExtendedTooltip name="ListViewStatusExtendedTooltip" id="12"/>
+			</ViewStatusAddition>
+			<SearchControlAddition name="ListSearchControl" id="13">
+				<AdditionSource>
+					<Item>List</Item>
+					<Type>SearchControl</Type>
+				</AdditionSource>
+				<ContextMenu name="ListSearchControlContextMenu" id="14"/>
+				<ExtendedTooltip name="ListSearchControlExtendedTooltip" id="15"/>
+			</SearchControlAddition>
+			<Events>
+				<Event name="OnActivateRow">ListOnActivateRow</Event>
+			</Events>
+			<ChildItems>
+				<LabelField name="Owner" id="22">
+					<DataPath>List.Owner</DataPath>
+					<ContextMenu name="OwnerContextMenu" id="23"/>
+					<ExtendedTooltip name="OwnerExtendedTooltip" id="24"/>
+				</LabelField>
+				<LabelField name="Code" id="16">
+					<DataPath>List.Code</DataPath>
+					<DefaultItem>true</DefaultItem>
+					<ContextMenu name="CodeContextMenu" id="17"/>
+					<ExtendedTooltip name="CodeExtendedTooltip" id="18"/>
+				</LabelField>
+				<LabelField name="Method" id="25">
+					<DataPath>List.Method</DataPath>
+					<ContextMenu name="MethodContextMenu" id="26"/>
+					<ExtendedTooltip name="MethodExtendedTooltip" id="27"/>
+				</LabelField>
+				<LabelField name="State" id="76">
+					<DataPath>List.State</DataPath>
+					<ContextMenu name="StateContextMenu" id="77"/>
+					<ExtendedTooltip name="StateExtendedTooltip" id="78"/>
+				</LabelField>
+				<LabelField name="Reference" id="28">
+					<DataPath>~List.Reference</DataPath>
+					<ContextMenu name="ReferenceContextMenu" id="29"/>
+					<ExtendedTooltip name="ReferenceExtendedTooltip" id="30"/>
+				</LabelField>
+				<LabelField name="CreatedAt" id="73">
+					<DataPath>List.CreatedAt</DataPath>
+					<ContextMenu name="CreatedAtContextMenu" id="74"/>
+					<ExtendedTooltip name="CreatedAtExtendedTooltip" id="75"/>
+				</LabelField>
+			</ChildItems>
+		</Table>
+	</ChildItems>
+	<Attributes>
+		<Attribute name="List" id="1">
+			<Type>
+				<v8:Type>cfg:DynamicList</v8:Type>
+			</Type>
+			<MainAttribute>true</MainAttribute>
+			<UseAlways>
+				<Field>List.Ref</Field>
+			</UseAlways>
+			<Settings xsi:type="DynamicList">
+				<ManualQuery>false</ManualQuery>
+				<DynamicDataRead>true</DynamicDataRead>
+				<MainTable>Catalog.FL_Jobs</MainTable>
+				<ListSettings>
+					<dcsset:filter>
+						<dcsset:viewMode>Normal</dcsset:viewMode>
+						<dcsset:userSettingID>dfcece9d-5077-440b-b6b3-45a5cb4538eb</dcsset:userSettingID>
+					</dcsset:filter>
+					<dcsset:order>
+						<dcsset:viewMode>Normal</dcsset:viewMode>
+						<dcsset:userSettingID>88619765-ccb3-46c6-ac52-38e9c992ebd4</dcsset:userSettingID>
+					</dcsset:order>
+					<dcsset:conditionalAppearance>
+						<dcsset:viewMode>Normal</dcsset:viewMode>
+						<dcsset:userSettingID>b75fecce-942b-4aed-abc9-e6a02e460fb3</dcsset:userSettingID>
+					</dcsset:conditionalAppearance>
+					<dcsset:itemsViewMode>Normal</dcsset:itemsViewMode>
+					<dcsset:itemsUserSettingID>911b6018-f537-43e8-a417-da56b22f9aec</dcsset:itemsUserSettingID>
+				</ListSettings>
+			</Settings>
+		</Attribute>
+		<Attribute name="StatusBar" id="2">
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<ConditionalAppearance>
+			<dcsset:item>
+				<dcsset:selection>
+					<dcsset:item>
+						<dcsset:field>List</dcsset:field>
+					</dcsset:item>
+				</dcsset:selection>
+				<dcsset:filter>
+					<dcsset:item xsi:type="dcsset:FilterItemComparison">
+						<dcsset:left xsi:type="dcscor:Field">List.State</dcsset:left>
+						<dcsset:comparisonType>InList</dcsset:comparisonType>
+						<dcsset:right xsi:type="dcscor:DesignTimeValue">Catalog.FL_States.Succeeded</dcsset:right>
+						<dcsset:right xsi:type="dcscor:DesignTimeValue">Catalog.FL_States.Deleted</dcsset:right>
+					</dcsset:item>
+				</dcsset:filter>
+				<dcsset:appearance>
+					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
+						<dcscor:parameter>TextColor</dcscor:parameter>
+						<dcscor:value xsi:type="v8ui:Color">web:MediumGray</dcscor:value>
+					</dcscor:item>
+				</dcsset:appearance>
+			</dcsset:item>
+		</ConditionalAppearance>
+	</Attributes>
+	<Commands>
+		<Command name="ProcessSelectedMessages" id="1">
+			<Title>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Обработать выделенные</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Process selected</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Обработать выделенные сообщения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Process selected messages</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Generate</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>ProcessSelectedMessages</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="ProcessMessages" id="2">
+			<Title>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Обработать сообщения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Process messages</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Обработать сообщения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Process messages</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_GenerateAll</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>ProcessMessages</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="StartJobServer" id="3">
+			<Title>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Запустить сервер</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Start job</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Запустить сервер заданий</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Start job server</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Generate</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>StartJobServer</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="StopJobServer" id="4">
+			<Title>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Остановить сервер</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Stop server</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Остановить сервер заданий</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Stop job server</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Stop</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>StopJobServer</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+	</Commands>
+</Form>

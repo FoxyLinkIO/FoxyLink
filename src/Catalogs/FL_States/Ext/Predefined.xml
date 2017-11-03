@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<PredefinedData xmlns="http://v8.1c.ru/8.3/xcf/predef" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CatalogPredefinedItems" version="2.4">
+	<Item id="7e551a86-acb0-46f2-9247-63b1f3affaa9">
+		<Name>Awaiting</Name>
+		<Code/>
+		<Description>Awaiting</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+	<Item id="cb1e6e39-7dc7-4eab-98bc-8190cf7ceeeb">
+		<Name>Deleted</Name>
+		<Code/>
+		<Description>Deleted</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+	<Item id="1ffc2f4b-add7-4cc7-ab77-c5dbddead989">
+		<Name>Enqueued</Name>
+		<Code/>
+		<Description>Enqueued</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+	<Item id="ece32604-3789-47c8-8176-bfacfd9ff3f7">
+		<Name>Failed</Name>
+		<Code/>
+		<Description>Failed</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+	<Item id="4a11ba31-6689-4347-8e11-63b2f1d39627">
+		<Name>Processing</Name>
+		<Code/>
+		<Description>Processing</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+	<Item id="32d823c7-91f2-4218-bc2a-435a2618fdad">
+		<Name>Scheduled</Name>
+		<Code/>
+		<Description>Scheduled</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+	<Item id="f117db91-a56d-4791-8a3e-20a85be69142">
+		<Name>Succeeded</Name>
+		<Code/>
+		<Description>Succeeded</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+</PredefinedData>
