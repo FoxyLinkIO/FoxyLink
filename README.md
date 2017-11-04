@@ -1,4 +1,23 @@
-FoxyLink (Project information will be updated soon)
+<p align="center">
+  <a href="https://pbazeliuk.com/foxylink">
+    <img src="https://github.com/pbazeliuk/FoxyLink/blob/develop/img/FoxyLink64.png" alt="" width=64 height=64>
+  </a>
+  <h3 align="center">FoxyLink</h3>
+
+  <p align="center">
+    Smooth, intuitive, and powerful subsystem for faster and easier integration development 
+    <br>based on "1C:Enterprise 8" platform
+    <br>
+    <a href="https://pbazeliuk.com/foxylink/docs/"><strong>Explore FoxyLink docs »</strong></a>
+    <br>
+    <br>
+    <a href="https://pbazeliuk.com/foxylink/integrations">FoxyLink Integrations</a>
+    ·
+    <a href="https://pbazeliuk.com/tag/FoxyLink/">Blog</a>
+  </p>
+</p>
+
+<br>
 =========
 
 [![Gitter](https://badges.gitter.im/UpdateExpress/OutputProcessorExtension.svg)](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![License AGPLv3](https://img.shields.io/badge/license-AGPLv3-green.svg)](http://www.gnu.org/licenses/agpl-3.0)
