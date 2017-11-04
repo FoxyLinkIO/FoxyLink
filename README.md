@@ -1,4 +1,4 @@
-Integration happiness library (IHL): Output processor extension 
+FoxyLink (Project information will be updated soon)
 =========
 
 [![Gitter](https://badges.gitter.im/UpdateExpress/OutputProcessorExtension.svg)](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![License AGPLv3](https://img.shields.io/badge/license-AGPLv3-green.svg)](http://www.gnu.org/licenses/agpl-3.0)
@@ -89,7 +89,7 @@ Open-source projects develop more smoothly when discussions are public.
 
 If you have any questions, problems related to IHL extension usage or if you want to discuss new features, please visit the chatroom [Gitter](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=share-link&utm_medium=link&utm_campaign=share-link).  
 
-If you've discovered a bug, please report it to the [IHL GitHub Issues](https://github.com/pbazeliuk/OutputProcessorExtension/issues?state=open). Detailed reports with stack traces, actual and expected behavours are welcome.
+If you've discovered a bug, please report it to the [FoxyLink GitHub Issues](https://github.com/pbazeliuk/FoxyLink/issues?state=open). Detailed reports with stack traces, actual and expected behavours are welcome.
 
 Related Projects
 -----------------
