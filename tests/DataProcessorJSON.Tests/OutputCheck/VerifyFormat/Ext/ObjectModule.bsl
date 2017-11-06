@@ -28,6 +28,7 @@ Procedure ЗаполнитьНаборТестов(TestsSet) Export
     
     TestsSet.Добавить("Fact_TwoInnerObjectValue");
     TestsSet.Добавить("Fact_ObjectValue");
+    TestsSet.Добавить("Fact_ObjectArraySeveralTypes");
     
     TestsSet.Добавить("Fact_ComplexHierarchy_1");
     
@@ -213,6 +214,36 @@ Procedure Fact_ObjectValue() Export
         |";
 
     VerifyAssertion("ObjectValueOutput", "READ", BenchmarkData);
+    
+EndProcedure // Fact_ObjectValue()
+
+Procedure Fact_ObjectArraySeveralTypes() Export
+    
+    BenchmarkData = "{
+        |""Name"": ""PE KS"",
+        |""Credentials"": {
+        |""Login"": ""ks123"",
+        |""Password"": ""yfk,yjV82""
+        |},
+        |""App"": {
+        |""Login"": ""f12a00d3"",
+        |""Password"": ""f43ad59""
+        |},
+        |""Accounts"": [
+        |1,
+        |{
+        |""ref"": ""8e4ddf8e"",
+        |""Name"": ""KS - 260080""
+        |},
+        |2,
+        |{
+        |""ref"": ""4731c66c"",
+        |""Name"": ""KS - 260081""
+        |}
+        |]
+        |}";
+
+    VerifyAssertion("ObjectArraySeveralTypes", "READ", BenchmarkData);
     
 EndProcedure // Fact_ObjectValue()
 
