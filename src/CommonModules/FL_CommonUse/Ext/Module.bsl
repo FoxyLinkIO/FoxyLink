@@ -791,6 +791,116 @@ Function MetadataObjectNameByManagerName(ManagerName) Export
     
 EndFunction // MetadataObjectNameByManagerName()
 
+// Returns the object manager by a full metadata object name.
+//
+// Parameters:
+//  FullName - String - full metadata object name. 
+//                  Example: "AccumulationRegister.Inventory".
+//
+// Returns:
+//  ObjectManager.
+//
+Function ObjectManagerByFullName(FullName) Export
+    
+    // The code in the comment written in one line is below this comment.
+    // To edit the code, remove the comment.
+    // For more information about the code in 1 line see http://infostart.ru/public/71130/.
+    
+    //Parts = StrSplit(FullName, ".");
+    //If Parts.Count() >= 2 Then
+    //    MOType = Upper(Parts[0]);
+    //    MOName = Parts[1];
+    //EndIf;
+    //
+    //If MOType = "EXCHANGEPLAN" 
+    //    Or MOType = "ПЛАНОБМЕНА" Then
+    //    Manager = ExchangePlans;
+    //ElsIf MOType = "CATALOG"    
+    //    Or MOType = "СПРАВОЧНИК" Then
+    //    Manager = Catalogs;
+    //ElsIf MOType = "DOCUMENT" 
+    //    Or MOType = "ДОКУМЕНТ" Then
+    //    Manager = Documents;
+    //ElsIf MOType = "DOCUMENTJOURNAL" 
+    //    Or MOType = "ЖУРНАЛДОКУМЕНТОВ" Then
+    //    Manager = DocumentJournals;
+    //ElsIf MOType = "ENUM" 
+    //    Or MOType = "ПЕРЕЧИСЛЕНИЕ" Then
+    //    Manager = Enums;
+    //ElsIf MOType = "REPORT" 
+    //    Or MOType = "ОТЧЕТ" Then
+    //    Manager = Reports;
+    //ElsIf MOType = "DATAPROCESSOR" 
+    //    Or MOType = "ОБРАБОТКА" Then
+    //    Manager = DataProcessors;
+    //ElsIf MOType = "CHARTOFCHARACTERISTICTYPES" 
+    //    Or MOType = "ПЛАНВИДОВХАРАКТЕРИСТИК" Then
+    //    Manager = ChartsOfCharacteristicTypes;
+    //ElsIf MOType = "CHARTOFACCOUNTS" 
+    //    Or MOType = "ПЛАНСЧЕТОВ" Then
+    //    Manager = ChartsOfAccounts;
+    //ElsIf MOType = "CHARTOFCALCULATIONTYPES" 
+    //    Or MOType = "ПЛАНВИДОВРАСЧЕТА" Then
+    //    Manager = ChartsOfCalculationTypes;
+    //ElsIf MOType = "INFORMATIONREGISTER" 
+    //    Or  MOType = "РЕГИСТРСВЕДЕНИЙ" Then
+    //    Manager = InformationRegisters;
+    //ElsIf MOType = "ACCUMULATIONREGISTER" 
+    //    Or MOType = "РЕГИСТРНАКОПЛЕНИЯ" Then
+    //    Manager = AccumulationRegisters;
+    //ElsIf MOType = "ACCOUNTINGREGISTER" 
+    //    Or MOType = "РЕГИСТРБУХГАЛТЕРИИ" Then
+    //    Manager = AccountingRegisters;
+    //ElsIf MOType = "CALCULATIONREGISTER"
+    //    Or MOType = "РЕГИСТРРАСЧЕТА" Then
+    //    
+    //    If Parts.Count() = 2 Then
+    //        // Calculation register
+    //        Manager = CalculationRegisters;
+    //    Else
+    //        MOSubordinate = Upper(Parts[2]);
+    //        SlaveName = Parts[3];
+    //        If MOSubordinate = "RECALCULATION" 
+    //            Or MOSubordinate = "ПЕРЕРАСЧЕТ" Then
+    //            // Recalculation
+    //            Try
+    //                Manager = CalculationRegisters[MOName].Recalculations;
+    //                MOName = SlaveName;
+    //            Except
+    //                Manager = Undefined;
+    //            EndTry;
+    //        EndIf;
+    //    EndIf;
+    //    
+    //ElsIf MOType = "BUSINESSPROCESS"
+    //    Or MOType = "БИЗНЕСПРОЦЕСС" Then
+    //    Manager = BusinessProcesses;
+    //ElsIf MOType = "TASK"
+    //    Or MOType = "ЗАДАЧА" Then
+    //    Manager = Tasks;
+    //ElsIf MOType = "CONSTANT" 
+    //    Or MOType = "КОНСТАНТА" Then
+    //    Manager = Constants;
+    //ElsIf MOType = "SEQUENCE" 
+    //    Or MOType = "ПОСЛЕДОВАТЕЛЬНОСТЬ" Then
+    //    Manager = Sequences;
+    //EndIf;
+    //
+    //If Manager <> Undefined Then
+    //    Try
+    //        Return Manager[MOName];
+    //    Except
+    //        Manager = Undefined;
+    //    EndTry;
+    //EndIf;
+    //
+    //Raise StrTemplate(NStr("en = 'Unknown type of metadata object ''%1''.';
+    //        |ru = 'Неизвестный тип объекта метаданных ''%1''.'"), FullName);
+    
+    Parts = StrSplit(FullName, ".");If Parts.Count() >= 2 Then MOType = Upper(Parts[0]);MOName = Parts[1];EndIf;If MOType = "EXCHANGEPLAN" Or MOType = "ПЛАНОБМЕНА" Then Manager = ExchangePlans;ElsIf MOType = "CATALOG" Or MOType = "СПРАВОЧНИК" Then Manager = Catalogs;ElsIf MOType = "DOCUMENT" Or MOType = "ДОКУМЕНТ" Then Manager = Documents;ElsIf MOType = "DOCUMENTJOURNAL" Or MOType = "ЖУРНАЛДОКУМЕНТОВ" Then Manager = DocumentJournals;ElsIf MOType = "ENUM" Or MOType = "ПЕРЕЧИСЛЕНИЕ" Then Manager = Enums;ElsIf MOType = "REPORT" Or MOType = "ОТЧЕТ" Then Manager = Reports;ElsIf MOType = "DATAPROCESSOR" Or MOType = "ОБРАБОТКА" Then Manager = DataProcessors;ElsIf MOType = "CHARTOFCHARACTERISTICTYPES" Or MOType = "ПЛАНВИДОВХАРАКТЕРИСТИК" Then Manager = ChartsOfCharacteristicTypes;ElsIf MOType = "CHARTOFACCOUNTS" Or MOType = "ПЛАНСЧЕТОВ" Then Manager = ChartsOfAccounts;ElsIf MOType = "CHARTOFCALCULATIONTYPES" Or MOType = "ПЛАНВИДОВРАСЧЕТА" Then Manager = ChartsOfCalculationTypes;ElsIf MOType = "INFORMATIONREGISTER" Or  MOType = "РЕГИСТРСВЕДЕНИЙ" Then Manager = InformationRegisters; ElsIf MOType = "ACCUMULATIONREGISTER" Or MOType = "РЕГИСТРНАКОПЛЕНИЯ" Then Manager = AccumulationRegisters; ElsIf MOType = "ACCOUNTINGREGISTER" Or MOType = "РЕГИСТРБУХГАЛТЕРИИ" Then Manager = AccountingRegisters;ElsIf MOType = "CALCULATIONREGISTER" Or MOType = "РЕГИСТРРАСЧЕТА" Then If Parts.Count() = 2 Then Manager = CalculationRegisters;Else MOSubordinate = Upper(Parts[2]);SlaveName = Parts[3];If MOSubordinate = "RECALCULATION" Or MOSubordinate = "ПЕРЕРАСЧЕТ" Then Try Manager = CalculationRegisters[MOName].Recalculations;MOName = SlaveName;Except Manager = Undefined;EndTry;EndIf;EndIf;ElsIf MOType = "BUSINESSPROCESS"Or MOType = "БИЗНЕСПРОЦЕСС" Then Manager = BusinessProcesses;ElsIf MOType = "TASK" Or MOType = "ЗАДАЧА" Then Manager = Tasks;ElsIf MOType = "CONSTANT" Or MOType = "КОНСТАНТА" Then Manager = Constants;ElsIf MOType = "SEQUENCE" Or MOType = "ПОСЛЕДОВАТЕЛЬНОСТЬ" Then Manager = Sequences;EndIf;If Manager <> Undefined Then Try Return Manager[MOName];Except Manager = Undefined;EndTry;EndIf;Raise StrTemplate(NStr("en = 'Unknown type of metadata object ''%1''.';ru = 'Неизвестный тип объекта метаданных ''%1''.'"), FullName);
+
+EndFunction // ObjectManagerByFullName()
+
 
 // Checks if the passed attribute name is included in the subset of standard attributes.
 // 
