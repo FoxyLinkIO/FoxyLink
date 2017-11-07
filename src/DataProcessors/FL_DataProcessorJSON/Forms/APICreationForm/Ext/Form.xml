@@ -3,11 +3,11 @@
 	<Title>
 		<v8:item>
 			<v8:lang>en</v8:lang>
-			<v8:content>API schema constructor</v8:content>
+			<v8:content>API schema constructor (FoxyLink)</v8:content>
 		</v8:item>
 		<v8:item>
 			<v8:lang>ru</v8:lang>
-			<v8:content>Конструктор схемы API</v8:content>
+			<v8:content>Конструктор схемы API (FoxyLink)</v8:content>
 		</v8:item>
 	</Title>
 	<AutoTitle>false</AutoTitle>
@@ -46,8 +46,8 @@
 					<DataPath>Object.APISchema</DataPath>
 					<RowPictureDataPath>Object.APISchema.RowPicture</RowPictureDataPath>
 					<RowsPicture>
-						<xr:Ref>StdPicture.Attribute</xr:Ref>
-						<xr:LoadTransparent>true</xr:LoadTransparent>
+						<xr:Abs>RowsPicture.png</xr:Abs>
+						<xr:LoadTransparent>false</xr:LoadTransparent>
 					</RowsPicture>
 					<ContextMenu name="APISchemaContextMenu" id="2">
 						<Autofill>false</Autofill>
@@ -102,6 +102,66 @@
 										<OnlyInAllActions>false</OnlyInAllActions>
 										<CommandName>Form.Command.LoadSample</CommandName>
 										<ExtendedTooltip name="LoadSampleExtendedTooltip" id="58"/>
+									</Button>
+								</ChildItems>
+							</ButtonGroup>
+							<ButtonGroup name="APISchemaAddItem" id="63">
+								<EnableContentChange>true</EnableContentChange>
+								<ExtendedTooltip name="APISchemaAddItemExtendedTooltip" id="64"/>
+								<ChildItems>
+									<Button name="AddObjectItem" id="71">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.AddObjectItem</CommandName>
+										<Picture>
+											<xr:Abs>Picture.png</xr:Abs>
+											<xr:LoadTransparent>false</xr:LoadTransparent>
+										</Picture>
+										<ExtendedTooltip name="AddObjectItemExtendedTooltip" id="72"/>
+									</Button>
+									<Button name="AddArrayItem" id="73">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.AddArrayItem</CommandName>
+										<Picture>
+											<xr:Abs>Picture.png</xr:Abs>
+											<xr:LoadTransparent>false</xr:LoadTransparent>
+										</Picture>
+										<ExtendedTooltip name="AddArrayItemExtendedTooltip" id="74"/>
+									</Button>
+									<Button name="AddStringItem" id="61">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.AddStringItem</CommandName>
+										<Picture>
+											<xr:Abs>Picture.png</xr:Abs>
+											<xr:LoadTransparent>false</xr:LoadTransparent>
+										</Picture>
+										<ExtendedTooltip name="AddStringItemExtendedTooltip" id="62"/>
+									</Button>
+									<Button name="AddNumberItem" id="65">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.AddNumberItem</CommandName>
+										<Picture>
+											<xr:Abs>Picture.png</xr:Abs>
+											<xr:LoadTransparent>false</xr:LoadTransparent>
+										</Picture>
+										<ExtendedTooltip name="AddNumberItemExtendedTooltip" id="66"/>
+									</Button>
+									<Button name="AddBooleanItem" id="67">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.AddBooleanItem</CommandName>
+										<Picture>
+											<xr:Abs>Picture.png</xr:Abs>
+											<xr:LoadTransparent>false</xr:LoadTransparent>
+										</Picture>
+										<ExtendedTooltip name="AddBooleanItemExtendedTooltip" id="68"/>
+									</Button>
+									<Button name="AddNullItem" id="69">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.AddNullItem</CommandName>
+										<Picture>
+											<xr:Abs>Picture.png</xr:Abs>
+											<xr:LoadTransparent>false</xr:LoadTransparent>
+										</Picture>
+										<ExtendedTooltip name="AddNullItemExtendedTooltip" id="70"/>
 									</Button>
 								</ChildItems>
 							</ButtonGroup>
@@ -304,7 +364,12 @@
 							</v8:item>
 						</Title>
 						<Type>
-							<v8:Type>xs:boolean</v8:Type>
+							<v8:Type>xs:decimal</v8:Type>
+							<v8:NumberQualifiers>
+								<v8:Digits>1</v8:Digits>
+								<v8:FractionDigits>0</v8:FractionDigits>
+								<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+							</v8:NumberQualifiers>
 						</Type>
 					</Column>
 					<Column name="MaxLength" id="5">
@@ -681,6 +746,150 @@
 			</Picture>
 			<Action>LoadSample</Action>
 			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="AddStringItem" id="5">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add string item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент строка</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add string item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент строка</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Action>AddStringItem</Action>
+			<Representation>Picture</Representation>
+		</Command>
+		<Command name="AddNumberItem" id="6">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add number item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент число</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add number item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент число</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Action>AddNumberItem</Action>
+			<Representation>Picture</Representation>
+		</Command>
+		<Command name="AddBooleanItem" id="7">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add boolean item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент булево</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add boolean item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент булево</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Action>AddBooleanItem</Action>
+			<Representation>Picture</Representation>
+		</Command>
+		<Command name="AddNullItem" id="8">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add null item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент null</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add null item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент null</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Action>AddNullItem</Action>
+			<Representation>Picture</Representation>
+		</Command>
+		<Command name="AddObjectItem" id="9">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add object item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент объект</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add object item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент объект</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Action>AddObjectItem</Action>
+			<Representation>Picture</Representation>
+		</Command>
+		<Command name="AddArrayItem" id="10">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add array item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент массив</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add array item</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить элемент массив</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Action>AddArrayItem</Action>
+			<Representation>Picture</Representation>
 		</Command>
 	</Commands>
 </Form>

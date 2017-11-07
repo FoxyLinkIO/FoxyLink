@@ -35,7 +35,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
             
         EndIf;
     EndIf;
-    
+  
 EndProcedure // OnCreateAtServer()
 
 #EndRegion // FormEventHandlers
@@ -65,6 +65,7 @@ Procedure APISchemaTypeOnChange(Item)
     
     CurrentData = Items.APISchema.CurrentData;
     If CurrentData <> Undefined Then
+        CurrentData.RowPicture = RowPictureNumber(CurrentData.Type);
         CurrentData.StructuredType = IsStructuredType(CurrentData.Type);        
     EndIf;
     
@@ -83,14 +84,21 @@ Procedure APISchemaTypeChoiceProcessing(Item, SelectedValue, StandardProcessing)
         If IsStructuredType(CurrentData.Type) = True
           And IsStructuredType(SelectedValue) = False Then
           
-            CurrentData.GetItems().Clear();        
-            Message = StrTemplate(
-                NStr(
-                    "en = 'The new type ''%1'' cannot have nested items. Nested items have just been cleared.';
-                    |ru = 'Новый тип ''%1'' не может иметь вложенные элементы. Вложенные элементы были удалены.'"), 
-                SelectedValue);
+            APISchemaItems = CurrentData.GetItems();        
+            If APISchemaItems.Count() > 0 Then
                 
-            FL_CommonUseClientServer.NotifyUser(Message);  
+                APISchemaItems.Clear();
+                
+                Explanation = StrTemplate(
+                    NStr(
+                        "en = 'The new type ''%1'' cannot have nested items. Nested items have just been cleared.';
+                        |ru = 'Новый тип ''%1'' не может иметь вложенные элементы. Вложенные элементы были удалены.'"), 
+                    SelectedValue);
+                
+                ShowUserNotification(Title, , Explanation, 
+                    PictureLib.FL_Logotype64);
+                                
+            EndIf;
             
         EndIf;
                     
@@ -134,88 +142,51 @@ EndProcedure // SaveAndClose()
 
 
 &AtClient
+Procedure AddObjectItem(Command)
+    
+    AddRowToAPISchema("Object");
+    
+EndProcedure // AddObjectItem()
+
+&AtClient
+Procedure AddArrayItem(Command)
+    
+    AddRowToAPISchema("Array");
+    
+EndProcedure // AddArrayItem()
+
+&AtClient
+Procedure AddStringItem(Command)
+    
+    AddRowToAPISchema("String");
+    
+EndProcedure // AddStringItem()
+
+&AtClient
+Procedure AddNumberItem(Command)
+    
+    AddRowToAPISchema("Number");
+    
+EndProcedure // AddNumberItem() 
+
+&AtClient
+Procedure AddBooleanItem(Command)
+    
+    AddRowToAPISchema("Boolean");
+    
+EndProcedure // AddBooleanItem()
+
+&AtClient
+Procedure AddNullItem(Command)
+    
+    AddRowToAPISchema("Null");
+    
+EndProcedure // AddNullItem() 
+
+&AtClient
 Procedure AddRowAPITable(Command)
     
-    CurrentData = Items.APISchema.CurrentData;
-    If CurrentData = Undefined Then
-        
-        If Object.APISchema.GetItems().Count() = 0 Then 
-            
-            NewItem = Object.APISchema.GetItems().Add();
-            NewItem.Name = "RootItem";
-            NewItem.RowPicture = False;
-            
-            // Set focus on root item.
-            Items.APISchema.CurrentRow = NewItem.GetID();
-            
-        Else
-            
-            ErrorMessage = NStr(
-                "en = 'Failed to add another root item. The root item already exists.';
-                |ru = 'Не удалось добавить еще один корневой элемент. Корневой элемент уже существует'");
-                
-            FL_CommonUseClientServer.NotifyUser(ErrorMessage);  
-            
-        EndIf;  
-        
-    Else
-        
-        If IsBlankString(CurrentData.Name) Then 
-            
-            ErrorMessage = NStr(
-                "en = 'Failed to add new item. Field name is empty.';
-                |ru = 'Не удалось добавить новый элемент. Имя поля не заполнено.'");
-
-            FL_CommonUseClientServer.NotifyUser(ErrorMessage, , 
-                "Object.APISchema[" + CurrentData.GetId() + "].Name");
-            
-            Return;
-            
-        EndIf;
-        
-        If IsBlankString(CurrentData.Type) Then 
-            
-            ErrorMessage = NStr(
-                "en = 'Failed to add new item. Type is empty.';
-                |ru = 'Не удалось добавить новый элемент. Тип не заполнен.'");
-
-            FL_CommonUseClientServer.NotifyUser(ErrorMessage, , 
-                "Object.APISchema[" + CurrentData.GetId() + "].Type");
-            
-            Return;
-            
-        EndIf;
-        
-        If Not IsStructuredType(CurrentData.Type) Then
-         
-            ErrorMessage = NStr(
-                "en = 'Failed to add new item. Type can not have nested items.';
-                |ru = 'Не удалось добавить новый элемент. Тип не может иметь вложенных элементов.'");
-
-            FL_CommonUseClientServer.NotifyUser(ErrorMessage, , 
-                "Object.APISchema[" + CurrentData.GetId() + "].Type");
-            
-            Return;
-            
-        Else
-            
-            CurrentId = CurrentData.GetId();
-            Parent = Object.APISchema.FindByID(CurrentId);
-            
-            NewItem = Parent.GetItems().Add();
-            NewItem.RowPicture = True;
-            
-            If CurrentData.Type = "Array" Then
-                NewItem.Name = "ArrayItem";    
-            EndIf;
-            
-            If Not Items.APISchema.Expanded(CurrentId) Then
-                Items.APISchema.Expand(CurrentId);    
-            EndIf;    
-          
-        EndIf; 
-                
-    EndIf;
+    AddRowToAPISchema("");
     
 EndProcedure // AddRowToAPITable()
 
@@ -307,6 +278,76 @@ Procedure DoAfterChooseRowToDelete(QuestionResult,
 EndProcedure // DoAfterChooseRowToDelete()
 
 
+// Only for internal use.
+//
+&AtClient
+Procedure AddRowToAPISchema(Type)
+    
+    CurrentData = Items.APISchema.CurrentData;
+    If CurrentData = Undefined Then
+        
+        If Object.APISchema.GetItems().Count() = 0 Then 
+            
+            NewItem = NewAPISchemaRow(Object.APISchema.GetItems(), "RootItem", 
+                Type);
+            NewItem.StructuredType = IsStructuredType(Type);
+            
+            // Set focus on root item.
+            Items.APISchema.CurrentRow = NewItem.GetID();
+            
+        Else
+            
+            Explanation = NStr(
+                "en = 'Failed to add another root item. The root item already exists.';
+                |ru = 'Не удалось добавить еще один корневой элемент. Корневой элемент уже существует'");
+                
+            ShowUserNotification(Title, , Explanation, 
+                PictureLib.FL_Logotype64);  
+            
+        EndIf;  
+        
+    Else
+                
+        If IsBlankString(CurrentData.Type) Then 
+            
+            Explanation = NStr(
+                "en = 'Failed to add new item. Type is empty.';
+                |ru = 'Не удалось добавить новый элемент. Тип не заполнен.'");
+
+            ShowUserNotification(Title, , Explanation, 
+                PictureLib.FL_Logotype64);
+            
+            Return;
+            
+        EndIf;
+        
+        If Not IsStructuredType(CurrentData.Type) Then
+         
+            Explanation = NStr(
+                "en = 'Failed to add new item. Type can not have nested items.';
+                |ru = 'Не удалось добавить новый элемент. Тип не может иметь вложенных элементов.'");
+
+            ShowUserNotification(Title, , Explanation, 
+                PictureLib.FL_Logotype64);
+            
+        Else
+            
+            CurrentId = CurrentData.GetId();
+            Parent = Object.APISchema.FindByID(CurrentId);
+            
+            NewItem = NewAPISchemaRow(Parent.GetItems(), "", Type);
+            NewItem.StructuredType = IsStructuredType(Type);
+                        
+            If Not Items.APISchema.Expanded(CurrentId) Then
+                Items.APISchema.Expand(CurrentId);    
+            EndIf;    
+          
+        EndIf; 
+                
+    EndIf;    
+    
+EndProcedure // AddRowToAPISchema()
+
 
 // Only for internal use.
 //
@@ -344,6 +385,21 @@ EndProcedure // LoadSampleAtServer()
 &AtServer
 Function PutValueTreeToTempStorage(Val OwnerUUID)
     
+    // TODO: Check value tree
+    //If IsBlankString(CurrentData.Name) Then 
+    //    
+    //    Explanation = NStr(
+    //        "en = 'Failed to add new item. Field name is empty.';
+    //        |ru = 'Не удалось добавить новый элемент. Имя поля не заполнено.'");
+
+    //    ShowUserNotification(Title, , Explanation, 
+    //        PictureLib.FL_Logotype64);
+    //    
+    //    Raise;
+    //    
+    //EndIf;
+
+    
     ValueTree = FormAttributeToValue("Object.APISchema", Type("ValueTree"));
     Return PutToTempStorage(ValueTree, OwnerUUID);
     
@@ -374,26 +430,28 @@ Procedure FillAPISchema(Rows, Name, SampleResult)
     
     If TypeOf(SampleResult) = Type("Map") Then
         
-        ObjectRows = AddRowToAPISchema(Rows, Name, "Object");
+        ObjectRows = NewAPISchemaRow(Rows, Name, "Object");
+        ObjectRows.StructuredType = True;
         For Each Item In SampleResult Do
             FillAPISchema(ObjectRows.Rows, Item.Key, Item.Value);             
         EndDo;
         
     ElsIf TypeOf(SampleResult) = Type("Array") Then
         
-        ObjectRows = AddRowToAPISchema(Rows, Name, "Array");
+        ObjectRows = NewAPISchemaRow(Rows, Name, "Array");
+        ObjectRows.StructuredType = True;
         For Each Item In SampleResult Do
             FillAPISchema(ObjectRows.Rows, "ArrayItem", Item);             
         EndDo;
         
     ElsIf TypeOf(SampleResult) = Type("String") Then
-        AddRowToAPISchema(Rows, Name, "String");
+        NewAPISchemaRow(Rows, Name, "String");
     ElsIf TypeOf(SampleResult) = Type("Number") Then
-        AddRowToAPISchema(Rows, Name, "Number");
+        NewAPISchemaRow(Rows, Name, "Number");
     ElsIf TypeOf(SampleResult) = Type("Boolean") Then
-        AddRowToAPISchema(Rows, Name, "Boolean");
+        NewAPISchemaRow(Rows, Name, "Boolean");
     Else
-        AddRowToAPISchema(Rows, Name, "Null");    
+        NewAPISchemaRow(Rows, Name, "Null");    
     EndIf;    
     
 EndProcedure // FillAPISchema() 
@@ -401,14 +459,40 @@ EndProcedure // FillAPISchema()
 
 // Only for internal use.
 //
-&AtServerNoContext
-Function AddRowToAPISchema(Rows, Name, Type)
+&AtClientAtServerNoContext
+Function RowPictureNumber(Type)
+    
+    If Type = "String" Then
+        Number = 1;   
+    ElsIf Type = "Boolean" Then
+        Number = 2;    
+    ElsIf Type = "Number" Then
+        Number = 3;
+    ElsIf Type = "Null" Then
+        Number = 4;
+    ElsIf Type = "Object" Then
+        Number = 5;
+    ElsIf Type = "Array" Then
+        Number = 6; 
+    Else
+        Number = 0;    
+    EndIf;
+    
+    Return Number;
+
+EndFunction // RowPictureNumber()
+    
+// Only for internal use.
+//
+&AtClientAtServerNoContext
+Function NewAPISchemaRow(Rows, Name, Type)
     
     NewRow = Rows.Add();
     NewRow.Name = Name;
     NewRow.Type = Type;
+    NewRow.RowPicture = RowPictureNumber(Type);    
     Return NewRow;
     
-EndFunction // AddRowToAPISchema() 
+EndFunction // NewAPISchemaRow()
 
 #EndRegion // ServiceProceduresAndFunctions
