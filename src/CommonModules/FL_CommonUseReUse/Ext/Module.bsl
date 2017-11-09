@@ -16,10 +16,10 @@
 
 #Region ProgramInterface
 
-// Returns an fixed array of splitters that exist in the configuration.
+// Returns fixed array of splitters that exist in the configuration.
 //
 // Returns: 
-//  FixedArray(String) - an array of common attribute names, that are used as splitters.
+//  FixedArray(String) - fixed array of common attribute names, that are used as splitters.
 //
 Function ConfigurationSplitters() Export
 

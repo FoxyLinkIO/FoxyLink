@@ -18,7 +18,7 @@
 				<v8:TypeSet>cfg:AccumulationRegisterRecordSet</v8:TypeSet>
 			</Source>
 			<Event>OnWrite</Event>
-			<Handler>CommonModule.FL_Events.FL_AccumulationRegisterOnWrite</Handler>
+			<Handler>CommonModule.FL_Events.AccumulationRegisterOnWrite</Handler>
 		</Properties>
 	</EventSubscription>
 </MetaDataObject>

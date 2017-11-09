@@ -36,6 +36,26 @@ Procedure CatalogBeforeWrite(SourceObject, Cancel) Export
     
 EndProcedure // CatalogBeforeWrite()
 
+// Handler of BeforeWrite accumulation register event subscription.
+//
+// Parameters:
+//  Source    - AccumulationRegisterRecordSet - represents a collection of 
+//                                  records of accumulation register in memory.
+//  Cancel    - Boolean - action execution cancel flag. 
+//  Replacing - Boolean - sets write mode. 
+//          True  - the set records in the database are replaced by writing.
+//          False - the current record set is added to the database by writing. 
+//
+Procedure AccumulationRegisterBeforeWrite(Source, Cancel, Replacing) Export
+    
+    If Cancel = False Then
+        
+        
+        
+    EndIf;
+    
+EndProcedure // AccumulationRegisterBeforeWrite()
+
 
 // Handler of OnWrite catalog event subscription.
 //
@@ -104,7 +124,7 @@ EndProcedure // CatalogOnWrite()
 //          True  - the set records in the database are replaced by writing.
 //          False - the current record set is added to the database by writing. 
 //
-Procedure FL_AccumulationRegisterOnWrite(Source, Cancel, Replacing) Export
+Procedure AccumulationRegisterOnWrite(Source, Cancel, Replacing) Export
     
     If Cancel = False Then
         
@@ -112,7 +132,7 @@ Procedure FL_AccumulationRegisterOnWrite(Source, Cancel, Replacing) Export
         
     EndIf;
     
-EndProcedure // FL_AccumulationRegisterOnWrite()
+EndProcedure // AccumulationRegisterOnWrite()
 
 #EndRegion // ProgramInterface
 

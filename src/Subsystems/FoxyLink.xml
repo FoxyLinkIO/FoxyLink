@@ -39,7 +39,6 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Methods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Update</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Download</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">837a6e10-d078-46f1-9322-ef88d4649f13</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUse</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Export</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Prototype</xr:Item>
@@ -90,6 +89,8 @@
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_AccumulationRegistersOnWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_GenerateAll</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_CodeFile</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_EventsReUse</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_AccumulationRegistersBeforeWrite</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>
