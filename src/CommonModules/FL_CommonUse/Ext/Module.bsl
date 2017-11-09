@@ -336,7 +336,7 @@ Function ConfigurationMetadataTree(Filter = Undefined) Export
         3,
         CollectionsOfMetadataObjects);
         
-    NewMetadataObjectCollectionRow(TypeNameAccountingRegisters(),      
+    NewMetadataObjectCollectionRow(TypeNameAccumulationRegisters(),      
         NStr("en='Accumulation registers';ru='Регистры накопления'"),       
         PictureLib.AccumulationRegister,      
         PictureLib.AccumulationRegister,
@@ -914,9 +914,7 @@ EndFunction // ObjectManagerByFullName()
 //
 Function IsStandardAttribute(StandardAttributes, AttributeName) Export
 
-    Synonyms = New Map;
-    Synonyms.Insert("ССЫЛКА", "REF");
-    Synonyms.Insert("REF", "ССЫЛКА");
+    Synonyms = FL_CommonUseReUse.StandardAttributeSynonyms();
     
     Name = Upper(AttributeName);
     For Each Attribute In StandardAttributes Do
