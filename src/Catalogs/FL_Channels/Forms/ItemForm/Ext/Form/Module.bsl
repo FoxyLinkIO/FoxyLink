@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region FormEventHandlers
 
@@ -38,7 +41,7 @@ EndProcedure // OnCreateAtServer()
 &AtClient
 Procedure BasicChannelGuidOnChange(Item)
     
-    If Not IsBlankString(Object.BasicChannelGuid) Then
+    If NOT IsBlankString(Object.BasicChannelGuid) Then
         LoadBasicChannelInfo();   
     EndIf;
     
@@ -49,8 +52,8 @@ Procedure ChannelStandardClick(Item, StandardProcessing)
     
     StandardProcessing = False;
     BeginRunningApplication(New NotifyDescription(
-        "DoAfterBeginRunningApplication", ThisObject), 
-        ChannelStandardLink(ChannelProcessorName, Object.BasicChannelGuid));
+            "DoAfterBeginRunningApplication", ThisObject), 
+        ChannelStandardLink(Object.BasicChannelGuid), , True);
     
 EndProcedure // ChannelStandardClick()
 
@@ -61,8 +64,8 @@ EndProcedure // ChannelStandardClick()
 &AtClient
 Procedure ChannelForm(Command)
     
-    ChannelParameters = ChannelParameters(ChannelProcessorName, 
-        Object.BasicChannelGuid, "ChannelForm");
+    ChannelParameters = ChannelParameters(Object.BasicChannelGuid, 
+        "ChannelForm");
     ChannelParameters.Insert("ChannelData", Object.ChannelData);
     ChannelParameters.Insert("EncryptedData", Object.EncryptedData);
     
@@ -72,8 +75,6 @@ Procedure ChannelForm(Command)
         New UUID, 
         , 
         , 
-        //New NotifyDescription("DoAfterCloseConnectionForm", ThisObject, 
-        //    ChannelParameters)
         , 
         FormWindowOpeningMode.LockOwnerWindow);
           
@@ -82,8 +83,8 @@ EndProcedure // ChannelForm()
 &AtClient
 Procedure Connect(Command)
     
-    ChannelParameters = ChannelParameters(ChannelProcessorName, 
-        Object.BasicChannelGuid);
+    ChannelParameters = ChannelParameters(Object.BasicChannelGuid,
+        "ConnectionForm");
     OpenForm(ChannelParameters.FormName, 
         ChannelParameters, 
         ThisObject,
@@ -99,7 +100,7 @@ EndProcedure // Connect()
 &AtClient
 Procedure Disconnect(Command)
     
-    If Modified = False Then
+    If NOT Modified Then
         
         ShowQueryBox(New NotifyDescription("DoAfterChannelDisconnect", ThisObject),
             NStr("en = 'Invalidate channel connection?';
@@ -122,65 +123,86 @@ EndProcedure // Disconnect()
 
 // Only for internal use.
 //
+// Parameters:
+//  CodeReturn           - Number, Undefined - the code of return, if a relevant
+//                          input parameter <WaitForCompletion> is not specified. 
+//  AdditionalParameters - Arbitrary         - the value specified when the 
+//                              NotifyDescription object was created.
+//
 &AtClient
 Procedure DoAfterBeginRunningApplication(CodeReturn, AdditionalParameters) Export
     
-    // TODO: Some checks   
+    If CodeReturn <> 0 Then 
+        Explanation = NStr("
+            |en = 'Unexpected error has happened.';
+            |ru = 'Произошла непредвиденная ошибка.'");
+    
+        ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
+        
+    EndIf;
     
 EndProcedure // DoAfterBeginRunningApplication()
 
-// Only for internal use.
+// Saves a connection to this channel into database if it was established.
+//
+// Parameters:
+//  ClosureResult        - Arbitrary - the value transferred when you call 
+//                                      the Close method of the opened form.
+//  AdditionalParameters - Arbitrary - the value specified when the 
+//                                      NotifyDescription object was created. 
 //
 &AtClient
 Procedure DoAfterCloseConnectionForm(ClosureResult, AdditionalParameters) Export
     
-    If ClosureResult <> Undefined Then
+    If ClosureResult <> Undefined 
+        AND TypeOf(ClosureResult) = Type("FormDataStructure") Then
+            
+        Modified = True;
+        Object.Connected = True;
         
-        If TypeOf(ClosureResult) = Type("FormDataStructure") Then
+        If ClosureResult.Property("ChannelData")
+            AND TypeOf(ClosureResult.ChannelData) = Type("FormDataCollection") Then
             
-            Modified = True;
-            Object.Connected = True;
-            
-            If ClosureResult.Property("ChannelData") And
-                TypeOf(ClosureResult.ChannelData) = Type("FormDataCollection") Then
-                For Each Item In ClosureResult.ChannelData Do
-                    NewData = Object.ChannelData.Add();        
-                    FillPropertyValues(NewData, Item);
-                EndDo;     
-            EndIf;
-            
-            If ClosureResult.Property("EncryptedData") And
-                TypeOf(ClosureResult.EncryptedData) = Type("FormDataCollection") Then
-                For Each Item In ClosureResult.EncryptedData Do
-                    NewData = Object.EncryptedData.Add();        
-                    FillPropertyValues(NewData, Item);
-                EndDo;    
-            EndIf;
-            
-            LoadBasicChannelInfo();
+            For Each Item In ClosureResult.ChannelData Do
+                NewData = Object.ChannelData.Add();        
+                FillPropertyValues(NewData, Item);
+            EndDo; 
             
         EndIf;
+        
+        If ClosureResult.Property("EncryptedData")
+            AND TypeOf(ClosureResult.EncryptedData) = Type("FormDataCollection") Then
+            
+            For Each Item In ClosureResult.EncryptedData Do
+                NewData = Object.EncryptedData.Add();        
+                FillPropertyValues(NewData, Item);
+            EndDo; 
+            
+        EndIf;
+        
+        LoadBasicChannelInfo();
  
     EndIf;
     
 EndProcedure // DoAfterCloseConnectionForm()
 
-// Only for internal use.
+// Disconnects the channel from the integration source.
+//
+// Parameters:
+//  QuestionResult       - DialogReturnCode - system enumeration value 
+//                  or a value related to a clicked button. If a dialog 
+//                  is closed on timeout, the value is Timeout. 
+//  AdditionalParameters - Arbitrary - the value specified when the 
+//                              NotifyDescription object was created.
 //
 &AtClient
 Procedure DoAfterChannelDisconnect(QuestionResult, AdditionalParameters) Export 
 
     If QuestionResult = DialogReturnCode.Yes Then
-        DisconnectChannel(ChannelProcessorName, Object.BasicChannelGuid);        
+        DisconnectChannel(Object.BasicChannelGuid);        
     EndIf;
     
 EndProcedure // DoAfterChannelDisconnect()
-
-
-
-
-
-
 
 // Fills basic channel info.
 //
@@ -190,7 +212,7 @@ Procedure LoadBasicChannelInfo()
     Items.HeaderGroupLeft.Visible = True;
     Items.HeaderPagesChannel.CurrentPage = Items.HeaderPageBasicChannel;
     ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
-        ChannelProcessorName, Object.BasicChannelGuid);
+        Object.BasicChannelGuid);
         
     ChannelName = StrTemplate("%1 (%2)", ChannelProcessor.ChannelFullName(),
         ChannelProcessor.ChannelShortName());    
@@ -208,10 +230,10 @@ EndProcedure // LoadBasicChannelInfo()
 // Invalidates channel connection.
 //
 &AtServer
-Procedure DisconnectChannel(ChannelProcessorName, Val LibraryGuid)
+Procedure DisconnectChannel(Val LibraryGuid)
     
     ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
-        ChannelProcessorName, LibraryGuid);
+        LibraryGuid);
     ChannelProcessor.ChannelData.Load(Object.ChannelData.Unload());
     ChannelProcessor.EncryptedData.Load(Object.EncryptedData.Unload());
     ChannelProcessor.Disconnect(Undefined);
@@ -226,26 +248,21 @@ Procedure DisconnectChannel(ChannelProcessorName, Val LibraryGuid)
       
 EndProcedure // DisconnectChannel()
 
-
-
 // Only for internal use.
 //
 &AtServerNoContext
-Function ChannelParameters(ChannelProcessorName, Val LibraryGuid, 
-    Val FormName = "ConnectionForm")
+Function ChannelParameters(Val LibraryGuid, Val FormName)
     
-    Return Catalogs.FL_Channels.NewChannelParameters(
-        ChannelProcessorName, LibraryGuid, FormName);      
+    Return Catalogs.FL_Channels.NewChannelParameters(LibraryGuid, FormName);      
  
 EndFunction // ChannelParameters() 
 
 // Returns link to the channel document from the Internet.
 //
 &AtServerNoContext
-Function ChannelStandardLink(ChannelProcessorName, Val LibraryGuid) 
+Function ChannelStandardLink(Val LibraryGuid) 
     
-    ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
-        ChannelProcessorName, LibraryGuid);     
+    ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(LibraryGuid);     
     Return ChannelProcessor.ChannelStandardLink();
     
 EndFunction // ChannelStandardLink()

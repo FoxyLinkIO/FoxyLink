@@ -91,6 +91,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_CodeFile</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_EventsReUse</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_AccumulationRegistersBeforeWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUseReUse</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region ProgramInterface
 
@@ -51,7 +54,6 @@ Procedure MoveItemInItemFormCollectionNoSearch(Items, Item,
     Items.Move(Item, Parent, Location);
 
 EndProcedure // MoveItemInItemFormCollectionNoSearch()
-
 
 // Add an item to item form collection.
 // 
@@ -117,14 +119,15 @@ Function AddItemToItemFormCollection(Items, Parameters, Parent = Undefined) Expo
     
 EndFunction // AddItemToItemFormCollection()
 
-
-
-// Returns metadata object: plugable formats subsystem.
+// Returns metadata object: plugable subsystem.
+//
+// Parameters:
+//  SubsystemName - String - plugable subsystem name.
 //
 // Returns:
-//  MetadataObject: Subsystem - plugable formats subsystem.  
+//  MetadataObject: Subsystem - plugable subsystem.  
 //
-Function PlugableFormatsSubsystem() Export
+Function PlugableSubsystem(SubsystemName) Export
     
     MainSubsystem = Metadata.Subsystems.Find("FoxyLink");
     If MainSubsystem = Undefined Then
@@ -146,60 +149,20 @@ Function PlugableFormatsSubsystem() Export
         
     EndIf;
     
-    PlugableFormats = PluginsSubsystem.Subsystems.Find("Formats");
-    If PlugableFormats = Undefined Then
+    PlugableSubsystem = PluginsSubsystem.Subsystems.Find(SubsystemName);
+    If PlugableSubsystem = Undefined Then
         
-        ErrorMessage = NStr(
-            "en = 'Failed to find ''FoxyLink -> Plugins -> Formats'' subsystem.';
-            |ru = 'Не удалось найти подсистему ''FoxyLink -> Plugins -> Formats''.'");
+        ErrorMessage = StrTemplate(NStr(
+                "en = 'Failed to find ''FoxyLink -> Plugins -> %1'' subsystem.';
+                |ru = 'Не удалось найти подсистему ''FoxyLink -> Plugins -> %1''.'"),
+            SubsystemName);
         Raise ErrorMessage;
         
     EndIf;
     
-    Return PlugableFormats;
+    Return PlugableSubsystem;
     
-EndFunction // PlugableFormatsSubsystem() 
-
-// Returns metadata object: plugable channels subsystem.
-//
-// Returns:
-//  MetadataObject: Subsystem - plugable channels subsystem.  
-//
-Function PlugableChannelsSubsystem() Export
-    
-    MainSubsystem = Metadata.Subsystems.Find("FoxyLink");
-    If MainSubsystem = Undefined Then
-        
-        ErrorMessage = NStr(
-            "en = 'Failed to find main subsystem ''FoxyLink''.';
-            |ru = 'Не удалось найти основную подсистему ''FoxyLink''.'");
-        Raise ErrorMessage;
-        
-    EndIf;
-    
-    PluginsSubsystem = MainSubsystem.Subsystems.Find("Plugins");
-    If PluginsSubsystem = Undefined Then
-        
-        ErrorMessage = NStr(
-            "en = 'Failed to find ''FoxyLink -> Plugins'' subsystem.';
-            |ru = 'Не удалось найти подсистему ''FoxyLink -> Plugins''.'");
-        Raise ErrorMessage;
-        
-    EndIf;
-    
-    PlugableChannels = PluginsSubsystem.Subsystems.Find("Channels");
-    If PlugableChannels = Undefined Then
-        
-        ErrorMessage = NStr(
-            "en = 'Failed to find ''FoxyLink -> Plugins -> Channels'' subsystem.';
-            |ru = 'Не удалось найти подсистему ''FoxyLink -> Plugins -> Channels''.'");
-        Raise ErrorMessage;
-        
-    EndIf;
-    
-    Return PlugableChannels;
-    
-EndFunction // PlugableChannelsSubsystem() 
+EndFunction // PlugableSubsystem()
 
 #EndRegion // ProgramInterface
 

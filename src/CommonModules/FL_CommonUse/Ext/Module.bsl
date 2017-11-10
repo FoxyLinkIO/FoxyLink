@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region ProgramInterface
 
@@ -45,15 +48,19 @@ Function ObjectAttributesValues(Ref, Val Attributes) Export
         Attributes = StrSplit(Attributes, ",", True);
     EndIf;
 
-    AttributesStructure = New Structure;
-    If TypeOf(Attributes) = Type("Structure") 
-        Or TypeOf(Attributes) = Type("FixedStructure") Then
+    AttributesType = TypeOf(Attributes);
+    If AttributesType = Type("Structure") Then 
         
-        AttributesStructure = Attributes;
+        AttributesStructure = Attributes;    
         
-    ElsIf TypeOf(Attributes) = Type("Array") 
-        Or TypeOf(Attributes) = Type("FixedArray") Then
+    ElsIf AttributesType = Type("FixedStructure") Then
         
+        AttributesStructure = New Structure(Attributes);
+        
+    ElsIf AttributesType = Type("Array") 
+        Or AttributesType = Type("FixedArray") Then
+        
+        AttributesStructure = New Structure;
         For Each Attribute In Attributes Do
             AttributesStructure.Insert(StrReplace(Attribute, ".", ""), 
                 Attribute);
@@ -61,9 +68,9 @@ Function ObjectAttributesValues(Ref, Val Attributes) Export
         
     Else
         
-        Raise StrTemplate(NStr("en = 'Invalid type of Attributes second parameter: %1';
-                |ru = 'Неверный тип второго параметра Реквизиты: %1'"),
-            String(TypeOf(Attributes)));
+        Raise StrTemplate(NStr("en = 'Invalid type of Attributes second parameter: ''%1''.';
+                |ru = 'Неверный тип второго параметра Реквизиты: ''%1''.'"),
+            String(AttributesType));
             
     EndIf;
 
@@ -71,8 +78,7 @@ Function ObjectAttributesValues(Ref, Val Attributes) Export
     For Each KeyAndValue In AttributesStructure Do
         
         FieldName = ?(ValueIsFilled(KeyAndValue.Value),
-                      TrimAll(KeyAndValue.Value),
-                      TrimAll(KeyAndValue.Key));
+            TrimAll(KeyAndValue.Value), TrimAll(KeyAndValue.Key));
         
         Alias = TrimAll(KeyAndValue.Key);
         
@@ -93,13 +99,9 @@ Function ObjectAttributesValues(Ref, Val Attributes) Export
     Selection = Query.Execute().Select();
     Selection.Next();
 
-    Result = New Structure;
-    For Each KeyAndValue In AttributesStructure Do
-        Result.Insert(KeyAndValue.Key);
-    EndDo;
-    FillPropertyValues(Result, Selection);
+    FillPropertyValues(AttributesStructure, Selection);
 
-    Return Result;
+    Return AttributesStructure;
 
 EndFunction // ObjectAttributesValues()
 
@@ -119,8 +121,6 @@ Function ObjectAttributeValue(Ref, AttributeName) Export
     Return Result[StrReplace(AttributeName, ".", "")];
 
 EndFunction // ObjectAttributeValue()
-
-
 
 // Creates a structure with properties named as value table row columns and 
 // sets the values of these properties from the values table row.
@@ -142,7 +142,6 @@ Function ValueTableRowIntoStructure(ValueTableRow) Export
 
 EndFunction // ValueTableRowIntoStructure()
 
-
 // Records data of the Structure, Map, Array types considering nesting.
 //
 // Parameters:
@@ -163,8 +162,6 @@ Function FixedData(Data, CallingException = True) Export
 
     If TypeOf(Data) = Type("Array") Then
         Array = New Array;
-        
-        IndexOf = Data.Count() - 1;
         
         For Each Value In Data Do
             
@@ -222,7 +219,6 @@ Function FixedData(Data, CallingException = True) Export
     Return Data;
 
 EndFunction // FixedData()
-
 
 // Checks if the passed type is a reference data type.
 // 
@@ -669,8 +665,6 @@ Function TypeNameTasks() Export
 
 EndFunction // TypeNameTasks()
 
-
-
 // Returns the name of base type based on the metadata object.
 // 
 // Parameters:
@@ -764,23 +758,23 @@ Function MetadataObjectNameByManagerName(ManagerName) Export
     ManagerType = Left(ManagerName, Position - 1);
 
     TypesNames = New Map;
-    TypesNames.Insert(TypeNameExchangePlans(),              "ExchangePlan");
-    TypesNames.Insert(TypeNameConstants(),                  "Constant");
-    TypesNames.Insert(TypeNameCatalogs(),                   "Catalog");
-    TypesNames.Insert(TypeNameDocuments(),                  "Document");
-    TypesNames.Insert(TypeNameDocumentJournals(),           "DocumentJournal");
-    TypesNames.Insert(TypeNameEnums(),                      "Enum");
-    TypesNames.Insert(TypeNameReports(),                    "Report");
-    TypesNames.Insert(TypeNameDataProcessors(),             "DataProcessor");
-    TypesNames.Insert(TypeNameChartsOfCharacteristicTypes(),"ChartOfCharacteristicTypes");
-    TypesNames.Insert(TypeNameChartsOfAccounts(),           "ChartOfAccounts");
-    TypesNames.Insert(TypeNameChartsOfCalculationTypes(),   "ChartOfCalculationTypes");
-    TypesNames.Insert(TypeNameInformationRegisters(),       "InformationRegister");
-    TypesNames.Insert(TypeNameAccumulationRegisters(),      "AccumulationRegister");
-    TypesNames.Insert(TypeNameAccountingRegisters(),        "AccountingRegister");
-    TypesNames.Insert(TypeNameCalculationRegisters(),       "CalculationRegister");
-    TypesNames.Insert(TypeNameBusinessProcess(),            "BusinessProcess");
-    TypesNames.Insert(TypeNameTasks(),                      "Task");
+    TypesNames.Insert(TypeNameExchangePlans(),               "ExchangePlan");
+    TypesNames.Insert(TypeNameConstants(),                   "Constant");
+    TypesNames.Insert(TypeNameCatalogs(),                    "Catalog");
+    TypesNames.Insert(TypeNameDocuments(),                   "Document");
+    TypesNames.Insert(TypeNameDocumentJournals(),            "DocumentJournal");
+    TypesNames.Insert(TypeNameEnums(),                       "Enum");
+    TypesNames.Insert(TypeNameReports(),                     "Report");
+    TypesNames.Insert(TypeNameDataProcessors(),              "DataProcessor");
+    TypesNames.Insert(TypeNameChartsOfCharacteristicTypes(), "ChartOfCharacteristicTypes");
+    TypesNames.Insert(TypeNameChartsOfAccounts(),            "ChartOfAccounts");
+    TypesNames.Insert(TypeNameChartsOfCalculationTypes(),    "ChartOfCalculationTypes");
+    TypesNames.Insert(TypeNameInformationRegisters(),        "InformationRegister");
+    TypesNames.Insert(TypeNameAccumulationRegisters(),       "AccumulationRegister");
+    TypesNames.Insert(TypeNameAccountingRegisters(),         "AccountingRegister");
+    TypesNames.Insert(TypeNameCalculationRegisters(),        "CalculationRegister");
+    TypesNames.Insert(TypeNameBusinessProcess(),             "BusinessProcess");
+    TypesNames.Insert(TypeNameTasks(),                       "Task");
     
     TypeName = TypesNames[ManagerType];
     If TypeName = Undefined Then
@@ -802,105 +796,98 @@ EndFunction // MetadataObjectNameByManagerName()
 //
 Function ObjectManagerByFullName(FullName) Export
     
-    // The code in the comment written in one line is below this comment.
-    // To edit the code, remove the comment.
-    // For more information about the code in 1 line see http://infostart.ru/public/71130/.
+    Parts = StrSplit(FullName, ".");
+    If Parts.Count() >= 2 Then
+        MOType = Upper(Parts[0]);
+        MOName = Parts[1];
+    EndIf;
     
-    //Parts = StrSplit(FullName, ".");
-    //If Parts.Count() >= 2 Then
-    //    MOType = Upper(Parts[0]);
-    //    MOName = Parts[1];
-    //EndIf;
-    //
-    //If MOType = "EXCHANGEPLAN" 
-    //    Or MOType = "ПЛАНОБМЕНА" Then
-    //    Manager = ExchangePlans;
-    //ElsIf MOType = "CATALOG"    
-    //    Or MOType = "СПРАВОЧНИК" Then
-    //    Manager = Catalogs;
-    //ElsIf MOType = "DOCUMENT" 
-    //    Or MOType = "ДОКУМЕНТ" Then
-    //    Manager = Documents;
-    //ElsIf MOType = "DOCUMENTJOURNAL" 
-    //    Or MOType = "ЖУРНАЛДОКУМЕНТОВ" Then
-    //    Manager = DocumentJournals;
-    //ElsIf MOType = "ENUM" 
-    //    Or MOType = "ПЕРЕЧИСЛЕНИЕ" Then
-    //    Manager = Enums;
-    //ElsIf MOType = "REPORT" 
-    //    Or MOType = "ОТЧЕТ" Then
-    //    Manager = Reports;
-    //ElsIf MOType = "DATAPROCESSOR" 
-    //    Or MOType = "ОБРАБОТКА" Then
-    //    Manager = DataProcessors;
-    //ElsIf MOType = "CHARTOFCHARACTERISTICTYPES" 
-    //    Or MOType = "ПЛАНВИДОВХАРАКТЕРИСТИК" Then
-    //    Manager = ChartsOfCharacteristicTypes;
-    //ElsIf MOType = "CHARTOFACCOUNTS" 
-    //    Or MOType = "ПЛАНСЧЕТОВ" Then
-    //    Manager = ChartsOfAccounts;
-    //ElsIf MOType = "CHARTOFCALCULATIONTYPES" 
-    //    Or MOType = "ПЛАНВИДОВРАСЧЕТА" Then
-    //    Manager = ChartsOfCalculationTypes;
-    //ElsIf MOType = "INFORMATIONREGISTER" 
-    //    Or  MOType = "РЕГИСТРСВЕДЕНИЙ" Then
-    //    Manager = InformationRegisters;
-    //ElsIf MOType = "ACCUMULATIONREGISTER" 
-    //    Or MOType = "РЕГИСТРНАКОПЛЕНИЯ" Then
-    //    Manager = AccumulationRegisters;
-    //ElsIf MOType = "ACCOUNTINGREGISTER" 
-    //    Or MOType = "РЕГИСТРБУХГАЛТЕРИИ" Then
-    //    Manager = AccountingRegisters;
-    //ElsIf MOType = "CALCULATIONREGISTER"
-    //    Or MOType = "РЕГИСТРРАСЧЕТА" Then
-    //    
-    //    If Parts.Count() = 2 Then
-    //        // Calculation register
-    //        Manager = CalculationRegisters;
-    //    Else
-    //        MOSubordinate = Upper(Parts[2]);
-    //        SlaveName = Parts[3];
-    //        If MOSubordinate = "RECALCULATION" 
-    //            Or MOSubordinate = "ПЕРЕРАСЧЕТ" Then
-    //            // Recalculation
-    //            Try
-    //                Manager = CalculationRegisters[MOName].Recalculations;
-    //                MOName = SlaveName;
-    //            Except
-    //                Manager = Undefined;
-    //            EndTry;
-    //        EndIf;
-    //    EndIf;
-    //    
-    //ElsIf MOType = "BUSINESSPROCESS"
-    //    Or MOType = "БИЗНЕСПРОЦЕСС" Then
-    //    Manager = BusinessProcesses;
-    //ElsIf MOType = "TASK"
-    //    Or MOType = "ЗАДАЧА" Then
-    //    Manager = Tasks;
-    //ElsIf MOType = "CONSTANT" 
-    //    Or MOType = "КОНСТАНТА" Then
-    //    Manager = Constants;
-    //ElsIf MOType = "SEQUENCE" 
-    //    Or MOType = "ПОСЛЕДОВАТЕЛЬНОСТЬ" Then
-    //    Manager = Sequences;
-    //EndIf;
-    //
-    //If Manager <> Undefined Then
-    //    Try
-    //        Return Manager[MOName];
-    //    Except
-    //        Manager = Undefined;
-    //    EndTry;
-    //EndIf;
-    //
-    //Raise StrTemplate(NStr("en = 'Unknown type of metadata object ''%1''.';
-    //        |ru = 'Неизвестный тип объекта метаданных ''%1''.'"), FullName);
+    If MOType = "EXCHANGEPLAN" 
+        Or MOType = "ПЛАНОБМЕНА" Then
+        Manager = ExchangePlans;
+    ElsIf MOType = "CATALOG"    
+        Or MOType = "СПРАВОЧНИК" Then
+        Manager = Catalogs;
+    ElsIf MOType = "DOCUMENT" 
+        Or MOType = "ДОКУМЕНТ" Then
+        Manager = Documents;
+    ElsIf MOType = "DOCUMENTJOURNAL" 
+        Or MOType = "ЖУРНАЛДОКУМЕНТОВ" Then
+        Manager = DocumentJournals;
+    ElsIf MOType = "ENUM" 
+        Or MOType = "ПЕРЕЧИСЛЕНИЕ" Then
+        Manager = Enums;
+    ElsIf MOType = "REPORT" 
+        Or MOType = "ОТЧЕТ" Then
+        Manager = Reports;
+    ElsIf MOType = "DATAPROCESSOR" 
+        Or MOType = "ОБРАБОТКА" Then
+        Manager = DataProcessors;
+    ElsIf MOType = "CHARTOFCHARACTERISTICTYPES" 
+        Or MOType = "ПЛАНВИДОВХАРАКТЕРИСТИК" Then
+        Manager = ChartsOfCharacteristicTypes;
+    ElsIf MOType = "CHARTOFACCOUNTS" 
+        Or MOType = "ПЛАНСЧЕТОВ" Then
+        Manager = ChartsOfAccounts;
+    ElsIf MOType = "CHARTOFCALCULATIONTYPES" 
+        Or MOType = "ПЛАНВИДОВРАСЧЕТА" Then
+        Manager = ChartsOfCalculationTypes;
+    ElsIf MOType = "INFORMATIONREGISTER" 
+        Or  MOType = "РЕГИСТРСВЕДЕНИЙ" Then
+        Manager = InformationRegisters;
+    ElsIf MOType = "ACCUMULATIONREGISTER" 
+        Or MOType = "РЕГИСТРНАКОПЛЕНИЯ" Then
+        Manager = AccumulationRegisters;
+    ElsIf MOType = "ACCOUNTINGREGISTER" 
+        Or MOType = "РЕГИСТРБУХГАЛТЕРИИ" Then
+        Manager = AccountingRegisters;
+    ElsIf MOType = "CALCULATIONREGISTER"
+        Or MOType = "РЕГИСТРРАСЧЕТА" Then
+        
+        If Parts.Count() = 2 Then
+            // Calculation register
+            Manager = CalculationRegisters;
+        Else
+            MOSubordinate = Upper(Parts[2]);
+            SlaveName = Parts[3];
+            If MOSubordinate = "RECALCULATION" 
+                Or MOSubordinate = "ПЕРЕРАСЧЕТ" Then
+                // Recalculation
+                Try
+                    Manager = CalculationRegisters[MOName].Recalculations;
+                    MOName = SlaveName;
+                Except
+                    Manager = Undefined;
+                EndTry;
+            EndIf;
+        EndIf;
+        
+    ElsIf MOType = "BUSINESSPROCESS"
+        Or MOType = "БИЗНЕСПРОЦЕСС" Then
+        Manager = BusinessProcesses;
+    ElsIf MOType = "TASK"
+        Or MOType = "ЗАДАЧА" Then
+        Manager = Tasks;
+    ElsIf MOType = "CONSTANT" 
+        Or MOType = "КОНСТАНТА" Then
+        Manager = Constants;
+    ElsIf MOType = "SEQUENCE" 
+        Or MOType = "ПОСЛЕДОВАТЕЛЬНОСТЬ" Then
+        Manager = Sequences;
+    EndIf;
     
-    Parts = StrSplit(FullName, ".");If Parts.Count() >= 2 Then MOType = Upper(Parts[0]);MOName = Parts[1];EndIf;If MOType = "EXCHANGEPLAN" Or MOType = "ПЛАНОБМЕНА" Then Manager = ExchangePlans;ElsIf MOType = "CATALOG" Or MOType = "СПРАВОЧНИК" Then Manager = Catalogs;ElsIf MOType = "DOCUMENT" Or MOType = "ДОКУМЕНТ" Then Manager = Documents;ElsIf MOType = "DOCUMENTJOURNAL" Or MOType = "ЖУРНАЛДОКУМЕНТОВ" Then Manager = DocumentJournals;ElsIf MOType = "ENUM" Or MOType = "ПЕРЕЧИСЛЕНИЕ" Then Manager = Enums;ElsIf MOType = "REPORT" Or MOType = "ОТЧЕТ" Then Manager = Reports;ElsIf MOType = "DATAPROCESSOR" Or MOType = "ОБРАБОТКА" Then Manager = DataProcessors;ElsIf MOType = "CHARTOFCHARACTERISTICTYPES" Or MOType = "ПЛАНВИДОВХАРАКТЕРИСТИК" Then Manager = ChartsOfCharacteristicTypes;ElsIf MOType = "CHARTOFACCOUNTS" Or MOType = "ПЛАНСЧЕТОВ" Then Manager = ChartsOfAccounts;ElsIf MOType = "CHARTOFCALCULATIONTYPES" Or MOType = "ПЛАНВИДОВРАСЧЕТА" Then Manager = ChartsOfCalculationTypes;ElsIf MOType = "INFORMATIONREGISTER" Or  MOType = "РЕГИСТРСВЕДЕНИЙ" Then Manager = InformationRegisters; ElsIf MOType = "ACCUMULATIONREGISTER" Or MOType = "РЕГИСТРНАКОПЛЕНИЯ" Then Manager = AccumulationRegisters; ElsIf MOType = "ACCOUNTINGREGISTER" Or MOType = "РЕГИСТРБУХГАЛТЕРИИ" Then Manager = AccountingRegisters;ElsIf MOType = "CALCULATIONREGISTER" Or MOType = "РЕГИСТРРАСЧЕТА" Then If Parts.Count() = 2 Then Manager = CalculationRegisters;Else MOSubordinate = Upper(Parts[2]);SlaveName = Parts[3];If MOSubordinate = "RECALCULATION" Or MOSubordinate = "ПЕРЕРАСЧЕТ" Then Try Manager = CalculationRegisters[MOName].Recalculations;MOName = SlaveName;Except Manager = Undefined;EndTry;EndIf;EndIf;ElsIf MOType = "BUSINESSPROCESS"Or MOType = "БИЗНЕСПРОЦЕСС" Then Manager = BusinessProcesses;ElsIf MOType = "TASK" Or MOType = "ЗАДАЧА" Then Manager = Tasks;ElsIf MOType = "CONSTANT" Or MOType = "КОНСТАНТА" Then Manager = Constants;ElsIf MOType = "SEQUENCE" Or MOType = "ПОСЛЕДОВАТЕЛЬНОСТЬ" Then Manager = Sequences;EndIf;If Manager <> Undefined Then Try Return Manager[MOName];Except Manager = Undefined;EndTry;EndIf;Raise StrTemplate(NStr("en = 'Unknown type of metadata object ''%1''.';ru = 'Неизвестный тип объекта метаданных ''%1''.'"), FullName);
-
+    If Manager <> Undefined Then
+        Try
+            Return Manager[MOName];
+        Except
+            Manager = Undefined;
+        EndTry;
+    EndIf;
+    
+    Raise StrTemplate(NStr("en = 'Unknown type of metadata object ''%1''.';
+            |ru = 'Неизвестный тип объекта метаданных ''%1''.'"), FullName);
+    
 EndFunction // ObjectManagerByFullName()
-
 
 // Checks if the passed attribute name is included in the subset of standard attributes.
 // 
@@ -979,7 +966,7 @@ Function ConvertValueIntoPlatformObject(Val Value, SupportedTypes) Export
         //    ConvertValueIntoRef(Value, Type, ConversionResult);
         EndIf;
         
-        if ConversionResult.TypeConverted Then
+        If ConversionResult.TypeConverted Then
             Break;
         EndIf;
         
@@ -1032,7 +1019,6 @@ Procedure NewMetadataObjectCollectionRow(Name, Synonym, Picture, ObjectPicture,
 
 EndProcedure // NewMetadataObjectCollectionRow()
 
-
 // Only for internal use.
 //
 Procedure CheckingDataFixed(Data, DataInValueOfFixedTypes = False)
@@ -1076,7 +1062,6 @@ Procedure CheckingDataFixed(Data, DataInValueOfFixedTypes = False)
 
 EndProcedure // CheckingDataFixed()
 
-
 #Region ValueConversion
 
 // Converts value into "String" type.
@@ -1094,10 +1079,6 @@ Procedure ConvertValueIntoString(Value, ConversionResult)
     EndIf;
                         
 EndProcedure // ConvertValueIntoString()
-
-
-
-
 
 // Returns base convertion result structure.
 //

@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region FormEventHandlers
 
@@ -511,7 +514,7 @@ Procedure LoadBasicFormatInfo()
     Items.HeaderGroupLeft.Visible = True;
     Items.HeaderPagesFormat.CurrentPage = Items.HeaderPageBasicFormat;
     FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
-        FormatProcessorName, Object.BasicFormatGuid);
+        Object.BasicFormatGuid);
         
     FormatName = StrTemplate("%1 (%2)", FormatProcessor.FormatFullName(),
         FormatProcessor.FormatShortName());
@@ -539,7 +542,7 @@ EndProcedure // LoadBasicFormatInfo()
 Function FormatStandardLink() 
     
      FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
-        FormatProcessorName, Object.BasicFormatGuid);     
+        Object.BasicFormatGuid);     
      Return FormatProcessor.FormatStandardLink();
     
 EndFunction // FormatStandardLink()
@@ -548,7 +551,7 @@ EndFunction // FormatStandardLink()
 Function DescribeAPIParameters()
         
     FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
-        FormatProcessorName, Object.BasicFormatGuid);      
+        Object.BasicFormatGuid);      
     FormatProcessorMetadata = FormatProcessor.Metadata();
 
     APISchemaData = NewAPISchemaData(); 
@@ -691,6 +694,7 @@ Procedure GenerateSpecificDocumentAtServer()
     
     
     ExchangeSettings = Catalogs.FL_Exchanges.NewExchangeSettings();
+    ExchangeSettings.BasicFormatGuid = Object.BasicFormatGuid;
     
     // Read API schema from temp storage address.
     CurrentData = CurrentMethodData(RowMethod);
@@ -706,7 +710,7 @@ Procedure GenerateSpecificDocumentAtServer()
     ExchangeSettings.CanUseExternalFunctions = RowCanUseExternalFunctions;
     
     ResultMessage = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined,
-        New FixedStructure(ExchangeSettings), , FormatProcessorName);
+        New FixedStructure(ExchangeSettings));
         
         
     // End measuring.
@@ -1306,7 +1310,7 @@ EndFunction // AddChannelAtServer()
 &AtServer
 Function ChannelParameters(ChannelRef, Val FormName = "ChannelForm")
     
-    Return Catalogs.FL_Channels.NewChannelParameters("", 
+    Return Catalogs.FL_Channels.NewChannelParameters(
         ChannelRef.BasicChannelGuid, FormName);
  
 EndFunction // ChannelParameters() 
@@ -1316,10 +1320,10 @@ EndFunction // ChannelParameters()
 &AtServer
 Function RequiredChannelResources(ChannelRef, Val FormName = "ResourcesForm")
     
-    ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor("", 
+    ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
         ChannelRef.BasicChannelGuid);
     If ChannelProcessor.ResourcesRequired() Then
-        Return Catalogs.FL_Channels.NewChannelParameters("", 
+        Return Catalogs.FL_Channels.NewChannelParameters(
             ChannelRef.BasicChannelGuid, FormName);    
     EndIf;
     

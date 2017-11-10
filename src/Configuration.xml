@@ -213,6 +213,7 @@
 			<CommonModule>FL_Events</CommonModule>
 			<CommonModule>FL_EventsReUse</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
+			<CommonModule>FL_InteriorUseReUse</CommonModule>
 			<CommonModule>FL_JobServer</CommonModule>
 			<CommonModule>FL_RecurringJob</CommonModule>
 			<CommonModule>FL_RunInSafeMode</CommonModule>

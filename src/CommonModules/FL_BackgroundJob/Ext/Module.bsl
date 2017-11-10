@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region ProgramInterface
 
@@ -30,8 +33,7 @@
 //
 Function Enqueue(Method, InvocationData) Export
 
-    
-    Return Undefined;
+    Return False;
     
 EndFunction // Enqueue()
 
@@ -48,6 +50,8 @@ EndFunction // Enqueue()
 //
 Function Delete(Job, FromState = Undefined) Export
 
+    Return False;
+    
 EndFunction // Delete()
 
 // Changes state of a job with the specified parameter Job to the EnqueuedState.
@@ -74,10 +78,14 @@ EndFunction // Requeue()
 
 Function ContinueWith() Export
 
+     Return False;
+    
 EndFunction // ContinueWith()
 
 Function Schedule() Export
 
+     Return False;
+    
 EndFunction // Schedule()
 
 #EndRegion // ProgramInterface
