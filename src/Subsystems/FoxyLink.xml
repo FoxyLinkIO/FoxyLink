@@ -92,6 +92,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_EventsReUse</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_AccumulationRegistersBeforeWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUseReUse</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">3b87c347-a590-4013-bd3f-0c1dc3f500c2</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

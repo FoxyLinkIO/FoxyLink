@@ -39,13 +39,6 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
 EndProcedure // OnCreateAtServer()
 
 &AtClient
-Procedure OnOpen(Cancel)
-    
-    
-    
-EndProcedure // OnOpen()
-
-&AtClient
 Procedure ChoiceProcessing(SelectedValue, ChoiceSource)
     
     #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then
@@ -439,26 +432,50 @@ EndProcedure // DeleteAPI()
 
 #Region Formats
 
+// Begins running an external application or opens an application file with 
+// the associated name.
+//
+// Parameters:
+//  CodeReturn           - Number, Undefined - the code of return, if a relevant
+//                          input parameter <WaitForCompletion> is not specified. 
+//  AdditionalParameters - Arbitrary         - the value specified when the 
+//                              NotifyDescription object was created.
+//
 &AtClient
 Procedure DoAfterBeginRunningApplication(CodeReturn, AdditionalParameters) Export
     
-    // TODO: Some checks   
+    If CodeReturn <> 0 Then 
+        Explanation = NStr("
+            |en = 'Unexpected error has happened.';
+            |ru = 'Произошла непредвиденная ошибка.'");
+    
+        ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
+        
+    EndIf;   
     
 EndProcedure // DoAfterBeginRunningApplication() 
 
+// Rewrites the current method APISchema form the ClosureResult.
+// Changes are applied only for the form Object.
+//
+// Parameters:
+//  ClosureResult        - Arbitrary - the value transferred when you call 
+//                                      the Close method of the opened form.
+//  AdditionalParameters - Arbitrary - the value specified when the 
+//                                      NotifyDescription object was created. 
+//
 &AtServer
 Procedure DoAfterCloseAPICreationForm(ClosureResult, AdditionalParameters) Export
     
-    If ClosureResult <> Undefined Then
-        If TypeOf(ClosureResult) = Type("String") Then
+    If ClosureResult <> Undefined
+        AND TypeOf(ClosureResult) = Type("String") Then
             
-            Modified = True;
-            CurrentData = CurrentMethodData(RowMethod);
-            CurrentData.APISchemaAddress = ClosureResult;
+        Modified = True;
+        CurrentData = CurrentMethodData(RowMethod);
+        CurrentData.APISchemaAddress = ClosureResult;
+        
+        UpdateMethodView(CurrentData);
             
-            UpdateMethodView(CurrentData);
-            
-        EndIf;
     EndIf;
     
 EndProcedure // DoAfterCloseAPICreationForm()
@@ -653,27 +670,25 @@ Procedure GenerateSpreadsheetDocumentAtServer()
     
     ResultSpreadsheetDocument.Clear();
     
-     // Start measuring.
+    // Start measuring.
     StartTime = CurrentUniversalDateInMilliseconds();
-    
     
     DataCompositionSchema = GetFromTempStorage(
         DataCompositionSchemaEditAddress);     
     DataCompositionSettings = RowComposerSettings.GetSettings();
 
     DataCompositionTemplate = FL_DataComposition
-        .NewDataCompositionTemplateParameters();
+        .NewTemplateComposerParameters();
     DataCompositionTemplate.Schema   = DataCompositionSchema;
     DataCompositionTemplate.Template = DataCompositionSettings;
 
     OutputParameters = FL_DataComposition.NewOutputParameters();
     OutputParameters.DCTParameters = DataCompositionTemplate;
-    OutputParameters.CanUseExternalFunctions = True;
+    OutputParameters.CanUseExternalFunctions = RowCanUseExternalFunctions;
     
     FL_DataComposition.OutputInSpreadsheetDocument(Undefined, // Reserved
         ResultSpreadsheetDocument, OutputParameters);     
-        
-        
+            
     // End measuring.
     TestingExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
         
@@ -691,7 +706,6 @@ Procedure GenerateSpecificDocumentAtServer()
     
     // Start measuring.
     StartTime = CurrentUniversalDateInMilliseconds();
-    
     
     ExchangeSettings = Catalogs.FL_Exchanges.NewExchangeSettings();
     ExchangeSettings.BasicFormatGuid = Object.BasicFormatGuid;
@@ -711,8 +725,7 @@ Procedure GenerateSpecificDocumentAtServer()
     
     ResultMessage = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined,
         New FixedStructure(ExchangeSettings));
-        
-        
+            
     // End measuring.
     TestingExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
     

@@ -34,7 +34,7 @@ Procedure OnCreateAtServer(ManagedForm) Export
         Return;
     EndIf;
     
-    LoadSettingsToTempStorage(Object);    
+    LoadSettingsToTempStorage(Object, ManagedForm.UUID);    
 
 EndProcedure // OnCreateAtServer()
 
@@ -62,7 +62,6 @@ Procedure UpdateMethodsView(ManagedForm) Export
         EndIf;
             
     EndDo;
-    
     
     For Each Item In Items.MethodPages.ChildItems Do
         
@@ -174,7 +173,7 @@ EndFunction // NewFormatProcessor()
 Function GenerateMessageResult(Mediator, ExchangeSettings, 
     MessageSettings = Undefined) Export
     
-    DataCompositionSchema   = GetValueFromStorage(ExchangeSettings, 
+    DataCompositionSchema = GetValueFromStorage(ExchangeSettings, 
         "DataCompositionSchema");
     DataCompositionSettings = GetValueFromStorage(ExchangeSettings, 
         "DataCompositionSettings");
@@ -189,9 +188,9 @@ Function GenerateMessageResult(Mediator, ExchangeSettings,
         FL_DataComposition.SetDataToSettingsComposer(Mediator, 
             SettingsComposer, MessageSettings); 
     EndIf;
-    
+        
     DataCompositionTemplate = FL_DataComposition
-        .NewDataCompositionTemplateParameters();
+        .NewTemplateComposerParameters();
     DataCompositionTemplate.Schema   = DataCompositionSchema;
     DataCompositionTemplate.Template = SettingsComposer.GetSettings();
     
@@ -229,20 +228,20 @@ Function NewExchangeSettings() Export
     ExchangeSettings = New Structure;
     ExchangeSettings.Insert("APISchema");
     ExchangeSettings.Insert("BasicFormatGuid");
-    ExchangeSettings.Insert("CanUseExternalFunctions", False);
     ExchangeSettings.Insert("DataCompositionSchema");
     ExchangeSettings.Insert("DataCompositionSettings");
     
-    //ExchangeSettings.Insert("DetailsData");
-    //ExchangeSettings.Insert("AppearanceTemplate");
-    //ExchangeSettings.Insert("GeneratorType", Type("DataCompositionTemplateGenerator"));
-    //ExchangeSettings.Insert("CheckFieldsAvailability", True);
-    //ExchangeSettings.Insert("FunctionalOptionParameters");
-    //
-    //ExchangeSettings.Insert("ExternalDataSets");
-    //ExchangeSettings.Insert("DetailsData");
-    //ExchangeSettings.Insert("CanUseExternalFunctions", False);
-    //ExchangeSettings.Insert("DCTParameters");
+    ExchangeSettings.Insert("DetailsData");
+    ExchangeSettings.Insert("AppearanceTemplate");
+    ExchangeSettings.Insert("GeneratorType", Type("DataCompositionValueCollectionTemplateGenerator"));
+    ExchangeSettings.Insert("CheckFieldsAvailability", True);
+    ExchangeSettings.Insert("FunctionalOptionParameters");
+    
+    ExchangeSettings.Insert("ExternalDataSets");
+    ExchangeSettings.Insert("DetailsData");
+    ExchangeSettings.Insert("CanUseExternalFunctions", False);
+    ExchangeSettings.Insert("DCTParameters");
+    
     Return ExchangeSettings;
         
 EndFunction // NewExchangeSettings()
@@ -337,7 +336,7 @@ EndFunction // ExchangeSettingsByNames()
 
 // Only for internal use.
 //
-Procedure LoadSettingsToTempStorage(Object)
+Procedure LoadSettingsToTempStorage(Object, UUID)
 
     Ref = Object.Ref;
     If ValueIsFilled(Ref) Then
@@ -347,31 +346,28 @@ Procedure LoadSettingsToTempStorage(Object)
             
             FillPropertyValues(FilterParameters, Item); 
             FilterResult = Ref.Methods.FindRows(FilterParameters);
-            If FilterResult.Count() <> 1 Then
+            If FilterResult.Count() = 1 Then
                 
-                // TODO: Critical problems, later it must be fixed. 
-                Continue; 
+                ItemRow = FilterResult[0];
+                DataCompositionSchema = ItemRow.DataCompositionSchema.Get();
+                If DataCompositionSchema <> Undefined Then
+                    Item.DataCompositionSchemaAddress = PutToTempStorage(
+                        DataCompositionSchema, UUID);
+                EndIf;
                 
-            EndIf;
-            
-            DataCompositionSchema = FilterResult[0].DataCompositionSchema.Get();
-            If DataCompositionSchema <> Undefined Then
-                Item.DataCompositionSchemaAddress = PutToTempStorage(
-                    DataCompositionSchema, New UUID);
-            EndIf;
-            
-            DataCompositionSettings = FilterResult[0].DataCompositionSettings.Get();
-            If DataCompositionSettings <> Undefined Then
-                Item.DataCompositionSettingsAddress = PutToTempStorage(
-                    DataCompositionSettings, New UUID);
-            EndIf;
+                DataCompositionSettings = ItemRow.DataCompositionSettings.Get();
+                If DataCompositionSettings <> Undefined Then
+                    Item.DataCompositionSettingsAddress = PutToTempStorage(
+                        DataCompositionSettings, UUID);
+                EndIf;
 
-            APISchema = FilterResult[0].APISchema.Get();
-            If APISchema <> Undefined Then
-                Item.APISchemaAddress = PutToTempStorage(APISchema, 
-                    New UUID);
+                APISchema = ItemRow.APISchema.Get();
+                If APISchema <> Undefined Then
+                    Item.APISchemaAddress = PutToTempStorage(APISchema, UUID);
+                EndIf; 
+                
             EndIf;
-            
+ 
         EndDo;
         
     EndIf;
@@ -459,20 +455,20 @@ Procedure AddMethodOnForm(Items, MethodDescription, Description, Picture)
 
 EndProcedure // AddMethodOnForm()
 
-
 // Only for internal use.
 //
 Function GetValueFromStorage(Storage, Key)
     
-    If Storage.Property(Key) Then
-        If TypeOf(Storage[Key]) = Type("ValueStorage") Then
-            Return Storage[Key].Get();
-        Else
-            Return Storage[Key];   
-        EndIf;
+    Var Value;
+    
+    If Storage.Property(Key, Value) 
+        AND TypeOf(Value) = Type("ValueStorage") Then
+        
+        Return Value.Get();   
+
     EndIf;
     
-    Return Undefined;
+    Return Value;
 
 EndFunction // GetValueFromStorage()
 

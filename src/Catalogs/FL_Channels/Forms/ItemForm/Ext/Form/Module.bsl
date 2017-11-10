@@ -121,7 +121,8 @@ EndProcedure // Disconnect()
 
 #Region ServiceProceduresAndFunctions
 
-// Only for internal use.
+// Begins running an external application or opens an application file with 
+// the associated name.
 //
 // Parameters:
 //  CodeReturn           - Number, Undefined - the code of return, if a relevant
