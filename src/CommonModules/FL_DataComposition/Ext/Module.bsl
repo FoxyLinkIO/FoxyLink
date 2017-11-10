@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region ProgramInterface
 
@@ -335,7 +338,6 @@ Procedure SetDataToSettingsComposer(Mediator, SettingsComposer,
                         
 EndProcedure // SetDataToSettingsComposer()
 
-
 // Creates layout template according passed parameters.
 //
 // Parameters:
@@ -349,9 +351,8 @@ Function NewDataCompositionTemplate(DCTParameters) Export
     // TODO: Проверка параметров макета
     
  
-    DCTComposer = New DataCompositionTemplateComposer;
-    Return DCTComposer.Execute(
-        DCTParameters.Schema, 
+    DataCompositionTemplateComposer = New DataCompositionTemplateComposer;
+    Return DataCompositionTemplateComposer.Execute(DCTParameters.Schema, 
         DCTParameters.Template, 
         DCTParameters.DetailsData, 
         DCTParameters.AppearanceTemplate, 
@@ -360,34 +361,6 @@ Function NewDataCompositionTemplate(DCTParameters) Export
         DCTParameters.FunctionalOptionParameters);
     
 EndFunction // NewDataCompositionTemplate()
-
-
-// Creates a new structure with output parameters.
-//
-// Returns:
-//  Structure - with keys:
-//      * ExternalDataSets - Structure - structure key corresponds to external data set name. Structure value - 
-//                                          external data set.
-//      * DetailsData - DataCompositionDetailsData - an object to fill with details data. If not specified, details 
-//                                                      will not be filled in.  
-//      * CanUseExternalFunctions - Boolean - indicates the possibility to use the function of common configuration
-//                                              modules in expressions of data composition.
-//                                  Default value: False.
-//      * DCTParameters - Structure - see function FL_DataComposition.NewDataCompositionTemplateParameters.
-//
-// See also:
-//  DataCompositionProcessor.Initialize in the syntax-assistant.
-//
-Function NewOutputParameters() Export
-    
-    OutputParameters = New Structure;
-    OutputParameters.Insert("ExternalDataSets");
-    OutputParameters.Insert("DetailsData");
-    OutputParameters.Insert("CanUseExternalFunctions", False);
-    OutputParameters.Insert("DCTParameters");
-    Return OutputParameters;
-    
-EndFunction // NewOutputParameters()
 
 // Creates a new structure with data composition template parameters. 
 // Parameters are needed to execute template layout.
@@ -413,19 +386,47 @@ EndFunction // NewOutputParameters()
 // See also:
 //  DataCompositionTemplateComposer.Execute in the syntax-assistant.
 //
-Function NewDataCompositionTemplateParameters() Export
+Function NewTemplateComposerParameters() Export
     
-    DCTParameters = New Structure;
-    DCTParameters.Insert("Schema");
-    DCTParameters.Insert("Template");
-    DCTParameters.Insert("DetailsData");
-    DCTParameters.Insert("AppearanceTemplate");
-    DCTParameters.Insert("GeneratorType", Type("DataCompositionTemplateGenerator"));
-    DCTParameters.Insert("CheckFieldsAvailability", True);
-    DCTParameters.Insert("FunctionalOptionParameters");
-    Return DCTParameters;
+    TemplateComposerParameters = New Structure;
+    TemplateComposerParameters.Insert("Schema");
+    TemplateComposerParameters.Insert("Template");
+    TemplateComposerParameters.Insert("DetailsData");
+    TemplateComposerParameters.Insert("AppearanceTemplate");
+    TemplateComposerParameters.Insert("GeneratorType", 
+        Type("DataCompositionTemplateGenerator"));
+    TemplateComposerParameters.Insert("CheckFieldsAvailability", True);
+    TemplateComposerParameters.Insert("FunctionalOptionParameters");
+    Return TemplateComposerParameters;
     
-EndFunction // NewDataCompositionTemplateParameters()
+EndFunction // NewTemplateComposerParameters()
+
+// Creates a new structure with output parameters.
+//
+// Returns:
+//  Structure - with keys:
+//      * ExternalDataSets - Structure - structure key corresponds to external data set name. Structure value - 
+//                                          external data set.
+//      * DetailsData - DataCompositionDetailsData - an object to fill with details data. If not specified, details 
+//                                                      will not be filled in.  
+//      * CanUseExternalFunctions - Boolean - indicates the possibility to use the function of common configuration
+//                                              modules in expressions of data composition.
+//                                  Default value: False.
+//      * DCTParameters - Structure - see function FL_DataComposition.NewDataCompositionTemplateParameters.
+//
+// See also:
+//  DataCompositionProcessor.Initialize in the syntax-assistant.
+//
+Function NewOutputParameters() Export
+    
+    OutputParameters = New Structure;
+    OutputParameters.Insert("ExternalDataSets");
+    OutputParameters.Insert("DetailsData");
+    OutputParameters.Insert("CanUseExternalFunctions");
+    OutputParameters.Insert("DCTParameters");
+    Return OutputParameters;
+    
+EndFunction // NewOutputParameters()
 
 // Creates a new structure with message settings.
 //

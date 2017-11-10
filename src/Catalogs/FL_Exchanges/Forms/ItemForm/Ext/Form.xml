@@ -51,7 +51,6 @@
 	<Events>
 		<Event name="ChoiceProcessing">ChoiceProcessing</Event>
 		<Event name="AfterWriteAtServer">AfterWriteAtServer</Event>
-		<Event name="OnOpen">OnOpen</Event>
 		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
 		<Event name="BeforeWriteAtServer">BeforeWriteAtServer</Event>
 	</Events>
