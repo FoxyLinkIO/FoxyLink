@@ -139,7 +139,8 @@ Function NewFormattedTextParameters(Font)
                                      
     FormattedTextParameters.Insert("SelectionBeginning", Undefined);
     FormattedTextParameters.Insert("SelectionEnding", Undefined);
-    
+    Return FormattedTextParameters;
+     
 EndFunction // NewFormattedTextParameters() 
 
 #EndRegion // ServiceProceduresAndFunctions

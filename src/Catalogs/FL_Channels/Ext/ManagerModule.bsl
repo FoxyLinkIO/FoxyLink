@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #If Server Or ThickClientOrdinaryApplication Or ExternalConnection Then
 
@@ -28,7 +31,7 @@ Function AvailableChannels() Export
     
     ValueList = New ValueList;
 
-    PlugableChannels = FL_InteriorUse.PlugableChannelsSubsystem(); 
+    PlugableChannels = FL_InteriorUse.PlugableSubsystem("Channels"); 
     For Each Item In PlugableChannels.Content Do
         
         If Metadata.DataProcessors.Contains(Item) Then
@@ -69,11 +72,11 @@ Function ExchangeChannels() Export
     Query = New Query;
     Query.Text = QueryTextConnectedChannels();
     QueryResult = Query.Execute();
-    If QueryResult.IsEmpty() = False Then
+    If NOT QueryResult.IsEmpty() Then
         
         ValueTable = QueryResult.Unload();
         For Each Item In ValueTable Do
-            If Item.Connected = True Then 
+            If Item.Connected Then 
                 ValueList.Add(Item.Ref, , True, PictureLib.FL_Link);
             Else
                 ValueList.Add(Item.Ref, , False, PictureLib.FL_LinkBroken);   
@@ -89,63 +92,30 @@ EndFunction // ExchangeChannels()
 // Returns new channel data processor for every server call.
 //
 // Parameters:
-//  ChannelProcessorName - String - name of the object type depends on the data 
-//                                 processor name in the configuration.
-//                         Default value: Undefined.
 //  LibraryGuid - String - library guid which is used to identify 
 //                         different implementations of specific channel.
 //
 // Returns:
 //  DataProcessorObject.<Data processor name> - channel data processor.
 //
-Function NewChannelProcessor(ChannelProcessorName = Undefined, 
-    Val LibraryGuid) Export
+Function NewChannelProcessor(Val LibraryGuid) Export
     
-    If IsBlankString(ChannelProcessorName) Then
-    
-        PlugableChannels = FL_InteriorUse.PlugableChannelsSubsystem();
-        For Each Item In PlugableChannels.Content Do
-            
-            If Metadata.DataProcessors.Contains(Item) Then
-                
-                Try
-                
-                    ChannelProcessor = DataProcessors[Item.Name].Create();
-                    If ChannelProcessor.LibraryGuid() = LibraryGuid Then
-                        ChannelProcessorName = Item.Name;
-                        Break;
-                    EndIf;
-                
-                Except
-                    
-                    FL_CommonUseClientServer.NotifyUser(ErrorDescription());
-                    Continue;
-                    
-                EndTry;
-                
-            EndIf;
-            
-        EndDo;
-        
-    Else
-        
-        ChannelProcessor = DataProcessors[ChannelProcessorName].Create();
-        
-    EndIf;
-            
-    Return ChannelProcessor;
+    DataProcessorName = FL_InteriorUseReUse.IdentifyChannelProcessorName(
+        LibraryGuid, "Channels");
+           
+    Return DataProcessors[DataProcessorName].Create();
     
 EndFunction // NewChannelProcessor()
 
 // Returns a new channel parameters structure.
 //
 // Parameters:
-//  ChannelProcessorName - String - name of the object type depends on the data 
-//                                 processor name in the configuration.
-//                         Default value: Undefined.
 //  LibraryGuid          - String - library guid which is used to identify 
 //                         different implementations of specific channel.
 //  FormName             - Stirng - The name of the form.
+//  ChannelProcessorName - String - name of the object type depends on the data 
+//                                 processor name in the configuration.
+//                         Default value: "".
 //
 // Returns:
 //  Structure - with values:
@@ -158,10 +128,9 @@ EndFunction // NewChannelProcessor()
 //                      different implementations of specific channel.
 //      * Parameters       - Structure - Additional parameters.
 //  
-Function NewChannelParameters(ChannelProcessorName = Undefined, 
-    Val LibraryGuid, FormName) Export
+Function NewChannelParameters(Val LibraryGuid, FormName) Export
     
-    ChannelProcessor = NewChannelProcessor(ChannelProcessorName, LibraryGuid);      
+    ChannelProcessor = NewChannelProcessor(LibraryGuid);      
     ChannelProcessorMetadata = ChannelProcessor.Metadata();
     
     ChannelParameters = NewChannelParametersStructure();
@@ -174,7 +143,6 @@ Function NewChannelParameters(ChannelProcessorName = Undefined,
     Return ChannelParameters;     
     
 EndFunction // NewChannelParameters()
-
 
 // Sends the resulting message to the specified exchange channel.
 //
@@ -201,14 +169,13 @@ Function SendMessageResult(Mediator, Message, Channel,
         // Error    
     EndIf;
     
-    
     ChannelSettings = QueryResult.Select();
     ChannelSettings.Next();
     If Not ChannelSettings.Connected Then
         // Error    
     EndIf;
     
-    ChannelProcessor = NewChannelProcessor(, ChannelSettings.BasicChannelGuid);
+    ChannelProcessor = NewChannelProcessor(ChannelSettings.BasicChannelGuid);
     ChannelProcessor.ChannelData.Load(ChannelSettings.ChannelData.Unload());
     ChannelProcessor.EncryptedData.Load(ChannelSettings.EncryptedData.Unload()); 
     For Each Resource In SubscriberResources Do
@@ -274,7 +241,6 @@ Function QueryTextChannelSettings()
     Return QueryText;
     
 EndFunction // QueryTextChannelSettings()
-
 
 // Only for internal use.
 //

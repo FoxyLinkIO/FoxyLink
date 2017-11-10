@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,13 +14,15 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region ProgramInterface
 
-// Returns an fixed array of splitters that exist in the configuration.
+// Returns fixed array of splitters that exist in the configuration.
 //
 // Returns: 
-//  FixedArray(String) - an array of common attribute names, that are used as splitters.
+//  FixedArray(String) - fixed array of common attribute names, that are used as splitters.
 //
 Function ConfigurationSplitters() Export
 
@@ -106,7 +109,6 @@ Function StandardAttributeSynonyms() Export
     Synonyms.Insert("BUSINESSPROCESS", "БИЗНЕСПРОЦЕСС");
     Synonyms.Insert("ROUTEPOINT", "ТОЧКАМАРШРУТА");
     Synonyms.Insert("EXECUTED", "ВЫПОЛНЕНА");
-    
     
     // Catalog
     Synonyms.Insert("ССЫЛКА", "REF");

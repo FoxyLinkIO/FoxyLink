@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #If Server Or ThickClientOrdinaryApplication Or ExternalConnection Then
 
@@ -97,7 +100,6 @@ Procedure BeforeWriteAtServer(ManagedForm, CurrentObject) Export
     
 EndProcedure // BeforeWriteAtServer()
 
-
 // Returns available plugable formats.
 //
 // Returns:
@@ -108,7 +110,7 @@ Function AvailableFormats() Export
     
     ValueList = New ValueList;
 
-    PlugableFormats = FL_InteriorUse.PlugableFormatsSubsystem(); 
+    PlugableFormats = FL_InteriorUse.PlugableSubsystem("Formats"); 
     For Each Item In PlugableFormats.Content Do
         
         If Metadata.DataProcessors.Contains(Item) Then
@@ -140,132 +142,20 @@ EndFunction // AvailableFormats()
 // Returns new format data processor for every server call.
 //
 // Parameters:
-//  FormatProcessorName - String - the name of the object type depends 
-//                                  on the data processor name in the configuration.
-//                        Default value: Undefined.
-//  LibraryGuid         - String - library guid which is used to identify 
-//                                 different implementations of specific format.
+//  LibraryGuid - String - library guid which is used to identify 
+//                         different implementations of specific format.
 //
 // Returns:
 //  DataProcessorObject.<Data processor name> - format data processor.
 //
-Function NewFormatProcessor(FormatProcessorName = Undefined, 
-    Val LibraryGuid) Export
+Function NewFormatProcessor(Val LibraryGuid) Export
     
-    If IsBlankString(FormatProcessorName) Then
+    DataProcessorName = FL_InteriorUseReUse.IdentifyChannelProcessorName(
+        LibraryGuid, "Formats");
+           
+    Return DataProcessors[DataProcessorName].Create();
         
-        PlugableFormats = FL_InteriorUse.PlugableFormatsSubsystem();
-        For Each Item In PlugableFormats.Content Do
-            
-            If Metadata.DataProcessors.Contains(Item) Then
-                
-                Try
-                
-                    FormatProcessor = DataProcessors[Item.Name].Create();
-                    If FormatProcessor.LibraryGuid() = LibraryGuid Then
-                        FormatProcessorName = Item.Name;
-                        Break;
-                    EndIf;
-                
-                Except
-                    
-                    FL_CommonUseClientServer.NotifyUser(ErrorDescription());
-                    Continue;
-                    
-                EndTry;
-                
-            EndIf;
-            
-        EndDo;
-        
-    Else
-        
-        FormatProcessor = DataProcessors[FormatProcessorName].Create();
-        
-    EndIf;
-    
-    Return FormatProcessor;
-    
 EndFunction // NewFormatProcessor()
-
-
-// Returns available plugable channels.
-//
-// Returns:
-//  ValueList - with values:
-//      * Value - String - channel library guid.
-//
-Function AvailableChannels() Export
-    
-    ValueList = New ValueList;
-
-    PlugableChannels = FL_InteriorUse.PlugableChannelsSubsystem(); 
-    For Each Item In PlugableChannels.Content Do
-        
-        If Metadata.DataProcessors.Contains(Item) Then
-            
-            Try
-            
-                DataProcessor = DataProcessors[Item.Name].Create();                
-                ValueList.Add(DataProcessor.LibraryGuid(),
-                    StrTemplate("%1 (ver. %2)", 
-                        DataProcessor.ChannelFullName(),
-                        DataProcessor.Version()));
-            
-            Except
-                
-                FL_CommonUseClientServer.NotifyUser(ErrorDescription());
-                Continue;
-                
-            EndTry;
-            
-        EndIf;
-        
-    EndDo;
-    
-    Return ValueList;
-    
-EndFunction // AvailableChannels()
-
-// Returns new channel data processor for every server call.
-//
-// Parameters:
-//  LibraryGuid - String - library guid which is used to identify 
-//                         different implementations of specific channel.
-//
-// Returns:
-//  DataProcessorObject.<Data processor name> - channel data processor.
-//
-Function NewChannelProcessor(Val LibraryGuid) Export
-    
-    PlugableChannels = FL_InteriorUse.PlugableChannelsSubsystem();
-    For Each Item In PlugableChannels.Content Do
-        
-        If Metadata.DataProcessors.Contains(Item) Then
-            
-            Try
-            
-                ChannelProcessor = DataProcessors[Item.Name].Create();
-                If ChannelProcessor.LibraryGuid() = LibraryGuid Then
-                    ChannelProcessorName = Item.Name;
-                    Break;
-                EndIf;
-            
-            Except
-                
-                FL_CommonUseClientServer.NotifyUser(ErrorDescription());
-                Continue;
-                
-            EndTry;
-            
-        EndIf;
-        
-    EndDo;
-            
-    Return ChannelProcessor;
-    
-EndFunction // NewChannelProcessor()
-
 
 // Returns the resulting message based on the specified exchange settings.
 //
@@ -282,7 +172,7 @@ EndFunction // NewChannelProcessor()
 //  Arbitrary - the resulting message.
 //
 Function GenerateMessageResult(Mediator, ExchangeSettings, 
-    MessageSettings = Undefined, FormatProcessorName = Undefined) Export
+    MessageSettings = Undefined) Export
     
     DataCompositionSchema   = GetValueFromStorage(ExchangeSettings, 
         "DataCompositionSchema");
@@ -310,8 +200,7 @@ Function GenerateMessageResult(Mediator, ExchangeSettings,
     OutputParameters.CanUseExternalFunctions = ExchangeSettings
         .CanUseExternalFunctions;
     
-    StreamObject = NewFormatProcessor(FormatProcessorName, 
-        ExchangeSettings.BasicFormatGuid);
+    StreamObject = NewFormatProcessor(ExchangeSettings.BasicFormatGuid);
     StreamObject.Initialize(GetValueFromStorage(ExchangeSettings, "APISchema"));    
     
     FL_DataComposition.Output(Undefined, StreamObject, OutputParameters); 

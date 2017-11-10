@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #If Server Or ThickClientOrdinaryApplication Or ExternalConnection Then
 
@@ -31,7 +34,7 @@ Function FinalStates() Export
     Query.Text = QueryTextFinalStates();
     QueryResult = Query.Execute();
     
-    If QueryResult.IsEmpty() = False Then
+    If NOT QueryResult.IsEmpty() Then
         ValueTable = QueryResult.Unload();
         ValueList.LoadValues(ValueTable.UnloadColumn("Ref"));
     EndIf;
@@ -49,11 +52,11 @@ EndFunction // FinalStates()
 Function QueryTextFinalStates()
 
     QueryText = "
-        |Select
-        |   States.Ref As Ref   
-        |From
-        |   Catalog.IHL_States As States
-        |Where
+        |SELECT
+        |   States.Ref AS Ref   
+        |FROM
+        |   Catalog.IHL_States AS States
+        |WHERE
         |    States.DeletionMark = False
         |AND States.IsFinal      = True
         |";
