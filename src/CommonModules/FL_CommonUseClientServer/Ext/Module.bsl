@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,12 +14,14 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region ProgramInterface
 
 // Generates and outputs the message that can be connected to form managing item.
 //
-// Parameters
+// Parameters:
 // MessageTextToUser - String  - message type.
 // DataKey           - AnyRef  - to infobase object.
 //                               Ref to object of the infobase to which
@@ -42,8 +45,8 @@ Procedure NotifyUser(Val Text, Val DataKey = Undefined, Val Field = "",
 
     IsObject = False;
 
-    #If Not ТонкийКлиент AND Not ВебКлиент Then
-    If DataKey <> Undefined And XMLTypeOf(DataKey) <> Undefined Then
+    #If NOT ThinClient AND NOT WebClient Then
+    If DataKey <> Undefined AND XMLTypeOf(DataKey) <> Undefined Then
         ValueType = XMLTypeOf(DataKey).TypeName;
         IsObject = Find(ValueType, "Object.") > 0;
     EndIf;
@@ -64,8 +67,6 @@ Procedure NotifyUser(Val Text, Val DataKey = Undefined, Val Field = "",
     Cancel = True;
 
 EndProcedure // NotifyUser()
-
-
 
 // Saves a serialized value to a temporary storage.
 //
@@ -92,8 +93,6 @@ Procedure PutSerializedValueToTempStorage(SerializedValue, Address,
     
 EndProcedure // PutDataToTempStorage()
 
-
-
 // Deletes the values from FormDataObject by filter.
 //
 // Parameters:
@@ -114,8 +113,6 @@ Procedure DeleteRowsByFilter(FormDataObject, FilterParameters,
     EndDo;
     
 EndProcedure // DeleteRowsByFilter()
-
-
 
 // Extends the receiver array with values from the source array.
 //
@@ -147,22 +144,21 @@ EndProcedure // ExtendArray()
 //
 Procedure ExtendStructure(Receiver, Source, WithReplacement = Undefined) Export
 
-    SearchKey = (WithReplacement = False Or WithReplacement = Undefined);
-    For Each KeyAndValue IN Source Do
+    SearchKey = WithReplacement = Undefined Or NOT WithReplacement;
+    For Each KeyAndValue In Source Do
         If SearchKey AND Receiver.Property(KeyAndValue.Key) Then
-            If WithReplacement = False Then
+            If NOT WithReplacement Then
                 Continue;
             Else
                 Raise StrTemplate(NStr("en = 'Source and receiver structures intersection by key ''%1''.';
                         |ru = 'Пересечение структур источника и приемника по ключу ''%1''.'"),
                     KeyAndValue.Key);
-            EndIf
+            EndIf;
         EndIf;
         Receiver.Insert(KeyAndValue.Key, KeyAndValue.Value);
     EndDo;
 
 EndProcedure // ExtendStructure()
-
 
 // Creates an instance copy of the specified object.
 //
@@ -232,7 +228,7 @@ Function CopyMap(SourceMap) Export
     
     ResultMap = New Map;
     
-    For Each KeyAndValue IN SourceMap Do
+    For Each KeyAndValue In SourceMap Do
         ResultMap.Insert(KeyAndValue.Key, CopyRecursive(KeyAndValue.Value));
     EndDo;
     
@@ -252,7 +248,7 @@ Function CopyArray(ArraySource) Export
     
     ResultArray = New Array;
     
-    For Each Item IN ArraySource Do
+    For Each Item In ArraySource Do
         ResultArray.Add(CopyRecursive(Item));
     EndDo;
     
@@ -272,7 +268,7 @@ Function CopyValueList(SourceList) Export
     
     ResultList = New ValueList;
     
-    For Each ItemOfList IN SourceList Do
+    For Each ItemOfList In SourceList Do
         ResultList.Add(CopyRecursive(ItemOfList.Value), 
             ItemOfList.Presentation, 
             ItemOfList.Check, 
@@ -283,9 +279,16 @@ Function CopyValueList(SourceList) Export
     
 EndFunction // CopyValueList() 
 
-
 #Region StringOperations
 
+// Checks if variable name is correct.
+//
+// Parameters:
+//  VariableName - String - variable name.
+//
+// Returns:
+//  Boolean - check result.
+//
 Function IsCorrectVariableName(VariableName) Export
     
     If (IsBlankString(VariableName)) Then
@@ -324,7 +327,7 @@ EndFunction // IsCorrectVariableName()
 Function IsSpecialSymbol(Character) Export
     
     Return ?(IsNumber(Character) 
-          Or IsLetter(Character), False, True);
+          OR IsLetter(Character), False, True);
     
 EndFunction // IsSpecialSymbol()
 
@@ -338,8 +341,14 @@ EndFunction // IsSpecialSymbol()
 //
 Function IsNumber(Character) Export
     
+    // Value corresponds to 0.
+    FirstNumber = 47;
+    
+    // Value corresponds to 9.
+    LastNumber = 58;
+    
     Code = CharCode(Character);
-    Return ?(Code <= 47 Or Code >= 58, False, True);
+    Return ?(Code <= FirstNumber OR Code >= LastNumber, False, True);
     
 EndFunction // IsNumber()
 
@@ -354,7 +363,7 @@ EndFunction // IsNumber()
 Function IsLetter(Character) Export
     
     Return ?(IsLatinLetter(Character) 
-          Or IsCyrillicLetter(Character), True, False);
+          OR IsCyrillicLetter(Character), True, False);
     
 EndFunction // IsLetter()
 
@@ -368,9 +377,21 @@ EndFunction // IsLetter()
 //
 Function IsLatinLetter(Character) Export
     
+    // Value corresponds to a.
+    FirstLowLetter = 97;
+    
+    // Value corresponds to z.
+    LastLowLetter = 122;
+    
+    // Value corresponds to A.
+    FirstUpperLetter = 65;
+    
+    // Value corresponds to Z.
+    LastUpperLetter = 90;
+    
     Code = CharCode(Character);
-    Return ?((Code > 64 And Code < 91) 
-          Or (Code > 96 And Code < 123), True, False);
+    Return ?((Code >= FirstUpperLetter AND Code <= LastUpperLetter) 
+          OR (Code >= FirstLowLetter   AND Code <= LastLowLetter), True, False);
     
 EndFunction // IsLatinLetter() 
 
@@ -384,8 +405,14 @@ EndFunction // IsLatinLetter()
 //
 Function IsCyrillicLetter(Character) Export
     
+    // Value corresponds to А.
+    FirstUpperLetter = 1040;
+    
+    // Value corresponds to ы.
+    LastLowLetter = 1103;
+    
     Code = CharCode(Character);
-    Return ?(Code > 1039 And Code < 1104, True, False);
+    Return ?(Code >= FirstUpperLetter AND Code <= LastLowLetter, True, False);
     
 EndFunction // IsCyrillicLetter()
 
@@ -401,10 +428,13 @@ EndFunction // IsCyrillicLetter()
 //
 Procedure HandleThreeStateCheckBox(TreeItem, FieldName) Export
     
+    // Third state checkbox value.
+    ThirdState = 2;
+    
     CurrentData = TreeItem;
     If CurrentData <> Undefined Then
         
-        If CurrentData[FieldName] = 2 Then
+        If CurrentData[FieldName] = ThirdState Then
             CurrentData[FieldName] = 0;    
         EndIf;
         
@@ -416,7 +446,7 @@ Procedure HandleThreeStateCheckBox(TreeItem, FieldName) Export
             If ChangeParentValueOfThreeStateCheckBox(CurrentData, FieldName) Then
                 Parent[FieldName] = CurrentData[FieldName];
             Else
-                Parent[FieldName] = 2;    
+                Parent[FieldName] = ThirdState;    
             EndIf;    
             
             CurrentData = Parent;
@@ -451,95 +481,20 @@ EndProcedure // HandleThreeStateCheckBox()
 Function URIStructure(Val StringURI) Export
 
     StringURI = TrimAll(StringURI);
-    Parameters = New Map;
     
-    // Schema
-    Schema = "";
-    Position = StrFind(StringURI, "://");
-    If Position > 0 Then
-        Schema = Lower(Left(StringURI, Position - 1));
-        StringURI = Mid(StringURI, Position + 3);
-    EndIf;
+    URIComponents = NewURIComponents();
+    URIComponents.Schema = URISchema(StringURI);
+    URIComponents.PathOnServer = URIPathOnServer(StringURI);
+    URIComponents.Parameters = URIParameters(URIComponents.PathOnServer);
+    URIComponents.ServerName = URIServerName(StringURI);
+    URIComponents.Login = URILogin(StringURI);
+    URIComponents.Password = URIPassword(StringURI);
+    URIComponents.Host = URIHost(URIComponents.ServerName);
+    URIComponents.Port = URIPort(URIComponents.Schema, 
+        URIComponents.ServerName);
 
-    // Connection string and path on the server.
-    ConnectionString = StringURI;
-    PathOnServer = "";
-    Position = StrFind(ConnectionString, "/");
-    If Position > 0 Then
-        PathOnServer = Mid(ConnectionString, Position + 1);
-        ConnectionString = Left(ConnectionString, Position - 1);
-    EndIf;
+    Return URIComponents;
     
-    // Parameters
-    Position = StrFind(PathOnServer, "?");
-    If Position > 0 Then
-        ParametersString = Mid(PathOnServer, Position + 1);        
-        ParametersArray = StrSplit(ParametersString, "&");
-        For Each Parameter In ParametersArray Do
-            Position = StrFind(Parameter, "=");
-            If Position > 1 Then
-                Parameters.Insert(Left(Parameter, Position - 1), Mid(Parameter, Position + 1));    
-            EndIf;    
-        EndDo;
-    EndIf;
-        
-    // User information and server name.
-    AuthorizeString = "";
-    ServerName = ConnectionString;
-    Position = StrFind(ConnectionString, "@");
-    If Position > 0 Then
-        AuthorizeString = Left(ConnectionString, Position - 1);
-        ServerName = Mid(ConnectionString, Position + 1);
-    EndIf;
-
-    // Login and password.
-    Login = AuthorizeString;
-    Password = "";
-    Position = StrFind(AuthorizeString, ":");
-    If Position > 0 Then
-        Login = Left(AuthorizeString, Position - 1);
-        Password = Mid(AuthorizeString, Position + 1);
-    EndIf;
-
-    // Host and port.
-    Host = ServerName;
-    Port = "";
-    Position = StrFind(ServerName, ":");
-    If Position > 0 Then
-        
-        Host = Left(ServerName, Position - 1);
-        Port = Mid(ServerName, Position + 1); 
-        For Index = 1 To StrLen(Port) Do
-            Symbol = Mid(Port, Index, 1);
-            If Not IsNumber(Symbol) Then
-                Port = "";
-                Break;    
-            EndIf;
-            
-        EndDo;
-        
-        If IsBlankString(Port) Then
-            If Schema = "http" Then
-                Port = "80";
-            ElsIf Schema = "https" Then
-                Port = "443";
-            EndIf;
-        EndIf;
- 
-    EndIf;
-
-    Result = New Structure;
-    Result.Insert("Schema", Schema);
-    Result.Insert("Login", Login);
-    Result.Insert("Password", Password);
-    Result.Insert("ServerName", ServerName);
-    Result.Insert("Host", Host);
-    Result.Insert("Port", ?(IsBlankString(Port), Undefined, Number(Port)));
-    Result.Insert("PathOnServer", PathOnServer);
-    Result.Insert("Parameters", Parameters);
-
-    Return Result;
-
 EndFunction // URIStructure()
 
 #EndRegion // ProgramInterface
@@ -560,7 +515,6 @@ Procedure SetValueOfThreeStateCheckBox(CurrentData, FieldName)
 
 EndProcedure // SetValueOfThreeStateCheckBox()
 
-
 // Only for internal use.
 //
 Function ChangeParentValueOfThreeStateCheckBox(CurrentData, FieldName)
@@ -577,5 +531,177 @@ Function ChangeParentValueOfThreeStateCheckBox(CurrentData, FieldName)
 EndFunction // ChangeParentValueOfThreeStateCheckBox()
 
 #EndRegion // ValueTreeOperations
+
+// Only for internal use.
+//
+Function URISchema(StringURI, Substring = "://")
+    
+    Schema = "";
+    SubstringLen = StrLen(Substring);
+    
+    Position = StrFind(StringURI, Substring);
+    If Position > 0 Then
+        Schema = Lower(Left(StringURI, Position - 1));
+        StringURI = Mid(StringURI, Position + SubstringLen);
+    EndIf;
+    
+    Return Schema;
+    
+EndFunction // URISchema()
+
+// Only for internal use.
+//
+Function URIPathOnServer(StringURI)
+        
+    PathOnServer = "";
+    
+    Position = StrFind(StringURI, "/");
+    If Position > 0 Then
+        PathOnServer = Mid(StringURI, Position + 1);
+        StringURI = Left(StringURI, Position - 1);
+    EndIf;
+    
+    Return PathOnServer;
+    
+EndFunction // PathOnServer()
+
+// Only for internal use.
+//
+Function URIParameters(PathOnServer)
+        
+    Parameters = New Map;
+    
+    Position = StrFind(PathOnServer, "?");
+    If Position > 0 Then
+        ParametersString = Mid(PathOnServer, Position + 1);        
+        ParametersArray = StrSplit(ParametersString, "&");
+        For Each Parameter In ParametersArray Do
+            Position = StrFind(Parameter, "=");
+            If Position > 1 Then
+                Parameters.Insert(Left(Parameter, Position - 1), 
+                    Mid(Parameter, Position + 1));    
+            EndIf;    
+        EndDo;
+    EndIf;
+    
+    Return Parameters;
+    
+EndFunction // URIParameters()
+
+// Only for internal use.
+//
+Function URIServerName(StringURI)
+    
+    ServerName = StringURI;
+    
+    Position = StrFind(StringURI, "@");
+    If Position > 0 Then
+        ServerName = Mid(StringURI, Position + 1);
+        StringURI = Left(StringURI, Position - 1);
+    Else
+        StringURI = "";    
+    EndIf;
+    
+    Return ServerName;
+    
+EndFunction // URIServerName()
+
+// Only for internal use.
+//
+Function URILogin(StringURI)
+        
+    Login = StringURI;
+    
+    Position = StrFind(StringURI, ":");
+    If Position > 0 Then
+        Login = Left(StringURI, Position - 1);
+    EndIf;
+
+    Return Login;
+    
+EndFunction // URILogin()
+
+// Only for internal use.
+//
+Function URIPassword(StringURI)
+    
+    Password = "";
+    
+    Position = StrFind(StringURI, ":");
+    If Position > 0 Then
+        Password = Mid(StringURI, Position + 1);
+    EndIf;
+
+    Return Password;
+    
+EndFunction // URIPassword()
+
+// Only for internal use.
+//
+Function URIHost(ServerName)
+    
+    Host = ServerName;
+    
+    Position = StrFind(ServerName, ":");
+    If Position > 0 Then
+       Host = Left(ServerName, Position - 1);
+    EndIf;
+    
+    Return Host;
+  
+EndFunction // URIHost()
+
+// Only for internal use.
+//
+Function URIPort(Schema, ServerName)
+    
+    Port = Undefined;
+    
+    Position = StrFind(ServerName, ":");
+    If Position > 0 Then
+        
+        Port = Mid(ServerName, Position + 1);
+        For Index = 1 To StrLen(Port) Do
+            Symbol = Mid(Port, Index, 1);
+            If NOT IsNumber(Symbol) Then
+                Port = Undefined;
+                Break;    
+            EndIf;
+            
+        EndDo;
+        
+    EndIf;
+
+    If Port = Undefined Then
+        If Schema = "http" Then
+            Port = 80;
+        ElsIf Schema = "https" Then
+            Port = 443;
+        EndIf;
+    Else
+        Port = Number(Port);    
+    EndIf;
+    
+    Return Port;
+    
+EndFunction // URIPort()
+
+// Only for internal use.
+//
+Function NewURIComponents()
+    
+    URIComponents = New Structure;
+    URIComponents.Insert("Schema");
+    URIComponents.Insert("Login");
+    URIComponents.Insert("Password");
+    URIComponents.Insert("ServerName");
+    URIComponents.Insert("Host");
+    URIComponents.Insert("Port");
+    URIComponents.Insert("PathOnServer");
+    URIComponents.Insert("Parameters");
+    
+    Return URIComponents;
+    
+EndFunction // NewURIComponents() 
 
 #EndRegion // ServiceProceduresAndFunctions
