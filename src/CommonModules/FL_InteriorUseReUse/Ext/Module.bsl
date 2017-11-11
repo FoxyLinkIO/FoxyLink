@@ -22,19 +22,19 @@
 // Identifies a plugin data processor name from library guid.
 //
 // Parameters:
-//  LibraryGuid       - String - library guid which is used to identify 
+//  LibraryGuid        - String - library guid which is used to identify 
 //                         different implementations of a specific plugin.
-//  PlugableSubsystem - String - plugable subsystem name.
+//  PluggableSubsystem - String - plugable subsystem name.
 //
 // Returns:
 //  String - the plugin data processor name.
 //
-Function IdentifyChannelProcessorName(LibraryGuid, PlugableSubsystem) Export
+Function IdentifyPluginProcessorName(LibraryGuid, PluggableSubsystem) Export
     
     Var DataProcessorName;
     
-    PlugableSubsystem = FL_InteriorUse.PlugableSubsystem(PlugableSubsystem);
-    For Each Item In PlugableSubsystem.Content Do
+    PluggableSubsystem = FL_InteriorUse.PluggableSubsystem(PluggableSubsystem);
+    For Each Item In PluggableSubsystem.Content Do
         
         If Metadata.DataProcessors.Contains(Item) Then
             
@@ -59,6 +59,6 @@ Function IdentifyChannelProcessorName(LibraryGuid, PlugableSubsystem) Export
                     
     Return DataProcessorName;
     
-EndFunction // IdentifyChannelProcessorName()
+EndFunction // IdentifyPluginProcessorName()
 
 #EndRegion // ProgramInterface

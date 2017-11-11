@@ -92,19 +92,20 @@ Function AddItemToItemFormCollection(Items, Parameters, Parent = Undefined) Expo
             |ru = 'Ошибка: Вид элемента не задан.'"), False, True);
 
     If Parent <> Undefined 
-        And TypeOf(Parent) <> Type("FormGroup") 
-        And TypeOf(Parent) <> Type("FormTable") 
-        And TypeOf(Parent) <> Type("ManagedForm") Then
+        AND TypeOf(Parent) <> Type("FormGroup") 
+        AND TypeOf(Parent) <> Type("FormTable") 
+        AND TypeOf(Parent) <> Type("ManagedForm") Then
            
-            ErrorMessage = StrTemplate(NStr(
-                "en = 'Error: Parameter(3) failed to convert. Expected type ''%1'', ''%2'', ''%3'' and received type is ''%4''.';
-                |ru = 'Ошибка: Тип параметра(3) не удалось преобразовать. Ожидался тип ''%1'', ''%2'', ''%3'', а получили тип ''%4''.'"),
-                String(Type("ManagedForm")),
-                String(Type("FormGroup")),
-                String(Type("FormTable")),
-                String(TypeOf(Parent)));
+        ErrorMessage = StrTemplate(NStr("en = 'Error: Parameter(3) failed to convert. 
+                |Expected type ''%1'', ''%2'', ''%3'' and received type is ''%4''.';
+                |ru = 'Ошибка: Тип параметра(3) не удалось преобразовать. 
+                |Ожидался тип ''%1'', ''%2'', ''%3'', а получили тип ''%4''.'"),
+            String(Type("ManagedForm")),
+            String(Type("FormGroup")),
+            String(Type("FormTable")),
+            String(TypeOf(Parent)));
             
-            Raise ErrorMessage;
+        Raise ErrorMessage;
             
     EndIf;
         
@@ -119,7 +120,7 @@ Function AddItemToItemFormCollection(Items, Parameters, Parent = Undefined) Expo
     
 EndFunction // AddItemToItemFormCollection()
 
-// Returns metadata object: plugable subsystem.
+// Returns metadata object: pluggable subsystem.
 //
 // Parameters:
 //  SubsystemName - String - plugable subsystem name.
@@ -127,7 +128,7 @@ EndFunction // AddItemToItemFormCollection()
 // Returns:
 //  MetadataObject: Subsystem - plugable subsystem.  
 //
-Function PlugableSubsystem(SubsystemName) Export
+Function PluggableSubsystem(SubsystemName) Export
     
     MainSubsystem = Metadata.Subsystems.Find("FoxyLink");
     If MainSubsystem = Undefined Then
@@ -149,8 +150,8 @@ Function PlugableSubsystem(SubsystemName) Export
         
     EndIf;
     
-    PlugableSubsystem = PluginsSubsystem.Subsystems.Find(SubsystemName);
-    If PlugableSubsystem = Undefined Then
+    PluggableSubsystem = PluginsSubsystem.Subsystems.Find(SubsystemName);
+    If PluggableSubsystem = Undefined Then
         
         ErrorMessage = StrTemplate(NStr(
                 "en = 'Failed to find ''FoxyLink -> Plugins -> %1'' subsystem.';
@@ -160,9 +161,9 @@ Function PlugableSubsystem(SubsystemName) Export
         
     EndIf;
     
-    Return PlugableSubsystem;
+    Return PluggableSubsystem;
     
-EndFunction // PlugableSubsystem()
+EndFunction // PluggableSubsystem()
 
 #EndRegion // ProgramInterface
 
@@ -188,13 +189,14 @@ Function ParametersPropertyValue(Parameters, PropertyName, ErrorMessage,
 
     Var ProperyValue;
         
-    If Parameters.Property(PropertyName, ProperyValue) = False Then
-        If PerformCheck Then
-            Raise ErrorMessage;   
-        EndIf;
+    If NOT Parameters.Property(PropertyName, ProperyValue)
+        AND PerformCheck Then
+        
+        Raise ErrorMessage;   
+            
     EndIf;
         
-    If DeleteProperty = True Then 
+    If DeleteProperty Then 
         Parameters.Delete(PropertyName);
     EndIf;
 

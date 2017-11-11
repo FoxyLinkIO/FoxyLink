@@ -112,7 +112,7 @@ Function AvailableFormats() Export
     
     ValueList = New ValueList;
 
-    PlugableFormats = FL_InteriorUse.PlugableSubsystem("Formats"); 
+    PlugableFormats = FL_InteriorUse.PluggableSubsystem("Formats"); 
     For Each Item In PlugableFormats.Content Do
         
         If Metadata.DataProcessors.Contains(Item) Then
@@ -152,7 +152,7 @@ EndFunction // AvailableFormats()
 //
 Function NewFormatProcessor(Val LibraryGuid) Export
     
-    DataProcessorName = FL_InteriorUseReUse.IdentifyChannelProcessorName(
+    DataProcessorName = FL_InteriorUseReUse.IdentifyPluginProcessorName(
         LibraryGuid, "Formats");
            
     Return DataProcessors[DataProcessorName].Create();
