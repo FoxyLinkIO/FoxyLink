@@ -30,12 +30,15 @@
 Procedure OnCreateAtServer(ManagedForm) Export
 
     Object = ManagedForm.Object;
-    If TypeOf(Object.Ref) <> Type("CatalogRef.FL_Exchanges") Then
+    If TypeOf(Object.Ref) <> Type("CatalogRef.FL_Exchanges") 
+        OR NOT ValueIsFilled(Object.Ref) Then
         Return;
     EndIf;
     
-    LoadSettingsToTempStorage(Object, ManagedForm.UUID);    
-
+    // ManagedForm.UUID is used to remove automatically the value after 
+    // closing the form.
+    PlaceStorageDataIntoFormObject(Object, Object.Ref, ManagedForm.UUID);
+    
 EndProcedure // OnCreateAtServer()
 
 // Updates methods view on managed form.
@@ -230,7 +233,7 @@ Function NewExchangeSettings() Export
     ExchangeSettings.Insert("BasicFormatGuid");
     ExchangeSettings.Insert("DataCompositionSchema");
     ExchangeSettings.Insert("DataCompositionSettings");
-    
+     
     ExchangeSettings.Insert("DetailsData");
     ExchangeSettings.Insert("AppearanceTemplate");
     ExchangeSettings.Insert("GeneratorType", Type("DataCompositionValueCollectionTemplateGenerator"));
@@ -336,43 +339,38 @@ EndFunction // ExchangeSettingsByNames()
 
 // Only for internal use.
 //
-Procedure LoadSettingsToTempStorage(Object, UUID)
-
-    Ref = Object.Ref;
-    If ValueIsFilled(Ref) Then
+Procedure PlaceStorageDataIntoFormObject(Object, Ref, FormUUID)
         
-        FilterParameters = New Structure("Method, APIVersion"); 
-        For Each Item In Object.Methods Do
+    FilterParameters = New Structure("Method, APIVersion"); 
+    For Each Item In Object.Methods Do
+        
+        FillPropertyValues(FilterParameters, Item); 
+        FilterResult = Ref.Methods.FindRows(FilterParameters);
+        If FilterResult.Count() = 1 Then
             
-            FillPropertyValues(FilterParameters, Item); 
-            FilterResult = Ref.Methods.FindRows(FilterParameters);
-            If FilterResult.Count() = 1 Then
-                
-                ItemRow = FilterResult[0];
-                DataCompositionSchema = ItemRow.DataCompositionSchema.Get();
-                If DataCompositionSchema <> Undefined Then
-                    Item.DataCompositionSchemaAddress = PutToTempStorage(
-                        DataCompositionSchema, UUID);
-                EndIf;
-                
-                DataCompositionSettings = ItemRow.DataCompositionSettings.Get();
-                If DataCompositionSettings <> Undefined Then
-                    Item.DataCompositionSettingsAddress = PutToTempStorage(
-                        DataCompositionSettings, UUID);
-                EndIf;
-
-                APISchema = ItemRow.APISchema.Get();
-                If APISchema <> Undefined Then
-                    Item.APISchemaAddress = PutToTempStorage(APISchema, UUID);
-                EndIf; 
-                
+            ItemRow = FilterResult[0];
+            DataCompositionSchema = ItemRow.DataCompositionSchema.Get();
+            If DataCompositionSchema <> Undefined Then
+                Item.DataCompositionSchemaAddress = PutToTempStorage(
+                    DataCompositionSchema, FormUUID);
             EndIf;
- 
-        EndDo;
+            
+            DataCompositionSettings = ItemRow.DataCompositionSettings.Get();
+            If DataCompositionSettings <> Undefined Then
+                Item.DataCompositionSettingsAddress = PutToTempStorage(
+                    DataCompositionSettings, FormUUID);
+            EndIf;
+
+            APISchema = ItemRow.APISchema.Get();
+            If APISchema <> Undefined Then
+                Item.APISchemaAddress = PutToTempStorage(APISchema, FormUUID);
+            EndIf; 
+            
+        EndIf;
+
+    EndDo;
         
-    EndIf;
-        
-EndProcedure // LoadSettingsToTempStorage()
+EndProcedure // PlaceStorageDataIntoFormObject()
 
 // Only for internal use.
 //
