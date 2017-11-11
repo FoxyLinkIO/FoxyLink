@@ -32,6 +32,9 @@ Var StreamWriter; // It is used to write JSON objects and texts.
 // (IETF) that is the result of committee drafting and subsequent review 
 // by interested parties.
 //
+// Returns:
+//  String - format standard.
+//
 Function FormatStandard() Export
     
     Return "RFC 7159";
@@ -41,6 +44,9 @@ EndFunction // FormatStandard()
 // Returns link to the formal document from the Internet Engineering Task Force 
 // (IETF) that is the result of committee drafting and subsequent review 
 // by interested parties.
+//
+// Returns:
+//  String - format standard link.
 //
 Function FormatStandardLink() Export
     
@@ -101,17 +107,16 @@ EndFunction // FormatMediaType()
 // Parameters:
 //  APISchema - Arbitrary - user defined API schema.
 //                  Default value: Undefined.
-//  OpenFile  - String    - output filename.
+//  FileName  - String    - output filename.
 //                  Default value: Undefined.
 //
-Procedure Initialize(APISchema = Undefined, OpenFile = Undefined) Export
+Procedure Initialize(APISchema = Undefined, FileName = Undefined) Export
     
     RefTypesCache = New Map;
     RefTypesCache.Insert(Type("String"), False);
     RefTypesCache.Insert(Type("Number"), False);
     RefTypesCache.Insert(Type("Boolean"), False); 
     RefTypesCache.Insert(Type("Undefined"), False);
-    
     
     If APISchema <> Undefined Then
         If TypeOf(ThisObject.APISchema) = TypeOf(APISchema) Then    
@@ -123,14 +128,13 @@ Procedure Initialize(APISchema = Undefined, OpenFile = Undefined) Export
     
     StreamWriter = New JSONWriter;
     StreamWriter.ValidateStructure = False;
-    If OpenFile <> Undefined Then 
-            
+    If FileName <> Undefined Then 
+        StreamWriter.OpenFile(FileName);        
     Else
         StreamWriter.SetString();    
     EndIf;
     
 EndProcedure // Initialize()
-
 
 // Completes JSON text writing. If writing to a file, the file is closed. 
 // If writing to a string, the resultant string will be returned as the method's return value. 
@@ -197,7 +201,6 @@ Procedure Output(Item, DataCompositionProcessor, ReportStructure,
     EndIf;
         
 EndProcedure // Output()
-
 
 // Returns JSON types represented by four primitive types (String, Number, 
 // Boolean and Null) and two structured types (Object and Array).
@@ -300,7 +303,7 @@ Procedure BasicOutput(Item, DataCompositionProcessor,
     //                
     //            EndIf;
     //            
-    //        ElsIf IsBlankString(Item.Template) = False Then
+    //        ElsIf NOT IsBlankString(Item.Template) Then
     //            
     //            ColumnNames = TemplateColumns[Item.Template];
     //            
@@ -338,7 +341,7 @@ Procedure BasicOutput(Item, DataCompositionProcessor,
     //
     //StreamWriter.WriteEndObject();        
     
-    Var Level; End = DataCompositionResultItemType.End; Begin = DataCompositionResultItemType.Begin; BeginAndEnd = DataCompositionResultItemType.BeginAndEnd; StreamWriter.WriteStartObject(); While Item <> Undefined Do If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = BeginAndEnd Then Level = ?(Level = Undefined, 0, Level + 1); StreamWriter.WritePropertyName(GroupNames[Item.Template]); StreamWriter.WriteStartArray(); EndIf; EndIf; EndIf; If Level <> Undefined Then If Item.ItemType = End Then StreamWriter.WriteEndObject(); Item = DataCompositionProcessor.Next(); If Item.ItemType = End Then Level = ?(Level - 1 < 0, Undefined, Level - 1); StreamWriter.WriteEndArray(); EndIf; ElsIf Not IsBlankString(Item.Template) Then ColumnNames = TemplateColumns[Item.Template]; StreamWriter.WriteStartObject(); For Each ColumnName In ColumnNames Do StreamWriter.WritePropertyName(ColumnName.Value); Value = Item.ParameterValues[ColumnName.Key].Value; ValueType = TypeOf(Value); If RefTypesCache[ValueType] = False Then StreamWriter.WriteValue(Value); ElsIf ValueType = Type("Date") Then StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO)); ElsIf RefTypesCache[ValueType] = True Then StreamWriter.WriteValue(XMLString(Value)); ElsIf FL_CommonUse.IsReference(ValueType) Then RefTypesCache.Insert(ValueType, True); StreamWriter.WriteValue(XMLString(Value)); Else StreamWriter.WriteValue(Undefined); EndIf; EndDo; EndIf; EndIf; Item = DataCompositionProcessor.Next(); EndDo; StreamWriter.WriteEndObject();  
+    Var Level; End = DataCompositionResultItemType.End; Begin = DataCompositionResultItemType.Begin; BeginAndEnd = DataCompositionResultItemType.BeginAndEnd; StreamWriter.WriteStartObject(); While Item <> Undefined Do If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = BeginAndEnd Then Level = ?(Level = Undefined, 0, Level + 1); StreamWriter.WritePropertyName(GroupNames[Item.Template]); StreamWriter.WriteStartArray(); EndIf; EndIf; EndIf; If Level <> Undefined Then If Item.ItemType = End Then StreamWriter.WriteEndObject(); Item = DataCompositionProcessor.Next(); If Item.ItemType = End Then Level = ?(Level - 1 < 0, Undefined, Level - 1); StreamWriter.WriteEndArray(); EndIf; ElsIf NOT IsBlankString(Item.Template) Then ColumnNames = TemplateColumns[Item.Template]; StreamWriter.WriteStartObject(); For Each ColumnName In ColumnNames Do StreamWriter.WritePropertyName(ColumnName.Value); Value = Item.ParameterValues[ColumnName.Key].Value; ValueType = TypeOf(Value); If RefTypesCache[ValueType] = False Then StreamWriter.WriteValue(Value); ElsIf ValueType = Type("Date") Then StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO)); ElsIf RefTypesCache[ValueType] = True Then StreamWriter.WriteValue(XMLString(Value)); ElsIf FL_CommonUse.IsReference(ValueType) Then RefTypesCache.Insert(ValueType, True); StreamWriter.WriteValue(XMLString(Value)); Else StreamWriter.WriteValue(Undefined); EndIf; EndDo; EndIf; EndIf; Item = DataCompositionProcessor.Next(); EndDo; StreamWriter.WriteEndObject();  
     
 EndProcedure // BasicOutput() 
 
@@ -347,14 +350,14 @@ EndProcedure // BasicOutput()
 Procedure APISchemaOutput(Item, DataCompositionProcessor, 
     ReportStructure, TemplateColumns)
     
-    Raise NStr("en = 'To use this option you need the FoxyLink Pro. 
+    Raise NStr("en = 'To use this option FoxyLink Pro is needed. 
         |FoxyLink Pro is a set of extension packages, that are available under 
         |paid subscriptions. After purchase, you receive binaries and access 
         |to the private repository.';
-        |ru = 'Для использования этой опции вам нужен FoxyLink Pro.
+        |ru = 'Для использования этой опции необходима версия FoxyLink Pro.
         |FoxyLink Pro представляет собой набор пакетов расширения, доступных 
-        |под платной подпиской. После покупки вы получаете двоичные файлы и 
-        |доступ к частному репозиторию.'");
+        |под платной подпиской. После покупки, доступ к двоичным файлам и 
+        |к частному репозиторию будет предоставлен.'");
     
 EndProcedure // APISchemaOutput()
 
@@ -369,7 +372,7 @@ EndProcedure // APISchemaOutput()
 //
 Function Version() Export
     
-    Return "1.0.0.0";
+    Return "0.5.0.0";
     
 EndFunction // Version()
 
@@ -399,7 +402,6 @@ Function LibraryGuid() Export
     
 EndFunction // LibraryGuid()
 
-
 // Only for internal use.
 //
 Function ExternalDataProcessorInfo() Export
@@ -417,12 +419,12 @@ EndFunction // ExternalDataProcessorInfo()
 Function СведенияОВнешнейОбработке() Export 
     
     // Версия подключаемой функциональности 
-    Версия = Version();
+    Version = Version();
 
-    Наименование = BaseDescription();
+    Description = BaseDescription();
     
     Return False;
-    
+            
 EndFunction // СведенияОВнешнейОбработке()
 
 #EndRegion // ExternalDataProcessorInfo
