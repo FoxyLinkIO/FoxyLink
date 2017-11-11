@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -12,7 +13,9 @@
 // GNU Affero General Public License for more details.
 //
 // You should have received a copy of the GNU Affero General Public License 
-// along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+// along with this program. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region ProgramInterface
 
@@ -26,24 +29,24 @@
 // Returns:
 //  String - error description message.
 //
-Function ErrorTypeIsDifferentThanExpected(VarName, VarValue, ExpectedType) Export
+Function ErrorTypeIsDifferentFromExpected(VarName, VarValue, ExpectedType) Export
     
-    ErrorMessage = NStr(
-        "en = 'Error: Failed to process parameter ''%1''. Expected type ''%2'' and received type is ''%3''.';
-        |ru = 'Ошибка: Не удалось обработать параметр ''%1''. Ожидался тип ''%2'', а получили тип ''%3''.'");
-    
+    ErrorMessage = NStr("en = 'Error: Failed to process parameter ''%1''. 
+        |Expected type ''%2'' and received type is ''%3''.';
+        |ru = 'Ошибка: Не удалось обработать параметр ''%1''. 
+        |Ожидался тип ''%2'', а получили тип ''%3''.'");
     ErrorMessage = StrTemplate(ErrorMessage, VarName, String(ExpectedType), 
         String(TypeOf(VarValue)));
     Return ErrorMessage;   
     
-EndFunction // ErrorTypeIsDifferentThanExpected()
+EndFunction // ErrorTypeIsDifferentFromExpected()
 
 // Returns key missing error description.
 //
 // Parameters:
-//  VarName      - String    - variable name.
-//  VarValue     - Arbitrary - variable value.
-//  KeyName      - String    - expected key.
+//  VarName  - String    - variable name.
+//  VarValue - Arbitrary - variable value.
+//  KeyName  - String    - expected key.
 //
 // Returns:
 //  String - error description message.
@@ -53,11 +56,29 @@ Function ErrorKeyIsMissingInObject(VarName, VarValue, KeyName) Export
     ErrorMessage = NStr(
         "en = 'Error: Key ''%1'' is missing in %2 ''%3''.';
         |ru = 'Ошибка: Ключ ''%1'' отсутствует в %2 ''%3''.'");
-    
     ErrorMessage = StrTemplate(ErrorMessage, KeyName, String(TypeOf(VarValue)), 
         VarName);
     Return ErrorMessage;   
     
 EndFunction // ErrorKeyIsMissingInObject()
+
+// Returns collections are different error description.
+//
+// Parameters:
+//  CollectionName1 - String - collection name1.
+//  CollectionName2 - String - collection name2.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorColumnCollectionsAreDifferent(CollectionName1, CollectionName2) Export
+    
+    ErrorMessage = NStr(
+        "en = 'Error: The column collection ''%1'' differ from the column collection ''%2''.';
+        |ru = 'Ошибка: Коллекция колонок ''%1'' отличается от коллекции колонок ''%2''.'");
+    ErrorMessage = StrTemplate(ErrorMessage, CollectionName1, CollectionName2);
+    Return ErrorMessage;   
+    
+EndFunction // ErrorColumnCollectionsAreDifferent()
 
 #EndRegion // ProgramInterface

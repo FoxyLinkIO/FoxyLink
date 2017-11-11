@@ -1116,7 +1116,7 @@ Function ValueTypeMatchExpected(Value, ExpectedType, ConversionResult)
     If TypeOf(Value) <> ExpectedType Then
         
         // Mediator
-        // FL_ErrorsClientServer.ErrorTypeIsDifferentThanExpected(
+        // FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
         //      "SettingsComposer", Value, ExpectedType);
         
         Return False;

@@ -22,13 +22,13 @@
 // Generates and outputs the message that can be connected to form managing item.
 //
 // Parameters:
-// MessageTextToUser - String  - message type.
-// DataKey           - AnyRef  - to infobase object.
+//  MessageTextToUser - String  - message type.
+//  DataKey           - AnyRef  - to infobase object.
 //                               Ref to object of the infobase to which
 //                               this message relates or the record key.
-// Field             - String  - form attribute name.
-// DataPath          - String  - path to data (path to form attribute).
-// Cancel            - Boolean - Output parameter.
+//  Field             - String  - form attribute name.
+//  DataPath          - String  - path to data (path to form attribute).
+//  Cancel            - Boolean - Output parameter.
 //                               Always set to True value.
 //
 // Cases of incorrect usage:

@@ -13,16 +13,16 @@
 // GNU Affero General Public License for more details.
 //
 // You should have received a copy of the GNU Affero General Public License 
-// along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+// along with this program. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 #Region ProgramInterface
 
-// Returns fixed array of splitters that exist in the configuration.
+// Returns an fixed array of splitters that exist in the configuration.
 //
 // Returns: 
-//  FixedArray(String) - fixed array of common attribute names, that are used as splitters.
+//  FixedArray(String) - an array of common attribute names, that are used as splitters.
 //
 Function ConfigurationSplitters() Export
 
@@ -38,7 +38,29 @@ Function ConfigurationSplitters() Export
 
 EndFunction // ConfigurationSplitters()
 
-// Returns fixed map with standard attribute synonym names.
+// Returns a fixed map with base types synonym names.
+//
+// Returns:
+//  FixedMap - with  base types synonym names.
+//
+Function BaseTypesNameSynonyms() Export
+    
+    Synonyms = New Map;
+    Synonyms.Insert("EXCHANGEPLAN", "ПЛАНОБМЕНА");
+    Synonyms.Insert("CATALOG", "СПРАВОЧНИК");
+    Synonyms.Insert("DOCUMENT", "ДОКУМЕНТ");
+    Synonyms.Insert("ENUM", "ПЕРЕЧИСЛЕНИЕ");
+    Synonyms.Insert("CHARTOFCHARACTERISTICTYPES", "ПЛАНВИДОВХАРАКТЕРИСТИК");
+    Synonyms.Insert("CHARTOFACCOUNTS", "ПЛАНСЧЕТОВ");
+    Synonyms.Insert("CHARTOFCALCULATIONTYPES", "ПЛАНВИДОВРАСЧЕТА");
+    Synonyms.Insert("BUSINESSPROCESS", "БИЗНЕСПРОЦЕСС");
+    Synonyms.Insert("TASK", "ЗАДАЧА");
+        
+    Return New FixedMap(BuildSynonymCombinations(Synonyms));
+    
+EndFunction // BaseTypeNameSynonyms()
+
+// Returns a fixed map with standard attribute synonym names.
 //
 // Returns:
 //  FixedMap - with standard attribute synonym names.
@@ -109,72 +131,27 @@ Function StandardAttributeSynonyms() Export
     Synonyms.Insert("BUSINESSPROCESS", "БИЗНЕСПРОЦЕСС");
     Synonyms.Insert("ROUTEPOINT", "ТОЧКАМАРШРУТА");
     Synonyms.Insert("EXECUTED", "ВЫПОЛНЕНА");
-    
-    // Catalog
-    Synonyms.Insert("ССЫЛКА", "REF");
-    Synonyms.Insert("КОД", "CODE");
-    Synonyms.Insert("НАИМЕНОВАНИЕ", "DESCRIPTION");
-    Synonyms.Insert("ВЛАДЕЛЕЦ", "OWNER");
-    Synonyms.Insert("РОДИТЕЛЬ", "PARENT");
-    Synonyms.Insert("ЭТОГРУППА", "ISFOLDER");
-    Synonyms.Insert("ПОМЕТКАУДАЛЕНИЯ", "DELETIONMARK");
-    Synonyms.Insert("ПРЕДОПРЕДЕЛЕННЫЙ", "PREDEFINED");
-    Synonyms.Insert("ИМЯПРЕДОПРЕДЕЛЕННЫХДАННЫХ", "PREDEFINEDDATANAME");
-    
-    // Document
-    Synonyms.Insert("НОМЕР", "NUMBER");
-    Synonyms.Insert("ДАТА", "DATE");
-    Synonyms.Insert("ПРОВЕДЕН", "POSTED");
-    
-    // Document journals
-    Synonyms.Insert("ТИП", "TYPE");
-    
-    // Enumerations
-    Synonyms.Insert("ПОРЯДОК", "ORDER");
-
-    // Charts of characteristic types
-    Synonyms.Insert("ТИПЗНАЧЕНИЯ", "VALUETYPE");
-    
-    // Charts of accounts
-    Synonyms.Insert("ЗАБАЛАНСОВЫЙ", "OFFBALANCE");
-    
-    // Charts of calculation types
-    Synonyms.Insert("ПЕРИОДДЕЙСТВИЯБАЗОВЫЙ", "ACTIONPERIODISBASIC");
-    
-    // Information registers
-    Synonyms.Insert("ПЕРИОД", "PERIOD");
-    Synonyms.Insert("РЕГИСТРАТОР", "RECORDER");
-    Synonyms.Insert("НОМЕРСТРОКИ", "LINENUMBER");
-    Synonyms.Insert("АКТИВНОСТЬ", "ACTIVE");
-    
-    // Accumulation registers
-    Synonyms.Insert("ВИДДВИЖЕНИЯ", "RECORDTYPE"); 
-    
-    // Accounting registers
-    Synonyms.Insert("СЧЕТ", "ACCOUNT");
-    
-    // Calculation registers
-    Synonyms.Insert("ПЕРИОДРЕГИСТРАЦИИ", "REGISTRATIONPERIOD");
-    Synonyms.Insert("ВИДРАСЧЕТА", "CALCULATIONTYPE");
-    Synonyms.Insert("ПЕРИОДДЕЙСТВИЯ", "ACTIONPERIOD");
-    Synonyms.Insert("ПЕРИОДДЕЙСТВИЯНАЧАЛО", "BEGOFACTIONPERIOD");
-    Synonyms.Insert("ПЕРИОДДЕЙСТВИЯКОНЕЦ", "ENDOFACTIONPERIOD");
-    Synonyms.Insert("БАЗОВЫЙПЕРИОДНАЧАЛО", "BEGOFBASEPERIOD");
-    Synonyms.Insert("БАЗОВЫЙПЕРИОДКОНЕЦ", "ENDOFBASEPERIOD");
-    Synonyms.Insert("СТОРНО", "REVERSINGENTRY");
-    
-    // Business processes
-    Synonyms.Insert("ВЕДУЩАЯЗАДАЧА", "HEADTASK");
-    Synonyms.Insert("СТАРТОВАН", "STARTED");
-    Synonyms.Insert("ЗАВЕРШЕН", "COMPLETED");
-    
-    // Tasks
-    Synonyms.Insert("БИЗНЕСПРОЦЕСС", "BUSINESSPROCESS");
-    Synonyms.Insert("ТОЧКАМАРШРУТА", "ROUTEPOINT");
-    Synonyms.Insert("ВЫПОЛНЕНА", "EXECUTED");
-
-    Return New FixedMap(Synonyms);
+        
+    Return New FixedMap(BuildSynonymCombinations(Synonyms));
     
 EndFunction // StandardAttributeSynonyms()  
 
-#EndRegion // ProgramInterface 
+#EndRegion // ProgramInterface
+
+#Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Function BuildSynonymCombinations(Synonyms)
+    
+    SynonymCombinations = New Map;
+    For Each Synonym In Synonyms Do
+        SynonymCombinations.Insert(Synonym.Key, Synonym.Value);
+        SynonymCombinations.Insert(Synonym.Value, Synonym.Key);
+    EndDo;
+    
+    Return SynonymCombinations;
+    
+EndFunction // BuildSynonymCombinations()
+
+#EndRegion // ServiceProceduresAndFunctions
