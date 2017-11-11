@@ -193,7 +193,7 @@ EndProcedure // DoAfterCloseConnectionForm()
 //  QuestionResult       - DialogReturnCode - system enumeration value 
 //                  or a value related to a clicked button. If a dialog 
 //                  is closed on timeout, the value is Timeout. 
-//  AdditionalParameters - Arbitrary - the value specified when the 
+//  AdditionalParameters - Arbitrary        - the value specified when the 
 //                              NotifyDescription object was created.
 //
 &AtClient

@@ -41,8 +41,6 @@
 					<SelectionMode>SingleRow</SelectionMode>
 					<RowSelectionMode>Row</RowSelectionMode>
 					<InitialTreeView>ExpandAllLevels</InitialTreeView>
-					<EnableStartDrag>true</EnableStartDrag>
-					<EnableDrag>true</EnableDrag>
 					<DataPath>Object.APISchema</DataPath>
 					<RowPictureDataPath>Object.APISchema.RowPicture</RowPictureDataPath>
 					<RowsPicture>

@@ -400,21 +400,8 @@ EndProcedure // LoadSampleAtServer()
 &AtServer
 Function PutValueTreeToTempStorage(Val OwnerUUID)
     
-    // TODO: Check value tree
-    //If IsBlankString(CurrentData.Name) Then 
-    //    
-    //    Explanation = NStr(
-    //        "en = 'Failed to add new item. Field name is empty.';
-    //        |ru = 'Не удалось добавить новый элемент. Имя поля не заполнено.'");
-
-    //    ShowUserNotification(Title, , Explanation, 
-    //        PictureLib.FL_Logotype64);
-    //    
-    //    Raise;
-    //    
-    //EndIf;
-
     ValueTree = FormAttributeToValue("Object.APISchema", Type("ValueTree"));
+    FillCheckAPISchema(ValueTree.Rows); 
     Return PutToTempStorage(ValueTree, OwnerUUID);
     
 EndFunction // PutValueTreeToTempStorage()
@@ -467,6 +454,29 @@ Procedure FillAPISchema(Rows, Name, SampleResult)
     EndIf;    
     
 EndProcedure // FillAPISchema() 
+
+// Only for internal use.
+//
+&AtServerNoContext
+Procedure FillCheckAPISchema(Rows)
+    
+    For Each Row In Rows Do
+        
+        If IsBlankString(Row.Name) OR IsBlankString(Row.Type) Then
+            
+            Raise NStr("en = 'Content type or field name is empty. 
+                |Cannot save API schema.';
+                |ru = 'Тип или имя поля не заданы. 
+                |Невозможно сохранить схему API.'");    
+        EndIf;
+        
+        If Row.Rows.Count() > 0 Then
+            FillCheckAPISchema(Row.Rows);        
+        EndIf;
+        
+    EndDo;
+    
+EndProcedure // FillCheckAPISchema()
 
 // Only for internal use.
 //
