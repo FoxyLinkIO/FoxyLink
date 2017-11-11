@@ -44,7 +44,7 @@ Procedure ChoiceProcessing(SelectedValue, ChoiceSource)
     #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then
         
     If TypeOf(ChoiceSource) = Type("DataCompositionSchemaWizard")
-        And TypeOf(SelectedValue) = Type("DataCompositionSchema") Then
+        AND TypeOf(SelectedValue) = Type("DataCompositionSchema") Then
         
         UpdateDataCompositionSchema(SelectedValue);    
         
@@ -97,16 +97,12 @@ Procedure FormatStandardClick(Item, StandardProcessing)
     
 EndProcedure // FormatStandardClick()
 
-
-
 &AtClient
 Procedure MethodPagesOnCurrentPageChange(Item, CurrentPage)
     
     LoadMethodSettings();
     
 EndProcedure // MethodPagesOnCurrentPageChange()
-
-
 
 &AtClient
 Procedure ChannelsSelection(Item, SelectedRow, Field, StandardProcessing)
@@ -123,91 +119,87 @@ Procedure ChannelsSelection(Item, SelectedRow, Field, StandardProcessing)
         New UUID, 
         , 
         ,
-        //New NotifyDescription("DoAfterCloseConnectionForm", ThisObject, 
-        //    ChannelParameters)
         , 
         FormWindowOpeningMode.LockOwnerWindow);
     
 EndProcedure // ChannelsSelection()
 
-
 #Region DataCompositionSettingsComposer
 
 &AtClient
-Procedure RowComposerSettingsSettingsOnChange(Item)
+Procedure RowComposerSettingsOnChange(Item)
     
     Modified = True;
     RowComposerSettingsModified = True;
     
-EndProcedure // RowComposerSettingsSettingsOnChange()
+EndProcedure // RowComposerSettingsOnChange()
 
 &AtClient
-Procedure RowComposerSettingsSettingsBeforeRowChange(Item, Cancel)
+Procedure RowComposerSettingsBeforeRowChange(Item, Cancel)
     
     Modified = True;
     RowComposerSettingsModified = True;
     
-EndProcedure // RowComposerSettingsSettingsBeforeRowChange()
-
+EndProcedure // RowComposerSettingsBeforeRowChange()
 
 &AtClient
-Procedure RowComposerSettingsSettingsDataParametersOnChange(Item)
+Procedure RowComposerSettingsDataParametersOnChange(Item)
     
     Modified = True;
     RowComposerSettingsModified = True;    
     
-EndProcedure // RowComposerSettingsSettingsDataParametersOnChange()
-
+EndProcedure // RowComposerSettingsDataParametersOnChange()
 
 &AtClient
-Procedure RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSelection(Item, SelectedRow, Field, StandardProcessing)
+Procedure RowComposerSettingsSelectionAvailableFieldsSelection(Item, 
+    SelectedRow, Field, StandardProcessing)
     
     Modified = True;
     RowComposerSettingsModified = True;
     
-EndProcedure // RowComposerSettingsSettingsSelectionSelectionAvailableFieldsSelection()
+EndProcedure // RowComposerSettingsSelectionAvailableFieldsSelection()
 
 &AtClient
-Procedure RowComposerSettingsSettingsSelectionOnChange(Item)
+Procedure RowComposerSettingsSelectionOnChange(Item)
     
     Modified = True;
     RowComposerSettingsModified = True;    
     
-EndProcedure // RowComposerSettingsSettingsSelectionOnChange() 
-
+EndProcedure // RowComposerSettingsSelectionOnChange() 
 
 &AtClient
-Procedure RowComposerSettingsSettingsFilterFilterAvailableFieldsSelection(Item, SelectedRow, Field, StandardProcessing)
+Procedure RowComposerSettingsFilterAvailableFieldsSelection(Item, SelectedRow, 
+    Field, StandardProcessing)
    
     Modified = True;
     RowComposerSettingsModified = True;
     
-EndProcedure // RowComposerSettingsSettingsFilterFilterAvailableFieldsSelection()
+EndProcedure // RowComposerSettingsFilterAvailableFieldsSelection()
 
 &AtClient
-Procedure RowComposerSettingsSettingsFilterOnChange(Item)
+Procedure RowComposerSettingsFilterOnChange(Item)
     
     Modified = True;
     RowComposerSettingsModified = True;
     
-EndProcedure // RowComposerSettingsSettingsFilterOnChange()
-
+EndProcedure // RowComposerSettingsFilterOnChange()
 
 &AtClient
-Procedure RowComposerSettingsSettingsOrderOrderAvailableFieldsSelection(Item, SelectedRow, Field, StandardProcessing)
+Procedure RowComposerSettingsOrderAvailableFieldsSelection(Item, SelectedRow, 
+    Field, StandardProcessing)
     
     Modified = True;
     RowComposerSettingsModified = True;
     
-EndProcedure // RowComposerSettingsSettingsOrderOrderAvailableFieldsSelection()
+EndProcedure // RowComposerSettingsOrderAvailableFieldsSelection()
 
 &AtClient
-Procedure RowComposerSettingsSettingsOrderOnChange(Item)
+Procedure RowComposerSettingsOrderOnChange(Item)
     
     Modified = True;
     RowComposerSettingsModified = True;    
     
-EndProcedure // RowComposerSettingsSettingsOrderOnChange()
+EndProcedure // RowComposerSettingsOrderOnChange()
 
 #EndRegion // DataCompositionSettingsComposer
 
@@ -230,7 +222,6 @@ Procedure DeleteAPIMethod(Command)
         ThisObject), CurrentMethods(), Items.DeleteAPIMethod);
     
 EndProcedure // DeleteAPIMethod()
-
 
 &AtClient
 Procedure AddEvent(Command)
@@ -278,7 +269,6 @@ Procedure DeleteEvent(Command)
     EndIf;
     
 EndProcedure // DeleteEvent() 
-
 
 &AtClient
 Procedure AddChannel(Command)
@@ -351,7 +341,6 @@ Procedure DeleteChannel(Command)
     
 EndProcedure // DeleteChannel()
 
-
 &AtClient
 Procedure EditDataCompositionSchema(Command)
     
@@ -388,7 +377,6 @@ Procedure GenerateSpecificDocument(Command)
     GenerateSpecificDocumentAtServer();   
          
 EndProcedure // GenerateSpecificDocument() 
-
 
 &AtClient
 Procedure DescribeAPI(Command)
@@ -521,8 +509,6 @@ Procedure DoAfterChooseAPISchemaToDelete(QuestionResult,
     
 EndProcedure // DoAfterChooseAPISchemaToDelete()
 
-
-
 // Fills basic format info.
 //
 &AtServer
@@ -548,8 +534,6 @@ Procedure LoadBasicFormatInfo()
         FormatProcessor.FormatShortName(), FormatProcessor.Version());
     
 EndProcedure // LoadBasicFormatInfo() 
-
-
 
 // Returns link to the formal document from the Internet Engineering Task Force 
 // (IETF) that is the result of committee drafting and subsequent review 
@@ -664,7 +648,6 @@ Procedure DoAfterChooseMethodToDelete(SelectedElement,
     
 EndProcedure // DoAfterChooseMethodToDelete() 
 
-
 &AtServer
 Procedure GenerateSpreadsheetDocumentAtServer()
     
@@ -735,7 +718,6 @@ Procedure GenerateSpecificDocumentAtServer()
     
 EndProcedure // GenerateSpecificDocumentAtServer() 
 
-
 // See function Catalogs.FL_Methods.UpdateMethodsView.
 //
 &AtServer
@@ -800,17 +782,16 @@ Procedure UpdateDataCompositionSchema(DataCompositionSchema)
     RowComposerSettingsModified = RowComposerSettingsModified Or Changes;
     RowDataCompositionSchemaModified = RowDataCompositionSchemaModified Or Changes;
         
-    If Changes = True Then
+    If Changes Then
         
         // Init data composer by new data composition schema.
         FL_DataComposition.InitSettingsComposer(Undefined, // Reserved
             RowComposerSettings, 
             DataCompositionSchemaEditAddress);
 
-    Endif;
+    EndIf;
 
 EndProcedure // UpdateDataCompositionSchema() 
-
 
 &AtServer
 Procedure LoadMethodSettings()
@@ -821,7 +802,8 @@ Procedure LoadMethodSettings()
     SaveMethodSettings();
         
     CurrentPage = Items.MethodPages.CurrentPage;
-    If CurrentPage = Undefined And Items.MethodPages.ChildItems.Count() > 0 Then
+    If CurrentPage = Undefined 
+        AND Items.MethodPages.ChildItems.Count() > 0 Then
         CurrentPage = Items.MethodPages.ChildItems[0];
     EndIf;
     
@@ -834,7 +816,6 @@ Procedure LoadMethodSettings()
         CurrentData = CurrentMethodData(RowMethod);
         RowAPIVersion = CurrentData.APIVersion;
         RowCanUseExternalFunctions = CurrentData.CanUseExternalFunctions;
-        
         
         UpdateMethodView(CurrentData);
         
@@ -912,8 +893,6 @@ Procedure SaveMethodSettings()
     RowDataCompositionSchemaModified = False;
 
 EndProcedure // SaveMethodSettings() 
-
-
 
 // See function Catalogs.FL_Methods.AvailableMethods.
 //
@@ -1008,8 +987,6 @@ Function CurrentMethodData(Val RowMethod)
 
 EndFunction // CurrentMethodData()  
 
-
-
 // Only for internal use.
 //
 &AtClientAtServerNoContext
@@ -1032,10 +1009,11 @@ EndFunction // NewMethodFilterParameters()
 Procedure DoAfterChooseEventToAdd(ClosureResult, 
     AdditionalParameters) Export
     
-    If ClosureResult <> Undefined Then
-        If TypeOf(ClosureResult) = Type("Array") Then
-            AddEventAtServer(ClosureResult);            
-        EndIf;           
+    If ClosureResult <> Undefined
+        AND TypeOf(ClosureResult) = Type("Array") Then
+        
+        AddEventAtServer(ClosureResult);
+        
     EndIf;
     
 EndProcedure // DoAfterChooseEventToAdd() 
@@ -1048,11 +1026,12 @@ Procedure DoAfterChooseEventToFire(QuestionResult,
     
     Var Identifier;
     
-    If QuestionResult = DialogReturnCode.Yes Then
-        If TypeOf(AdditionalParameters) = Type("Structure")
-         And AdditionalParameters.Property("Identifier", Identifier) Then
-            FireEventAtServer(Identifier);            
-        EndIf; 
+    If QuestionResult = DialogReturnCode.Yes
+        AND TypeOf(AdditionalParameters) = Type("Structure")
+        AND AdditionalParameters.Property("Identifier", Identifier) Then
+        
+        FireEventAtServer(Identifier);            
+ 
     EndIf;
     
 EndProcedure // DoAfterChooseEventsToAdd() 
@@ -1065,24 +1044,21 @@ Procedure DoAfterChooseEventToDelete(QuestionResult,
     
     Var Identifier;
     
-    If QuestionResult = DialogReturnCode.Yes Then
-        If TypeOf(AdditionalParameters) = Type("Structure")
-            And AdditionalParameters.Property("Identifier", Identifier) Then
+    If QuestionResult = DialogReturnCode.Yes
+        AND TypeOf(AdditionalParameters) = Type("Structure")
+        AND AdditionalParameters.Property("Identifier", Identifier) Then
             
-            SearchResult = Object.Events.FindByID(Identifier);
-            If SearchResult <> Undefined Then
-                
-                Modified = True;
-                
-                Object.Events.Delete(SearchResult);                
-                
-            EndIf;
+        SearchResult = Object.Events.FindByID(Identifier);
+        If SearchResult <> Undefined Then
             
-        EndIf; 
+            Modified = True;
+            Object.Events.Delete(SearchResult);                
+            
+        EndIf;
+            
     EndIf;
     
 EndProcedure // DoAfterChooseEventToDelete()
-
 
 // Only for internal use.
 //
@@ -1119,7 +1095,11 @@ Procedure FireEventAtServer(Identifier)
     EndIf;
     
     Query = New Query;
-    Query.Text = StrTemplate("SELECT Ref As Source From %1", 
+    Query.Text = StrTemplate("
+        |SELECT 
+        |   Ref AS Source 
+        |FROM
+        |   %1", 
         SearchResult.MetadataObject);
     QueryResult = Query.Execute();
     If Not QueryResult.IsEmpty() Then 
@@ -1141,7 +1121,6 @@ Procedure FireEventAtServer(Identifier)
         
 EndProcedure // FireEventAtServer() 
 
-
 // Only for internal use.
 //
 &AtClientAtServerNoContext
@@ -1149,7 +1128,6 @@ Function NewEventFilterParameters()
 
     FilterParameters = New Structure;
     FilterParameters.Insert("APIVersion");
-    //FilterParameters.Insert("MetadataObject");
     FilterParameters.Insert("Method");
     Return FilterParameters;
 
@@ -1187,25 +1165,24 @@ Procedure DoAfterChooseChannelToDelete(QuestionResult,
     
     Var Identifier;
     
-    If QuestionResult = DialogReturnCode.Yes Then
-        If TypeOf(AdditionalParameters) = Type("Structure")
-            And AdditionalParameters.Property("Identifier", Identifier) Then
+    If QuestionResult = DialogReturnCode.Yes
+        AND TypeOf(AdditionalParameters) = Type("Structure")
+        AND AdditionalParameters.Property("Identifier", Identifier) Then
             
-            SearchResult = Object.Channels.FindByID(Identifier);
-            If SearchResult <> Undefined Then
-                
-                Modified = True;
-                
-                FilterParameters = ChannelFilterParameters();
-                FillPropertyValues(FilterParameters, SearchResult);
-                FL_CommonUseClientServer.DeleteRowsByFilter(Object.ChannelResources, 
-                    FilterParameters, Modified);
-                
-                Object.Channels.Delete(SearchResult);                
-                
-            EndIf;
+        SearchResult = Object.Channels.FindByID(Identifier);
+        If SearchResult <> Undefined Then
             
-        EndIf; 
+            Modified = True;
+            
+            FilterParameters = ChannelFilterParameters();
+            FillPropertyValues(FilterParameters, SearchResult);
+            FL_CommonUseClientServer.DeleteRowsByFilter(Object.ChannelResources, 
+                FilterParameters, Modified);
+            
+            Object.Channels.Delete(SearchResult);                
+            
+        EndIf;
+            
     EndIf;
     
 EndProcedure // DoAfterChooseChannelToDelete()
@@ -1216,34 +1193,29 @@ EndProcedure // DoAfterChooseChannelToDelete()
 Procedure DoAfterCloseChannelResourcesForm(ClosureResult, 
     ChannelRef) Export
     
-    If ClosureResult <> Undefined Then
-
-        If TypeOf(ClosureResult) = Type("FormDataStructure") Then
+    If ClosureResult <> Undefined
+        AND TypeOf(ClosureResult) = Type("FormDataStructure") Then
             
-            ChannelIdentifier = AddChannelAtServer(ChannelRef);
-            ChannelRow = Object.Channels.FindByID(ChannelIdentifier);
+        ChannelIdentifier = AddChannelAtServer(ChannelRef);
+        ChannelRow = Object.Channels.FindByID(ChannelIdentifier);
+        
+        If ClosureResult.Property("ChannelResources")
+            AND TypeOf(ClosureResult.ChannelResources) = Type("FormDataCollection") Then
             
-            If ClosureResult.Property("ChannelResources") And
-                TypeOf(ClosureResult.ChannelResources) = Type("FormDataCollection") Then
-                
-                Modified = True;
-                FilterParameters = ChannelFilterParameters();
-                FillPropertyValues(FilterParameters, ChannelRow);
-                
-                FilterResults = Object.ChannelResources.FindRows(FilterParameters);
-                If FilterResults.Count() Then
-                    For Each FilterResult In FilterResults Do
-                        Object.ChannelResources.Delete(FilterResult);    
-                    EndDo;         
-                EndIf;
-                
-                For Each Item In ClosureResult.ChannelResources Do
-                    NewData = Object.ChannelResources.Add();
-                    FillPropertyValues(NewData, ChannelRow);
-                    FillPropertyValues(NewData, Item);
-                EndDo; 
-                
-            EndIf;
+            Modified = True;
+            FilterParameters = ChannelFilterParameters();
+            FillPropertyValues(FilterParameters, ChannelRow);
+            
+            FilterResults = Object.ChannelResources.FindRows(FilterParameters);
+            For Each FilterResult In FilterResults Do
+                Object.ChannelResources.Delete(FilterResult);    
+            EndDo;         
+            
+            For Each Item In ClosureResult.ChannelResources Do
+                NewData = Object.ChannelResources.Add();
+                FillPropertyValues(NewData, ChannelRow);
+                FillPropertyValues(NewData, Item);
+            EndDo; 
             
         EndIf;
  
@@ -1269,7 +1241,6 @@ Procedure DoAfterCloseResponseHandlerForm(ClosureResult,
     
 EndProcedure // DoAfterCloseResponseHandlerForm() 
 
-
 &AtClient
 Procedure OpenChannelResourceForm(ChannelParameters, ChannelRef)
     
@@ -1286,9 +1257,6 @@ Procedure OpenChannelResourceForm(ChannelParameters, ChannelRef)
         FormWindowOpeningMode.LockOwnerWindow);
     
 EndProcedure // OpenChannelResourceForm()
-
-
-
 
 // Only for internal use.
 //
@@ -1344,8 +1312,6 @@ Function RequiredChannelResources(ChannelRef, Val FormName = "ResourcesForm")
         
 EndFunction // RequiredChannelResources() 
 
-
-
 // Only for internal use.
 //
 &AtClientAtServerNoContext
@@ -1358,8 +1324,6 @@ Function ChannelFilterParameters()
     Return FilterParameters;
 
 EndFunction // ChannelFilterParameters() 
-
-
 
 // See function Catalogs.FL_Channels.ExchangeChannels.
 //

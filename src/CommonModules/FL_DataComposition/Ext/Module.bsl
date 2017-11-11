@@ -286,12 +286,12 @@ Procedure SetDataToSettingsComposer(Mediator, SettingsComposer,
     Var MessageBody, Parameters, Filter;
     
     If TypeOf(SettingsComposer) <> Type("DataCompositionSettingsComposer") Then
-        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentThanExpected(
+        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
             "SettingsComposer", SettingsComposer, Type("DataCompositionSettingsComposer"));          
     EndIf;
     
     If TypeOf(MessageSettings) <> Type("FixedStructure") Then      
-        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentThanExpected(
+        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
             "MessageSettings", MessageSettings, Type("FixedStructure"));     
     EndIf;
     
@@ -301,7 +301,7 @@ Procedure SetDataToSettingsComposer(Mediator, SettingsComposer,
     EndIf;
     
     If TypeOf(MessageBody) <> Type("FixedStructure") Then
-        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentThanExpected(
+        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
             "MessageSettings.Body", MessageBody, Type("FixedStructure"));     
     EndIf;
     

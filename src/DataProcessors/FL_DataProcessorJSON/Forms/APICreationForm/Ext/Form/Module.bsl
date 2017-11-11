@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -12,7 +13,9 @@
 // GNU Affero General Public License for more details.
 //
 // You should have received a copy of the GNU Affero General Public License 
-// along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+// along with this program. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region FormEventHandlers
 
@@ -81,8 +84,8 @@ Procedure APISchemaTypeChoiceProcessing(Item, SelectedValue, StandardProcessing)
             Return;
         EndIf;
         
-        If IsStructuredType(CurrentData.Type) = True
-          And IsStructuredType(SelectedValue) = False Then
+        If IsStructuredType(CurrentData.Type)
+          AND NOT IsStructuredType(SelectedValue) Then
           
             APISchemaItems = CurrentData.GetItems();        
             If APISchemaItems.Count() > 0 Then
@@ -90,9 +93,10 @@ Procedure APISchemaTypeChoiceProcessing(Item, SelectedValue, StandardProcessing)
                 APISchemaItems.Clear();
                 
                 Explanation = StrTemplate(
-                    NStr(
-                        "en = 'The new type ''%1'' cannot have nested items. Nested items have just been cleared.';
-                        |ru = 'Новый тип ''%1'' не может иметь вложенные элементы. Вложенные элементы были удалены.'"), 
+                    NStr("en = 'The new type ''%1'' cannot have nested items. 
+                        |Nested items have just been cleared.';
+                        |ru = 'Новый тип ''%1'' не может иметь вложенные элементы. 
+                        |Вложенные элементы были удалены.'"), 
                     SelectedValue);
                 
                 ShowUserNotification(Title, , Explanation, 
@@ -115,7 +119,7 @@ Procedure LoadSample(Command)
     
     If Object.APISchema.GetItems().Count() > 0 Then
         
-        ShowQueryBox(New NotifyDescription("DoAfterChooseLoadSample", 
+        ShowQueryBox(New NotifyDescription("DoAfterChooseSampleToLoad", 
                 ThisObject),
             NStr("en = 'The existing API schema description will be erased, continue loading sample?';
                  |ru = 'Существующее описание схемы API будет стерто, продолжить загрузку образца?'"),
@@ -124,7 +128,7 @@ Procedure LoadSample(Command)
             DialogReturnCode.Cancel);
             
     Else
-        DoAfterChooseLoadSample(DialogReturnCode.OK, Undefined);
+        DoAfterChooseSampleToLoad(DialogReturnCode.OK, Undefined);
     EndIf;
     
 EndProcedure // LoadSample() 
@@ -139,7 +143,6 @@ Procedure SaveAndClose(Command)
     EndIf;
     
 EndProcedure // SaveAndClose()
-
 
 &AtClient
 Procedure AddObjectItem(Command)
@@ -213,10 +216,17 @@ EndProcedure // DeleteRowAPITable()
 
 #Region ServiceProceduresAndFunctions
 
-// Only for internal use.
+// Shows an input string dialog if user has clicked «OK» button.
+//
+// Parameters:
+//  QuestionResult       - DialogReturnCode - system enumeration value 
+//                  or a value related to a clicked button. If a dialog 
+//                  is closed on timeout, the value is Timeout. 
+//  AdditionalParameters - Arbitrary        - the value specified when the 
+//                              NotifyDescription object was created.
 //
 &AtClient
-Procedure DoAfterChooseLoadSample(QuestionResult, AdditionalParameters) Export
+Procedure DoAfterChooseSampleToLoad(QuestionResult, AdditionalParameters) Export
     
     If QuestionResult = DialogReturnCode.OK Then
         
@@ -230,14 +240,19 @@ Procedure DoAfterChooseLoadSample(QuestionResult, AdditionalParameters) Export
                 
     EndIf;
     
-EndProcedure // DoAfterChooseLoadSample()
+EndProcedure // DoAfterChooseSampleToLoad()
 
-// Only for internal use.
+// Procedure that will be called after the string entry window is closed.
+//
+// String               - String, Undefined - the entered string value or 
+//                              undefined if the user has not entered anything. 
+// AdditionalParameters - Arbitrary         - the value specified when the 
+//                              NotifyDescription object was created.
 //
 &AtClient
 Procedure DoAfterInputStringSample(String, AdditionalParameters) Export
     
-    If String <> Undefined And TypeOf(String) = Type("String") Then
+    If String <> Undefined AND TypeOf(String) = Type("String") Then
         
         LoadSampleAtServer(String);
         APISchemaItems = Object.APISchema.GetItems();
@@ -249,34 +264,37 @@ Procedure DoAfterInputStringSample(String, AdditionalParameters) Export
     
 EndProcedure // DoAfterInputStringSample()
 
-
-// Only for internal use.
+// Deletes the selected row if user has clicked «OK» button.
+//
+// Parameters:
+//  QuestionResult       - DialogReturnCode - system enumeration value 
+//                  or a value related to a clicked button. If a dialog 
+//                  is closed on timeout, the value is Timeout. 
+//  AdditionalParameters - Arbitrary        - the value specified when the 
+//                              NotifyDescription object was created.
 //
 &AtClient
-Procedure DoAfterChooseRowToDelete(QuestionResult, 
-    AdditionalParameters) Export
+Procedure DoAfterChooseRowToDelete(QuestionResult, AdditionalParameters) Export
     
     Var Identifier;
     
-    If QuestionResult = DialogReturnCode.Yes Then
-        If TypeOf(AdditionalParameters) = Type("Structure")
-            And AdditionalParameters.Property("Identifier", Identifier) Then
+    If QuestionResult = DialogReturnCode.Yes
+        AND TypeOf(AdditionalParameters) = Type("Structure")
+        AND AdditionalParameters.Property("Identifier", Identifier) Then
             
-            SearchResult = Object.APISchema.FindByID(Identifier);
-            If SearchResult <> Undefined Then
-                TreeItem = SearchResult.GetParent();
-                If TreeItem = Undefined Then
-                    TreeItem = Object.APISchema;             
-                EndIf;
-                TreeItem.GetItems().Delete(SearchResult);
-                Modified = True;     
+        SearchResult = Object.APISchema.FindByID(Identifier);
+        If SearchResult <> Undefined Then
+            TreeItem = SearchResult.GetParent();
+            If TreeItem = Undefined Then
+                TreeItem = Object.APISchema;             
             EndIf;
-                        
-        EndIf; 
+            TreeItem.GetItems().Delete(SearchResult);
+            Modified = True;     
+        EndIf;
+                         
     EndIf;
     
 EndProcedure // DoAfterChooseRowToDelete()
-
 
 // Only for internal use.
 //
@@ -348,7 +366,6 @@ Procedure AddRowToAPISchema(Type)
     
 EndProcedure // AddRowToAPISchema()
 
-
 // Only for internal use.
 //
 &AtServer
@@ -378,29 +395,13 @@ Procedure LoadSampleAtServer(String)
     
 EndProcedure // LoadSampleAtServer()
 
-
-
 // Only for internal use.
 //
 &AtServer
 Function PutValueTreeToTempStorage(Val OwnerUUID)
     
-    // TODO: Check value tree
-    //If IsBlankString(CurrentData.Name) Then 
-    //    
-    //    Explanation = NStr(
-    //        "en = 'Failed to add new item. Field name is empty.';
-    //        |ru = 'Не удалось добавить новый элемент. Имя поля не заполнено.'");
-
-    //    ShowUserNotification(Title, , Explanation, 
-    //        PictureLib.FL_Logotype64);
-    //    
-    //    Raise;
-    //    
-    //EndIf;
-
-    
     ValueTree = FormAttributeToValue("Object.APISchema", Type("ValueTree"));
+    FillCheckAPISchema(ValueTree.Rows); 
     Return PutToTempStorage(ValueTree, OwnerUUID);
     
 EndFunction // PutValueTreeToTempStorage()
@@ -420,8 +421,6 @@ Function IsStructuredType(TypeName)
     Return MainObject.IsStructuredType(TypeName);
 
 EndFunction // IsStructuredType() 
-
-
 
 // Only for internal use.
 //
@@ -456,6 +455,28 @@ Procedure FillAPISchema(Rows, Name, SampleResult)
     
 EndProcedure // FillAPISchema() 
 
+// Only for internal use.
+//
+&AtServerNoContext
+Procedure FillCheckAPISchema(Rows)
+    
+    For Each Row In Rows Do
+        
+        If IsBlankString(Row.Name) OR IsBlankString(Row.Type) Then
+            
+            Raise NStr("en = 'Content type or field name is empty. 
+                |Cannot save API schema.';
+                |ru = 'Тип или имя поля не заданы. 
+                |Невозможно сохранить схему API.'");    
+        EndIf;
+        
+        If Row.Rows.Count() > 0 Then
+            FillCheckAPISchema(Row.Rows);        
+        EndIf;
+        
+    EndDo;
+    
+EndProcedure // FillCheckAPISchema()
 
 // Only for internal use.
 //

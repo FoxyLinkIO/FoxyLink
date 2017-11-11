@@ -31,7 +31,7 @@ Function AvailableChannels() Export
     
     ValueList = New ValueList;
 
-    PlugableChannels = FL_InteriorUse.PlugableSubsystem("Channels"); 
+    PlugableChannels = FL_InteriorUse.PluggableSubsystem("Channels"); 
     For Each Item In PlugableChannels.Content Do
         
         If Metadata.DataProcessors.Contains(Item) Then
@@ -100,7 +100,7 @@ EndFunction // ExchangeChannels()
 //
 Function NewChannelProcessor(Val LibraryGuid) Export
     
-    DataProcessorName = FL_InteriorUseReUse.IdentifyChannelProcessorName(
+    DataProcessorName = FL_InteriorUseReUse.IdentifyPluginProcessorName(
         LibraryGuid, "Channels");
            
     Return DataProcessors[DataProcessorName].Create();
