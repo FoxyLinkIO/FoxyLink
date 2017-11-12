@@ -78,8 +78,8 @@
 		</Metadata>
 		<Metadata name="Catalog.FL_Jobs.Form.BackgroundJobForm" id="e6319168-1af7-4605-bdb5-5270939d9d36" configVersion="03de3b741836de46b3d1d3c0a303526400000000"/>
 		<Metadata name="Catalog.FL_Jobs.Form.BackgroundJobForm.Form" id="e6319168-1af7-4605-bdb5-5270939d9d36.0" configVersion="136f2d19d226d14da4dd529a2875cbdf00000000"/>
-		<Metadata name="Catalog.FL_Jobs.Form.BackgroundJobsList" id="f6e6ba23-c508-45e1-91cf-6b9036d2ee22" configVersion="dedac1065f44f847a5427e930116085400000000"/>
-		<Metadata name="Catalog.FL_Jobs.Form.BackgroundJobsList.Form" id="f6e6ba23-c508-45e1-91cf-6b9036d2ee22.0" configVersion="12598a76033d2145bbfc1348a6d14d9500000000"/>
+		<Metadata name="Catalog.FL_Jobs.Form.BackgroundJobsList" id="f6e6ba23-c508-45e1-91cf-6b9036d2ee22" configVersion="b5e748e475c7fc4291568a26d71fef5a00000000"/>
+		<Metadata name="Catalog.FL_Jobs.Form.BackgroundJobsList.Form" id="f6e6ba23-c508-45e1-91cf-6b9036d2ee22.0" configVersion="64afd55e5ec004438f53e96953fbadf200000000"/>
 		<Metadata name="Catalog.FL_Jobs.ManagerModule" id="83d109a0-741e-40d3-86aa-fa3bf87e41d7.3" configVersion="b6ed62d882233e44b372ddebfb63240f00000000"/>
 		<Metadata name="Catalog.FL_Jobs.ObjectModule" id="83d109a0-741e-40d3-86aa-fa3bf87e41d7.0" configVersion="21e52c18ba515f468ca851a7cc817d7100000000"/>
 		<Metadata name="Catalog.FL_Methods" id="614effcc-67bb-42af-a18f-2c35946cac11" configVersion="a46f9889f8ded1458133ba9b9052dc5800000000">
@@ -213,7 +213,7 @@
 		<Metadata name="CommonPicture.FL_Update.Picture" id="80fcdb52-533a-4157-964d-356e13919eac.0" configVersion="42d07a3df5138e4ebab16461801da1b600000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE" id="4cc3426b-e953-4bd9-b838-2153998228de" configVersion="b2a8be15ab755b45b7223f80d443893900000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE.Template" id="4cc3426b-e953-4bd9-b838-2153998228de.0" configVersion="e6ba9340b3cc0742ae6383c1d84c3a5700000000"/>
-		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="513bf5e4c7c6bb44aaee9a3f05356cff00000000"/>
+		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="6a7643947f00ff419b3b20bc23ea237700000000"/>
 		<Metadata name="Configuration.FoxyLink.Logo" id="d93db53b-5a84-46dd-b01b-c5c745936a50.1" configVersion="9659276839a8dc428c0d1192ab0a0d9b00000000"/>
 		<Metadata name="Constant.FL_JobServerID" id="9e97fc4e-49d8-4ea4-8210-fe8e99fcee75" configVersion="ede47b6e1d626747a88fd2d83859869800000000"/>
 		<Metadata name="Constant.FL_LicenseAccepted" id="0207f42a-aad8-496a-a811-ebe708f2d1e3" configVersion="bde353e6ee74fe4db30c35b3caa753ff00000000"/>
