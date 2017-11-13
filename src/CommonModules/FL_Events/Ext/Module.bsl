@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region ProgramInterface
 
@@ -25,15 +28,15 @@
 //
 Procedure CatalogBeforeWrite(SourceObject, Cancel) Export
     
-    If Cancel = False Then
-        
-        AdditionalProperties = NewAdditionalProperties();
-        AdditionalProperties.IsNew = SourceObject.IsNew();
-        SourceObject.AdditionalProperties.Insert("FL_EventProperties", 
-            AdditionalProperties);
-            
+    If Cancel Then
+        Return;    
     EndIf;
-    
+
+    AdditionalProperties = NewAdditionalProperties();
+    AdditionalProperties.IsNew = SourceObject.IsNew();
+    SourceObject.AdditionalProperties.Insert("FL_EventProperties", 
+        AdditionalProperties);
+            
 EndProcedure // CatalogBeforeWrite()
 
 // Handler of BeforeWrite accumulation register event subscription.
@@ -48,14 +51,11 @@ EndProcedure // CatalogBeforeWrite()
 //
 Procedure AccumulationRegisterBeforeWrite(Source, Cancel, Replacing) Export
     
-    If Cancel = False Then
-        
-        
-        
+    If Cancel Then
+        Return;    
     EndIf;
-    
+ 
 EndProcedure // AccumulationRegisterBeforeWrite()
-
 
 // Handler of OnWrite catalog event subscription.
 //
@@ -68,49 +68,49 @@ Procedure CatalogOnWrite(SourceObject, Cancel) Export
     
     Var Method;
     
-    If SourceObject.AdditionalProperties.Property("FL_ResponseHandler")
-     And SourceObject.AdditionalProperties.FL_ResponseHandler = True Then
+    If Cancel Then
         Return;    
     EndIf;
     
-    If Cancel = False Then
-        
-        // Start measuring.
-        StartTime = CurrentUniversalDateInMilliseconds();
-        
-        MetadataObject = SourceObject.Metadata().FullName();
-        
-        AdditionalProperties = SourceObject.AdditionalProperties.FL_EventProperties;
-        If AdditionalProperties.IsNew = True Then
-            Method = Catalogs.FL_Methods.Create;        
-        Else
-            If SourceObject.DeletionMark = False Then
-                Method = Catalogs.FL_Methods.Update;        
-            Else
-                Method = Catalogs.FL_Methods.Delete;    
-            EndIf;
-        EndIf;
-        
-        Query = New Query;
-        Query.Text = QueryTextSubscribers();
-        Query.SetParameter("Method", Method);
-        Query.SetParameter("MetadataObject", MetadataObject);
-        QueryResult = Query.Execute();
-        
-        If QueryResult.IsEmpty() = False Then
-            
-            ValueTable = QueryResult.Unload();
-            For Each TableRow In ValueTable Do
-                Catalogs.FL_Jobs.CreateMessage(SourceObject.Ref,
-                    FL_CommonUse.ValueTableRowIntoStructure(TableRow));      
-            EndDo;
-            
-        EndIf;
-        
-        // End measuring.
-        ExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
-                
+    If SourceObject.AdditionalProperties.Property("FL_ResponseHandler")
+     AND SourceObject.AdditionalProperties.FL_ResponseHandler Then
+        Return;    
     EndIf;
+    
+    // Start measuring.
+    StartTime = CurrentUniversalDateInMilliseconds();
+    
+    MetadataObject = SourceObject.Metadata().FullName();
+    
+    AdditionalProperties = SourceObject.AdditionalProperties.FL_EventProperties;
+    If AdditionalProperties.IsNew Then
+        Method = Catalogs.FL_Methods.Create;        
+    Else
+        If NOT SourceObject.DeletionMark Then
+            Method = Catalogs.FL_Methods.Update;        
+        Else
+            Method = Catalogs.FL_Methods.Delete;    
+        EndIf;
+    EndIf;
+    
+    Query = New Query;
+    Query.Text = QueryTextSubscribers();
+    Query.SetParameter("Method", Method);
+    Query.SetParameter("MetadataObject", MetadataObject);
+    QueryResult = Query.Execute();
+    
+    If NOT QueryResult.IsEmpty() Then
+        
+        ValueTable = QueryResult.Unload();
+        For Each TableRow In ValueTable Do
+            Catalogs.FL_Jobs.CreateMessage(SourceObject.Ref,
+                FL_CommonUse.ValueTableRowIntoStructure(TableRow));      
+        EndDo;
+        
+    EndIf;
+    
+    // End measuring.
+    ExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;      
     
 EndProcedure // CatalogOnWrite()
 
@@ -126,10 +126,8 @@ EndProcedure // CatalogOnWrite()
 //
 Procedure AccumulationRegisterOnWrite(Source, Cancel, Replacing) Export
     
-    If Cancel = False Then
-        
-        
-        
+    If Cancel Then
+        Return;    
     EndIf;
     
 EndProcedure // AccumulationRegisterOnWrite()
@@ -156,7 +154,6 @@ Function QueryTextSubscribers()
         |SELECT
         |   Events.Ref              AS Owner,
         |   Events.APIVersion       AS APIVersion,
-        //|   Events.EventName        AS EventName,
         |   Events.MetadataObject   AS MetadataObject, 
         |   Events.Method           AS Method
         |FROM
