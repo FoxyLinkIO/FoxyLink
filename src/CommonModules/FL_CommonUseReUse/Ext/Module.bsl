@@ -38,12 +38,12 @@ Function ConfigurationSplitters() Export
 
 EndFunction // ConfigurationSplitters()
 
-// Returns a fixed map with base types synonym names.
+// Returns a fixed map with base reference type name synonyms.
 //
 // Returns:
-//  FixedMap - with  base types synonym names.
+//  FixedMap - with base reference type name synonyms.
 //
-Function BaseTypesNameSynonyms() Export
+Function BaseReferenceTypeNameSynonyms() Export
     
     Synonyms = New Map;
     Synonyms.Insert("EXCHANGEPLAN", "ПЛАНОБМЕНА");
@@ -58,7 +58,7 @@ Function BaseTypesNameSynonyms() Export
         
     Return New FixedMap(BuildSynonymCombinations(Synonyms));
     
-EndFunction // BaseTypeNameSynonyms()
+EndFunction // BaseReferenceTypeNameSynonyms()
 
 // Returns a fixed map with standard attribute synonym names.
 //

@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region FormEventHandlers
 
@@ -96,8 +99,10 @@ Procedure StopJobServer(Command)
     ShowUserNotification(NStr("en = 'Job server (FoxyLink)'; 
             |ru = 'Сервер заданий (FoxyLink)'"),
         ,
-        NStr("en = 'Job server is stopped, but the stopped status will be set by the server just in a few seconds.'; 
-            |ru = 'Сервер заданий остановлен, но состояние остановки будет установлено сервером только через несколько секунд.'"),
+        NStr("en = 'Job server is stopped, but the stopped status 
+            |will be set by the server just in a few seconds.'; 
+            |ru = 'Сервер заданий остановлен, но состояние остановки будет
+            |установлено сервером через несколько секунд.'"),
         PictureLib.FL_Logotype64
         );
         
@@ -126,7 +131,7 @@ EndProcedure // UpdateJobServerState()
 Procedure UpdateJobServerStateAtServer()
     
     JobServerState = FL_JobServer.JobServerIsRunning();   
-    If JobServerState = True Then
+    If JobServerState Then
         Items.GroupJobServerPages.CurrentPage = Items.GroupJobServerRunning;
         Items.ServerStatus.Picture = PictureLib.FL_Processing;
     Else
@@ -135,7 +140,6 @@ Procedure UpdateJobServerStateAtServer()
     EndIf;
     
 EndProcedure // UpdateJobServerStateAtServer() 
-
 
 // See function Catalogs.FL_Jobs.ProcessMessage.
 //
@@ -172,7 +176,6 @@ Procedure ProcessMessagesAtServer()
     EndDo;
   
 EndProcedure // ProcessMessageAtServer() 
-
 
 // See procedure FL_JobServer.JobServerActivator.
 // 

@@ -122,6 +122,44 @@ Function ObjectAttributeValue(Ref, AttributeName) Export
 
 EndFunction // ObjectAttributeValue()
 
+// Creates a value table and copies all records of the set to it. 
+// The structure of the resulting table matches the structure of the recordset.
+//
+// Parameters:
+//  MetadataObject - MetadataObject - metadata object of which it is required 
+//                                      to receive records values. 
+//  Filter         - Filter         - it contains the object Filter, for which 
+//                                      current filtration of records is  
+//                                      performed when the set is read or written. 
+//
+// Returns:
+//  ValueTable - creates a value table and copies all records of the set to it. 
+//               The structure of the resulting table matches the structure of 
+//               the recordset.
+//
+Function RegisterRecordsValues(MetadataObject, Filter) Export
+    
+    ObjectManager = FL_CommonUse.ObjectManagerByFullName(
+        MetadataObject.FullName());
+        
+    RecordSet = ObjectManager.CreateRecordSet();
+    For Each FilterValue In Filter Do
+            
+        If NOT FilterValue.Use Then
+            Continue;
+        EndIf;
+        
+        FilterRow = RecordSet.Filter.Find(FilterValue.Name);
+        FilterRow.Value = FilterValue.Value;
+        FilterRow.Use = True;
+        
+    EndDo;
+    
+    RecordSet.Read();
+    Return RecordSet.Unload();   
+    
+EndFunction // RegisterRecordsValues()
+
 // Creates a structure with properties named as value table row columns and 
 // sets the values of these properties from the values table row.
 //
@@ -161,8 +199,8 @@ EndFunction // ValueTableRowIntoStructure()
 Function FixedData(Data, CallingException = True) Export
 
     If TypeOf(Data) = Type("Array") Then
-        Array = New Array;
         
+        Array = New Array;
         For Each Value In Data Do
             
             If TypeOf(Value) = Type("Structure")
@@ -219,30 +257,6 @@ Function FixedData(Data, CallingException = True) Export
     Return Data;
 
 EndFunction // FixedData()
-
-// Checks if the passed type is a reference data type.
-// 
-// Parameters: 
-//  Type - Type - type that is needed to check.  
-//
-// Returns:
-//  Boolean - False is returned for the Undefined type.
-//
-Function IsReference(Type) Export
-
-    Return Type <> Type("Undefined") 
-      AND (Catalogs.AllRefsType().ContainsType(Type)
-        OR Documents.AllRefsType().ContainsType(Type)
-        OR Enums.AllRefsType().ContainsType(Type)
-        OR ChartsOfCharacteristicTypes.AllRefsType().ContainsType(Type)
-        OR ChartsOfAccounts.AllRefsType().ContainsType(Type)
-        OR ChartsOfCalculationTypes.AllRefsType().ContainsType(Type)
-        OR BusinessProcesses.AllRefsType().ContainsType(Type)
-        OR BusinessProcesses.RoutePointsAllRefsType().ContainsType(Type)
-        OR Tasks.AllRefsType().ContainsType(Type)
-        OR ExchangePlans.AllRefsType().ContainsType(Type));
-    
-EndFunction // IsReference()
 
 // Receives the configuration metadata tree with the specified filter by the metadata objects.
 // 
@@ -442,6 +456,94 @@ Function ConfigurationMetadataTree(Filter = Undefined) Export
     Return MetadataTree;
 
 EndFunction // ConfigurationMetadataTree()
+
+#Region ObjectTypes
+
+// Checks if the passed type is a reference data type.
+// 
+// Parameters: 
+//  Type - Type - type that is needed to check.  
+//
+// Returns:
+//  Boolean - False is returned for the Undefined type.
+//
+Function IsReference(Type) Export
+
+    Return Type <> Type("Undefined") 
+      AND (Catalogs.AllRefsType().ContainsType(Type)
+        OR Documents.AllRefsType().ContainsType(Type)
+        OR Enums.AllRefsType().ContainsType(Type)
+        OR ChartsOfCharacteristicTypes.AllRefsType().ContainsType(Type)
+        OR ChartsOfAccounts.AllRefsType().ContainsType(Type)
+        OR ChartsOfCalculationTypes.AllRefsType().ContainsType(Type)
+        OR BusinessProcesses.AllRefsType().ContainsType(Type)
+        OR BusinessProcesses.RoutePointsAllRefsType().ContainsType(Type)
+        OR Tasks.AllRefsType().ContainsType(Type)
+        OR ExchangePlans.AllRefsType().ContainsType(Type));
+    
+EndFunction // IsReference()
+
+// Constructs a TypeDescription that contains the String type.
+//
+// Parameters:
+//  StringLength - Number - allowed string length. If a parameter is not 
+//                          specified, the string length is unlimited.
+//                      Default value: 0. 
+//
+// Returns:
+//  TypeDescription - the description of types based on specified types and 
+//                    qualifiers for Number, String, Date types. 
+//
+Function StringTypeDescription(StringLength = 0) Export
+
+    QualifierRows = New StringQualifiers(StringLength, AllowedLength.Variable);
+    Return New TypeDescription("String", , QualifierRows);
+
+EndFunction // StringTypeDescription()
+
+// Constructs a TypeDescription that contains the Number type.
+//
+// Parameters:
+//  Digits         - Number      - total number of number digits
+//                      Default value: 0.
+//  FractionDigits - Number      - number of digits after the decimal point.
+//                      Default value: 0.
+//  AllowedSign    - AllowedSign - allowed number sign.
+//
+// Returns:
+//  TypeDescription - the description of types based on specified types and 
+//                    qualifiers for Number, String, Date types.
+//
+Function NumberTypeDescription(Digits = 0, FractionDigits = 0, 
+    AllowedSign = Undefined) Export
+
+    If AllowedSign = Undefined Then
+        NumberQualifier = New NumberQualifiers(Digits, FractionDigits);
+    Else
+        NumberQualifier = New NumberQualifiers(Digits, FractionDigits, 
+            AllowedSign);
+    EndIf;
+
+    Return New TypeDescription("Number", NumberQualifier);
+
+EndFunction // NumberTypeDescription()
+
+// Constructs a TypeDescription that contains the Date type.
+//
+// Parameters:
+//  DateFractions - DateFractions - allowed date fractions.
+//
+// Returns:
+//  TypeDescription - the description of types based on specified types and 
+//                    qualifiers for Number, String, Date types.
+//
+Function DateTypeDescription(DateFractions) Export
+
+    Return New TypeDescription("Date", , , New DateQualifiers(DateFractions));
+
+EndFunction // DateTypeDescription()
+
+#EndRegion // ObjectTypes
 
 #Region MetadataObjectTypes
  
@@ -664,6 +766,70 @@ Function TypeNameTasks() Export
     Return "Tasks";
 
 EndFunction // TypeNameTasks()
+
+#EndRegion // MetadataObjectTypes
+
+#Region MetadataObjectTypesDefinition
+
+// Defines if passed a metadata object belongs to the register type.
+// 
+// Parameters:
+//  MetadataObject - MetadataObject - object for which it is required to define 
+//                                      whether it belongs to the specified type.
+// 
+// Returns:
+//  Boolean.
+//
+Function IsRegister(MetadataObject) Export
+
+    Return Metadata.InformationRegisters.Contains(MetadataObject)
+        Or Metadata.AccumulationRegisters.Contains(MetadataObject)
+        Or Metadata.AccountingRegisters.Contains(MetadataObject)
+        Or Metadata.CalculationRegisters.Contains(MetadataObject);
+        
+EndFunction // IsRegister()
+
+// Defines if passed a metadata object belongs to the reference type.
+// 
+// Parameters:
+//  MetadataObject - MetadataObject - object for which it is required to define 
+//                                    whether it belongs to the specified type.
+// 
+// Returns:
+//   Boolean.
+//
+Function IsReferenceTypeObject(MetadataObject) Export
+
+    Return IsReferenceTypeObjectByMetadataObjectName(
+        MetadataObject.FullName());
+
+EndFunction // IsReferenceTypeObject()
+
+// Defines if passed a metadata object name belongs to the reference type.
+// 
+// Parameters:
+//  MetadataObjectName - String - object name for which it is required to define 
+//                                whether it belongs to the specified type.
+// 
+// Returns:
+//   Boolean.
+//
+Function IsReferenceTypeObjectByMetadataObjectName(MetadataObjectName) Export
+    
+    Position = Find(MetadataObjectName, ".");
+    If Position > 0 Then 
+        
+        BaseTypes = FL_CommonUseReUse.BaseReferenceTypeNameSynonyms();
+        BaseTypeName = Upper(Left(MetadataObjectName, Position - 1));
+        Return BaseTypes.Get(BaseTypeName) <> Undefined;
+        
+    EndIf;
+    
+    Return False;
+    
+EndFunction // IsReferenceTypeObjectByFullName()
+
+#EndRegion // MetadataObjectTypesDefinition
 
 // Returns the name of base type based on the metadata object.
 // 
@@ -912,8 +1078,6 @@ Function IsStandardAttribute(StandardAttributes, AttributeName) Export
     Return False;
 
 EndFunction // IsStandardAttribute()
-
-#EndRegion // MetadataObjectTypes
 
 #Region ValueConversion 
 
