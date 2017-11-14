@@ -22,14 +22,14 @@
 // Generates and outputs the message that can be connected to form managing item.
 //
 // Parameters:
-//  MessageTextToUser - String  - message type.
-//  DataKey           - AnyRef  - to infobase object.
-//                               Ref to object of the infobase to which
-//                               this message relates or the record key.
-//  Field             - String  - form attribute name.
-//  DataPath          - String  - path to data (path to form attribute).
-//  Cancel            - Boolean - Output parameter.
-//                               Always set to True value.
+//  Text     - String  - message type.
+//  DataKey  - AnyRef  - to infobase object.
+//                          Ref to object of the infobase to which
+//                          this message relates or the record key.
+//  Field    - String  - form attribute name.
+//  DataPath - String  - path to data (path to form attribute).
+//  Cancel   - Boolean - Output parameter.
+//                          Always set to True value.
 //
 // Cases of incorrect usage:
 //  1. Simultaneously pass the DataKey and DataPath parameters.
@@ -114,6 +114,20 @@ Procedure DeleteRowsByFilter(FormDataObject, FilterParameters,
     
 EndProcedure // DeleteRowsByFilter()
 
+// Extends the target table with the data from the source table.
+//
+// Parameters:
+//  SourceTable - ValueTable - table from which rows will be taken.
+//  TargetTable - ValueTable - table to which rows will be added.
+//  
+Procedure ExtendValueTable(SourceTable, TargetTable) Export
+
+    For Each SourceTableRow In SourceTable Do
+        FillPropertyValues(TargetTable.Add(), SourceTableRow);
+    EndDo;
+
+EndProcedure // ExtendValueTable()
+
 // Extends the receiver array with values from the source array.
 //
 // Parameters:
@@ -135,12 +149,15 @@ EndProcedure // ExtendArray()
 // Extends the receiver collection with values from the source collection.
 //
 // Parameters:
-//  StructureReceiver - Structure - collection to which new values will be added.
-//  SourceStructure   - Structure - collection from which pairs Key and Value for filling will be read.
-//  WithReplacement   - Boolean, Undefined - what to do in intersection places of the source keys and receiver.
-//       - True      - Replace receiver values (the quickest method).
-//       - False     - Do not replace receiver values (skip).
-//       - Undefined - Value by default. Throw exception.
+//  Receiver        - Structure          - collection to which new values 
+//                                          will be added.
+//  Source          - Structure          - collection from which pairs Key and
+//                                          Value for filling will be read.
+//  WithReplacement - Boolean, Undefined - what to do in intersection places of 
+//                                          the source keys and receiver.
+//                  - True      - replace receiver values (the quickest method).
+//                  - False     - do not replace receiver values (skip).
+//                  - Undefined - value by default. Throw exception.
 //
 Procedure ExtendStructure(Receiver, Source, WithReplacement = Undefined) Export
 

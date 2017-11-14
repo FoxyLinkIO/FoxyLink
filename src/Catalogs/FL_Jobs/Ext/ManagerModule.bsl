@@ -13,7 +13,7 @@
 // GNU Affero General Public License for more details.
 //
 // You should have received a copy of the GNU Affero General Public License 
-// along with this program. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+// along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -127,12 +127,10 @@ Function ProcessMessage(Ref) Export
     //DataLock.Lock();
     
     // It is needed to avoid "Dirty read" from the file infobase.
-    IsFileInfobase = FL_CommonUse.FileInfobase();
-    If IsFileInfobase Then
-        BeginTransaction();
-    EndIf;
-    
-    
+    //IsFileInfobase = FL_CommonUse.FileInfobase();
+    //If IsFileInfobase Then
+    //    BeginTransaction();
+    //EndIf;
     
     //Query = New Query;
     //Query.Text = QueryTextMessageData();
@@ -154,11 +152,7 @@ Function ProcessMessage(Ref) Export
     // MessageObject.Next();
     MessageObject = Ref.GetObject();
     MessageObject.State = Catalogs.FL_States.Succeeded;
-    
-    
-    // Start measuring.
-    // Mediator
-    
+        
     MessageSettings = FL_DataComposition.NewMessageSettings();
     For Each DCSParameter In MessageObject.DCSParameters Do
         MessageSettings.Body.Parameters.Insert(DCSParameter.Parameter, 
@@ -172,8 +166,6 @@ Function ProcessMessage(Ref) Export
         ExchangeSettings, FL_CommonUse.FixedData(MessageSettings));
             
     If Not MessageObject.Subscribers.Count() = 0 Then
-        
-        //Subscribers = MessageData.Subscribers.Select();
         
         FilterParameters = New Structure("Channel");
         SubscriberResources = MessageObject.SubscriberResources.Unload();
@@ -217,16 +209,7 @@ Function ProcessMessage(Ref) Export
     EndIf;
     
     MessageObject.Write();  
-    
-    
-    // End measuring.
-    // Mediator    
         
-        
-    If TransactionActive() Then
-        CommitTransaction();
-    EndIf;
-    
     Return DeliveryResponse;
             
 EndFunction // ProcessMessage() 
