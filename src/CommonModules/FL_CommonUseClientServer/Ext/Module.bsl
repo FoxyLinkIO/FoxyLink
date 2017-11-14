@@ -497,6 +497,36 @@ Function URIStructure(Val StringURI) Export
     
 EndFunction // URIStructure()
 
+// Assembles URI string and returns it.
+// Based on RFC 3986.
+//
+// Parameters:
+//  URIStructure - Structure - uri structure.
+//      * Schema       - String - schema.
+//      * Login        - String - user login.
+//      * Password     - String - user password.
+//      * ServerName   - String - part <host>:<port> from the StringURI.
+//      * Host         - String - host name.
+//      * Port         - Number - port number.
+//      * PathOnServer - String - part <path >?<parameters>#<anchor> from the StringURI.
+//      * Parameters   - Map    - parsed parameters from the StringURI.
+//
+// Returns:
+//  StringURI - String - reference to the resource in the format:
+//                          <schema>://<login>:<password>@<host>:<port>/<path>?<parameters>#<anchor>. 
+//
+Function StringURI(Val URIStructure) Export
+
+    TemplateURI = "%1://%2:%3@%4/%5";
+    Return StrTemplate(TemplateURI, 
+        URIStructure.Schema,
+        URIStructure.Login,
+        URIStructure.Password,
+        URIStructure.ServerName,
+        URIStructure.PathOnServer);
+    
+EndFunction // StringURI()
+    
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
