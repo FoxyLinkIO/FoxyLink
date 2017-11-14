@@ -166,9 +166,6 @@ EndFunction // NewFormatProcessor()
 //  ExchangeSettings    - FixedStructure - exchange settings.
 //  MessageSettings     - FixedStructure - message settings.
 //                          Default value: Undefined.
-//  FormatProcessorName - String         - the name of the object type depends 
-//                                          on the data processor name in the configuration.
-//                          Default value: Undefined.
 //
 // Returns:
 //  Arbitrary - the resulting message.

@@ -69,22 +69,22 @@ EndFunction // Delete()
 //
 Function Requeue(Job, FromState = Undefined) Export
 
-    
     Return False;
     
 EndFunction // Requeue()
 
-
-
 Function ContinueWith() Export
 
-     Return False;
+    Return False;
     
 EndFunction // ContinueWith()
 
+// Creates a new background job based on a specified instance method
+// call expression and schedules it to be enqueued after a given delay.
+//
 Function Schedule() Export
 
-     Return False;
+    Return False;
     
 EndFunction // Schedule()
 
