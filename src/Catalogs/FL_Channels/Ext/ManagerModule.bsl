@@ -113,9 +113,6 @@ EndFunction // NewChannelProcessor()
 //  LibraryGuid          - String - library guid which is used to identify 
 //                         different implementations of specific channel.
 //  FormName             - Stirng - The name of the form.
-//  ChannelProcessorName - String - name of the object type depends on the data 
-//                                 processor name in the configuration.
-//                         Default value: "".
 //
 // Returns:
 //  Structure - with values:
