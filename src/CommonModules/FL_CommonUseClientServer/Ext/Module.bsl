@@ -296,6 +296,43 @@ Function CopyValueList(SourceList) Export
     
 EndFunction // CopyValueList() 
 
+// Create the value copy of the TypeDescription type.
+// 
+// Parameters:
+//  SourceTypeDescription - TypeDescription - copied description of type.
+//  AddedTypes            - Array, String   - array of Type values consisting 
+//                      of types that will be used in the object, or a string 
+//                      containing values of type names, separated by commas. 
+//                        - TypeDescription - description of types. 
+//  RemovedTypes          - Array, String   - array of Type type values 
+//                      consisting of types that will be removed from the source
+//                      description set as the first parameter.
+//                        - TypeDescription -  description of types.
+// 
+// Returns:
+//  TypeDescription - copy of the source description of type.
+//
+Function CopyTypeDescription(SourceTypeDescription, AddedTypes = Undefined, 
+    RemovedTypes = Undefined) Export
+    
+    Add = Undefined;
+    If TypeOf(AddedTypes) = Type("TypeDescription") Then
+        Add = AddedTypes.Types();
+    Else
+        Add = AddedTypes;   
+    EndIf;
+    
+    Remove = Undefined;
+    If TypeOf(RemovedTypes) = Type("TypeDescription") Then
+        Remove = RemovedTypes.Types();
+    Else
+        Remove = RemovedTypes;   
+    EndIf;
+    
+    Return New TypeDescription(SourceTypeDescription, Add, Remove);
+    
+EndFunction // CopyTypeDescription()
+
 #Region StringOperations
 
 // Checks if variable name is correct.

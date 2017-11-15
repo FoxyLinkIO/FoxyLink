@@ -259,6 +259,7 @@
 			</Events>
 		</Pages>
 		<UsualGroup name="HiddenGroup" id="39">
+			<Visible>false</Visible>
 			<Representation>None</Representation>
 			<ShowTitle>false</ShowTitle>
 			<ExtendedTooltip name="HiddenGroupExtendedTooltip" id="40"/>

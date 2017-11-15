@@ -290,9 +290,9 @@ Procedure SetDataToSettingsComposer(Mediator, SettingsComposer,
             "SettingsComposer", SettingsComposer, Type("DataCompositionSettingsComposer"));          
     EndIf;
     
-    If TypeOf(MessageSettings) <> Type("FixedStructure") Then      
+    If TypeOf(MessageSettings) <> Type("Structure") Then      
         Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "MessageSettings", MessageSettings, Type("FixedStructure"));     
+            "MessageSettings", MessageSettings, Type("Structure"));     
     EndIf;
     
     If MessageSettings.Property("Body", MessageBody) = False Then
@@ -300,11 +300,10 @@ Procedure SetDataToSettingsComposer(Mediator, SettingsComposer,
             "MessageSettings", MessageSettings, "Body");    
     EndIf;
     
-    If TypeOf(MessageBody) <> Type("FixedStructure") Then
+    If TypeOf(MessageBody) <> Type("Structure") Then
         Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "MessageSettings.Body", MessageBody, Type("FixedStructure"));     
+            "MessageSettings.Body", MessageBody, Type("Structure"));     
     EndIf;
-    
     
     If MessageBody.Property("Parameters", Parameters) Then
          
@@ -319,7 +318,7 @@ Procedure SetDataToSettingsComposer(Mediator, SettingsComposer,
         EndIf;
                 
         SettingsInitialized = False;
-        If TypeOf(Parameters) = Type("FixedStructure") Then
+        If TypeOf(Parameters) = Type("Structure") Then
             SettingsInitialized = Parameters.Count() > 0; 
         EndIf;
         
@@ -506,7 +505,6 @@ Procedure FillReportStructure(Mediator, ReportStructure,
         
 EndProcedure // FillReportStructure()
 
-
 // Fills data composition parameter value collection from MessageSettings.Body.Parameters.
 //
 // Parameters:
@@ -637,8 +635,6 @@ Procedure SetDataCompositionDataParameterValue(DataParameters, ID, Value)
     Endif;
 
 EndProcedure // SetValueOfDataCompositionAvailableParameter()
-
-
 
 // Returns the structure with template columns which is needed for output processor. 
 //
@@ -892,7 +888,6 @@ Function NewResourcesCache(Items, ResourcesCache = Undefined)
     
 EndFunction // NewResourcesCache()
 
-
 // Returns normalized column name.
 //
 // Parameters:
@@ -924,7 +919,6 @@ Function NormalizeColumnName(Val ColumnName)
     Return ColumnName;
     
 EndFunction // NormalizeColumnName()
-
 
 // Returns data composition template area template definition 
 // that is matched to data composition template body.  
@@ -1022,7 +1016,6 @@ Function GroupTemplateItem(TemplateGroup, Expression, ProcessSubordinate = True)
     Return Undefined;
     
 EndFunction // GroupTemplateItem()
-
 
 // Returns an empty report structure. Names that were set early in the report 
 // strucure with help of context menu command "Set name...".
