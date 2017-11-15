@@ -470,6 +470,12 @@ EndProcedure // DoAfterCloseAPICreationForm()
 
 // Copies API schema from the selected method to the current method.
 //
+// Parameters:
+//  SelectedElement      - ValueListItem - the selected list item or Undefined 
+//                                          if the user has not selected anything. 
+//  AdditionalParameters - Arbitrary     - the value specified when the 
+//                                          NotifyDescription object was created. 
+//
 &AtClient
 Procedure DoAfterChooseMethodAPIToCopy(SelectedElement, 
     AdditionalParameters) Export
@@ -498,6 +504,13 @@ Procedure DoAfterChooseMethodAPIToCopy(SelectedElement,
 EndProcedure // DoAfterChooseMethodAPIToCopy()
 
 // Deletes API schema from the current method.
+//
+// Parameters:
+//  QuestionResult       - DialogReturnCode - system enumeration value 
+//                  or a value related to a clicked button. If a dialog 
+//                  is closed on timeout, the value is Timeout. 
+//  AdditionalParameters - Arbitrary        - the value specified when the 
+//                              NotifyDescription object was created.
 //
 &AtClient
 Procedure DoAfterChooseAPISchemaToDelete(QuestionResult, 
@@ -583,13 +596,18 @@ EndFunction // NewAPISchemaData()
 
 // Adds new API method to ThisObject.
 //
+// Parameters:
+//  SelectedElement      - ValueListItem - the selected list item or Undefined 
+//                                          if the user has not selected anything. 
+//  AdditionalParameters - Arbitrary     - the value specified when the 
+//                                          NotifyDescription object was created.  
+//
 &AtClient
 Procedure DoAfterChooseMethodToAdd(SelectedElement, 
     AdditionalParameters) Export
     
     If SelectedElement <> Undefined Then
         
-        // TODO: Add possibility to use different versions of API.
         FilterParameters = New Structure("APIVersion, Method", "1.0.0", 
             SelectedElement.Value);
             
@@ -611,6 +629,12 @@ Procedure DoAfterChooseMethodToAdd(SelectedElement,
 EndProcedure // DoAfterChooseMethodToAdd() 
 
 // Deletes API method from ThisObject.
+//
+// Parameters:
+//  SelectedElement      - ValueListItem - the selected list item or Undefined 
+//                                          if the user has not selected anything. 
+//  AdditionalParameters - Arbitrary     - the value specified when the 
+//                                          NotifyDescription object was created.
 //
 &AtClient
 Procedure DoAfterChooseMethodToDelete(SelectedElement, 
@@ -1005,6 +1029,12 @@ EndFunction // NewMethodFilterParameters()
 
 // Adds new subscriptions on events.
 //
+// Parameters:
+//  ClosureResult        - Arbitrary - the value transferred when you call 
+//                                      the Close method of the opened form.
+//  AdditionalParameters - Arbitrary - the value specified when the 
+//                                      NotifyDescription object was created.
+//
 &AtClient
 Procedure DoAfterChooseEventToAdd(ClosureResult, 
     AdditionalParameters) Export
@@ -1019,6 +1049,13 @@ Procedure DoAfterChooseEventToAdd(ClosureResult,
 EndProcedure // DoAfterChooseEventToAdd() 
 
 // Adds new subscriptions on events.
+//
+// Parameters:
+//  QuestionResult       - DialogReturnCode - system enumeration value 
+//                  or a value related to a clicked button. If a dialog 
+//                  is closed on timeout, the value is Timeout. 
+//  AdditionalParameters - Arbitrary        - the value specified when the 
+//                              NotifyDescription object was created.
 //
 &AtClient
 Procedure DoAfterChooseEventToFire(QuestionResult, 
@@ -1037,6 +1074,13 @@ Procedure DoAfterChooseEventToFire(QuestionResult,
 EndProcedure // DoAfterChooseEventsToAdd() 
 
 // Deletes the selected event.
+//
+// Parameters:
+//  QuestionResult       - DialogReturnCode - system enumeration value 
+//                  or a value related to a clicked button. If a dialog 
+//                  is closed on timeout, the value is Timeout. 
+//  AdditionalParameters - Arbitrary        - the value specified when the 
+//                              NotifyDescription object was created.
 //
 &AtClient
 Procedure DoAfterChooseEventToDelete(QuestionResult, 
@@ -1094,30 +1138,30 @@ Procedure FireEventAtServer(Identifier)
         Return;          
     EndIf;
     
+    CurrentData = CurrentMethodData(RowMethod);
+    
+    // Event mock
+    SourceMock = FL_Events.NewSourceMock();
+    InvocationData = SourceMock.AdditionalProperties.InvocationData;
+    InvocationData.APIVersion = CurrentData.APIVersion;
+    InvocationData.MetadataObject = SearchResult.MetadataObject;
+    InvocationData.Method = CurrentData.Method;
+    InvocationData.Owner = Object.Ref;
+    
     Query = New Query;
     Query.Text = StrTemplate("
-        |SELECT 
-        |   Ref AS Source 
-        |FROM
-        |   %1", 
-        SearchResult.MetadataObject);
-    QueryResult = Query.Execute();
-    If Not QueryResult.IsEmpty() Then 
+            |SELECT 
+            |   Ref AS Ref 
+            |FROM 
+            |   %1", 
+        SearchResult.MetadataObject);    
         
-        CurrentData = CurrentMethodData(RowMethod);
-        
-        QueryParameters = New Structure;
-        QueryParameters.Insert("Owner", Object.Ref);
-        QueryParameters.Insert("APIVersion", CurrentData.APIVersion);
-        QueryParameters.Insert("Method", CurrentData.Method);
-        
-        QueryResultSelection = QueryResult.Select();
-        While QueryResultSelection.Next() Do
-            Catalogs.FL_Jobs.CreateMessage(
-                QueryResultSelection.Source, QueryParameters);       
-        EndDo;
-        
-    EndIf;
+    QueryResultSelection = Query.Execute().Select();
+    While QueryResultSelection.Next() Do
+        SourceMock.Ref = QueryResultSelection.Ref;
+        InvocationData.Arguments = QueryResultSelection.Ref;
+        FL_Events.EnqueueEvent(SourceMock);
+    EndDo;
         
 EndProcedure // FireEventAtServer() 
 
@@ -1139,6 +1183,12 @@ EndFunction // NewEventFilterParameters()
 
 // Adds new channel to API method to ThisObject.
 //
+// Parameters:
+//  SelectedElement      - ValueListItem - the selected list item or Undefined 
+//                                          if the user has not selected anything. 
+//  AdditionalParameters - Arbitrary     - the value specified when the 
+//                                          NotifyDescription object was created.
+//
 &AtClient
 Procedure DoAfterChooseChannelToAdd(SelectedElement, 
     AdditionalParameters) Export
@@ -1158,6 +1208,13 @@ Procedure DoAfterChooseChannelToAdd(SelectedElement,
 EndProcedure // DoAfterChooseChannelToAdd() 
 
 // Deletes the selected channel.
+//
+// Parameters:
+//  QuestionResult       - DialogReturnCode - system enumeration value or a value
+//                                      related to a clicked button. If a dialog 
+//                                      is closed on timeout, the value is Timeout. 
+//  AdditionalParameters - Structure        - the value specified when the 
+//                                      NotifyDescription object was created.
 //
 &AtClient
 Procedure DoAfterChooseChannelToDelete(QuestionResult, 
@@ -1188,6 +1245,12 @@ Procedure DoAfterChooseChannelToDelete(QuestionResult,
 EndProcedure // DoAfterChooseChannelToDelete()
 
 // Fills required channel resources.
+//
+// Parameters:
+//  ClosureResult - FormDataStructure      - the value transferred when you call 
+//                                           the Close method of the opened form.
+//  ChannelRef    - CatalogRef.FL_Channels - the value specified when the 
+//                                           NotifyDescription object was created.
 //
 &AtClient
 Procedure DoAfterCloseChannelResourcesForm(ClosureResult, 
@@ -1224,6 +1287,12 @@ Procedure DoAfterCloseChannelResourcesForm(ClosureResult,
 EndProcedure // DoAfterCloseChannelResourcesForm()
 
 // Fills channel response handler.
+//
+// Parameters:
+//  ClosureResult - String - the value transferred when you call the Close 
+//                           method of the opened form.
+//  ID            - Number - the value specified when the NotifyDescription
+//                           object was created.
 //
 &AtClient
 Procedure DoAfterCloseResponseHandlerForm(ClosureResult, 

@@ -163,7 +163,7 @@ Function ProcessMessage(Ref) Export
         MessageObject.Owner, MessageObject.Method); 
         
     ResultMessage = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined, 
-        ExchangeSettings, FL_CommonUse.FixedData(MessageSettings));
+        ExchangeSettings, MessageSettings);
             
     If Not MessageObject.Subscribers.Count() = 0 Then
         

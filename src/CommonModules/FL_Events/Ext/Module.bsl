@@ -48,7 +48,7 @@ Procedure CatalogBeforeWrite(Source, Cancel) Export
             EndIf;
         EndIf;
 
-        Source.AdditionalProperties.Insert("FL_InvocationData", 
+        Source.AdditionalProperties.Insert("InvocationData", 
             InvocationData);
         
     EndIf;
@@ -84,7 +84,7 @@ Procedure AccumulationRegisterBeforeWrite(Source, Cancel, Replacing) Export
                 SourceMetadata, Source.Filter);
         EndIf;
         
-        Source.AdditionalProperties.Insert("FL_InvocationData", 
+        Source.AdditionalProperties.Insert("InvocationData", 
             InvocationData);
         
     EndIf;    
@@ -104,7 +104,7 @@ Procedure CatalogOnWrite(Source, Cancel) Export
         Return;
     EndIf;
     
-    EnqueueEvents(Source);
+    EnqueueEvent(Source);
     
 EndProcedure // CatalogOnWrite()
 
@@ -124,20 +124,20 @@ Procedure AccumulationRegisterOnWrite(Source, Cancel, Replacing) Export
         Return;
     EndIf;
     
-    EnqueueEvents(Source);
+    EnqueueEvent(Source);
     
 EndProcedure // AccumulationRegisterOnWrite()
 
 #EndRegion // ProgramInterface
 
-#Region ServiceProceduresAndFunctions
+#Region ServiceInterface
 
 // Handles event subscription.
 //
 // Parameters:
-//  Source    - Arbitrary - arbitrary object.
+//  Source - Arbitrary - arbitrary object.
 //
-Procedure EnqueueEvents(Source)
+Procedure EnqueueEvent(Source) Export
     
     Var InvocationData, Arguments;
     
@@ -164,9 +164,10 @@ Procedure EnqueueEvents(Source)
     EndIf;
                     
     Query = New Query;
-    Query.Text = QueryTextSubscribers();
-    Query.SetParameter("Method", InvocationData.Method);
+    Query.Text = QueryTextSubscribers(InvocationData.Owner);
     Query.SetParameter("MetadataObject", InvocationData.MetadataObject);
+    Query.SetParameter("Method", InvocationData.Method);
+    Query.SetParameter("Owner", InvocationData.Owner);
     QueryResult = Query.Execute();
     If NOT QueryResult.IsEmpty() Then
         
@@ -180,7 +181,30 @@ Procedure EnqueueEvents(Source)
         
     EndIf;  
     
-EndProcedure // EnqueueEvents()
+EndProcedure // EnqueueEvent()
+
+// Returns a new source mock.
+//
+// Returns:
+//  Structure - mock of source event object.
+//      * Ref                  - AnyRef    - ref to object.
+//      * AdditionalProperties - Structure - additional properties.
+//          * InvocationData - Structure - see function FL_BackgroundJob.NewInvocationData.
+//
+Function NewSourceMock() Export
+    
+    SourceMock = New Structure;
+    SourceMock.Insert("Ref");
+    SourceMock.Insert("AdditionalProperties", New Structure);
+    SourceMock.AdditionalProperties.Insert("InvocationData", 
+        FL_BackgroundJob.NewInvocationData());     
+    Return SourceMock;
+    
+EndFunction // NewSourceMock()
+
+#EndRegion // ServiceInterface
+
+#Region ServiceProceduresAndFunctions
 
 // Only for internal use.
 //
@@ -199,12 +223,12 @@ EndFunction // IsEventPublisher()
 //
 Function IsValidInvocationData(Source, InvocationData)
     
-    If Source.AdditionalProperties.Property("FL_ResponseHandler")
+    If Source.AdditionalProperties.Property("ResponseHandler")
         AND Source.AdditionalProperties.FL_ResponseHandler Then
         Return False;    
     EndIf;
     
-    If NOT Source.AdditionalProperties.Property("FL_InvocationData", InvocationData) 
+    If NOT Source.AdditionalProperties.Property("InvocationData", InvocationData) 
         OR TypeOf(InvocationData) <> Type("Structure") Then
         Return False;    
     EndIf;
@@ -220,18 +244,21 @@ EndFunction // IsValidInvocationData()
 
 // Only for internal use.
 //
-Function QueryTextSubscribers()
-
-    QueryText = "
+Function QueryTextSubscribers(Owner)
+    
+    QueryText = StrTemplate("
         |SELECT
         |   Events.Ref              AS Owner,
         |   Events.APIVersion       AS APIVersion
         |FROM
         |   Catalog.FL_Exchanges.Events AS Events
         |WHERE
-        |    Events.MetadataObject = &MetadataObject
+        // [OPPX|OPHP1 +] Attribute + Ref
+        |    Events.MetadataObject = &MetadataObject 
+        |%1
         |AND Events.Method         = &Method
-        |";
+        |
+        |", ?(Owner = Undefined, "", "AND Events.Ref = &Owner "));
     Return QueryText;
     
 EndFunction // QueryTextSubscribers()

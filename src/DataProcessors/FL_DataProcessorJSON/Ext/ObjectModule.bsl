@@ -350,16 +350,325 @@ EndProcedure // BasicOutput()
 Procedure APISchemaOutput(Item, DataCompositionProcessor, 
     ReportStructure, TemplateColumns)
     
-    Raise NStr("en = 'To use this option FoxyLink Pro is needed. 
-        |FoxyLink Pro is a set of extension packages, that are available under 
-        |paid subscriptions. After purchase, you receive binaries and access 
-        |to the private repository.';
-        |ru = 'Для использования этой опции необходима версия FoxyLink Pro.
-        |FoxyLink Pro представляет собой набор пакетов расширения, доступных 
-        |под платной подпиской. После покупки, доступ к двоичным файлам и 
-        |к частному репозиторию будет предоставлен.'");
+    // The code in the comment written in one line is below this comment.
+    // To edit the code, remove the comment.
+    // For more information about the code in 1 line see http://infostart.ru/public/71130/.
     
+    Var CurrentLevel; 
+       
+    FillParamName(ReportStructure, TemplateColumns);
+    TypeDate = Type("Date");
+    
+    Begin = DataCompositionResultItemType.Begin;
+    BeginAndEnd = DataCompositionResultItemType.BeginAndEnd;
+    End = DataCompositionResultItemType.End;
+    
+    While Item <> Undefined Do
+                
+        If Item.ItemType = Begin Then
+            
+            Item = DataCompositionProcessor.Next();
+            If Item.ItemType = Begin Then
+                
+                Item = DataCompositionProcessor.Next();
+                If Item.ItemType = BeginAndEnd Then
+                    
+                    If CurrentLevel = Undefined Then
+                        CurrentLevel = APISchema.Rows.Find(Item.Template, "Template", True);
+                    Else
+                        CurrentLevel = CurrentLevel.Rows.Find(Item.Template, "Template");
+                    EndIf;
+                    
+                    If CurrentLevel = Undefined Then    
+                        ErrorMessage = StrTemplate(NStr(
+                                "en = 'Error: Failed to find property with name: %1.';
+                                |ru = 'Ошибка: Не удалось найти свойство с именем: %1.'"),
+                            ReportStructure.Names[Item.Template]);
+                        Raise ErrorMessage;
+                    EndIf;
+                    
+                    Parent = CurrentLevel.Parent;
+                    If Parent <> Undefined Then
+                        
+                        If NOT Parent.Pair Then
+                            If Parent.Type = "Object" Then
+                                Parent.Pair = True;
+                                StreamWriter.WriteStartObject();
+                            ElsIf Parent.Type = "Array" Then
+                                Parent.Pair = True;
+                                StreamWriter.WriteStartArray(); 
+                            EndIf;    
+                        EndIf;    
+                        
+                        If Parent.Type <> "Array" Then
+                            StreamWriter.WritePropertyName(CurrentLevel.Name);
+                        EndIf;
+                        
+                    EndIf;
+                        
+                    If CurrentLevel.Type = "Object" Then
+                        CurrentLevel.Pair = True;
+                        StreamWriter.WriteStartObject();
+                    ElsIf CurrentLevel.Type = "Array" Then
+                        CurrentLevel.Pair = True;
+                        StreamWriter.WriteStartArray(); 
+                    EndIf;
+                                            
+                EndIf;
+                
+            EndIf;
+            
+        EndIf;
+        
+        If CurrentLevel <> Undefined Then
+            
+            If Item.ItemType = End Then
+                
+                Item = DataCompositionProcessor.Next();
+                If Item = Undefined Or Item.ItemType = End Then
+                    AddRightBracket(CurrentLevel);    
+                EndIf;
+                                
+            ElsIf Not IsBlankString(Item.Template) Then
+                
+                If CurrentLevel.StructuredType Then 
+                    
+                    For Each Row In CurrentLevel.Rows Do
+                        
+                        If NOT Row.StructuredType Then
+                            
+                            If CurrentLevel.Type <> "Array" Then
+                                StreamWriter.WritePropertyName(Row.Name);
+                            EndIf;
+                             
+                            Value = Item.ParameterValues[Row.Parameter].Value;
+                            ValueType = TypeOf(Value);
+             
+                            If RefTypesCache[ValueType] = False Then
+                                StreamWriter.WriteValue(Value);
+                            ElsIf ValueType = TypeDate Then
+                                StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO));    
+                            ElsIf RefTypesCache[ValueType] = True Then
+                                StreamWriter.WriteValue(XMLString(Value));
+                            // Possible improvement: skip non-ValueType.
+                            ElsIf FL_CommonUse.IsReference(ValueType) Then
+                                RefTypesCache.Insert(ValueType, True);
+                                StreamWriter.WriteValue(XMLString(Value));         
+                            Else
+                                StreamWriter.WriteValue(Undefined);              
+                            EndIf;
+                            
+                            Row.Done = True;
+                            
+                        EndIf;
+                        
+                    EndDo;
+                    
+                Else
+                                            
+                    Value = Item.ParameterValues[CurrentLevel.Parameter].Value;
+                    ValueType = TypeOf(Value);
+     
+                    If RefTypesCache[ValueType] = False Then
+                        StreamWriter.WriteValue(Value);
+                    ElsIf ValueType = TypeDate Then
+                        StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO));    
+                    ElsIf RefTypesCache[ValueType] = True Then
+                        StreamWriter.WriteValue(XMLString(Value));
+                    // Possible improvement: skip non-ValueType.
+                    ElsIf FL_CommonUse.IsReference(ValueType) Then
+                        RefTypesCache.Insert(ValueType, True);
+                        StreamWriter.WriteValue(XMLString(Value));         
+                    Else
+                        StreamWriter.WriteValue(Undefined);              
+                    EndIf;
+                    
+                    CurrentLevel.Done = True;
+                    
+                EndIf;
+                                
+            EndIf;
+            
+        EndIf;
+        
+        Item = DataCompositionProcessor.Next();
+        
+    EndDo;
+   
 EndProcedure // APISchemaOutput()
+
+// Only for internal use.
+//
+Procedure AddRightBracket(APISchemaRow)
+    
+    // The code in the comment written in one line is below this comment.
+    // To edit the code, remove the comment.
+    // For more information about the code in 1 line see http://infostart.ru/public/71130/.
+    //
+    //If APISchemaRow.StructuredType Then
+    //    If APISchemaRow.Rows.Find(False, "Done") = Undefined Then
+    //        APISchemaRow.Done = True;
+    //        If APISchemaRow.Type = "Object" Then
+    //            StreamWriter.WriteEndObject();
+    //        Else
+    //            StreamWriter.WriteEndArray();     
+    //        EndIf;
+    //    EndIf;
+    //EndIf;
+    //
+    //APISchemaRow = APISchemaRow.Parent;
+    //If APISchemaRow <> Undefined
+    //    AND APISchemaRow.Type <> "Array" Then
+    //    AddRigthBracket(APISchemaRow);    
+    //EndIf;
+    
+    If APISchemaRow.StructuredType Then If APISchemaRow.Rows.Find(False, "Done") = Undefined Then APISchemaRow.Done = True; If APISchemaRow.Type = "Object" Then StreamWriter.WriteEndObject(); Else StreamWriter.WriteEndArray(); EndIf; EndIf; EndIf; APISchemaRow = APISchemaRow.Parent; If APISchemaRow <> Undefined AND APISchemaRow.Type <> "Array" Then AddRightBracket(APISchemaRow); EndIf;
+     
+EndProcedure // AddRightBracket()
+
+// Only for internal use.
+//
+Procedure FillParamName(ReportStructure, TemplateColumns)
+    
+    Hierarchy = ReportStructure.Hierarchy;
+    
+    // It is needed to verify duplicate property names.
+    // APISchema.Columns.Add("Listed");
+    
+    // It is needed to check if a parameter has been listed in the 
+    // StreamObject at that level of hierarchy.
+    APISchema.Columns.Add("Pair", New TypeDescription("Boolean"));
+    APISchema.Columns.Add("Done", New TypeDescription("Boolean"));
+    APISchema.Columns.Add("Template", New TypeDescription("String"));
+    APISchema.Columns.Add("Parameter", New TypeDescription("String"));
+        
+    // Inverted columns cache.
+    APITemplateColumns = New Structure;
+    For Each Item In TemplateColumns Do
+        APIColumnsCache = New Map;
+        APITemplateColumns.Insert(Item.Key, APIColumnsCache);
+        For Each CItem In Item.Value Do
+            APIColumnsCache.Insert(Upper(CItem.Value), CItem.Key);        
+        EndDo;
+    EndDo; 
+    
+    FillParamNameRecursively(APISchema.Rows, Hierarchy, APITemplateColumns);
+    
+EndProcedure // FillParamName()
+
+// Only for internal use.
+//
+Procedure FillParamNameRecursively(Rows, Hierarchy, APITemplateColumns)
+    
+    // The code in the comment written in one line is below this comment.
+    // To edit the code, remove the comment.
+    // For more information about the code in 1 line see http://infostart.ru/public/71130/.
+    //
+    //Var NestedHierarchy;
+    //
+    //Shift = 0;
+    //RowsCount = Rows.Count() - 1;
+    //For Index = 0 To RowsCount Do
+    //    
+    //    Row = Rows[Index - Shift];
+    //    If Row.TurnedOff = 1 Then 
+    //        Rows.Delete(Row);
+    //        Shift = Shift + 1;
+    //        Continue;
+    //    EndIf;
+    //    
+    //    If Row.Parent = Undefined Then
+    //        If Row.Rows.Count() > 0 Then
+    //            FillParamNameRecursively(Row.Rows, Hierarchy, 
+    //                APITemplateColumns);    
+    //        Else
+    //            FillTemplateName(Row, Hierarchy);
+    //            FillParameterName(Row, APITemplateColumns);
+    //        EndIf;           
+    //    Else 
+    //        If NOT Row.StructuredType Then
+    //            RowParent = Row.Parent;
+    //            If IsBlankString(RowParent.Template) Then
+    //                FillTemplateName(RowParent, Hierarchy);
+    //            EndIf;
+    //            Row.Template = RowParent.Template;
+    //            FillParameterName(Row, APITemplateColumns); 
+    //        Else
+    //            FillTemplateName(Row, Hierarchy, NestedHierarchy);
+    //            If Row.Rows.Count() > 0 Then
+    //                FillParamNameRecursively(Row.Rows, NestedHierarchy, 
+    //                    APITemplateColumns);        
+    //            EndIf;    
+    //        EndIf;  
+    //    EndIf;
+    //            
+    //EndDo;
+    
+    Var NestedHierarchy; Shift = 0; RowsCount = Rows.Count() - 1; For Index = 0 To RowsCount Do Row = Rows[Index - Shift]; If Row.TurnedOff = 1 Then Rows.Delete(Row);Shift = Shift + 1; Continue; EndIf; If Row.Parent = Undefined Then If Row.Rows.Count() > 0 Then FillParamNameRecursively(Row.Rows, Hierarchy, APITemplateColumns); Else FillTemplateName(Row, Hierarchy); FillParameterName(Row, APITemplateColumns); EndIf; Else If NOT Row.StructuredType Then RowParent = Row.Parent; If IsBlankString(RowParent.Template) Then FillTemplateName(RowParent, Hierarchy); EndIf; Row.Template = RowParent.Template; FillParameterName(Row, APITemplateColumns); Else FillTemplateName(Row, Hierarchy, NestedHierarchy); If Row.Rows.Count() > 0 Then FillParamNameRecursively(Row.Rows, NestedHierarchy, APITemplateColumns); EndIf; EndIf; EndIf; EndDo;
+    
+EndProcedure // FillParamNameRecursively()
+
+// Only for internal use.
+//
+Procedure FillTemplateName(Row, Hierarchy, NestedHierarchy = Undefined)
+    
+    // The code in the comment written in one line is below this comment.
+    // To edit the code, remove the comment.
+    // For more information about the code in 1 line see http://infostart.ru/public/71130/.
+    //
+    //NestedHierarchy = Hierarchy.Rows.Find(Row.Name, "Name");
+    //If NestedHierarchy <> Undefined Then
+    //    Row.Template = NestedHierarchy.Template;    
+    //Else
+    //    ErrorMessage = StrTemplate(NStr(
+    //            "en = 'Error: Failed to find grouping in the report structure with name: ''%1''.';
+    //            |ru = 'Ошибка: Не удалось найти группировку в структуре отчета с именем: ''%1''.'"),
+    //        Row.Name);
+    //    Raise ErrorMessage;    
+    //EndIf;
+    
+    NestedHierarchy = Hierarchy.Rows.Find(Row.Name, "Name"); If NestedHierarchy <> Undefined Then Row.Template = NestedHierarchy.Template; Else ErrorMessage = StrTemplate(NStr("en = 'Error: Failed to find grouping in the report structure with name: ''%1''.'; ru = 'Ошибка: Не удалось найти группировку в структуре отчета с именем: ''%1''.'"), Row.Name); Raise ErrorMessage; EndIf; 
+    
+EndProcedure // FillTemplateName()
+
+// Only for internal use.
+//
+Procedure FillParameterName(Row, TemplateColumns)
+    
+    // The code in the comment written in one line is below this comment.
+    // To edit the code, remove the comment.
+    // For more information about the code in 1 line see http://infostart.ru/public/71130/.
+    //
+    //ColumnItem = TemplateColumns[Row.Template][Upper(Row.Name)];
+    //If ColumnItem = Undefined AND NOT Row.StructuredType Then
+    //    ErrorMessage = StrTemplate(NStr(
+    //            "en = 'Error: Failed to find field in report structure with name: ''%1'', grouping: ''%2''.';
+    //            |ru = 'Ошибка: Не удалось найти поле в структуре отчета с именем: ''%1'', группировка: ''%2''.'"),
+    //        Row.Name, ?(Row.Parent = Undefined, Row.Name, Row.Parent.Name));
+    //    Raise ErrorMessage;        
+    //EndIf;
+    //
+    //Row.Parameter = ColumnItem;
+    
+    ColumnItem = TemplateColumns[Row.Template][Upper(Row.Name)]; If ColumnItem = Undefined AND NOT Row.StructuredType Then ErrorMessage = StrTemplate(NStr("en = 'Error: Failed to find field in report structure with name: ''%1'', grouping: ''%2''.'; ru = 'Ошибка: Не удалось найти поле в структуре отчета с именем: ''%1'', группировка: ''%2''.'"), Row.Name, ?(Row.Parent = Undefined, Row.Name, Row.Parent.Name)); Raise ErrorMessage; EndIf; Row.Parameter = ColumnItem;
+    
+EndProcedure // FillParameterName()
+
+// Only for internal use.
+//
+Procedure CheckDublicateProperty(Listed, Name, Group)
+    
+    If Listed.Get(Name) = Undefined Then
+        Listed.Insert(Name, True);    
+    Else
+        ErrorMessage = StrTemplate(NStr(
+                "en = 'SyntaxError: Duplicate property with name: ''%1'', grouping: ''%2''.';
+                |ru = 'СинтаксическаяОшибка: Дублируемое свойство с именем: ''%1'', группировка: ''%2''.'"),
+            Name, Group);
+        Raise ErrorMessage;     
+    EndIf;
+    
+EndProcedure // CheckDublicateProperty()
 
 #EndRegion // ServiceProceduresAndFunctions 
 
@@ -372,7 +681,7 @@ EndProcedure // APISchemaOutput()
 //
 Function Version() Export
     
-    Return "0.5.0.0";
+    Return "1.0.0.0";
     
 EndFunction // Version()
 
@@ -401,31 +710,6 @@ Function LibraryGuid() Export
     Return "3ca485fe-3fcc-445b-9843-48c5ed370c0f";
     
 EndFunction // LibraryGuid()
-
-// Only for internal use.
-//
-Function ExternalDataProcessorInfo() Export
-    
-    Version = Version();
-    
-    Description = BaseDescription();
-    
-    Return False;
-     
-EndFunction // ExternalDataProcessorInfo()
-
-// Only for internal use.
-//
-Function СведенияОВнешнейОбработке() Export 
-    
-    // Версия подключаемой функциональности 
-    Version = Version();
-
-    Description = BaseDescription();
-    
-    Return False;
-            
-EndFunction // СведенияОВнешнейОбработке()
 
 #EndRegion // ExternalDataProcessorInfo
 
