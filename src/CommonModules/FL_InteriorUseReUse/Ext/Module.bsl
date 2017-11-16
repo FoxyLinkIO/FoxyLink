@@ -61,4 +61,29 @@ Function IdentifyPluginProcessorName(LibraryGuid, PluggableSubsystem) Export
     
 EndFunction // IdentifyPluginProcessorName()
 
+// Defines if HTTP method has no body.
+//
+// Parameters:
+//  HTTPMethod - String - HTTP method name.  
+//
+// Returns:
+//  Boolean - if True HTTP method has no body, False in opposite case.
+//
+Function IsHTTPMethodWithoutBody(HTTPMethod) Export
+    
+    HTTPMethods = New Structure;
+    HTTPMethods.Insert("GET");
+    HTTPMethods.Insert("HEAD");
+    HTTPMethods.Insert("TRACE");
+    HTTPMethods.Insert("DELETE");
+    HTTPMethods.Insert("CONNECT");
+    HTTPMethods.Insert("MKCOL");
+    HTTPMethods.Insert("COPY");
+    HTTPMethods.Insert("MOVE");
+    HTTPMethods.Insert("UNLOCK");
+    HTTPMethods.Insert("OPTIONS");
+    Return HTTPMethods.Property(HTTPMethod);
+    
+EndFunction // IsHTTPMethodWithoutBody()
+
 #EndRegion // ProgramInterface

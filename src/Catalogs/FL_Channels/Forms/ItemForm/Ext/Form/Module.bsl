@@ -237,16 +237,18 @@ Procedure DisconnectChannel(Val LibraryGuid)
         LibraryGuid);
     ChannelProcessor.ChannelData.Load(Object.ChannelData.Unload());
     ChannelProcessor.EncryptedData.Load(Object.EncryptedData.Unload());
-    ChannelProcessor.Disconnect(Undefined);
+    If ChannelProcessor.Disconnect() Then
     
-    Object.Connected = False;
-    Object.ChannelData.Clear();
-    Object.EncryptedData.Clear();
+        Object.Connected = False;
+        Object.ChannelData.Clear();
+        Object.EncryptedData.Clear();
+        
+        Write();
     
-    Write();
-    
-    LoadBasicChannelInfo();
-      
+        LoadBasicChannelInfo();
+        
+    EndIf;
+
 EndProcedure // DisconnectChannel()
 
 // Only for internal use.

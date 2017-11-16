@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+	<Title>
+		<v8:item>
+			<v8:lang>en</v8:lang>
+			<v8:content>Exchange channel form</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>ru</v8:lang>
+			<v8:content>Форма канала обмена</v8:content>
+		</v8:item>
+	</Title>
+	<AutoSaveDataInSettings>Use</AutoSaveDataInSettings>
+	<AutoTitle>false</AutoTitle>
+	<ScalingMode>Compact</ScalingMode>
+	<AutoCommandBar name="FormCommandBar" id="-1">
+		<Autofill>false</Autofill>
+	</AutoCommandBar>
+	<Events>
+		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
+	</Events>
+	<Attributes>
+		<Attribute name="Object" id="1">
+			<Type>
+				<v8:Type>cfg:DataProcessorObject.FL_RabbitMQ</v8:Type>
+			</Type>
+			<MainAttribute>true</MainAttribute>
+		</Attribute>
+		<ConditionalAppearance>
+			<dcsset:item>
+				<dcsset:selection>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesSku</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesDescriptionFull</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesType</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesMeasurementUnit</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesVATRate</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesEstimationMethod</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesQtyOnHand</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesUnitPrice</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesInventoryGLAccount</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesExpensesGLAccount</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesReplenishmentMethod</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesReplenishmentDeadline</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesProductsAndServicesCategory</dcsset:field>
+					</dcsset:item>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServicesBusinessActivity</dcsset:field>
+					</dcsset:item>
+				</dcsset:selection>
+				<dcsset:filter>
+					<dcsset:item xsi:type="dcsset:FilterItemComparison">
+						<dcsset:left xsi:type="dcscor:Field">ProductsAndServices.RowsPicture</dcsset:left>
+						<dcsset:comparisonType>Equal</dcsset:comparisonType>
+						<dcsset:right xsi:type="xs:decimal">1</dcsset:right>
+					</dcsset:item>
+				</dcsset:filter>
+				<dcsset:appearance>
+					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
+						<dcscor:parameter>ReadOnly</dcscor:parameter>
+						<dcscor:value xsi:type="xs:boolean">true</dcscor:value>
+					</dcscor:item>
+				</dcsset:appearance>
+			</dcsset:item>
+			<dcsset:item>
+				<dcsset:selection>
+					<dcsset:item>
+						<dcsset:field>ProductsAndServices</dcsset:field>
+					</dcsset:item>
+				</dcsset:selection>
+				<dcsset:filter>
+					<dcsset:item xsi:type="dcsset:FilterItemComparison">
+						<dcsset:left xsi:type="dcscor:Field">ProductsAndServices.Ref</dcsset:left>
+						<dcsset:comparisonType>Filled</dcsset:comparisonType>
+					</dcsset:item>
+				</dcsset:filter>
+				<dcsset:appearance>
+					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
+						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:value xsi:type="v8ui:Color">web:HoneyDew</dcscor:value>
+					</dcscor:item>
+				</dcsset:appearance>
+			</dcsset:item>
+		</ConditionalAppearance>
+	</Attributes>
+	<Commands>
+		<Command name="ExecuteQuery" id="1">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Execute query</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Execute query</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Generate</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>ExecuteQuery</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+	</Commands>
+</Form>
