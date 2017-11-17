@@ -116,88 +116,49 @@ EndFunction // ResourcesRequired()
 //      * OriginalResponse - Arbitrary - original response object.
 //      * StringResponse   - String    - string response presentation.
 //
-Function DeliverMessage(Mediator, Message, QueryParameters = Undefined) Export
+Function DeliverMessage(Mediator, Message, Parameters = Undefined) Export
     
-    If TypeOf(QueryParameters) <> Type("Structure") Then
-        ErrorMessage = StrTemplate(NStr(
-                "en = 'Error: Failed to read parameter ''QueryParameters''. Expected type ''%1'' and received type is ''%2''.'.'; 
-                |ru = 'Ошибка: Не удалось прочитать параметр ''QueryParameters''. Ожидался тип ''%1'', а получили тип ''%2''.'"),
-            String(Type("Structure")),
-            String(TypeOf(QueryParameters)));    
-        Raise ErrorMessage;
+    Var HTTPMethod, HTTPRequest;
+    
+    DeliveryResult = New Structure;
+    DeliveryResult.Insert("Success");
+    DeliveryResult.Insert("StatusCode");
+    DeliveryResult.Insert("StringResponse");
+    DeliveryResult.Insert("OriginalResponse");
+    
+    If TypeOf(Parameters) <> Type("Structure") Then   
+        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
+            "Parameters", Parameters, Type("Structure"));
     EndIf;
 
-    
-    If QueryParameters.Property("StringURI") = False Then
+    If Parameters.Property("PredefinedAPI") Then
+        ResolvePredefined(Parameters.PredefinedAPI, HTTPMethod, HTTPRequest);
+    EndIf;
        
-        SearchResult = ChannelData.Find("StringURI", "FieldName");
-        If SearchResult <> Undefined Then
-            QueryParameters.Insert("StringURI", 
-                SearchResult.FieldValue);
-        Else
-            // Error    
-        EndIf;
+    If Log Then
         
-    EndIf;
-    
-    If QueryParameters.Property("HTTPMethod") = False Then
-       
-        SearchResult = ChannelResources.Find("HTTPMethod", "FieldName");
-        If SearchResult <> Undefined Then
-            QueryParameters.Insert(SearchResult.FieldName, 
-                SearchResult.FieldValue);
-        Else
-            // Error    
-        EndIf;
-        
-    EndIf;
-    
-    If QueryParameters.Property("Resource") = False Then
-       
-        SearchResult = ChannelResources.Find("Resource", "FieldName");
-        If SearchResult <> Undefined Then
-            QueryParameters.Insert(SearchResult.FieldName, 
-                SearchResult.FieldValue);
-        Else
-            // Error    
-        EndIf;
-        
-    EndIf;
-        
-    If QueryParameters.Property("Headers") = False Then
-        QueryParameters.Insert("Headers", New Map);
-        QueryParameters.Headers.Insert("Accept", "application/json"); 
-        QueryParameters.Headers.Insert("Content-Type", "application/json");
-    EndIf;
-    
-    If TypeOf(QueryParameters.Headers) <> Type("Map") Then
-        ErrorMessage = StrTemplate(NStr(
-                "en = 'Error: Failed to read parameter ''Headers''. Expected type ''%1'' and received type is ''%2''.';
-                |ru = 'Ошибка: Не удалось прочитать параметр ''Headers''. Ожидался тип ''%1'', а получили тип ''%2''.'"),
-            String(Type("Map")),
-            String(TypeOf(QueryParameters.Headers)));
-        Raise ErrorMessage;    
-    EndIf;
-    
-    HTTPRequest = New HTTPRequest(QueryParameters.Resource);
-    HTTPRequest.SetBodyFromString(Message);
-    For Each Header In QueryParameters.Headers Do 
-        HTTPRequest.Headers.Insert(Header.Key, Header.Value);
-    EndDo;
-    
-    HTTPConnection = FL_InteriorUse.NewHTTPConnection(QueryParameters.StringURI);  
-    HTTPResponse = HTTPConnection.CallHTTPMethod(QueryParameters.HTTPMethod, 
-        HTTPRequest);
-    
-    DeliveryResponse = New Structure;
-    If HTTPResponse.StatusCode = 200 AND HTTPResponse.GetBodyAsString() = "{""routed"": true}" Then
-        DeliveryResponse.Insert("Success", HTTPResponse.StatusCode = 200);
+        DeliveryResult.OriginalResponse = FL_InteriorUse.CallHTTPMethod(
+            NewHTTPConnection(), 
+            HTTPRequest, 
+            HTTPMethod, 
+            DeliveryResult.StatusCode, 
+            DeliveryResult.StringResponse, 
+            LogAttribute);
+            
     Else
-        DeliveryResponse.Insert("Success", False);   
+        
+        DeliveryResult.OriginalResponse = FL_InteriorUse.CallHTTPMethod(
+            NewHTTPConnection(), 
+            HTTPRequest, 
+            HTTPMethod, 
+            DeliveryResult.StatusCode, 
+            DeliveryResult.StringResponse);
+            
     EndIf;
-    DeliveryResponse.Insert("OriginalResponse", HTTPResponse);
-    DeliveryResponse.Insert("StringResponse", HTTPResponse.GetBodyAsString());  
-    Return DeliveryResponse;
+    
+    DeliveryResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        DeliveryResult.StatusCode);
+    Return DeliveryResult;
     
 EndFunction // DeliverMessage() 
 
@@ -221,12 +182,12 @@ Procedure ConnectToRabbitMQ(StringURI, Val VirtualHost) Export
     EndIf;
     
     FL_InteriorUse.CallHTTPMethod(
-        FL_InteriorUse.NewHTTPConnection(StringURI),
-        FL_InteriorUse.NewHTTPRequest(AlivenessTestURL(VirtualHost)),
+        NewHTTPConnection(StringURI),
+        AlivenessHTTPRequest(VirtualHost),
         "GET",
         StatusCode,
         ResponseBody,
-        LogAttribute);
+        ?(Log, LogAttribute, Undefined));
         
     If AlivenessTestSucceeded(StatusCode, ResponseBody) Then   
         NewRow = ChannelData.Add();
@@ -236,9 +197,66 @@ Procedure ConnectToRabbitMQ(StringURI, Val VirtualHost) Export
     
 EndProcedure // ConnectToRabbitMQ() 
 
+// Converts a JSON string into Map or Array object.
+//
+// Parameters:
+//  ResponseBody - String - JSON string to be converted.  
+//
+// Returns:
+//  Map, Array - converted object.
+//
+Function ConvertResponseToMap(ResponseBody) Export
+    
+    JSONReader = New JSONReader;
+    JSONReader.SetString(ResponseBody);
+    Response = ReadJSON(JSONReader, True);
+    JSONReader.Close();
+    Return Response; 
+    
+EndFunction // ConvertResponseToMap()
+
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
+
+#Region Overview
+
+// Only for internal use.
+//
+Function OverviewHTTPRequest()
+    
+    Return FL_InteriorUse.NewHTTPRequest("/api/overview", 
+        NewHTTPRequestHeaders());
+     
+EndFunction // OverviewHTTPRequest()
+
+#EndRegion // Overview
+
+#Region Connections
+
+// Only for internal use.
+//
+Function ConnectionsHTTPRequest()
+    
+    Return FL_InteriorUse.NewHTTPRequest("/api/connections", 
+        NewHTTPRequestHeaders());
+     
+EndFunction // OverviewHTTPRequest()
+    
+#EndRegion // Connections 
+
+#Region Channels
+
+// Only for internal use.
+//
+Function ChannelsHTTPRequest()
+    
+    Return FL_InteriorUse.NewHTTPRequest("/api/channels", 
+        NewHTTPRequestHeaders());
+     
+EndFunction // ChannelsHTTPRequest()
+
+#EndRegion // Channels
 
 #Region Exchanges
 
@@ -291,25 +309,69 @@ EndFunction // ExchangeNamePublishURL()
 
 // Only for internal use.
 //
-Function AlivenessTestURL(VirtualHost)
+Function AlivenessHTTPRequest(VirtualHost)
     
-    Return StrTemplate("/api/aliveness-test/%1", VirtualHost);    
+    Return FL_InteriorUse.NewHTTPRequest(StrTemplate("/api/aliveness-test/%1", 
+            VirtualHost), 
+        NewHTTPRequestHeaders());
     
-EndFunction // AlivenessTestURL()
+EndFunction // AlivenessHTTPRequest()
 
 // Only for internal use.
 //
 Function AlivenessTestSucceeded(StatusCode, ResponseBody) 
     
-    If StatusCode = 200 AND ResponseBody = "{""status"":""ok""}" Then
-        Return True;
-    EndIf;
-    
-    Return False;
+    Return FL_InteriorUseReUse.IsSuccessHTTPStatusCode(StatusCode) 
+        AND ResponseBody = "{""status"":""ok""}";
     
 EndFunction // AlivenessTestSucceeded()
 
 #EndRegion // Aliveness 
+
+// Only for internal use.
+//
+Procedure ResolvePredefined(Path, HTTPMethod, HTTPRequest, Message = Undefined)
+    
+    If Path = "Overview" Then
+        HTTPMethod = "GET";
+        HTTPRequest = OverviewHTTPRequest();
+    ElsIf Path = "Connections" Then
+        HTTPMethod = "GET";
+        HTTPRequest = ConnectionsHTTPRequest();
+    ElsIf Path = "Channels" Then
+        HTTPMethod = "GET";
+        HTTPRequest = ChannelsHTTPRequest();
+    EndIf;    
+    
+EndProcedure // ResolvePredefined()
+
+// Only for internal use.
+//
+Function NewHTTPConnection(Val StringURI = "")
+    
+    If IsBlankString(StringURI) Then
+        
+        SearchResult = ChannelData.Find("StringURI", "FieldName");
+        If SearchResult <> Undefined Then
+            StringURI = SearchResult.FieldValue;
+        EndIf;
+        
+    EndIf;
+    
+    Return FL_InteriorUse.NewHTTPConnection(StringURI);
+    
+EndFunction // NewHTTPConnection()
+
+// Only for internal use.
+//
+Function NewHTTPRequestHeaders()
+    
+    Headers = New Map;
+    Headers.Insert("Accept", "application/json"); 
+    Headers.Insert("Content-Type", "application/json");
+    Return Headers;
+    
+EndFunction // NewHTTPRequestHeaders()
 
 #EndRegion // ServiceProceduresAndFunctions
 

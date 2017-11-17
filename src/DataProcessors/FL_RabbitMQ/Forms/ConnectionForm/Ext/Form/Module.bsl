@@ -17,6 +17,17 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#Region FormEventHandlers
+
+&AtServer
+Procedure OnCreateAtServer(Cancel, StandardProcessing)
+    
+    Object.Log = True;
+    
+EndProcedure // OnCreateAtServer()
+
+#EndRegion // FormEventHandlers
+
 #Region FormCommandHandlers
 
 &AtClient
