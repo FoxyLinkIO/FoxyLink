@@ -106,9 +106,9 @@ EndFunction // ResourcesRequired()
 // Delivers a message to the current channel.
 //
 // Parameters:
-//  Mediator        - Arbitrary - reserved, currently not in use.
-//  Message         - Arbitrary - message to deliver.
-//  QueryParameters - Structure - channel parameters.
+//  Mediator   - Arbitrary - reserved, currently not in use.
+//  Message    - Arbitrary - message to deliver.
+//  Parameters - Structure - channel parameters.
 //
 // Returns:
 //  Structure - message delivery result with values:
@@ -262,11 +262,12 @@ EndFunction // ChannelsHTTPRequest()
 
 // Only for internal use.
 //
-Function ExchangesURL(VirtualHost = "")
+Function ExchangesHTTPRequest()
     
-    Return StrTemplate("/api/exchanges/%1", VirtualHost);
+    Return FL_InteriorUse.NewHTTPRequest("/api/exchanges", 
+        NewHTTPRequestHeaders());
     
-EndFunction // ExchangesURL()
+EndFunction // ExchangesHTTPRequest()
 
 // Only for internal use.
 //
@@ -341,6 +342,9 @@ Procedure ResolvePredefined(Path, HTTPMethod, HTTPRequest, Message = Undefined)
     ElsIf Path = "Channels" Then
         HTTPMethod = "GET";
         HTTPRequest = ChannelsHTTPRequest();
+    ElsIf Path = "Exchanges" Then
+        HTTPMethod = "GET";
+        HTTPRequest = ExchangesHTTPRequest();
     EndIf;    
     
 EndProcedure // ResolvePredefined()

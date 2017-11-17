@@ -167,7 +167,7 @@ EndFunction // RegisterRecordsValues()
 //  ValueTableRow - ValueTableRow - value table row.
 //
 // Returns:
-//  Structure.
+//  Structure - with columns as keys and row values as values.
 //
 Function ValueTableRowIntoStructure(ValueTableRow) Export
 
@@ -183,10 +183,10 @@ EndFunction // ValueTableRowIntoStructure()
 // Creates a structure with properties named as value table columns.
 //
 // Parameters:
-//  ValueTableRow - ValueTableColumnCollection - value table column collection.
+//  Columns - ValueTableColumnCollection - value table column collection.
 //
 // Returns:
-//  Structure.
+//  Structure - with columns as keys.
 //
 Function ValueTableColumnsIntoStructure(Columns) Export
 

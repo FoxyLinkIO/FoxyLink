@@ -69,7 +69,9 @@ Procedure UpdateRabbitMQView()
     ElsIf Items.RabbitMQPages.CurrentPage = Items.PageConnections Then 
         FillConnectionsPage(MainObject);
     ElsIf Items.RabbitMQPages.CurrentPage = Items.PageChannels Then
-        FillChannelsPage(MainObject);    
+        FillChannelsPage(MainObject);
+    ElsIf Items.RabbitMQPages.CurrentPage = Items.PageExchanges Then
+        FillExchangesPage(MainObject);
     EndIf;
     
     ValueToFormAttribute(MainObject, "Object");
@@ -85,55 +87,55 @@ Procedure FillOverviewPage(MainObject)
     
     DeliveryResult = MainObject.DeliverMessage(Undefined, Undefined, 
         New Structure("PredefinedAPI", "Overview"));
-    If DeliveryResult.Success Then
-        
-        Response = MainObject.ConvertResponseToMap(
-            DeliveryResult.StringResponse);  
-            
-        ClusterName = Response["cluster_name"];
-        Erlang_version = Response["erlang_version"];
-        RabbitMQVersion = Response["rabbitmq_version"];
-        
-        Temp = Response["listeners"];
-        If TypeOf(Temp) = Type("Array") Then
-            FL_CommonUse.ExtendValueTableFromArray(Temp, Listeners);
-        EndIf;
-
-        Temp = Response["contexts"];
-        If TypeOf(Temp) = Type("Array") Then
-            FL_CommonUse.ExtendValueTableFromArray(Temp, Contexts); 
-        EndIf;
-
-        Temp = Response["object_totals"];
-        If TypeOf(Temp) = Type("Map") Then 
-            ConnectionsCount = Temp["connections"];
-            ChannelsCount    = Temp["channels"];
-            ExchangesCount   = Temp["exchanges"];
-            QueuesCount      = Temp["queues"];
-            ConsumersCount   = Temp["consumers"];    
-        EndIf;
-        
-        Temp = Response["message_stats"];
-        If TypeOf(Temp) = Type("Map") Then 
-            PublishRate           = Temp["publish_details"]["rate"]; 
-            ConfirmRate           = Temp["confirm_details"]["rate"];
-            Deliver_rate           = Temp["deliver_details"]["rate"];
-            RedeliverRate         = Temp["redeliver_details"]["rate"];
-            AckRate               = Temp["ack_details"]["rate"];
-            GetRate               = Temp["get_details"]["rate"];
-            DeliverNoAckRate    = Temp["deliver_no_ack_details"]["rate"];
-            GetNoAckRate        = Temp["get_no_ack_details"]["rate"];
-            ReturnUnroutableRate = Temp["return_unroutable_details"]["rate"];
-        EndIf;
-        
-        Temp = Response["queue_totals"];
-        If TypeOf(Temp) = Type("Map") Then 
-            Messages                = Temp["messages"];
-            MessagesReady          = Temp["messages_ready"];
-            MessagesUnacknowledged = Temp["messages_unacknowledged"];
-        EndIf;     
-               
+    If NOT DeliveryResult.Success Then
+        Return;
     EndIf;
+        
+    Response = MainObject.ConvertResponseToMap(
+        DeliveryResult.StringResponse);  
+        
+    ClusterName = Response["cluster_name"];
+    Erlang_version = Response["erlang_version"];
+    RabbitMQVersion = Response["rabbitmq_version"];
+    
+    Temp = Response["listeners"];
+    If TypeOf(Temp) = Type("Array") Then
+        FL_CommonUse.ExtendValueTableFromArray(Temp, Listeners);
+    EndIf;
+
+    Temp = Response["contexts"];
+    If TypeOf(Temp) = Type("Array") Then
+        FL_CommonUse.ExtendValueTableFromArray(Temp, Contexts); 
+    EndIf;
+
+    Temp = Response["object_totals"];
+    If TypeOf(Temp) = Type("Map") Then 
+        ConnectionsCount = Temp["connections"];
+        ChannelsCount    = Temp["channels"];
+        ExchangesCount   = Temp["exchanges"];
+        QueuesCount      = Temp["queues"];
+        ConsumersCount   = Temp["consumers"];    
+    EndIf;
+        
+    Temp = Response["message_stats"];
+    If TypeOf(Temp) = Type("Map") Then 
+        PublishRate           = Temp["publish_details"]["rate"]; 
+        ConfirmRate           = Temp["confirm_details"]["rate"];
+        Deliver_rate           = Temp["deliver_details"]["rate"];
+        RedeliverRate         = Temp["redeliver_details"]["rate"];
+        AckRate               = Temp["ack_details"]["rate"];
+        GetRate               = Temp["get_details"]["rate"];
+        DeliverNoAckRate    = Temp["deliver_no_ack_details"]["rate"];
+        GetNoAckRate        = Temp["get_no_ack_details"]["rate"];
+        ReturnUnroutableRate = Temp["return_unroutable_details"]["rate"];
+    EndIf;
+    
+    Temp = Response["queue_totals"];
+    If TypeOf(Temp) = Type("Map") Then 
+        Messages                = Temp["messages"];
+        MessagesReady          = Temp["messages_ready"];
+        MessagesUnacknowledged = Temp["messages_unacknowledged"];
+    EndIf;     
   
 EndProcedure // FillOverviewPage()
 
@@ -144,14 +146,14 @@ Procedure FillConnectionsPage(MainObject)
     
     DeliveryResult = MainObject.DeliverMessage(Undefined, Undefined, 
         New Structure("PredefinedAPI", "Connections"));
-    If DeliveryResult.Success Then
+    If NOT DeliveryResult.Success Then
+        Return;
+    EndIf;
 
-        Response = MainObject.ConvertResponseToMap(
-            DeliveryResult.StringResponse);
-        If TypeOf(Response) = Type("Array") Then
-            FL_CommonUse.ExtendValueTableFromArray(Response, Connections);
-        EndIf;
-        
+    Response = MainObject.ConvertResponseToMap(
+        DeliveryResult.StringResponse);
+    If TypeOf(Response) = Type("Array") Then
+        FL_CommonUse.ExtendValueTableFromArray(Response, Connections);
     EndIf;
     
 EndProcedure // FillConnectionsPage()
@@ -163,17 +165,86 @@ Procedure FillChannelsPage(MainObject)
     
     DeliveryResult = MainObject.DeliverMessage(Undefined, Undefined, 
         New Structure("PredefinedAPI", "Channels"));
-    If DeliveryResult.Success Then
+    If NOT DeliveryResult.Success Then
+        Return;
+    EndIf;
 
-        Response = MainObject.ConvertResponseToMap(
-            DeliveryResult.StringResponse);
-        If TypeOf(Response) = Type("Array") Then
-            FL_CommonUse.ExtendValueTableFromArray(Response, Channels);
-        EndIf;
-        
+    Response = MainObject.ConvertResponseToMap(
+        DeliveryResult.StringResponse);
+    If TypeOf(Response) = Type("Array") Then
+        For Each Item In Response Do
+            
+            NewChannel = Channels.Add();
+            
+            ConnectionDetails = Item["connection_details"];
+            If TypeOf(ConnectionDetails) = Type("Map") Then
+                NewChannel.peer_host = ConnectionDetails["peer_host"];
+                NewChannel.peer_port = ConnectionDetails["peer_port"];
+            EndIf;
+            
+            NewChannel.consumer_count = Item["consumer_count"];
+            NewChannel.node = Item["node"];
+            NewChannel.user = Item["user"];
+            NewChannel.state = Item["state"];
+            
+            If Item["transactional"] Then
+                NewChannel.mode = "T";
+            EndIf;
+            
+            If Item["confirm"] Then
+                NewChannel.mode = "C";
+            EndIf;
+            
+            NewChannel.messages_unconfirmed    = Item["messages_unconfirmed"];
+            NewChannel.prefetch_count          = Item["prefetch_count"];
+            NewChannel.messages_unacknowledged = Item["messages_unacknowledged"];
+            
+            MessageStats = Item["message_stats"];
+            If TypeOf(MessageStats) = Type("Map") Then
+                NewChannel.publish     = MessageStats["publish"];
+                NewChannel.deliver_get = MessageStats["deliver_get"];
+                NewChannel.ack         = MessageStats["ack"];
+            EndIf;
+            
+        EndDo;
+    EndIf;
+
+EndProcedure // FillChannelsPage()
+
+&AtServer
+Procedure FillExchangesPage(MainObject)
+    
+    ClearExchangesPage(); 
+    
+    DeliveryResult = MainObject.DeliverMessage(Undefined, Undefined, 
+        New Structure("PredefinedAPI", "Exchanges"));
+    If NOT DeliveryResult.Success Then
+        Return;
+    EndIf;
+
+    Response = MainObject.ConvertResponseToMap(
+        DeliveryResult.StringResponse);
+    If TypeOf(Response) = Type("Array") Then
+        For Each Item In Response Do
+            
+            NewExchanges = Exchanges.Add();
+            NewExchanges.name = Item["name"];
+            NewExchanges.type = Item["type"];
+            NewExchanges.auto_delete = Item["auto_delete"];
+            NewExchanges.durable = Item["durable"];
+            NewExchanges.internal = Item["internal"];
+            NewExchanges.policy = Item["policy"];
+            
+            MessageStats = Item["message_stats"];
+            If TypeOf(MessageStats) = Type("Map") Then
+                NewExchanges.publish_in  = MessageStats["publish_in"];
+                NewExchanges.publish_out = MessageStats["publish_out"];
+            EndIf;
+            
+        EndDo;
     EndIf;
     
-EndProcedure // FillChannelsPage()
+EndProcedure // FillExchangesPage()
 
 &AtServer
 Procedure ClearOverviewPage()
@@ -220,5 +291,12 @@ Procedure ClearChannelsPage()
     Channels.Clear();       
     
 EndProcedure // ClearChannelsPage()
+
+&AtServer
+Procedure ClearExchangesPage()
+    
+    Exchanges.Clear();       
+    
+EndProcedure // ClearExchangesPage()
 
 #EndRegion // ServiceProceduresAndFunctions 

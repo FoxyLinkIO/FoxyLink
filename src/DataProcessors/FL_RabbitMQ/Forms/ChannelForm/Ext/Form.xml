@@ -997,10 +997,330 @@ Return
 					<ToolTip>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Page channels</v8:content>
+							<v8:content>Channels</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Каналы</v8:content>
 						</v8:item>
 					</ToolTip>
 					<ExtendedTooltip name="PageChannelsExtendedTooltip" id="234"/>
+					<ChildItems>
+						<Table name="Channels" id="235">
+							<Representation>List</Representation>
+							<ReadOnly>true</ReadOnly>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Channels</DataPath>
+							<SearchStringLocation>None</SearchStringLocation>
+							<ViewStatusLocation>None</ViewStatusLocation>
+							<SearchControlLocation>None</SearchControlLocation>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="ChannelsContextMenu" id="236">
+								<Autofill>false</Autofill>
+							</ContextMenu>
+							<AutoCommandBar name="ChannelsCommandBar" id="237">
+								<Autofill>false</Autofill>
+							</AutoCommandBar>
+							<ExtendedTooltip name="ChannelsExtendedTooltip" id="238"/>
+							<SearchStringAddition name="ChannelsSearchString" id="239">
+								<AdditionSource>
+									<Item>Channels</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ChannelsSearchStringContextMenu" id="240"/>
+								<ExtendedTooltip name="ChannelsSearchStringExtendedTooltip" id="241"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="ChannelsViewStatus" id="242">
+								<AdditionSource>
+									<Item>Channels</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ChannelsViewStatusContextMenu" id="243"/>
+								<ExtendedTooltip name="ChannelsViewStatusExtendedTooltip" id="244"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="ChannelsSearchControl" id="245">
+								<AdditionSource>
+									<Item>Channels</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="ChannelsSearchControlContextMenu" id="246"/>
+								<ExtendedTooltip name="ChannelsSearchControlExtendedTooltip" id="247"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<ColumnGroup name="ChannelsGroup1" id="287">
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Overview</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Общие</v8:content>
+										</v8:item>
+									</Title>
+									<TitleFont ref="style:NormalTextFont" bold="true" italic="false" underline="false" strikeout="false" kind="StyleItem"/>
+									<Group>Horizontal</Group>
+									<ShowInHeader>true</ShowInHeader>
+									<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+									<ExtendedTooltip name="ChannelsGroup1ExtendedTooltip" id="288"/>
+									<ChildItems>
+										<InputField name="Channelspeer_host" id="248">
+											<DataPath>Channels.peer_host</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="Channelspeer_hostContextMenu" id="249"/>
+											<ExtendedTooltip name="Channelspeer_hostExtendedTooltip" id="250"/>
+										</InputField>
+										<InputField name="Channelspeer_port" id="251">
+											<DataPath>Channels.peer_port</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="Channelspeer_portContextMenu" id="252"/>
+											<ExtendedTooltip name="Channelspeer_portExtendedTooltip" id="253"/>
+										</InputField>
+										<InputField name="Channelsconsumers" id="254">
+											<DataPath>Channels.consumer_count</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="ChannelsconsumersContextMenu" id="255"/>
+											<ExtendedTooltip name="ChannelsconsumersExtendedTooltip" id="256"/>
+										</InputField>
+										<InputField name="Channelsnode" id="257">
+											<DataPath>Channels.node</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="ChannelsnodeContextMenu" id="258"/>
+											<ExtendedTooltip name="ChannelsnodeExtendedTooltip" id="259"/>
+										</InputField>
+										<InputField name="Channelsuser" id="260">
+											<DataPath>Channels.user</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="ChannelsuserContextMenu" id="261"/>
+											<ExtendedTooltip name="ChannelsuserExtendedTooltip" id="262"/>
+										</InputField>
+										<InputField name="Channelsmode" id="263">
+											<DataPath>Channels.mode</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="ChannelsmodeContextMenu" id="264"/>
+											<ExtendedTooltip name="ChannelsmodeExtendedTooltip" id="265"/>
+										</InputField>
+										<InputField name="Channelsstate" id="266">
+											<DataPath>Channels.state</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="ChannelsstateContextMenu" id="267"/>
+											<ExtendedTooltip name="ChannelsstateExtendedTooltip" id="268"/>
+										</InputField>
+									</ChildItems>
+								</ColumnGroup>
+								<ColumnGroup name="ChannelsGroup2" id="289">
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Details</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Детали</v8:content>
+										</v8:item>
+									</Title>
+									<TitleFont ref="style:NormalTextFont" bold="true" italic="false" underline="false" strikeout="false" kind="StyleItem"/>
+									<Group>Horizontal</Group>
+									<ShowInHeader>true</ShowInHeader>
+									<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+									<ExtendedTooltip name="ChannelsGroup2ExtendedTooltip" id="290"/>
+									<ChildItems>
+										<InputField name="Channelsmessages_unconfirmed" id="269">
+											<DataPath>Channels.messages_unconfirmed</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="Channelsmessages_unconfirmedContextMenu" id="270"/>
+											<ExtendedTooltip name="Channelsmessages_unconfirmedExtendedTooltip" id="271"/>
+										</InputField>
+										<InputField name="Channelsprefetch_count" id="272">
+											<DataPath>Channels.prefetch_count</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="Channelsprefetch_countContextMenu" id="273"/>
+											<ExtendedTooltip name="Channelsprefetch_countExtendedTooltip" id="274"/>
+										</InputField>
+										<InputField name="Channelsmessages_unacknowledged" id="275">
+											<DataPath>Channels.messages_unacknowledged</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="Channelsmessages_unacknowledgedContextMenu" id="276"/>
+											<ExtendedTooltip name="Channelsmessages_unacknowledgedExtendedTooltip" id="277"/>
+										</InputField>
+									</ChildItems>
+								</ColumnGroup>
+								<ColumnGroup name="ChannelsGroup3" id="291">
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Message stats</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Статистика сообщений</v8:content>
+										</v8:item>
+									</Title>
+									<TitleFont ref="style:NormalTextFont" bold="true" italic="false" underline="false" strikeout="false" kind="StyleItem"/>
+									<Group>Horizontal</Group>
+									<ShowInHeader>true</ShowInHeader>
+									<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+									<ExtendedTooltip name="ChannelsGroup3ExtendedTooltip" id="292"/>
+									<ChildItems>
+										<InputField name="Channelspublish" id="278">
+											<DataPath>Channels.publish</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="ChannelspublishContextMenu" id="279"/>
+											<ExtendedTooltip name="ChannelspublishExtendedTooltip" id="280"/>
+										</InputField>
+										<InputField name="Channelsdeliver_get" id="281">
+											<DataPath>Channels.deliver_get</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="Channelsdeliver_getContextMenu" id="282"/>
+											<ExtendedTooltip name="Channelsdeliver_getExtendedTooltip" id="283"/>
+										</InputField>
+										<InputField name="Channelsdeliver_get_no_ack" id="284">
+											<DataPath>Channels.ack</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<HeaderHorizontalAlign>Center</HeaderHorizontalAlign>
+											<ContextMenu name="Channelsdeliver_get_no_ackContextMenu" id="285"/>
+											<ExtendedTooltip name="Channelsdeliver_get_no_ackExtendedTooltip" id="286"/>
+										</InputField>
+									</ChildItems>
+								</ColumnGroup>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+				<Page name="PageExchanges" id="293">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Exchanges</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Обмены</v8:content>
+						</v8:item>
+					</Title>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Exchanges</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Обмены</v8:content>
+						</v8:item>
+					</ToolTip>
+					<ExtendedTooltip name="PageExchangesExtendedTooltip" id="294"/>
+					<ChildItems>
+						<Table name="Exchanges" id="295">
+							<Representation>List</Representation>
+							<ReadOnly>true</ReadOnly>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Exchanges</DataPath>
+							<SearchStringLocation>None</SearchStringLocation>
+							<ViewStatusLocation>None</ViewStatusLocation>
+							<SearchControlLocation>None</SearchControlLocation>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="ExchangesContextMenu" id="296">
+								<Autofill>false</Autofill>
+							</ContextMenu>
+							<AutoCommandBar name="ExchangesCommandBar" id="297">
+								<Autofill>false</Autofill>
+							</AutoCommandBar>
+							<ExtendedTooltip name="ExchangesExtendedTooltip" id="298"/>
+							<SearchStringAddition name="ExchangesSearchString" id="299">
+								<AdditionSource>
+									<Item>Exchanges</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ExchangesSearchStringContextMenu" id="300"/>
+								<ExtendedTooltip name="ExchangesSearchStringExtendedTooltip" id="301"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="ExchangesViewStatus" id="302">
+								<AdditionSource>
+									<Item>Exchanges</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ExchangesViewStatusContextMenu" id="303"/>
+								<ExtendedTooltip name="ExchangesViewStatusExtendedTooltip" id="304"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="ExchangesSearchControl" id="305">
+								<AdditionSource>
+									<Item>Exchanges</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="ExchangesSearchControlContextMenu" id="306"/>
+								<ExtendedTooltip name="ExchangesSearchControlExtendedTooltip" id="307"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<InputField name="Exchangesname" id="308">
+									<DataPath>Exchanges.name</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="ExchangesnameContextMenu" id="309"/>
+									<ExtendedTooltip name="ExchangesnameExtendedTooltip" id="310"/>
+								</InputField>
+								<InputField name="Exchangestype" id="311">
+									<DataPath>Exchanges.type</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="ExchangestypeContextMenu" id="312"/>
+									<ExtendedTooltip name="ExchangestypeExtendedTooltip" id="313"/>
+								</InputField>
+								<CheckBoxField name="Exchangesauto_delete" id="314">
+									<DataPath>Exchanges.auto_delete</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<CheckBoxType>Auto</CheckBoxType>
+									<ContextMenu name="Exchangesauto_deleteContextMenu" id="315"/>
+									<ExtendedTooltip name="Exchangesauto_deleteExtendedTooltip" id="316"/>
+								</CheckBoxField>
+								<CheckBoxField name="Exchangesdurable" id="317">
+									<DataPath>Exchanges.durable</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<CheckBoxType>Auto</CheckBoxType>
+									<ContextMenu name="ExchangesdurableContextMenu" id="318"/>
+									<ExtendedTooltip name="ExchangesdurableExtendedTooltip" id="319"/>
+								</CheckBoxField>
+								<CheckBoxField name="Exchangesinternal" id="320">
+									<DataPath>Exchanges.internal</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<CheckBoxType>Auto</CheckBoxType>
+									<ContextMenu name="ExchangesinternalContextMenu" id="321"/>
+									<ExtendedTooltip name="ExchangesinternalExtendedTooltip" id="322"/>
+								</CheckBoxField>
+								<InputField name="Exchangespolicy" id="323">
+									<DataPath>Exchanges.policy</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="ExchangespolicyContextMenu" id="324"/>
+									<ExtendedTooltip name="ExchangespolicyExtendedTooltip" id="325"/>
+								</InputField>
+								<InputField name="Exchangespublish_in" id="326">
+									<DataPath>Exchanges.publish_in</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="Exchangespublish_inContextMenu" id="327"/>
+									<ExtendedTooltip name="Exchangespublish_inExtendedTooltip" id="328"/>
+								</InputField>
+								<InputField name="Exchangespublish_out" id="329">
+									<DataPath>Exchanges.publish_out</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="Exchangespublish_outContextMenu" id="330"/>
+									<ExtendedTooltip name="Exchangespublish_outExtendedTooltip" id="331"/>
+								</InputField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
 				</Page>
 				<Page name="RequestLog" id="99">
 					<Title>
@@ -1708,7 +2028,7 @@ Return
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>UserName</v8:content>
+							<v8:content>User name</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
@@ -1852,6 +2172,423 @@ Return
 			<Type>
 				<v8:Type>v8:ValueTable</v8:Type>
 			</Type>
+			<Columns>
+				<Column name="peer_host" id="2">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Host</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Хост</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="peer_port" id="3">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Port</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Порт</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>5</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+				<Column name="consumer_count" id="1">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Consumers</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Потребители</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>5</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+				<Column name="node" id="4">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Node</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Нода</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="user" id="5">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>User name</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Имя пользователя</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="mode" id="6">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Mode</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Режим</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>1</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="state" id="7">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>State</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Статус</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="messages_unconfirmed" id="8">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Unconfirmed</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Неподтвержденные</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>10</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+				<Column name="prefetch_count" id="9">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Prefetch</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Предвыборка</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>5</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+				<Column name="messages_unacknowledged" id="10">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Unacked</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Неопознанные</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>10</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+				<Column name="publish" id="11">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Published</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Опубликовано</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>10</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+				<Column name="deliver_get" id="12">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Deliver / Get
+</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Доставлено / получено</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>10</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+				<Column name="ack" id="13">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Ack</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Опознано</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>10</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+			</Columns>
+		</Attribute>
+		<Attribute name="Exchanges" id="28">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Exchanges</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Обмены</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>v8:ValueTable</v8:Type>
+			</Type>
+			<Columns>
+				<Column name="name" id="1">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Name</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Название</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="type" id="2">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Type</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Тип</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="auto_delete" id="3">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Auto delete</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Автоудаление</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Column>
+				<Column name="durable" id="4">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Durable</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Надежный</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Column>
+				<Column name="internal" id="5">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Internal</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Внутренний</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Column>
+				<Column name="policy" id="6">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Policy</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Установка</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="publish_in" id="7">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Publish in</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Опубликовано в</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>10</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+				<Column name="publish_out" id="8">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Publish out</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Опубликовано из</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>10</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+			</Columns>
 		</Attribute>
 		<ConditionalAppearance>
 			<dcsset:item>
