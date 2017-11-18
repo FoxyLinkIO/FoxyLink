@@ -72,6 +72,8 @@ Procedure UpdateRabbitMQView()
         FillChannelsPage(MainObject);
     ElsIf Items.RabbitMQPages.CurrentPage = Items.PageExchanges Then
         FillExchangesPage(MainObject);
+    ElsIf Items.RabbitMQPages.CurrentPage = Items.PageQueues Then
+        FillQueuesPage(MainObject);
     EndIf;
     
     ValueToFormAttribute(MainObject, "Object");
@@ -171,43 +173,45 @@ Procedure FillChannelsPage(MainObject)
 
     Response = MainObject.ConvertResponseToMap(
         DeliveryResult.StringResponse);
-    If TypeOf(Response) = Type("Array") Then
-        For Each Item In Response Do
-            
-            NewChannel = Channels.Add();
-            
-            ConnectionDetails = Item["connection_details"];
-            If TypeOf(ConnectionDetails) = Type("Map") Then
-                NewChannel.peer_host = ConnectionDetails["peer_host"];
-                NewChannel.peer_port = ConnectionDetails["peer_port"];
-            EndIf;
-            
-            NewChannel.consumer_count = Item["consumer_count"];
-            NewChannel.node = Item["node"];
-            NewChannel.user = Item["user"];
-            NewChannel.state = Item["state"];
-            
-            If Item["transactional"] Then
-                NewChannel.mode = "T";
-            EndIf;
-            
-            If Item["confirm"] Then
-                NewChannel.mode = "C";
-            EndIf;
-            
-            NewChannel.messages_unconfirmed    = Item["messages_unconfirmed"];
-            NewChannel.prefetch_count          = Item["prefetch_count"];
-            NewChannel.messages_unacknowledged = Item["messages_unacknowledged"];
-            
-            MessageStats = Item["message_stats"];
-            If TypeOf(MessageStats) = Type("Map") Then
-                NewChannel.publish     = MessageStats["publish"];
-                NewChannel.deliver_get = MessageStats["deliver_get"];
-                NewChannel.ack         = MessageStats["ack"];
-            EndIf;
-            
-        EndDo;
+    If TypeOf(Response) <> Type("Array") Then
+        Return;
     EndIf;
+    
+    For Each Item In Response Do
+        
+        NewChannel = Channels.Add();
+        
+        ConnectionDetails = Item["connection_details"];
+        If TypeOf(ConnectionDetails) = Type("Map") Then
+            NewChannel.peer_host = ConnectionDetails["peer_host"];
+            NewChannel.peer_port = ConnectionDetails["peer_port"];
+        EndIf;
+        
+        NewChannel.consumer_count = Item["consumer_count"];
+        NewChannel.node = Item["node"];
+        NewChannel.user = Item["user"];
+        NewChannel.state = Item["state"];
+        
+        If Item["transactional"] Then
+            NewChannel.mode = "T";
+        EndIf;
+        
+        If Item["confirm"] Then
+            NewChannel.mode = "C";
+        EndIf;
+        
+        NewChannel.messages_unconfirmed    = Item["messages_unconfirmed"];
+        NewChannel.prefetch_count          = Item["prefetch_count"];
+        NewChannel.messages_unacknowledged = Item["messages_unacknowledged"];
+        
+        MessageStats = Item["message_stats"];
+        If TypeOf(MessageStats) = Type("Map") Then
+            NewChannel.publish     = MessageStats["publish"];
+            NewChannel.deliver_get = MessageStats["deliver_get"];
+            NewChannel.ack         = MessageStats["ack"];
+        EndIf;
+        
+    EndDo;
 
 EndProcedure // FillChannelsPage()
 
@@ -227,24 +231,71 @@ Procedure FillExchangesPage(MainObject)
     If TypeOf(Response) = Type("Array") Then
         For Each Item In Response Do
             
-            NewExchanges = Exchanges.Add();
-            NewExchanges.name = Item["name"];
-            NewExchanges.type = Item["type"];
-            NewExchanges.auto_delete = Item["auto_delete"];
-            NewExchanges.durable = Item["durable"];
-            NewExchanges.internal = Item["internal"];
-            NewExchanges.policy = Item["policy"];
+            NewExchange = Exchanges.Add();
+            NewExchange.name = Item["name"];
+            NewExchange.type = Item["type"];
+            NewExchange.auto_delete = Item["auto_delete"];
+            NewExchange.durable = Item["durable"];
+            NewExchange.internal = Item["internal"];
+            NewExchange.policy = Item["policy"];
             
             MessageStats = Item["message_stats"];
             If TypeOf(MessageStats) = Type("Map") Then
-                NewExchanges.publish_in  = MessageStats["publish_in"];
-                NewExchanges.publish_out = MessageStats["publish_out"];
+                NewExchange.publish_in  = MessageStats["publish_in"];
+                NewExchange.publish_out = MessageStats["publish_out"];
             EndIf;
             
         EndDo;
     EndIf;
     
 EndProcedure // FillExchangesPage()
+
+&AtServer
+Procedure FillQueuesPage(MainObject)
+    
+    ClearQueuesPage(); 
+    
+    DeliveryResult = MainObject.DeliverMessage(Undefined, Undefined, 
+        New Structure("PredefinedAPI", "Queues"));
+    If NOT DeliveryResult.Success Then
+        Return;
+    EndIf;
+
+    Response = MainObject.ConvertResponseToMap(
+        DeliveryResult.StringResponse);
+    If TypeOf(Response) = Type("Array") Then
+        For Each Item In Response Do
+            
+            NewQueue = Queues.Add();
+            NewQueue.name = Item["name"];
+            
+            SlaveNodes = Item["slave_nodes"]; 
+            If TypeOf(SlaveNodes) = Type("Array")
+                AND SlaveNodes.Count() > 0 Then
+                NewQueue.node = StrTemplate("%1 +%2", Item["node"], 
+                    SlaveNodes.Count());
+            Else
+                NewQueue.node = Item["node"];    
+            EndIf;    
+            
+            NewQueue.auto_delete = Item["auto_delete"];
+            NewQueue.durable = Item["durable"];
+            
+            OwnerPidDetails = Item["owner_pid_details"];
+            If TypeOf(OwnerPidDetails) = Type("Map") Then 
+                NewQueue.exclusive = OwnerPidDetails["name"];
+            EndIf;    
+                
+            NewQueue.policy = Item["policy"];
+            NewQueue.state = Item["state"];
+            NewQueue.messages_ready = Item["messages_ready"];
+            NewQueue.messages_unacknowledged = Item["messages_unacknowledged"];
+            NewQueue.messages = Item["messages"];
+                        
+        EndDo;
+    EndIf;
+    
+EndProcedure // FillQueuesPage()
 
 &AtServer
 Procedure ClearOverviewPage()
@@ -298,5 +349,12 @@ Procedure ClearExchangesPage()
     Exchanges.Clear();       
     
 EndProcedure // ClearExchangesPage()
+
+&AtServer
+Procedure ClearQueuesPage()
+    
+    Queues.Clear();       
+    
+EndProcedure // ClearQueuesPage()
 
 #EndRegion // ServiceProceduresAndFunctions 

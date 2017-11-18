@@ -305,7 +305,20 @@ Function ExchangeNamePublishURL(VirtualHost, Name)
 EndFunction // ExchangeNamePublishURL()
 
 #EndRegion // Exchanges    
+
+#Region Queues
+
+// Only for internal use.
+//
+Function QueuesHTTPRequest()
     
+    Return FL_InteriorUse.NewHTTPRequest("/api/queues", 
+        NewHTTPRequestHeaders());
+    
+EndFunction // ExchangesHTTPRequest()
+
+#EndRegion // Queues
+
 #Region Aliveness
 
 // Only for internal use.
@@ -345,6 +358,9 @@ Procedure ResolvePredefined(Path, HTTPMethod, HTTPRequest, Message = Undefined)
     ElsIf Path = "Exchanges" Then
         HTTPMethod = "GET";
         HTTPRequest = ExchangesHTTPRequest();
+    ElsIf Path = "Queues" Then
+        HTTPMethod = "GET";
+        HTTPRequest = QueuesHTTPRequest();
     EndIf;    
     
 EndProcedure // ResolvePredefined()
