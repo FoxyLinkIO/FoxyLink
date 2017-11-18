@@ -19,6 +19,123 @@
 
 #Region ProgramInterface
 
+#Region HTTPInteraction
+
+// Creates HTTPConnection object. 
+//
+// Parameters:
+//  StringURI           - String        - reference to the resource in the format:
+//    <schema>://<login>:<password>@<host>:<port>/<path>?<parameters>#<anchor>.
+//  Proxy               - InternetProxy - proxy used to connect to server.
+//                              Default value: Undefined.
+//  Timeout             - Number        - defines timeout for connection and 
+//                                        operations in seconds.
+//                              Default value: 0 - timeout is not set.
+//  UseOSAuthentication - Boolean       - enables NTLM or Negotiate authentication on the server.
+//                              Default value: False. 
+//
+// Returns:
+//  HTTPConnection - an object to interact with external systems by HTTP 
+//                   protocol, including file transfer.  
+//
+Function NewHTTPConnection(StringURI, Proxy = Undefined, Timeout = 0, 
+    UseOSAuthentication = False) Export
+    
+    URIStructure = FL_CommonUseClientServer.URIStructure(StringURI);
+    If Upper(URIStructure.Schema) = Upper("https") Then 
+        SecureConnection = New OpenSSLSecureConnection(Undefined, Undefined);      
+    Else 
+        SecureConnection = Undefined;
+    EndIf;
+
+    HTTPConnection = New HTTPConnection(
+        URIStructure.Host,
+        URIStructure.Port,
+        URIStructure.Login,
+        URIStructure.Password,
+        Proxy,
+        Timeout,
+        SecureConnection,
+        UseOSAuthentication);
+        
+    Return HTTPConnection;        
+    
+EndFunction // NewHTTPConnection()
+
+// Creates HTTPRequest object.
+//
+// Parameters:
+//  ResourceAddress - String - line of the http resource.
+//  Headers         - Map    - request headers.
+//                          Default value: Undefined.
+//  BodyAsString    - String - a request body as string.
+//                          Default value: "".
+//
+// Returns:
+//  HTTPRequest - describes the HTTP-requests. 
+//
+Function NewHTTPRequest(ResourceAddress, Headers = Undefined, 
+    BodyAsString = "") Export
+    
+    If Headers = Undefined Then
+        Headers = New Map;
+    EndIf;
+    
+    HTTPRequest = New HTTPRequest(ResourceAddress, Headers);
+    HTTPRequest.SetBodyFromString(BodyAsString);
+    Return HTTPRequest;
+    
+EndFunction // NewHTTPRequest()
+
+// Sends data at the specified address to be processed using 
+// the specified HTTP-method.
+//
+// Parameters:
+//  HTTPConnection - HTTPConnection - an object to interact with external 
+//                          systems by HTTP protocol, including file transfer.
+//  HTTPRequest    - HTTPRequest    - describes the HTTP-requests sent using 
+//                                      the HTTPConnection object.
+//  HTTPMethod     - HTTPMethod     - HTTP method name.
+//  StatusCode     - Number         - HTTP server status (response) code.
+//  ResponseBody   - String         - response body as a string.
+//  LogAttribute   - String         - if attribute is set, measuring data will
+//                                      be collected.
+//                          Default value: Undefined.
+//
+// Returns:
+//  HTTPResponse - provides access to contents of a HTTP server response to a request. 
+//
+Function CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, StatusCode, 
+    ResponseBody, LogAttribute = Undefined) Export
+    
+    If LogAttribute <> Undefined Then
+        LogObject = StartLogHTTPRequest(HTTPConnection, HTTPRequest, 
+            HTTPMethod);
+    EndIf;
+
+    Try
+        HTTPResponse = HTTPConnection.CallHTTPMethod(HTTPMethod, HTTPRequest);
+        StatusCode = HTTPResponse.StatusCode;
+        ResponseBody = HTTPResponse.GetBodyAsString();
+    Except
+        HTTPResponse = Undefined;
+        StatusCode = CodeStatusInternalServerError();
+        ResponseBody = ErrorDescription();     
+    EndTry;
+    
+    If LogAttribute <> Undefined Then
+        LogAttribute = LogAttribute + EndLogHTTPRequest(LogObject, StatusCode, 
+            ResponseBody);    
+    EndIf;
+
+    Return HTTPResponse;
+    
+EndFunction // CallHTTPMethod()
+
+#EndRegion // HTTPInteraction
+
+#Region FormInteraction
+
 // Moves a collection item.
 //
 // Parameters:
@@ -120,6 +237,10 @@ Function AddItemToItemFormCollection(Items, Parameters, Parent = Undefined) Expo
     
 EndFunction // AddItemToItemFormCollection()
 
+#Endregion // FormInteraction
+
+#Region SubsystemInteraction
+
 // Returns metadata object: pluggable subsystem.
 //
 // Parameters:
@@ -165,9 +286,13 @@ Function PluggableSubsystem(SubsystemName) Export
     
 EndFunction // PluggableSubsystem()
 
+#EndRegion // SubsystemInteraction
+
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
+
+#Region FormInteraction
 
 // Returns property value from structure.
 // 
@@ -203,5 +328,157 @@ Function ParametersPropertyValue(Parameters, PropertyName, ErrorMessage,
     Return ProperyValue;
 
 EndFunction // ParametersPropertyValue()
+
+#EndRegion // FormInteraction
+
+#Region HTTPInteraction
+
+// Only for internal use.
+//
+Function CodeStatusInternalServerError()
+    
+    Return 500;
+    
+EndFunction // CodeStatusInternalServerError()
+
+#EndRegion // HTTPInteraction
+
+#Region LogInteraction 
+
+// Returns a log message object that must be passed to the function 
+// FL_InteriorUse.EndLogHTTPRequest.
+//
+// Parameters:
+//  HTTPConnection - HTTPConnection - an object to interact with external 
+//                          systems by HTTP protocol, including file transfer.
+//  HTTPRequest    - HTTPRequest    - describes the HTTP-requests sent using 
+//                          the HTTPConnection object. 
+//  HTTPMethod     - String         - HTTP method name.
+//
+// Returns:
+//  Structure - see function FL_InteriorUse.NewLogMessageHTTP.
+//
+Function StartLogHTTPRequest(HTTPConnection, HTTPRequest, HTTPMethod)
+    
+    LogMessage = NewLogMessageHTTP();
+    LogMessage.HostURL = HTTPConnection.Host;
+    LogMessage.HTTPMethod = Upper(HTTPMethod);
+    LogMessage.ResourceAddress = HTTPRequest.ResourceAddress;
+    If FL_InteriorUseReUse.IsHTTPMethodWithoutBody(Upper(HTTPMethod)) Then
+        LogMessage.Delete("RequestBody");
+    Else
+        LogMessage.RequestBody = HTTPRequest.GetBodyAsString();   
+    EndIf;
+    Return LogMessage;
+    
+EndFunction // StartLogHTTPRequest()
+
+// Returns complete log message.
+//
+// Parameters:
+//  LogObject    - Structure - see function FL_InteriorUse.NewLogMessageHTTP.
+//  StatusCode   - Number    - HTTP server status (response) code.
+//  ResponseBody - String    - response body as a string.
+//
+// Returns:
+//  String - complete log message.
+//
+Function EndLogHTTPRequest(LogObject, StatusCode, ResponseBody)
+    
+    LogObject.StatusCode = StatusCode;
+    LogObject.ResponseBody = ResponseBody;
+    LogObject.DoneResponse = CurrentUniversalDate();   
+    LogObject.Elapsed = CurrentUniversalDateInMilliseconds() - LogObject.Elapsed;
+    
+    If LogObject.Property("RequestBody") Then
+        
+        Return StrTemplate("BeginRequest: %1
+                |
+                |REQUEST URL
+                |Host URL: %2
+                |Resource: %3 %4
+                |
+                |REQUEST BODY
+                |%5
+                |
+                |RESPONSE BODY
+                |Result: %6
+                |%7
+                |
+                |DoneResponse: %8
+                |Overall Elapsed: %9 ms
+                |----------------------------------------------------------------------
+                |", 
+            LogObject.BeginRequest,
+            LogObject.HostURL,
+            LogObject.HTTPMethod,
+            LogObject.ResourceAddress,
+            LogObject.RequestBody,
+            LogObject.StatusCode,
+            LogObject.ResponseBody,
+            LogObject.DoneResponse,
+            LogObject.Elapsed);
+        
+    Else
+        
+        Return StrTemplate("BeginRequest: %1
+                |
+                |REQUEST URL
+                |Host URL: %2
+                |Resource: %3 %4
+                |
+                |RESPONSE BODY 
+                |Result: %5
+                |%6
+                |
+                |DoneResponse: %7
+                |Overall Elapsed: %8 ms
+                |----------------------------------------------------------------------
+                |", 
+            LogObject.BeginRequest,
+            LogObject.HostURL,
+            LogObject.HTTPMethod,
+            LogObject.ResourceAddress,
+            LogObject.StatusCode,
+            LogObject.ResponseBody,
+            LogObject.DoneResponse,
+            LogObject.Elapsed);
+        
+    EndIf;
+    
+EndFunction // EndLogHTTPRequest()
+
+// Returns a new basic HTTP log message.
+//
+// Returns:
+//  Structure - the new basic HTTP log message:
+//      * BeginRequest    - Date   - time at which this HTTP request began.
+//      * HostURL         - String - host name.
+//      * HTTPMethod      - String - the name of the HTTP method.
+//      * ResourceAddress - String - line of the http resource. 
+//      * RequestBody     - String - request body as a string.  
+//      * StatusCode      - Number - HTTP server status (response) code.
+//      * ResponseBody    - String - response body as a string.
+//      * DoneResponse    - Date   - HTTP request processed time.             
+//      * Elapsed         - Date   - time at which this HTTP request began.
+//                        - Number - request execution time in ms.
+//
+Function NewLogMessageHTTP()
+    
+    LogMessageHTTP = New Structure;
+    LogMessageHTTP.Insert("BeginRequest", CurrentUniversalDate());
+    LogMessageHTTP.Insert("HostURL");
+    LogMessageHTTP.Insert("HTTPMethod");
+    LogMessageHTTP.Insert("ResourceAddress");
+    LogMessageHTTP.Insert("RequestBody");
+    LogMessageHTTP.Insert("StatusCode");
+    LogMessageHTTP.Insert("ResponseBody");
+    LogMessageHTTP.Insert("DoneResponse");
+    LogMessageHTTP.Insert("Elapsed", CurrentUniversalDateInMilliseconds());
+    Return LogMessageHTTP;
+    
+EndFunction // NewLogMessageHTTP()
+
+#EndRegion // LogInteraction
 
 #EndRegion // ServiceProceduresAndFunctions

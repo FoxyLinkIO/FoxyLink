@@ -30,7 +30,7 @@ Procedure Fact_EmptyDataCompositionSchema() Export
     
     DataCompositionSchema = New DataCompositionSchema;
     
-    DataCompositionTemplate = FL_DataComposition.NewDataCompositionTemplateParameters();
+    DataCompositionTemplate = FL_DataComposition.NewTemplateComposerParameters();
     DataCompositionTemplate.Schema   = DataCompositionSchema;
     DataCompositionTemplate.Template = DataCompositionSchema.DefaultSettings;
     

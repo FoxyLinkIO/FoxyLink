@@ -22,7 +22,9 @@ Procedure ЗаполнитьНаборТестов(TestsSet) Export
     TestsSet.Добавить("Fact_Encryption_ServerModule");
     TestsSet.Добавить("Fact_ErrorsClientServer_Module");
     TestsSet.Добавить("Fact_Events_ServerModule");
+    TestsSet.Добавить("Fact_EventsReUse_ServerModule");
     TestsSet.Добавить("Fact_InteriorUse_ServerModule");
+    TestsSet.Добавить("Fact_InteriorUseReUse_ServerModule");
     TestsSet.Добавить("Fact_JobServer_ServerModule");
     TestsSet.Добавить("Fact_RunInSafeMode_ServerModule");
     TestsSet.Добавить("Fact_Tasks_ServerModule");
@@ -58,7 +60,6 @@ Procedure Fact_RecurringJob_ServerModule() Export
 
 EndProcedure // Fact_RecurringJob_ServerModule()
 
-
 Procedure Fact_CommonUse_ServerModule() Export
         
     Module = Metadata.CommonModules.Find("FL_CommonUse");
@@ -79,7 +80,6 @@ Procedure Fact_CommonUseReUse_ServerModule() Export
     ReUseServerCommonModule(Module);
     
 EndProcedure // Fact_CommonUse_ServerModule()
-
 
 Procedure Fact_DataComposition_ServerModule() Export
 
@@ -109,12 +109,26 @@ Procedure Fact_Events_ServerModule() Export
 
 EndProcedure // Fact_Events_ServerModule()
 
+Procedure Fact_EventsReUse_ServerModule() Export
+        
+    Module = Metadata.CommonModules.Find("FL_EventsReUse");
+    ReUseServerCommonModule(Module);
+    
+EndProcedure // Fact_EventsReUse_ServerModule()
+
 Procedure Fact_InteriorUse_ServerModule() Export
 
     Module = Metadata.CommonModules.Find("FL_InteriorUse");
     ServerCommonModule(Module);
 
 EndProcedure // Fact_InteriorUse_ServerModule()
+
+Procedure Fact_InteriorUseReUse_ServerModule() Export
+        
+    Module = Metadata.CommonModules.Find("FL_InteriorUseReUse");
+    ReUseServerCommonModule(Module);
+    
+EndProcedure // Fact_InteriorUseReUse_ServerModule()
 
 Procedure Fact_JobServer_ServerModule() Export
 
@@ -136,7 +150,6 @@ Procedure Fact_Tasks_ServerModule() Export
     ServerCommonModule(Module);
 
 EndProcedure // Fact_Tasks_ServerModule()
-
 
 Procedure Fact_DataProcessorCSV() Export
     

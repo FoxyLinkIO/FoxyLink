@@ -61,4 +61,67 @@ Function IdentifyPluginProcessorName(LibraryGuid, PluggableSubsystem) Export
     
 EndFunction // IdentifyPluginProcessorName()
 
+// Defines if HTTP method has no body.
+//
+// Parameters:
+//  HTTPMethod - String - HTTP method name.  
+//
+// Returns:
+//  Boolean - if True HTTP method has no body, False in opposite case.
+//
+Function IsHTTPMethodWithoutBody(HTTPMethod) Export
+    
+    HTTPMethods = New Structure;
+    HTTPMethods.Insert("GET");
+    HTTPMethods.Insert("HEAD");
+    HTTPMethods.Insert("TRACE");
+    HTTPMethods.Insert("DELETE");
+    HTTPMethods.Insert("CONNECT");
+    HTTPMethods.Insert("MKCOL");
+    HTTPMethods.Insert("COPY");
+    HTTPMethods.Insert("MOVE");
+    HTTPMethods.Insert("UNLOCK");
+    HTTPMethods.Insert("OPTIONS");
+    Return HTTPMethods.Property(HTTPMethod);
+    
+EndFunction // IsHTTPMethodWithoutBody()
+ 
+// Returns HTTP success status codes 2xx.
+//
+// Returns:
+//  FixedMap - with HTTP success status codes:
+//      * Key   - Number - HTTP server status (response) code.
+//      * Value - String - string representation of status code.
+//
+Function SuccessHTTPStatusCodes() Export
+    
+    Map = New Map;
+    Map.Insert(200, "200 OK");
+    Map.Insert(201, "201 Created");
+    Map.Insert(202, "202 Accepted");
+    Map.Insert(203, "203 Non-Authoritative Information");
+    Map.Insert(204, "204 No Content");
+    Map.Insert(205, "205 Reset Content");
+    Map.Insert(206, "206 Partial Content");
+    Map.Insert(207, "207 Multi-Status");
+    Map.Insert(208, "208 Already Reported");
+    Map.Insert(226, "226 IM Used");
+    Return New FixedMap(Map);
+    
+EndFunction // SuccessHTTPStatusCodes()
+
+// Defines if it is success status code.
+//
+// Parameters:
+//  StatusCode - Number - HTTP server status (response) code.
+//
+// Returns:
+//  Boolean - if True it is success status code.  
+//
+Function IsSuccessHTTPStatusCode(StatusCode) Export
+    
+    Return FL_InteriorUseReUse.SuccessHTTPStatusCodes().Get(StatusCode) <> Undefined;
+    
+EndFunction // IsSuccessHTTPStatusCode() 
+
 #EndRegion // ProgramInterface

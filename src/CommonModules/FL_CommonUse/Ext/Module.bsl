@@ -167,7 +167,7 @@ EndFunction // RegisterRecordsValues()
 //  ValueTableRow - ValueTableRow - value table row.
 //
 // Returns:
-//  Structure.
+//  Structure - with columns as keys and row values as values.
 //
 Function ValueTableRowIntoStructure(ValueTableRow) Export
 
@@ -179,6 +179,52 @@ Function ValueTableRowIntoStructure(ValueTableRow) Export
     Return Structure;
 
 EndFunction // ValueTableRowIntoStructure()
+
+// Creates a structure with properties named as value table columns.
+//
+// Parameters:
+//  Columns - ValueTableColumnCollection - value table column collection.
+//
+// Returns:
+//  Structure - with columns as keys.
+//
+Function ValueTableColumnsIntoStructure(Columns) Export
+
+    Structure = New Structure;
+    For Each Column In Columns Do
+        Structure.Insert(Column.Name);
+    EndDo;
+    
+    Return Structure;
+
+EndFunction // ValueTableColumnsIntoStructure()
+
+// Extends the target table with the data from the source array.
+//
+// Parameters:
+//  SourceArray - Array      - array from which rows will be taken.
+//      * Map       - with values:
+//          ** Key   - String    - a column name of target table.
+//          ** Value - Arbitrary - a column value.
+//      * Structure - with values:
+//          ** Key   - String    - a column name of target table.
+//          ** Value - Arbitrary - a column value.
+//  TargetTable - ValueTable - table to which rows will be added.
+//  
+Procedure ExtendValueTableFromArray(SourceArray, TargetTable) Export
+
+    If TypeOf(TargetTable) = Type("FormDataCollection") Then
+        Columns = FormDataToValue(TargetTable, Type("ValueTable")).Columns;
+    EndIf;
+    
+    For Each SourceItem In SourceArray Do
+        TargetRow = TargetTable.Add();
+        For Each Column In Columns Do
+            TargetRow[Column.Name] = SourceItem[Column.Name];
+        EndDo;
+    EndDo;
+
+EndProcedure // ExtendValueTableFromArray()
 
 // Records data of the Structure, Map, Array types considering nesting.
 //
