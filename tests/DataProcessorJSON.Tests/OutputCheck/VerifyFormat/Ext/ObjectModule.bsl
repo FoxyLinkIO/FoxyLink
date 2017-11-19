@@ -25,10 +25,10 @@ Procedure ЗаполнитьНаборТестов(TestsSet) Export
     TestsSet.Добавить("Fact_TwoEmptyArrayInArray");
     TestsSet.Добавить("Fact_TwoEmptyArrayStringInArray");
     
-    
     TestsSet.Добавить("Fact_TwoInnerObjectValue");
     TestsSet.Добавить("Fact_ObjectValue");
     TestsSet.Добавить("Fact_ObjectArraySeveralTypes");
+    TestsSet.Добавить("Fact_ArrayObjectDetailRecords");
     
     TestsSet.Добавить("Fact_ComplexHierarchy_1");
     
@@ -245,7 +245,28 @@ Procedure Fact_ObjectArraySeveralTypes() Export
 
     VerifyAssertion("ObjectArraySeveralTypes", "READ", BenchmarkData);
     
-EndProcedure // Fact_ObjectValue()
+EndProcedure // Fact_ObjectArraySeveralTypes()
+
+Procedure Fact_ArrayObjectDetailRecords() Export
+    
+    BenchmarkData = "[
+    |{
+    |""String"": ""String"",
+    |""Number"": 7,
+    |""Boolean"": false
+    |},
+    |{
+    |""String"": ""String"",
+    |""Number"": 42,
+    |""Boolean"": true
+    |}
+    |]";
+
+    VerifyAssertion("#46 Bug: JSON Array", "READ", BenchmarkData);
+    
+EndProcedure // Fact_ArrayObjectDetailRecords()
+
+
 
 
 Procedure Fact_ComplexHierarchy_1() Export
