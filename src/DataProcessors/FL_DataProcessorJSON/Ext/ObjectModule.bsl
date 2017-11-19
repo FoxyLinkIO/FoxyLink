@@ -353,120 +353,54 @@ Procedure APISchemaOutput(Item, DataCompositionProcessor,
     // The code in the comment written in one line is below this comment.
     // To edit the code, remove the comment.
     // For more information about the code in 1 line see http://infostart.ru/public/71130/.
-    
-    Var CurrentLevel; 
-       
+     
     FillParamName(ReportStructure, TemplateColumns);
     TypeDate = Type("Date");
     
-    Begin = DataCompositionResultItemType.Begin;
-    BeginAndEnd = DataCompositionResultItemType.BeginAndEnd;
-    End = DataCompositionResultItemType.End;
+    CurrentLevel = APISchema.Rows[0];
+    If CurrentLevel.Type = "Object" Then
+        StreamWriter.WriteStartObject();
+    ElsIf CurrentLevel.Type = "Array" Then
+        StreamWriter.WriteStartArray();
+    EndIf;                   
     
     While Item <> Undefined Do
-                
-        If Item.ItemType = Begin Then
+        
+        If NOT IsBlankString(Item.Template) Then
             
-            Item = DataCompositionProcessor.Next();
-            If Item.ItemType = Begin Then
+            If CurrentLevel = Undefined Then    
+                ErrorMessage = StrTemplate(NStr(
+                        "en = 'Error: Failed to find property with name: %1.';
+                        |ru = 'Ошибка: Не удалось найти свойство с именем: %1.'"),
+                    ReportStructure.Names[Item.Template]);
+                Raise ErrorMessage;
+            EndIf;
+            
+            If CurrentLevel.Template <> Item.Template Then
                 
-                Item = DataCompositionProcessor.Next();
-                If Item.ItemType = BeginAndEnd Then
-                    
-                    If CurrentLevel = Undefined Then
-                        CurrentLevel = APISchema.Rows.Find(Item.Template, "Template", True);
-                    Else
-                        CurrentLevel = CurrentLevel.Rows.Find(Item.Template, "Template");
-                    EndIf;
-                    
-                    If CurrentLevel = Undefined Then    
-                        ErrorMessage = StrTemplate(NStr(
-                                "en = 'Error: Failed to find property with name: %1.';
-                                |ru = 'Ошибка: Не удалось найти свойство с именем: %1.'"),
-                            ReportStructure.Names[Item.Template]);
-                        Raise ErrorMessage;
-                    EndIf;
-                    
-                    Parent = CurrentLevel.Parent;
-                    If Parent <> Undefined Then
-                        
-                        If NOT Parent.Pair Then
-                            If Parent.Type = "Object" Then
-                                Parent.Pair = True;
-                                StreamWriter.WriteStartObject();
-                            ElsIf Parent.Type = "Array" Then
-                                Parent.Pair = True;
-                                StreamWriter.WriteStartArray(); 
-                            EndIf;    
-                        EndIf;    
-                        
-                        If Parent.Type <> "Array" Then
-                            StreamWriter.WritePropertyName(CurrentLevel.Name);
-                        EndIf;
-                        
-                    EndIf;
-                        
-                    If CurrentLevel.Type = "Object" Then
-                        CurrentLevel.Pair = True;
-                        StreamWriter.WriteStartObject();
-                    ElsIf CurrentLevel.Type = "Array" Then
-                        CurrentLevel.Pair = True;
-                        StreamWriter.WriteStartArray(); 
-                    EndIf;
-                                            
+                DownLevel = CurrentLevel.Rows.Find(Item.Template, "Template", True);
+                If DownLevel <> Undefined Then
+                    CertainlyOpenArrObj(CurrentLevel, DownLevel);    
+                Else
+                    CertainlyCloseArrObj(CurrentLevel);
+                    Continue;                      
                 EndIf;
                 
             EndIf;
-            
-        EndIf;
-        
-        If CurrentLevel <> Undefined Then
-            
-            If Item.ItemType = End Then
+                                                                                           
+            If CurrentLevel.StructuredType Then 
                 
-                Item = DataCompositionProcessor.Next();
-                If Item = Undefined Or Item.ItemType = End Then
-                    AddRightBracket(CurrentLevel);    
-                EndIf;
-                                
-            ElsIf Not IsBlankString(Item.Template) Then
-                
-                If CurrentLevel.StructuredType Then 
+                For Each Row In CurrentLevel.Rows Do
                     
-                    For Each Row In CurrentLevel.Rows Do
-                        
-                        If NOT Row.StructuredType Then
-                            
-                            If CurrentLevel.Type <> "Array" Then
-                                StreamWriter.WritePropertyName(Row.Name);
-                            EndIf;
-                             
-                            Value = Item.ParameterValues[Row.Parameter].Value;
-                            ValueType = TypeOf(Value);
-             
-                            If RefTypesCache[ValueType] = False Then
-                                StreamWriter.WriteValue(Value);
-                            ElsIf ValueType = TypeDate Then
-                                StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO));    
-                            ElsIf RefTypesCache[ValueType] = True Then
-                                StreamWriter.WriteValue(XMLString(Value));
-                            // Possible improvement: skip non-ValueType.
-                            ElsIf FL_CommonUse.IsReference(ValueType) Then
-                                RefTypesCache.Insert(ValueType, True);
-                                StreamWriter.WriteValue(XMLString(Value));         
-                            Else
-                                StreamWriter.WriteValue(Undefined);              
-                            EndIf;
-                            
-                            Row.Done = True;
-                            
-                        EndIf;
-                        
-                    EndDo;
+                    If Row.StructuredType Then
+                        Continue;
+                    EndIf;
                     
-                Else
-                                            
-                    Value = Item.ParameterValues[CurrentLevel.Parameter].Value;
+                    If CurrentLevel.Type <> "Array" Then
+                        StreamWriter.WritePropertyName(Row.Name);
+                    EndIf;
+                     
+                    Value = Item.ParameterValues[Row.Parameter].Value;
                     ValueType = TypeOf(Value);
      
                     If RefTypesCache[ValueType] = False Then
@@ -483,48 +417,103 @@ Procedure APISchemaOutput(Item, DataCompositionProcessor,
                         StreamWriter.WriteValue(Undefined);              
                     EndIf;
                     
-                    CurrentLevel.Done = True;
-                    
+                    Row.Done = True;
+                                                
+                EndDo;
+                
+                If CurrentLevel.Type = "Object" 
+                    AND CurrentLevel.Rows.Find(False, "Done") = Undefined Then
+                    CertainlyCloseArrObj(CurrentLevel);
                 EndIf;
-                                
+                
+            Else
+                                        
+                Value = Item.ParameterValues[CurrentLevel.Parameter].Value;
+                ValueType = TypeOf(Value);
+ 
+                If RefTypesCache[ValueType] = False Then
+                    StreamWriter.WriteValue(Value);
+                ElsIf ValueType = TypeDate Then
+                    StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO));    
+                ElsIf RefTypesCache[ValueType] = True Then
+                    StreamWriter.WriteValue(XMLString(Value));
+                // Possible improvement: skip non-ValueType.
+                ElsIf FL_CommonUse.IsReference(ValueType) Then
+                    RefTypesCache.Insert(ValueType, True);
+                    StreamWriter.WriteValue(XMLString(Value));         
+                Else
+                    StreamWriter.WriteValue(Undefined);              
+                EndIf;
+                
             EndIf;
-            
+                                      
         EndIf;
         
         Item = DataCompositionProcessor.Next();
         
+    EndDo;
+    
+    While CurrentLevel <> Undefined Do
+        CertainlyCloseArrObj(CurrentLevel);
     EndDo;
    
 EndProcedure // APISchemaOutput()
 
 // Only for internal use.
 //
-Procedure AddRightBracket(APISchemaRow)
+Procedure CertainlyOpenArrObj(CurrentLevel, DownLevel)
     
     // The code in the comment written in one line is below this comment.
     // To edit the code, remove the comment.
     // For more information about the code in 1 line see http://infostart.ru/public/71130/.
     //
-    //If APISchemaRow.StructuredType Then
-    //    If APISchemaRow.Rows.Find(False, "Done") = Undefined Then
-    //        APISchemaRow.Done = True;
-    //        If APISchemaRow.Type = "Object" Then
-    //            StreamWriter.WriteEndObject();
-    //        Else
-    //            StreamWriter.WriteEndArray();     
-    //        EndIf;
+    //Pointer = DownLevel;
+    //Pointers = New Array;
+    //While CurrentLevel <> Pointer Do
+    //    Pointers.Insert(0, Pointer);
+    //    Pointer = DownLevel.Parent;
+    //EndDo;
+    //
+    //CurrentLevel = DownLevel;
+    //
+    //For Each Pointer In Pointers Do
+    //    
+    //    If Pointer.Parent.Type = "Object" Then
+    //        StreamWriter.WritePropertyName(Pointer.Name);    
     //    EndIf;
+    //    
+    //    If Pointer.Type = "Object" Then
+    //        StreamWriter.WriteStartObject();    
+    //    Else
+    //        StreamWriter.WriteStartArray();       
+    //    EndIf;
+    //    
+    //EndDo;
+    
+    Pointer = DownLevel; Pointers = New Array; While CurrentLevel <> Pointer Do Pointers.Insert(0, Pointer); Pointer = DownLevel.Parent; EndDo; CurrentLevel = DownLevel; For Each Pointer In Pointers Do If Pointer.Parent.Type = "Object" Then StreamWriter.WritePropertyName(Pointer.Name); EndIf; If Pointer.Type = "Object" Then StreamWriter.WriteStartObject(); Else StreamWriter.WriteStartArray(); EndIf; EndDo;
+    
+EndProcedure // CertainlyOpenArrObj()
+
+// Only for internal use.
+//
+Procedure CertainlyCloseArrObj(Row)
+    
+    // The code in the comment written in one line is below this comment.
+    // To edit the code, remove the comment.
+    // For more information about the code in 1 line see http://infostart.ru/public/71130/.
+    //
+    //If Row.Type = "Object" Then
+    //   StreamWriter.WriteEndObject();
+    //ElsIf Row.Type = "Array" Then
+    //    StreamWriter.WriteEndArray();
     //EndIf;
     //
-    //APISchemaRow = APISchemaRow.Parent;
-    //If APISchemaRow <> Undefined
-    //    AND APISchemaRow.Type <> "Array" Then
-    //    AddRigthBracket(APISchemaRow);    
-    //EndIf;
+    //Row.Done = True;
+    //Row = Row.Parent;
     
-    If APISchemaRow.StructuredType Then If APISchemaRow.Rows.Find(False, "Done") = Undefined Then APISchemaRow.Done = True; If APISchemaRow.Type = "Object" Then StreamWriter.WriteEndObject(); Else StreamWriter.WriteEndArray(); EndIf; EndIf; EndIf; APISchemaRow = APISchemaRow.Parent; If APISchemaRow <> Undefined AND APISchemaRow.Type <> "Array" Then AddRightBracket(APISchemaRow); EndIf;
-     
-EndProcedure // AddRightBracket()
+    If Row.Type = "Object" Then StreamWriter.WriteEndObject(); ElsIf Row.Type = "Array" Then StreamWriter.WriteEndArray(); EndIf; Row.Done = True; Row = Row.Parent;
+    
+EndProcedure // CertainlyCloseArrObj() 
 
 // Only for internal use.
 //
@@ -537,9 +526,8 @@ Procedure FillParamName(ReportStructure, TemplateColumns)
     
     // It is needed to check if a parameter has been listed in the 
     // StreamObject at that level of hierarchy.
-    APISchema.Columns.Add("Pair", New TypeDescription("Boolean"));
     APISchema.Columns.Add("Done", New TypeDescription("Boolean"));
-    APISchema.Columns.Add("Template", New TypeDescription("String"));
+    APISchema.Columns.Add("Template", FL_CommonUse.StringTypeDescription(12));
     APISchema.Columns.Add("Parameter", New TypeDescription("String"));
         
     // Inverted columns cache.
