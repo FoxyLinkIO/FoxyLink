@@ -49,8 +49,8 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.2.16</Version>
-			<UpdateCatalogAddress>https://github.com/pbazeliuk/IHL/</UpdateCatalogAddress>
+			<Version>0.9.2.17</Version>
+			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
 			<UseOrdinaryFormInManagedApplication>false</UseOrdinaryFormInManagedApplication>
@@ -124,8 +124,12 @@
 			</BriefInformation>
 			<DetailedInformation>
 				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>FoxyLink, version 1.0</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Update.Express, бета-версия 0.2</v8:content>
+					<v8:content>FoxyLink, версия 1.0</v8:content>
 				</v8:item>
 			</DetailedInformation>
 			<Copyright>
@@ -148,7 +152,16 @@
 					<v8:content>https://pbazeliuk.com</v8:content>
 				</v8:item>
 			</VendorInformationAddress>
-			<ConfigurationInformationAddress/>
+			<ConfigurationInformationAddress>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>https://github.com/FoxyLinkIO/FoxyLink</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>https://github.com/FoxyLinkIO/FoxyLink</v8:content>
+				</v8:item>
+			</ConfigurationInformationAddress>
 			<DataLockControlMode>Managed</DataLockControlMode>
 			<ObjectAutonumerationMode>NotAutoFree</ObjectAutonumerationMode>
 			<ModalityUseMode>DontUse</ModalityUseMode>
