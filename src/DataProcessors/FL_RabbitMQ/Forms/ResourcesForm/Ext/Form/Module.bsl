@@ -13,7 +13,7 @@
 // GNU Affero General Public License for more details.
 //
 // You should have received a copy of the GNU Affero General Public License 
-// along with this program. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+// along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -39,77 +39,67 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         EndDo;
         
     EndIf;
+    
+    If IsBlankString(PayloadEncoding) Then
+        PayloadEncoding = "string";
+    EndIf;
      
 EndProcedure // OnCreateAtServer()
 
 #EndRegion // FormEventHandlers
 
-#Region FormItemsEventHandlers
-
-&AtClient
-Procedure HTTPMethodStartChoice(Item, ChoiceData, StandardProcessing)
-    
-    StandardProcessing = False;
-    
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseHTTPMethod",
-        ThisObject), HTTPMethods(), Item);
-    
-EndProcedure // HTTPMethodStartChoice()
-
-#EndRegion // FormItemsEventHandlers
-
 #Region FormCommandHandlers
 
 &AtClient
 Procedure SaveAndClose(Command)
-    
-    If IsBlankString(HTTPMethod) Then
+        
+    If IsBlankString(ExchangeName) Then
         FL_CommonUseClientServer.NotifyUser(NStr("
-            |en = 'Field ''HTTPMethod'' must be filled.';
-            |ru = 'Поле ''Метод HTTP'' должно быть заполнено.'"), , "HTTPMethod");
-        Return;  
-    EndIf;
-    
-    If IsBlankString(Resource) Then
-        FL_CommonUseClientServer.NotifyUser(NStr("
-            |en = 'Field ''Resource'' must be filled.';
-            |ru = 'Поле ''Ресурс'' должно быть заполнено.'"), , "Resource");
+                |en = 'Field ''Exchange name'' must be filled.';
+                |ru = 'Поле ''Имя обмена'' должно быть заполнено.'"), , 
+            "ExchangeName");
         Return;    
     EndIf;
     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "HTTPMethod";
-    ResourceRow.FieldValue = HTTPMethod;
+    If IsBlankString(RoutingKey) Then
+        FL_CommonUseClientServer.NotifyUser(NStr("
+                |en = 'Field ''Routing key'' must be filled.';
+                |ru = 'Поле ''Ключ маршрутизации'' должно быть заполнено.'"), , 
+            "RoutingKey");
+        Return;  
+    EndIf;
+    
+    If IsBlankString(VirtualHost) Then
+        VirtualHost = "%2F";       
+    EndIf;
     
     ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "Resource";
-    ResourceRow.FieldValue = Resource;
-    ResourceRow.ExecutableCode = True;
+    ResourceRow.FieldName = "Path";
+    ResourceRow.FieldValue = "PublishToExchange";
     
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "VirtualHost";
+    ResourceRow.FieldValue = VirtualHost;
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "ExchangeName";
+    ResourceRow.FieldValue = ExchangeName;
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "RoutingKey";
+    ResourceRow.FieldValue = RoutingKey;
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "ResourceAddress";
+    ResourceRow.FieldValue = StrTemplate("/api/exchanges/%1/%2/publish", 
+        VirtualHost, ExchangeName);
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "PayloadEncoding";
+    ResourceRow.FieldValue = PayloadEncoding;
+ 
     Close(Object);
     
 EndProcedure // SaveAndClose()
 
 #EndRegion // FormCommandHandlers
-
-#Region ServiceProceduresAndFunctions
-
-&AtClient
-Procedure DoAfterChooseHTTPMethod(SelectedElement, AdditionalParameters) Export
-    
-    If SelectedElement <> Undefined Then
-        HTTPMethod = String(SelectedElement.Value);    
-    EndIf;
-    
-EndProcedure // DoAfterChooseHTTPMethod() 
-
-// See function Catalogs.FL_Channels.ExchangeChannels.
-//
-&AtServerNoContext
-Function HTTPMethods()
-    
-    Return Enums.FL_RESTMethods.Methods();
-    
-EndFunction // HTTPMethods()
-
-#EndRegion // ServiceProceduresAndFunctions

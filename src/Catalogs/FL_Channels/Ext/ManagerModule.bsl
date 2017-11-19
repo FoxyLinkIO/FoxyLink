@@ -144,19 +144,17 @@ EndFunction // NewChannelParameters()
 // Sends the resulting message to the specified exchange channel.
 //
 // Parameters:
-//  Mediator            - Arbitrary              - reserved, currently not in use.
-//  Message             - Arbitrary              - message to deliver.
-//  Channel             - CatalogRef.FL_Channels - exchange channel.
-//  SubscriberResources - Array                  - channel resources.
-//      * ArrayItem - ValueTableRow - with values:
-//          ** FieldName  - String - field name.
-//          ** FieldValue - String - field value.
+//  Mediator   - Arbitrary              - reserved, currently not in use.
+//  Channel    - CatalogRef.FL_Channels - exchange channel.
+//  Payload    - Arbitrary              - data to deliver.
+//  Properties - Structure              - channel properties.
+//      * Key   - String - property name.
+//      * Value - String - property value.
 //
 // Returns:
 //  Arbitrary - the send result.
 //
-Function SendMessageResult(Mediator, Message, Channel, 
-    SubscriberResources) Export
+Function SendMessageResult(Mediator, Channel, Payload, Properties) Export
     
     Query = New Query;
     Query.Text = QueryTextChannelSettings();
@@ -168,19 +166,17 @@ Function SendMessageResult(Mediator, Message, Channel,
     
     ChannelSettings = QueryResult.Select();
     ChannelSettings.Next();
-    If Not ChannelSettings.Connected Then
+    If NOT ChannelSettings.Connected Then
         // Error    
     EndIf;
     
     ChannelProcessor = NewChannelProcessor(ChannelSettings.BasicChannelGuid);
     ChannelProcessor.ChannelData.Load(ChannelSettings.ChannelData.Unload());
-    ChannelProcessor.EncryptedData.Load(ChannelSettings.EncryptedData.Unload()); 
-    For Each Resource In SubscriberResources Do
-        FillPropertyValues(ChannelProcessor.ChannelResources.Add(), Resource);
-    EndDo;
+    ChannelProcessor.EncryptedData.Load(
+        ChannelSettings.EncryptedData.Unload()); 
     
-    DeliverResult = ChannelProcessor.DeliverMessage(Mediator, Message, 
-        New Structure);
+    DeliverResult = ChannelProcessor.DeliverMessage(Mediator, Payload, 
+        Properties);
     Return DeliverResult;    
     
 EndFunction // SendMessageResult()

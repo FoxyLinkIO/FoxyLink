@@ -162,13 +162,13 @@ Function ProcessMessage(Ref) Export
     ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
         MessageObject.Owner, MessageObject.Method); 
         
-    ResultMessage = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined, 
+    Payload = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined, 
         ExchangeSettings, MessageSettings);
             
-    If Not MessageObject.Subscribers.Count() = 0 Then
+    If MessageObject.Subscribers.Count() > 0 Then
         
         FilterParameters = New Structure("Channel");
-        SubscriberResources = MessageObject.SubscriberResources.Unload();
+        Resources = MessageObject.SubscriberResources.Unload();
         For Each Subscriber In MessageObject.Subscribers Do 
             
             If Subscriber.Completed Then
@@ -177,14 +177,10 @@ Function ProcessMessage(Ref) Export
             
             FilterParameters.Channel = Subscriber.Channel; 
             
-            DeliveryResponse = Catalogs.FL_Channels.SendMessageResult(
-                Undefined, 
-                ResultMessage, 
-                Subscriber.Channel, 
-                SubscriberResources.FindRows(
-                    FilterParameters));
+            DeliveryResult = Catalogs.FL_Channels.SendMessageResult(Undefined,
+                Subscriber.Channel, Payload, NewProperties(Resources.FindRows(
+                    FilterParameters)));
                     
-            
             SuccessResponseHandler = True;
             ErrorResponseDescription = "";
             If Not IsBlankString(Subscriber.ResponseHandler) Then
@@ -198,7 +194,7 @@ Function ProcessMessage(Ref) Export
                 
             EndIf;
             
-            If DeliveryResponse.Success And SuccessResponseHandler Then
+            If DeliveryResult.Success AND SuccessResponseHandler Then
                 Subscriber.Completed = True;
             Else
                 MessageObject.State = Catalogs.FL_States.Failed;
@@ -210,13 +206,25 @@ Function ProcessMessage(Ref) Export
     
     MessageObject.Write();  
         
-    Return DeliveryResponse;
+    Return DeliveryResult;
             
 EndFunction // ProcessMessage() 
 
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Function NewProperties(Resources)
+    
+    Properties = New Structure;
+    For Each Resource In Resources Do
+        Properties.Insert(Resource.FieldName, Resource.FieldValue);        
+    EndDo;
+    Return Properties;
+    
+EndFunction // NewProperties()
 
 // Only for internal use.
 //
