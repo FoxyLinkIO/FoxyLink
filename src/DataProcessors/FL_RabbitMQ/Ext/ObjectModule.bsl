@@ -107,8 +107,8 @@ EndFunction // ResourcesRequired()
 //
 // Parameters:
 //  Mediator   - Arbitrary - reserved, currently not in use.
-//  Message    - Arbitrary - message to deliver.
-//  Parameters - Structure - channel parameters.
+//  Payload    - Arbitrary - message to deliver.
+//  Properties - Structure - channel parameters.
 //
 // Returns:
 //  Structure - message delivery result with values:
@@ -116,7 +116,7 @@ EndFunction // ResourcesRequired()
 //      * OriginalResponse - Arbitrary - original response object.
 //      * StringResponse   - String    - string response presentation.
 //
-Function DeliverMessage(Mediator, Message, Parameters = Undefined) Export
+Function DeliverMessage(Mediator, Payload, Properties) Export
     
     Var HTTPMethod, HTTPRequest;
     
@@ -126,14 +126,12 @@ Function DeliverMessage(Mediator, Message, Parameters = Undefined) Export
     DeliveryResult.Insert("StringResponse");
     DeliveryResult.Insert("OriginalResponse");
     
-    If TypeOf(Parameters) <> Type("Structure") Then   
+    If TypeOf(Properties) <> Type("Structure") Then   
         Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "Parameters", Parameters, Type("Structure"));
+            "Properties", Properties, Type("Structure"));
     EndIf;
 
-    If Parameters.Property("PredefinedAPI") Then
-        ResolvePredefined(Parameters.PredefinedAPI, HTTPMethod, HTTPRequest);
-    EndIf;
+    ResolveProperties(Properties, HTTPMethod, HTTPRequest, Payload);
        
     If Log Then
         
@@ -271,38 +269,48 @@ EndFunction // ExchangesHTTPRequest()
 
 // Only for internal use.
 //
-Function ExchangeNameURL(VirtualHost, Name)
+Function ExchangePublishHTTPRequest(Properties, Payload)
     
-    Return StrTemplate("/api/exchanges/%1/%2", VirtualHost, Name);
+    Return FL_InteriorUse.NewHTTPRequest(Properties.ResourceAddress,  
+        NewHTTPRequestHeaders(), NewExchangePublishPayload(Properties, 
+            Payload));
     
-EndFunction // ExchangeNameURL()
+EndFunction // ExchangePublishHTTPRequest()
 
 // Only for internal use.
 //
-Function ExchangeNameBindingsSourceURL(VirtualHost, Name)
+Function NewExchangePublishPayload(Properties, Payload)
     
-    Return StrTemplate("/api/exchanges/%1/%2/bindings/source", 
-        VirtualHost, Name);
+    JSONWriter = New JSONWriter;
+    JSONWriter.SetString();
     
-EndFunction // ExchangeNameBindingsSourceURL()
-
-// Only for internal use.
-//
-Function ExchangeNameBindingsDestinationURL(VirtualHost, Name)
+    JSONWriter.WriteStartObject();
     
-    Return StrTemplate("/api/exchanges/%1/%2/bindings/destination", 
-        VirtualHost, Name);
+    // Routing key.
+    JSONWriter.WritePropertyName("routing_key");
+    JSONWriter.WriteValue(Properties.RoutingKey);
     
-EndFunction // ExchangeNameBindingsDestinationURL()
-
-// Only for internal use.
-//
-Function ExchangeNamePublishURL(VirtualHost, Name)
+    // Payload encoding.
+    JSONWriter.WritePropertyName("payload_encoding");
+    JSONWriter.WriteValue(Properties.PayloadEncoding);
     
-    Return StrTemplate("/api/exchanges/%1/%2/publish", 
-        VirtualHost, Name);        
+    // Properties
+    JSONWriter.WritePropertyName("properties");
+    JSONWriter.WriteStartObject();
+    JSONWriter.WriteEndObject();
     
-EndFunction // ExchangeNamePublishURL()
+    // Payload.
+    JSONWriter.WritePropertyName("payload");
+    If Properties.PayloadEncoding = "string" Then
+        JSONWriter.WriteValue(Payload);    
+    Else
+        JSONWriter.WriteValue(Base64String(GetBinaryDataFromString(Payload)));
+    EndIf;
+    
+    JSONWriter.WriteEndObject();
+    Return JSONWriter.Close();
+    
+EndFunction // NewExchangePublishPayload()
 
 #EndRegion // Exchanges    
 
@@ -344,26 +352,26 @@ EndFunction // AlivenessTestSucceeded()
 
 // Only for internal use.
 //
-Procedure ResolvePredefined(Path, HTTPMethod, HTTPRequest, Message = Undefined)
+Procedure ResolveProperties(Properties, HTTPMethod, HTTPRequest, 
+    Payload = Undefined)
     
-    If Path = "Overview" Then
-        HTTPMethod = "GET";
+    HTTPMethod = "GET";
+    If Properties.Path = "PublishToExchange" Then
+        HTTPMethod = "POST";     
+        HTTPRequest = ExchangePublishHTTPRequest(Properties, Payload);
+    ElsIf Properties.Path = "Overview" Then
         HTTPRequest = OverviewHTTPRequest();
-    ElsIf Path = "Connections" Then
-        HTTPMethod = "GET";
+    ElsIf Properties.Path = "Connections" Then
         HTTPRequest = ConnectionsHTTPRequest();
-    ElsIf Path = "Channels" Then
-        HTTPMethod = "GET";
+    ElsIf Properties.Path = "Channels" Then
         HTTPRequest = ChannelsHTTPRequest();
-    ElsIf Path = "Exchanges" Then
-        HTTPMethod = "GET";
+    ElsIf Properties.Path = "Exchanges" Then
         HTTPRequest = ExchangesHTTPRequest();
-    ElsIf Path = "Queues" Then
-        HTTPMethod = "GET";
+    ElsIf Properties.Path = "Queues" Then
         HTTPRequest = QueuesHTTPRequest();
     EndIf;    
     
-EndProcedure // ResolvePredefined()
+EndProcedure // ResolveProperties()
 
 // Only for internal use.
 //

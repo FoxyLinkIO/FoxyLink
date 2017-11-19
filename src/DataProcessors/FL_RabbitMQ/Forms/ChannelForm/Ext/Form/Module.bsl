@@ -88,7 +88,7 @@ Procedure FillOverviewPage(MainObject)
     ClearOverviewPage();
     
     DeliveryResult = MainObject.DeliverMessage(Undefined, Undefined, 
-        New Structure("PredefinedAPI", "Overview"));
+        New Structure("Path", "Overview"));
     If NOT DeliveryResult.Success Then
         Return;
     EndIf;
@@ -147,7 +147,7 @@ Procedure FillConnectionsPage(MainObject)
     ClearConnectionsPage(); 
     
     DeliveryResult = MainObject.DeliverMessage(Undefined, Undefined, 
-        New Structure("PredefinedAPI", "Connections"));
+        New Structure("Path", "Connections"));
     If NOT DeliveryResult.Success Then
         Return;
     EndIf;
@@ -166,7 +166,7 @@ Procedure FillChannelsPage(MainObject)
     ClearChannelsPage(); 
     
     DeliveryResult = MainObject.DeliverMessage(Undefined, Undefined, 
-        New Structure("PredefinedAPI", "Channels"));
+        New Structure("Path", "Channels"));
     If NOT DeliveryResult.Success Then
         Return;
     EndIf;
@@ -221,7 +221,7 @@ Procedure FillExchangesPage(MainObject)
     ClearExchangesPage(); 
     
     DeliveryResult = MainObject.DeliverMessage(Undefined, Undefined, 
-        New Structure("PredefinedAPI", "Exchanges"));
+        New Structure("Path", "Exchanges"));
     If NOT DeliveryResult.Success Then
         Return;
     EndIf;
@@ -256,7 +256,7 @@ Procedure FillQueuesPage(MainObject)
     ClearQueuesPage(); 
     
     DeliveryResult = MainObject.DeliverMessage(Undefined, Undefined, 
-        New Structure("PredefinedAPI", "Queues"));
+        New Structure("Path", "Queues"));
     If NOT DeliveryResult.Success Then
         Return;
     EndIf;
