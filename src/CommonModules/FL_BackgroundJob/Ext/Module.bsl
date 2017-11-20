@@ -268,7 +268,7 @@ Procedure FillParameterValueFromArguments(Parameter, Arguments, Value)
                 
             Value = FL_CommonUse.ObjectAttributeValue(Arguments, 
                 Parameter.Name);
-            If Parameter.ValueType.ContainsType(TypeOf(Value)) Then
+            If NOT Parameter.ValueType.ContainsType(TypeOf(Value)) Then
                 Value = Undefined;
             EndIf;
             

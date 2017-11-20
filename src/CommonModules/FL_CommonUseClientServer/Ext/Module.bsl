@@ -335,6 +335,22 @@ EndFunction // CopyTypeDescription()
 
 #Region StringOperations
 
+// Removes insignificant characters to the left of the first significant 
+// character and trailing spaces to the right of the last significant character
+// in a string.
+//
+// Parameters:
+//  String - String - source line. 
+//
+// Returns:
+//  String - string after trailing spaces removing. 
+//
+Function Trim(String) Export
+    
+    Return TrimAll(String);    
+    
+EndFunction // TrimAll()
+
 // Checks if variable name is correct.
 //
 // Parameters:
