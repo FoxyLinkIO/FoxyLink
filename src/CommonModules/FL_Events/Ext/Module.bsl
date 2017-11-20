@@ -159,6 +159,7 @@ Procedure EnqueueEvent(Source) Export
     ElsIf FL_CommonUse.IsReferenceTypeObjectByMetadataObjectName(
         InvocationData.MetadataObject) Then
         
+        InvocationData.Arguments = Source.Ref;
         InvocationData.SourceObject = Source.Ref;
         
     EndIf;
