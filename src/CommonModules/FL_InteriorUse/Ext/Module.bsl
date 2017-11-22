@@ -182,7 +182,8 @@ EndProcedure // MoveItemInItemFormCollectionNoSearch()
 // Returns:
 //  FormDecoration, FormGroup, FormButton, FormTable, FormField - the new form item.
 //
-Function AddItemToItemFormCollection(Items, Parameters, Parent = Undefined) Export
+Function AddItemToItemFormCollection(Items, Parameters, 
+    Parent = Undefined) Export
         
     If TypeOf(Parameters) <> Type("Structure") Then
         
@@ -236,6 +237,25 @@ Function AddItemToItemFormCollection(Items, Parameters, Parent = Undefined) Expo
     Return NewFormItem;
     
 EndFunction // AddItemToItemFormCollection()
+
+// Sets the value into property of the form item.
+// Applied when the form item can not be on form because user does not have 
+// rights to an object, attribute or command.
+//
+// Parameters:
+//  FormItems    - FormItems - property of the managed form.
+//  ItemName     - String    - form item name.
+//  PropertyName - String    - name of the set form item property.
+//  Value        - Arbitrary - new item value.
+// 
+Procedure SetFormItemProperty(FormItems, ItemName, PropertyName, Value) Export
+
+    FormItem = FormItems.Find(ItemName);
+    If FormItem <> Undefined AND FormItem[PropertyName] <> Value Then
+        FormItem[PropertyName] = Value;
+    EndIf;
+
+EndProcedure // SetFormItemProperty() 
 
 #Endregion // FormInteraction
 

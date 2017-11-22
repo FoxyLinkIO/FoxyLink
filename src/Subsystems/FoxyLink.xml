@@ -15,15 +15,13 @@
 			</Synonym>
 			<Comment/>
 			<IncludeHelpInContents>true</IncludeHelpInContents>
-			<IncludeInCommandInterface>false</IncludeInCommandInterface>
+			<IncludeInCommandInterface>true</IncludeInCommandInterface>
 			<Explanation/>
-			<Picture/>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Logotype16</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
 			<Content>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_DataComposition</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_CommonUse</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_CommonUseClientServer</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_RESTMethods</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_CRUDMethods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_MethodSettingsInvalid</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Settings</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Untested</xr:Item>
@@ -35,29 +33,20 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Filter</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Order</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Generate</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Exchanges</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Methods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Update</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Download</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUse</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Export</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Prototype</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_MethodSettingsValid</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Channels</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Jobs</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Link</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_LinkDelete</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Save</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_LinkBroken</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsBeforeWrite</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsOnWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_MetadataObjects</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Select</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Events</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Processing</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_ProcessingWarning</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_ProcessingError</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_ErrorsClientServer</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Response</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_LinkAdd</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Add</xr:Item>
@@ -66,36 +55,28 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Form</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_RowAdd</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_RowDelete</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonForm.FL_ResponseHandlerForm</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_DeleteFile</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_RunInSafeMode</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_CommonUseReUse</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype16</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Fire</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype32</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_JobServer</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_States</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_JobServerID</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobServer</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Stop</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype64</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonTemplate.FL_LICENSE</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Tasks</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_LicenseAccepted</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">FunctionalOption.FL_LicenseAccepted</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_TasksHeartbeat</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_WorkerCount</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_RetryAttempts</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_AccumulationRegistersOnWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_GenerateAll</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_CodeFile</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_EventsReUse</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_AccumulationRegistersBeforeWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_LicenseAccepted</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">FunctionalOption.FL_LicenseAccepted</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_CommonUse</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_CommonUseClientServer</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_CommonUseReUse</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_ErrorsClientServer</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUse</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUseReUse</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">3b87c347-a590-4013-bd3f-0c1dc3f500c2</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>
+			<Subsystem>GeneralSettings</Subsystem>
+			<Subsystem>Integration</Subsystem>
 			<Subsystem>Plugins</Subsystem>
 			<Subsystem>Tasks</Subsystem>
 		</ChildObjects>
