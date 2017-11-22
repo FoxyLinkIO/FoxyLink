@@ -30,9 +30,12 @@
 				<xr:Object>InformationRegister.FL_TasksHeartbeat</xr:Object>
 				<xr:Object>Constant.FL_RetryAttempts</xr:Object>
 				<xr:Object>Constant.FL_WorkerCount</xr:Object>
-				<xr:Object>Subsystem.FoxyLink</xr:Object>
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins</xr:Object>
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Tasks</xr:Object>
+				<xr:Object>Subsystem.FoxyLink.Subsystem.Integration</xr:Object>
+				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Channels</xr:Object>
+				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats</xr:Object>
+				<xr:Object>DataProcessor.FL_AdministrationPanel.Command.AdministrationPanel</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>
