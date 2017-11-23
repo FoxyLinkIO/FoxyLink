@@ -25,13 +25,15 @@
 			</Synonym>
 			<Comment/>
 			<UseStandardCommands>true</UseStandardCommands>
-			<DefaultForm>DataProcessor.FL_AdministrationPanel.Form.License</DefaultForm>
+			<DefaultForm>DataProcessor.FL_AdministrationPanel.Form.Form</DefaultForm>
 			<AuxiliaryForm/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<ExtendedPresentation/>
 			<Explanation/>
 		</Properties>
 		<ChildObjects>
+			<Form>CommonSettings</Form>
+			<Form>Form</Form>
 			<Form>License</Form>
 			<Command uuid="ad8ba017-ac91-4df9-97a5-947bddb9f293">
 				<Properties>

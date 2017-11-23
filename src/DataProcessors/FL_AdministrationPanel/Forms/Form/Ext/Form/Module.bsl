@@ -17,19 +17,18 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#Region EventHandlers
+#Region FormEventHandlers
 
-&AtClient
-Procedure CommandProcessing(CommandParameter, CommandExecuteParameters)
-    
-    FormParameters = New Structure("", );
-    FormName = "DataProcessor.FL_AdministrationPanel.Form.CommonSettings";
-    Uniqueness = FormName + ?(CommandExecuteParameters.Window = Undefined, 
-        ".SingleWindow", "");
-    OpenForm(FormName, New Structure, CommandExecuteParameters.Source, 
-        Uniqueness, CommandExecuteParameters.Window);
-    
-EndProcedure // CommandProcessing()
+&AtServer
+Procedure OnCreateAtServer(Cancel, StandardProcessing)
 
-#EndRegion // EventHandlers
+    If Parameters.Property("AutoTest") Then
+        Return;
+    EndIf;
 
+    Raise NStr("en='Data processor is not intended for direct usage.';
+        |ru='Обработка не предназначена для непосредственного использования.'");
+
+EndProcedure // OnCreateAtServer()
+
+#EndRegion // FormEventHandlers

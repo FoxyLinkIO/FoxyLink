@@ -139,7 +139,7 @@ EndProcedure // ExtendValueTable()
 Procedure ExtendArray(Receiver, Source, Unique = False) Export
 
     For Each ArrayItem In Source Do
-        If Not Unique Or Receiver.Find(ArrayItem) = Undefined Then
+        If NOT Unique OR Receiver.Find(ArrayItem) = Undefined Then
             Receiver.Add(ArrayItem);
         EndIf;
     EndDo;

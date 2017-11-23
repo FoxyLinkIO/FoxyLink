@@ -227,7 +227,7 @@ EndProcedure // DeleteAPIMethod()
 Procedure AddEvent(Command)
     
     OpenForm("Catalog.FL_Exchanges.Form.EventsSelectionForm", 
-        , 
+        New Structure("SelectedEvents", SelectedEvents()), 
         ThisObject,
         New UUID, 
         , 
@@ -1110,7 +1110,6 @@ EndProcedure // DoAfterChooseEventToDelete()
 Procedure AddEventAtServer(EventsArray)
 
     CurrentData = CurrentMethodData(RowMethod);   
-    
     FilterParameters = NewEventFilterParameters();
     FillPropertyValues(FilterParameters, CurrentData, "APIVersion, Method");
     
@@ -1164,6 +1163,25 @@ Procedure FireEventAtServer(Identifier)
     EndDo;
         
 EndProcedure // FireEventAtServer() 
+
+// Only for internal use.
+//
+&AtServer
+Function SelectedEvents()
+    
+    CurrentData = CurrentMethodData(RowMethod);
+    FilterParameters = NewEventFilterParameters();
+    FillPropertyValues(FilterParameters, CurrentData, "APIVersion, Method");
+    FilterResults = Object.Events.FindRows(FilterParameters);
+    
+    SelectedEvents = New ValueList;
+    For Each FilterResult In FilterResults Do
+        SelectedEvents.Add(FilterResult.MetadataObject);    
+    EndDo;
+    
+    Return SelectedEvents;
+    
+EndFunction // SelectedEvents()
 
 // Only for internal use.
 //

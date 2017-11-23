@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #Region FormEventHandlers
 
@@ -24,10 +27,24 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     Array.Add("Справочник.*");
     Array.Add("Document.*");
     Array.Add("Документ.*");
+    Array.Add("InformationRegister.*");
+    Array.Add("РегистрСведений.*");
+    Array.Add("AccumulationRegister.*");
+    Array.Add("РегистрНакопления.*");
 
     Filter = New Structure;
     Filter.Insert("MetadataObjectClass", Array);
     ValueTree = FL_CommonUse.ConfigurationMetadataTree(Filter);
+    
+    For Each SelectedEvent In Parameters.SelectedEvents Do
+        SearchResult = ValueTree.Rows.Find(SelectedEvent.Value, "FullName", 
+            True);
+        If SearchResult <> Undefined Then
+            SearchResult.Check = 1;
+            FL_CommonUse.HandleThreeStateCheckBox(SearchResult, "Check");
+        EndIf;
+    EndDo;
+    
     ValueToFormData(ValueTree, EventsTree);
     
 EndProcedure // OnCreateAtServer()

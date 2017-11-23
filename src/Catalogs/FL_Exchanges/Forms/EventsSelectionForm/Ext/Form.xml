@@ -269,4 +269,11 @@
 			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>
+	<Parameters>
+		<Parameter name="SelectedEvents">
+			<Type>
+				<v8:Type>v8:ValueListType</v8:Type>
+			</Type>
+		</Parameter>
+	</Parameters>
 </Form>
