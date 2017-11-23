@@ -17,19 +17,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#Region EventHandlers
+#Region FormEventHandlers
 
-&AtClient
-Procedure CommandProcessing(CommandParameter, CommandExecuteParameters)
+&AtServer
+Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
-    FormParameters = New Structure("", );
-    FormName = "DataProcessor.FL_AdministrationPanel.Form.CommonSettings";
-    Uniqueness = FormName + ?(CommandExecuteParameters.Window = Undefined, 
-        ".SingleWindow", "");
-    OpenForm(FormName, New Structure, CommandExecuteParameters.Source, 
-        Uniqueness, CommandExecuteParameters.Window);
-    
-EndProcedure // CommandProcessing()
+    If Parameters.Property("AutoTest") Then
+        Return;
+    EndIf;
 
-#EndRegion // EventHandlers
+EndProcedure // OnCreateAtServer()
 
+#EndRegion // FormEventHandlers

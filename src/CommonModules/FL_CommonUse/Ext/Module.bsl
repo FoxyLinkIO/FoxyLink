@@ -226,6 +226,44 @@ Procedure ExtendValueTableFromArray(SourceArray, TargetTable) Export
 
 EndProcedure // ExtendValueTableFromArray()
 
+// Handles three state checkbox in the ValueTree object.
+//
+// Parameters:
+//  TreeItem  - ValueTree - value tree item.
+//  FieldName - String    - the column name.
+//
+Procedure HandleThreeStateCheckBox(TreeItem, FieldName) Export
+    
+    // Third state checkbox value.
+    ThirdState = 2;
+    
+    CurrentData = TreeItem;
+    If CurrentData <> Undefined Then
+        
+        If CurrentData[FieldName] = ThirdState Then
+            CurrentData[FieldName] = 0;    
+        EndIf;
+        
+        SetValueOfThreeStateCheckBox(CurrentData, FieldName);
+        
+        Parent = CurrentData.Parent;
+        While Parent <> Undefined Do
+            
+            If ChangeParentValueOfThreeStateCheckBox(CurrentData, FieldName) Then
+                Parent[FieldName] = CurrentData[FieldName];
+            Else
+                Parent[FieldName] = ThirdState;    
+            EndIf;    
+            
+            CurrentData = Parent;
+            Parent = Parent.Parent;
+            
+        EndDo;
+                
+    EndIf;
+    
+EndProcedure // HandleThreeStateCheckBox()
+
 // Records data of the Structure, Map, Array types considering nesting.
 //
 // Parameters:
@@ -334,14 +372,27 @@ EndFunction // FixedData()
 //
 Function ConfigurationMetadataTree(Filter = Undefined) Export
 
-    UseFilter = (Filter <> Undefined);
+    UseFilter = Filter <> Undefined;
+    PictureIndexSize = 2;
+    PictureCatalogOrder                   = 1;
+    PictureDocumentOrder                  = 2;
+    PictureInformationRegisterOrder       = 3;
+    PictureChartOfCharacteristicTypeOrder = 4;
+    PictureAccountingRegisterOrder        = 5;
+    PictureAccumulationRegisterOrder      = 6;
+    PictureBusinessProcessOrder           = 7;
+    PictureCalculationRegisterOrder       = 8;
+    PictureChartOfCalculationTypeOrder    = 9;
+    PictureTaskOrder                      = 16;
+    PictureChartOfAccountOrder            = 32;
 
     CollectionsOfMetadataObjects = New ValueTable;
     CollectionsOfMetadataObjects.Columns.Add("Name");
     CollectionsOfMetadataObjects.Columns.Add("Synonym");
     CollectionsOfMetadataObjects.Columns.Add("Picture");
     CollectionsOfMetadataObjects.Columns.Add("ObjectPicture");
-    CollectionsOfMetadataObjects.Columns.Add("PictureIndex", New TypeDescription("Number"));
+    CollectionsOfMetadataObjects.Columns.Add("PictureIndex", 
+        NumberTypeDescription(PictureIndexSize));
 
     NewMetadataObjectCollectionRow(TypeNameConstants(),               
         NStr("en='Constants';ru='Константы'"),                 
@@ -354,77 +405,77 @@ Function ConfigurationMetadataTree(Filter = Undefined) Export
         NStr("en='Catalogs';ru='Справочники'"),               
         PictureLib.Catalog,             
         PictureLib.Catalog,
-        1,
+        PictureCatalogOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameDocuments(),               
         NStr("en='Documents';ru='Документы'"),                 
         PictureLib.Document,               
         PictureLib.DocumentObject,
-        2,
+        PictureDocumentOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameChartsOfCharacteristicTypes(), 
         NStr("en='Charts of characteristics types';ru='Планы видов характеристик'"), 
         PictureLib.ChartOfCharacteristicTypes, 
         PictureLib.ChartOfCharacteristicTypesObject,
-        4,
+        PictureChartOfCharacteristicTypeOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameChartsOfAccounts(),             
         NStr("en='Charts of accounts';ru='Планы счетов'"),              
         PictureLib.ChartOfAccounts,             
         PictureLib.ChartOfAccountsObject,
-        32,
+        PictureChartOfAccountOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameChartsOfCalculationTypes(),       
         NStr("en='Charts of calculation types';ru='Планы видов расчета'"), 
-        PictureLib.ChartOfCharacteristicTypes, 
-        PictureLib.ChartOfCharacteristicTypesObject,
-        9,
+        PictureLib.ChartOfCalculationTypes, 
+        PictureLib.ChartOfCalculationTypesObject,
+        PictureChartOfCalculationTypeOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameInformationRegisters(),        
         NStr("en='Information registers';ru='Регистры сведений'"),         
         PictureLib.InformationRegister,        
         PictureLib.InformationRegister,
-        3,
+        PictureInformationRegisterOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameAccumulationRegisters(),      
         NStr("en='Accumulation registers';ru='Регистры накопления'"),       
         PictureLib.AccumulationRegister,      
         PictureLib.AccumulationRegister,
-        6,
+        PictureAccumulationRegisterOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameAccountingRegisters(),     
         NStr("en='Accounting registers';ru='Регистры бухгалтерии'"),      
         PictureLib.AccountingRegister,     
         PictureLib.AccountingRegister, 
-        5,
+        PictureAccountingRegisterOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameCalculationRegisters(),         
         NStr("en='Calculation registers';ru='Регистры расчета'"),          
         PictureLib.CalculationRegister,         
         PictureLib.CalculationRegister,
-        8,
+        PictureCalculationRegisterOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameBusinessProcess(),          
         NStr("en='Business processes';ru='Бизнес-процессы'"),           
         PictureLib.BusinessProcess,          
         PictureLib.BusinessProcessObject,
-        7,
+        PictureBusinessProcessOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameTasks(),                  
         NStr("en='Tasks';ru='Задания'"),                    
         PictureLib.Task,                 
         PictureLib.TaskObject,
-        16,
+        PictureTaskOrder,
         CollectionsOfMetadataObjects);
 
     // Return value of the function.
@@ -1214,6 +1265,37 @@ EndFunction // FileInfobase()
 #EndRegion // FileInfobase
 
 #Region ServiceProceduresAndFunctions
+
+#Region ValueTreeOperations
+
+// Only for internal use.
+//
+Procedure SetValueOfThreeStateCheckBox(CurrentData, FieldName)
+
+    TreeItems = CurrentData.Rows;
+    For Each TreeItem In TreeItems Do
+        TreeItem[FieldName] = CurrentData[FieldName];
+        SetValueOfThreeStateCheckBox(TreeItem, FieldName);
+    EndDo;
+
+EndProcedure // SetValueOfThreeStateCheckBox()
+
+// Only for internal use.
+//
+Function ChangeParentValueOfThreeStateCheckBox(CurrentData, FieldName)
+
+    TreeItems = CurrentData.Parent.Rows;
+    For Each TreeItem In TreeItems Do
+        If TreeItem[FieldName] <> CurrentData[FieldName] Then
+            Return False;
+        EndIf;
+    EndDo;
+    
+    Return True;
+
+EndFunction // ChangeParentValueOfThreeStateCheckBox()
+
+#EndRegion // ValueTreeOperations
 
 // Only for internal use.
 //
