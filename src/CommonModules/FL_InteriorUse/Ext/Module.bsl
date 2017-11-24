@@ -308,6 +308,20 @@ EndFunction // PluggableSubsystem()
 
 #EndRegion // SubsystemInteraction
 
+#Region RightsInteraction
+
+// Verifies administrative access rights.
+//
+Procedure AdministrativeRights() Export
+
+    If NOT PrivilegedMode() Then
+        VerifyAccessRights("Administration", Metadata);
+    EndIf;
+
+EndProcedure // AdministrativeRights()
+
+#EndRegion // RightsInteraction
+
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
