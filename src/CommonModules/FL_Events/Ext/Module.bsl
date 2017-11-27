@@ -35,9 +35,6 @@ Procedure LicenseAcceptedOnWrite(Source, Cancel) Export
         Return;
     EndIf;
     
-    ConstantName = Source.Metadata().Name;
-    ConstantValue = Source.Value;
-    
     If NOT Source.Value Then
         Raise NStr("en = 'It is not possible to cancel an accepted license.';
             |ru = 'Невозможно аннулировать принятую лицензию.'");    

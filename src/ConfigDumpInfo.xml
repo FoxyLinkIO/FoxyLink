@@ -113,12 +113,12 @@
 		<Metadata name="CommonModule.FL_DataComposition.Module" id="55ea697a-b5cf-4f2d-944e-58625713ff98.0" configVersion="1cd5866c3f254e4daa4fe27230bb984d00000000"/>
 		<Metadata name="CommonModule.FL_ErrorsClientServer" id="d6c6d228-fcea-4e03-bf6a-1c5a4dee628c" configVersion="22bae5a1f5a30344a43968d1dfae010900000000"/>
 		<Metadata name="CommonModule.FL_ErrorsClientServer.Module" id="d6c6d228-fcea-4e03-bf6a-1c5a4dee628c.0" configVersion="ae898fb81ad89442988ca19fa53c15e400000000"/>
-		<Metadata name="CommonModule.FL_Events" id="fb56a4dc-7071-4ef3-9806-5560862be366" configVersion="3014871faf0df1448ede952619e801ff00000000"/>
-		<Metadata name="CommonModule.FL_Events.Module" id="fb56a4dc-7071-4ef3-9806-5560862be366.0" configVersion="1de33c4a1060ce42afc5bc6dbd7b3e2000000000"/>
+		<Metadata name="CommonModule.FL_Events" id="fb56a4dc-7071-4ef3-9806-5560862be366" configVersion="33c6d0e77f8be5488a4edf0bc2f4fe4c00000000"/>
+		<Metadata name="CommonModule.FL_Events.Module" id="fb56a4dc-7071-4ef3-9806-5560862be366.0" configVersion="31a9cc59533c264a90555b50a1f40a5c00000000"/>
 		<Metadata name="CommonModule.FL_EventsReUse" id="c8c7390a-d44d-4837-864a-06fade5e2990" configVersion="3f5007abe83f1e47b1f261700d068bba00000000"/>
 		<Metadata name="CommonModule.FL_EventsReUse.Module" id="c8c7390a-d44d-4837-864a-06fade5e2990.0" configVersion="410bcc88a71d384ea3e994b1553c5a9400000000"/>
-		<Metadata name="CommonModule.FL_InteriorUse" id="a2966db9-58fa-440a-9d0b-66ebf191b030" configVersion="f5ef485aa4456c44a5abb7be8205bbe400000000"/>
-		<Metadata name="CommonModule.FL_InteriorUse.Module" id="a2966db9-58fa-440a-9d0b-66ebf191b030.0" configVersion="898d85b04c0cc542b3c670def79d68cc00000000"/>
+		<Metadata name="CommonModule.FL_InteriorUse" id="a2966db9-58fa-440a-9d0b-66ebf191b030" configVersion="4aaa9ed7e94051498d2df29a3810ed0800000000"/>
+		<Metadata name="CommonModule.FL_InteriorUse.Module" id="a2966db9-58fa-440a-9d0b-66ebf191b030.0" configVersion="8287eb4949e6cb4399ae4a2d6580113f00000000"/>
 		<Metadata name="CommonModule.FL_InteriorUseClient" id="8a11a7cf-261f-4598-bcc4-be026319bbf0" configVersion="798444b90886e448951b9a3079c1431900000000"/>
 		<Metadata name="CommonModule.FL_InteriorUseClient.Module" id="8a11a7cf-261f-4598-bcc4-be026319bbf0.0" configVersion="ca078c7d8b4d50439a77eb596885547f00000000"/>
 		<Metadata name="CommonModule.FL_InteriorUseReUse" id="6576a210-39e4-4b77-80b7-588cd254d338" configVersion="87e62e0e0aec6e48a7b970a749efc36700000000"/>
@@ -215,7 +215,7 @@
 		<Metadata name="CommonPicture.FL_Update.Picture" id="80fcdb52-533a-4157-964d-356e13919eac.0" configVersion="42d07a3df5138e4ebab16461801da1b600000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE" id="4cc3426b-e953-4bd9-b838-2153998228de" configVersion="6f2118bb1288364dbd77c05a51b523ee00000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE.Template" id="4cc3426b-e953-4bd9-b838-2153998228de.0" configVersion="a3107b1e2e297649811382e1f34ff0a400000000"/>
-		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="5336f639bce57b4fa89e0519c76f45a000000000"/>
+		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="2ce85801b115174dabf93e7760e2cdd300000000"/>
 		<Metadata name="Configuration.FoxyLink.ClientApplicationInterface" id="d93db53b-5a84-46dd-b01b-c5c745936a50.b" configVersion="d8329b2f17783b4d95d717c64e1b543700000000"/>
 		<Metadata name="Configuration.FoxyLink.Logo" id="d93db53b-5a84-46dd-b01b-c5c745936a50.1" configVersion="9659276839a8dc428c0d1192ab0a0d9b00000000"/>
 		<Metadata name="Configuration.FoxyLink.MainSectionPicture" id="d93db53b-5a84-46dd-b01b-c5c745936a50.c" configVersion="d986729751ef9a47bd15852d84d4bd0500000000"/>
@@ -230,8 +230,8 @@
 		</Metadata>
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Command.CommonSettings.CommandModule" id="ad8ba017-ac91-4df9-97a5-947bddb9f293.2" configVersion="e07401d5c788d34e9ef5125e988343a400000000"/>
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Command.License.CommandModule" id="becea859-5704-4482-badb-18dc5c9c9323.2" configVersion="e8b11c6d4391094f99cc9d44e64a482f00000000"/>
-		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.CommonSettings" id="b582ecec-0ff3-4083-950b-2c576029e0f0" configVersion="12a558f8e36b9c44ab316e453ab75db900000000"/>
-		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.CommonSettings.Form" id="b582ecec-0ff3-4083-950b-2c576029e0f0.0" configVersion="603b6c6c626cd242a5b80ccaf9d4c70800000000"/>
+		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.CommonSettings" id="b582ecec-0ff3-4083-950b-2c576029e0f0" configVersion="f0bdc919acbfc04fb795fc4dc86b334800000000"/>
+		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.CommonSettings.Form" id="b582ecec-0ff3-4083-950b-2c576029e0f0.0" configVersion="9f7c713622f0644f95f55db01cf30e5300000000"/>
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.Form" id="51b0f629-f787-4347-8825-21a041413f6d" configVersion="a09a24a62d379549b8a3ba409f824d0e00000000"/>
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.Form.Form" id="51b0f629-f787-4347-8825-21a041413f6d.0" configVersion="78ef0044f7b5b04e954c0a61076d420900000000"/>
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.License" id="513c7982-a3b0-4491-bdf6-23ef41def92c" configVersion="9dcd514a088034409efa4e68c2262fed00000000"/>
@@ -287,7 +287,7 @@
 		<Metadata name="EventSubscription.FL_CatalogsOnWrite" id="741f7b17-9a2d-4ff0-af48-6793ef09a6ff" configVersion="d51eba1c88d070498ecb60eafcb6253b00000000"/>
 		<Metadata name="EventSubscription.FL_LicenseAcceptedOnWrite" id="bc05d4cf-4a8c-4e94-aaf2-9246412a4a14" configVersion="075be2534785874586a05ac2749b577a00000000"/>
 		<Metadata name="FunctionalOption.FL_LicenseAccepted" id="6dac776b-7fc4-46c8-b56a-175150b8905a" configVersion="0bd0e0d5dcf9644297f2770dad2a248e00000000"/>
-		<Metadata name="FunctionalOption.FL_UseFoxyLink" id="051a868b-13e0-4fae-9405-c407f5906b7f" configVersion="5032988c787db340a6466bff5e7fd3fb00000000"/>
+		<Metadata name="FunctionalOption.FL_UseFoxyLink" id="051a868b-13e0-4fae-9405-c407f5906b7f" configVersion="97736efeed79ca4e98b4bc05daca1f8c00000000"/>
 		<Metadata name="InformationRegister.FL_TasksHeartbeat" id="7e69c834-2d7b-4c7a-bc2c-0bf34c3e13de" configVersion="dbb24e793d4c90458b5ef6f4bedf7cf200000000">
 			<Metadata name="InformationRegister.FL_TasksHeartbeat.Dimension.Job" id="1b15bccd-c143-4fdd-8d9e-8df1faa42702"/>
 			<Metadata name="InformationRegister.FL_TasksHeartbeat.Attribute.RetryAttempts" id="2eb9c6c0-1e72-4a1f-9ff2-9534c8214722"/>
@@ -305,8 +305,8 @@
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Integration" id="f708e06a-a99f-4fb0-9ac9-e662d5b4a098" configVersion="35ecf72e335a5444b258d044ba02fa0000000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Integration.CommandInterface" id="f708e06a-a99f-4fb0-9ac9-e662d5b4a098.1" configVersion="b0e1320ee923b348aa848eb0eb82976900000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins" id="2c24fa32-a19d-44d4-a5a4-1e9daa2bb265" configVersion="2565e3a1932796468ce0dfb6f00111e900000000"/>
-		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="2641672bd2f95a4b87d2c5d7c8defbd300000000"/>
-		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="c764bfe1dc83c5459ee383512395a2a100000000"/>
+		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="fcf6fb27f3bd0247b724f0bc165b3bd100000000"/>
+		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="204bf3b855359e4786585a701275e74f00000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Tasks" id="99d97624-ec69-4a4b-8804-4cc3a20b6a92" configVersion="570d2d32a69ce14fad0c91e78e62d19e00000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Tasks.CommandInterface" id="99d97624-ec69-4a4b-8804-4cc3a20b6a92.1" configVersion="9238644acffeec4f94c7ed27cebd6a7900000000"/>
 	</ConfigVersions>

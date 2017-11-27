@@ -218,6 +218,7 @@
 			<CommonTemplate>FL_LICENSE</CommonTemplate>
 			<CommonModule>FL_BackgroundJob</CommonModule>
 			<CommonModule>FL_BatchJob</CommonModule>
+			<CommonModule>FL_CommonUse</CommonModule>
 			<CommonModule>FL_CommonUseClientServer</CommonModule>
 			<CommonModule>FL_CommonUseReUse</CommonModule>
 			<CommonModule>FL_DataComposition</CommonModule>
@@ -225,13 +226,12 @@
 			<CommonModule>FL_Events</CommonModule>
 			<CommonModule>FL_EventsReUse</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
-			<CommonModule>FL_CommonUse</CommonModule>
+			<CommonModule>FL_InteriorUseClient</CommonModule>
 			<CommonModule>FL_InteriorUseReUse</CommonModule>
 			<CommonModule>FL_JobServer</CommonModule>
 			<CommonModule>FL_RecurringJob</CommonModule>
 			<CommonModule>FL_RunInSafeMode</CommonModule>
 			<CommonModule>FL_Tasks</CommonModule>
-			<CommonModule>FL_InteriorUseClient</CommonModule>
 			<EventSubscription>FL_AccumulationRegistersBeforeWrite</EventSubscription>
 			<EventSubscription>FL_AccumulationRegistersOnWrite</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>

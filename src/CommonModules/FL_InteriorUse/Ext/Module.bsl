@@ -286,15 +286,15 @@ EndProcedure // SetFormItemProperty()
 
 #Region SubsystemInteraction
 
-// Performs Initial filling of the subsystem.
+// Performs initial filling of the subsystem.
 //
-Procedure SubsystemInitialFilling() Export
+Procedure InitializeSubsystem() Export
     
-    InitStates();
-    InitMethods();
-    InitConstants();
+    InitializeStates();
+    InitializeMethods();
+    InitializeConstants();
     
-EndProcedure // SubsystemInitialFilling() 
+EndProcedure // InitializeSubsystem() 
 
 // Returns metadata object: pluggable subsystem.
 //
@@ -416,7 +416,7 @@ EndFunction // ParametersPropertyValue()
 
 // Only for internal use.
 //
-Procedure InitStates()
+Procedure InitializeStates()
     
     DeletedState = Catalogs.FL_States.Deleted.GetObject();
     If NOT DeletedState.IsFinal Then
@@ -430,11 +430,11 @@ Procedure InitStates()
         SucceededState.Write();
     EndIf;
     
-EndProcedure // InitStates()
+EndProcedure // InitializeStates()
 
 // Only for internal use.
 //
-Procedure InitMethods()
+Procedure InitializeMethods()
     
     CreateMethod = Catalogs.FL_Methods.Create.GetObject();
     If CreateMethod.RESTMethod.IsEmpty() 
@@ -445,7 +445,6 @@ Procedure InitMethods()
         CreateMethod.Write();
         
     EndIf;
-    
     
     ReadMethod = Catalogs.FL_Methods.Read.GetObject();
     If ReadMethod.RESTMethod.IsEmpty() 
@@ -481,7 +480,7 @@ EndProcedure // InitMethods()
 
 // Only for internal use.
 //
-Procedure InitConstants()
+Procedure InitializeConstants()
     
     WorkerCount = FL_JobServer.GetWorkerCount();
     If WorkerCount = 0 Then
@@ -493,7 +492,7 @@ Procedure InitConstants()
         FL_JobServer.SetRetryAttempts(FL_JobServer.DefaultRetryAttempts());    
     EndIf;
     
-EndProcedure // InitConstants() 
+EndProcedure // InitializeConstants() 
 
 #EndRegion // SubsystemInteraction
 
