@@ -18,9 +18,7 @@
 			<IncludeInCommandInterface>false</IncludeInCommandInterface>
 			<Explanation/>
 			<Picture/>
-			<Content>
-				<xr:Item xsi:type="xr:MDObjectRef">FunctionalOption.FL_LicenseAccepted</xr:Item>
-			</Content>
+			<Content/>
 		</Properties>
 		<ChildObjects>
 			<Subsystem>Channels</Subsystem>

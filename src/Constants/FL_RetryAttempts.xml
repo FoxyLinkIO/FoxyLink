@@ -16,18 +16,18 @@
 			<Synonym>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Automatic retry attempts (FoxyLink)</v8:content>
+					<v8:content>Automatic retry attempts</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Автоматическое количество повторных попыток (FoxyLink)</v8:content>
+					<v8:content>Автоматическое количество повторных попыток</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment>Represents the number of automatic retry attempts.</Comment>
 			<Type>
 				<v8:Type>xs:decimal</v8:Type>
 				<v8:NumberQualifiers>
-					<v8:Digits>5</v8:Digits>
+					<v8:Digits>2</v8:Digits>
 					<v8:FractionDigits>0</v8:FractionDigits>
 					<v8:AllowedSign>Nonnegative</v8:AllowedSign>
 				</v8:NumberQualifiers>
@@ -41,12 +41,12 @@
 			<EditFormat/>
 			<ToolTip>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Максимальный размер пула фоновых заданий, который может использоваться для выполнения задач, создания объектов, обработки асинхронных операций ввода-вывода, ожидания других фоновых заданий и обработки таймеров.</v8:content>
+					<v8:lang>en</v8:lang>
+					<v8:content>Determines the default number of retry attempts.</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>The max size of a workers pool that can be used to execute tasks, post work items, process asynchronous I/O, wait on behalf of other workers, and process timers.</v8:content>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Определяет количество попыток повтора по умолчанию.</v8:content>
 				</v8:item>
 			</ToolTip>
 			<MarkNegatives>false</MarkNegatives>
@@ -59,7 +59,7 @@
 			<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
 			<ChoiceParameterLinks/>
 			<ChoiceParameters/>
-			<QuickChoice>DontUse</QuickChoice>
+			<QuickChoice>Auto</QuickChoice>
 			<ChoiceForm/>
 			<LinkByType/>
 			<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>

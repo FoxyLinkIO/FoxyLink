@@ -17,25 +17,8 @@
 			<Location>Constant.FL_LicenseAccepted</Location>
 			<PrivilegedGetMode>true</PrivilegedGetMode>
 			<Content>
-				<xr:Object>CommonForm.FL_ResponseHandlerForm</xr:Object>
-				<xr:Object>Constant.FL_JobServerID</xr:Object>
-				<xr:Object>Catalog.FL_Channels</xr:Object>
-				<xr:Object>Catalog.FL_Exchanges</xr:Object>
-				<xr:Object>Catalog.FL_Jobs</xr:Object>
-				<xr:Object>Catalog.FL_Methods</xr:Object>
-				<xr:Object>Catalog.FL_States</xr:Object>
-				<xr:Object>Enum.FL_CRUDMethods</xr:Object>
-				<xr:Object>Enum.FL_RESTMethods</xr:Object>
-				<xr:Object>DataProcessor.FL_DataProcessorJSON</xr:Object>
-				<xr:Object>InformationRegister.FL_TasksHeartbeat</xr:Object>
-				<xr:Object>Constant.FL_RetryAttempts</xr:Object>
-				<xr:Object>Constant.FL_WorkerCount</xr:Object>
-				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins</xr:Object>
-				<xr:Object>Subsystem.FoxyLink.Subsystem.Tasks</xr:Object>
-				<xr:Object>Subsystem.FoxyLink.Subsystem.Integration</xr:Object>
-				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Channels</xr:Object>
-				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats</xr:Object>
-				<xr:Object>DataProcessor.FL_AdministrationPanel.Command.AdministrationPanel</xr:Object>
+				<xr:Object>DataProcessor.FL_AdministrationPanel.Command.CommonSettings</xr:Object>
+				<xr:Object>Constant.FL_UseFoxyLink</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

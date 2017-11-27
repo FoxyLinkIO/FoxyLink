@@ -27,7 +27,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     EndIf;
     
     // No dependencies.
-    FormConstantsSet = SetOfConstants(ConstantsSet);
+    FormConstantsSet = FL_InteriorUse.SetOfConstants(ConstantsSet);
     
     License = GetCommonTemplate("FL_LICENSE");    
     Items.AcceptLicenseTerms.Visible = NOT Constants.FL_LicenseAccepted.Get();    
@@ -64,8 +64,10 @@ Procedure Attachable_OnAttributeChange(AttributePathToData,
 
     Result = OnAttributeChangeServer(AttributePathToData);
 
-    RefreshInterface();
-
+    If RefreshingInterface Then
+        RefreshInterface();
+    EndIf;
+    
     If Result.Property("NotificationForms") Then
         Notify(Result.NotificationForms.EventName, 
             Result.NotificationForms.Parameter, 
@@ -75,19 +77,19 @@ Procedure Attachable_OnAttributeChange(AttributePathToData,
 EndProcedure // Attachable_OnAttributeChange()
 
 &AtServer
-Procedure SetEnabled(AttributePathToData = "")
+Function OnAttributeChangeServer(AttributePathToData)
 
-    If AttributePathToData = "ConstantsSet.FL_LicenseAccepted" 
-        OR IsBlankString(AttributePathToData) Then
-        
-        ConstantValue = ConstantsSet.FL_LicenseAccepted;
-        
-        FL_InteriorUse.SetFormItemProperty(Items, "AcceptLicenseTerms", 
-            "Visible", NOT ConstantValue);
+    Result = New Structure;
     
-    EndIf;
+    SaveAttributeValue(AttributePathToData, Result);
+    
+    SetEnabled(AttributePathToData);
+    
+    RefreshReusableValues();
+    
+    Return Result;
 
-EndProcedure // SetEnabled()
+EndFunction // OnAttributeChangeServer()
 
 &AtServer
 Procedure SaveAttributeValue(AttributePathToData, Result)
@@ -126,39 +128,18 @@ Procedure SaveAttributeValue(AttributePathToData, Result)
 EndProcedure // SaveAttributeValue()
 
 &AtServer
-Function OnAttributeChangeServer(AttributePathToData)
+Procedure SetEnabled(AttributePathToData = "")
 
-    Result = New Structure;
-    SaveAttributeValue(AttributePathToData, Result);
-    SetEnabled(AttributePathToData);
-    RefreshReusableValues();
-    Return Result;
+    If AttributePathToData = "ConstantsSet.FL_LicenseAccepted" 
+        OR IsBlankString(AttributePathToData) Then
+        
+        ConstantValue = ConstantsSet.FL_LicenseAccepted;
+        
+        FL_InteriorUse.SetFormItemProperty(Items, "AcceptLicenseTerms", 
+            "Visible", NOT ConstantValue);
+    
+    EndIf;
 
-EndFunction // OnAttributeChangeServer() 
-
-&AtServerNoContext
-Function SetOfConstants(Set)
-
-    Result = New Structure;
-
-    For Each MetaConstant In Metadata.Constants Do
-        If IsObjectAttribute(Set, MetaConstant.Name) Then
-            Result.Insert(MetaConstant.Name);
-        EndIf;
-    EndDo;
-
-    Return Result;
-
-EndFunction // SetOfConstants()
-
-&AtServerNoContext
-Function IsObjectAttribute(Object, AttributeName)
-
-    FLUUID = New UUID;
-    AttributeStructure = New Structure(AttributeName, FLUUID);
-    FillPropertyValues(AttributeStructure, Object);
-    Return AttributeStructure[AttributeName] <> FLUUID;
-
-EndFunction // IsObjectAttribute()
+EndProcedure // SetEnabled()
 
 #EndRegion // ServiceProceduresAndFunctions

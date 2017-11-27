@@ -220,6 +220,83 @@ Function JobServerIsRunning() Export
     
 EndFunction // JobServerWatchDog()
 
+// Sets a new worker count value.
+//
+// Parameters:
+//  Count - Number - the new worker count value. 
+//
+Procedure SetWorkerCount(Count) Export
+
+    Constants.FL_WorkerCount.Set(Count);
+
+EndProcedure // SetWorkerCount()
+
+// Returns a worker count value.
+//
+// Returns:
+//  Number - the worker count value. 
+//
+Function GetWorkerCount() Export
+
+    Return Constants.FL_WorkerCount.Get();
+    
+EndFunction // GetWorkerCount()
+
+// Returns default worker count value.
+//
+// Returns:
+//  Number - default worker count value. 
+//
+Function DefaultWorkerCount() Export
+    
+    Return 20;
+    
+EndFunction // DefaultWorkerCount() 
+
+// Sets a new retry attempts value.
+//
+// Parameters:
+//  Count - Number - the new retry attempts value. 
+//
+Procedure SetRetryAttempts(Count) Export
+    
+    Constants.FL_RetryAttempts.Set(Count);
+    
+EndProcedure // SetRetryAttempts()
+
+// Returns a retry attemps value.
+//
+// Returns:
+//  Number - the retry attemps value.
+//
+Function GetRetryAttempts() Export
+
+    Return Constants.FL_RetryAttempts.Get();
+    
+EndFunction // GetRetryAttempts()
+
+// Returns default retry attemps value.
+//
+// Returns:
+//  Number - default retry attemps value.
+//
+Function DefaultRetryAttempts() Export
+    
+    Return 5;
+    
+EndFunction // DefaultRetryAttempts() 
+
+// Returns default job server id.
+//
+// Returns:
+//  UUID - default job server id.
+//
+Function DefaultJobServerId() Export
+    
+    Return New UUID("00000000-0000-0000-0000-000000000000");
+    
+EndFunction // DefaultJobServerId() 
+
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
@@ -417,68 +494,6 @@ EndFunction // NewBackgroundJobsFilter()
 
 // Only for internal use.
 //
-Function GetRetryAttempts()
-
-    Return Constants.FL_RetryAttempts.Get();
-    
-EndFunction // GetRetryAttempts()
-
-// Only for internal use.
-//
-Function SetRetryAttempts(Count)
-    
-    Try
-        Constants.FL_RetryAttempts.Set(Count);
-    Except
-        // TODO: Log exception.  
-        Return False;
-    EndTry;
-    
-    Return True;
-    
-EndFunction // SetRetryAttempts()
-
-// Only for internal use.
-//
-Function DefaultRetryAttempts()
-    
-    Return 5;
-    
-EndFunction // DefaultRetryAttempts() 
-
-// Only for internal use.
-//
-Function GetWorkerCount()
-
-    Return Constants.FL_WorkerCount.Get();
-    
-EndFunction // GetUniqueJobServerId()
-
-// Only for internal use.
-//
-Function SetWorkerCount(Count)
-    
-    Try
-        Constants.FL_WorkerCount.Set(Count);
-    Except
-        // TODO: Log exception.  
-        Return False;
-    EndTry;
-    
-    Return True;
-    
-EndFunction // SetWorkerCount()
-
-// Only for internal use.
-//
-Function DefaultWorkerCount()
-    
-    Return 20;
-    
-EndFunction // DefaultWorkerCount() 
-
-// Only for internal use.
-//
 Function GetJobServerId()
 
     Return Constants.FL_JobServerID.Get();
@@ -499,14 +514,6 @@ Function SetJobServerId(Id)
     Return True;
     
 EndFunction // SetJobServerId()
-
-// Only for internal use.
-//
-Function DefaultJobServerId()
-    
-    Return New UUID("00000000-0000-0000-0000-000000000000");
-    
-EndFunction // DefaultJobServerId() 
 
 // Only for internal use.
 //

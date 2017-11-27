@@ -20,7 +20,6 @@
 			<Picture/>
 			<Content>
 				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_DataProcessorJSON</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">FunctionalOption.FL_LicenseAccepted</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

@@ -20,6 +20,7 @@
 			<Picture/>
 			<Content>
 				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_AdministrationPanel</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_UseFoxyLink</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

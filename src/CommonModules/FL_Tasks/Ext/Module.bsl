@@ -23,10 +23,7 @@
 // object that represents that work.
 //
 // Parameters:
-//  MethodName - String    - the name of exported procedure or a function
-//              of a non-global general module which could be performed at the 
-//              server, in the ModuleName.MethodName form.
-//  Task       - Structure - see function FL_Tasks.NewTask.
+//  Task - Structure - see function FL_Tasks.NewTask.
 //
 // Returns:
 //  BackgroundJob - object that represents queued work. 
@@ -57,8 +54,7 @@ EndFunction // RunTask()
 // Returns:
 //  Structure - with values:
 //      * MethodName        - String    - the name of exported procedure or a function
-//              of a non-global server module which could be performed at the 
-//              server. 
+//              of a non-global server module which could be performed at the server. 
 //      * Parameters        - Array     - array of parameters passed to the method. 
 //              Number and types of parameters should correspond to the method 
 //              parameters.All passed parameters should support serialization. 

@@ -37,15 +37,15 @@
 			<Form>License</Form>
 			<Command uuid="ad8ba017-ac91-4df9-97a5-947bddb9f293">
 				<Properties>
-					<Name>AdministrationPanel</Name>
+					<Name>CommonSettings</Name>
 					<Synonym>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Administration panel</v8:content>
+							<v8:content>Common settings</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
-							<v8:content>Панель администрирования</v8:content>
+							<v8:content>Общие настройки</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
