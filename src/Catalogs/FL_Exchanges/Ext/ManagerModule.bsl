@@ -58,10 +58,10 @@ Procedure UpdateMethodsView(ManagedForm) Export
         
         SearchResult = Items.Find(MethodDescription);
         If SearchResult <> Undefined Then
-            SearchResult.Picture = PictureLib.FL_MethodSettingsInvalid;
+            SearchResult.Picture = PictureLib.FL_InvalidMethodSettings;
         Else
             AddMethodOnForm(Items, MethodDescription, Item.OperationDescription,
-                PictureLib.FL_MethodSettingsInvalid);
+                PictureLib.FL_InvalidMethodSettings);
         EndIf;
             
     EndDo;
