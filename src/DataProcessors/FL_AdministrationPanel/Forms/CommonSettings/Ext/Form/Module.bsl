@@ -150,7 +150,10 @@ Procedure SaveAttributeValue(AttributePathToData, Result)
     EndIf;
     
     If ConstantName = "FL_UseFoxyLink" AND ConstantValue Then
+        
         FL_InteriorUse.InitializeSubsystem();
+        Read();
+        
     EndIf;
 
 EndProcedure // SaveAttributeValue()
