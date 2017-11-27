@@ -65,8 +65,11 @@ EndFunction // Enqueue()
 // only if the current state name of the job equal to the given value.
 //
 // Parameters:
-//  Job   - UUID                -
-//        - CatalogRef.FL_Jobs -
+//  Job       - CatalogRef.FL_Jobs   - .
+//            - UUID                 - .
+//  FromState - CatalogRef.FL_States - current state assertion.
+//            - String               - .
+//                  Default value: Undefined.
 //
 // Returns:
 //  Boolean - True, if state change succeeded, otherwise False.
@@ -82,9 +85,10 @@ EndFunction // Delete()
 // only if the current state name of the job equal to the given value.
 //
 // Parameters:
-//  Job   - UUID                -
-//        - CatalogRef.FL_Jobs -
-//  State -                     - current state assertion.
+//  Job       - CatalogRef.FL_Jobs   - .
+//            - UUID                 - .
+//  FromState - CatalogRef.FL_States - current state assertion.
+//            - String               - .
 //                  Default value: Undefined.
 //
 // Returns:

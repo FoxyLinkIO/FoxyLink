@@ -333,6 +333,26 @@ Function CopyTypeDescription(SourceTypeDescription, AddedTypes = Undefined,
     
 EndFunction // CopyTypeDescription()
 
+// Checks whether an transferred attribute name is the attribute of the object.
+//
+// Parameters:
+//  Object        - Arbitrary - object for which it is necessary to check the 
+//                              attribute name.
+//  AttributeName - String    - attribute name to be checked.
+//
+// Returns:
+//  Boolean - True if the attribute name is included in the subset of the 
+//            object attributes. Otherwise - False.
+//
+Function IsObjectAttribute(Object, AttributeName) Export
+
+    UniquenessKey = New UUID;
+    AttributeStructure = New Structure(AttributeName, UniquenessKey);
+    FillPropertyValues(AttributeStructure, Object);
+    Return AttributeStructure[AttributeName] <> UniquenessKey;
+
+EndFunction // IsObjectAttribute()
+
 #Region StringOperations
 
 // Removes insignificant characters to the left of the first significant 

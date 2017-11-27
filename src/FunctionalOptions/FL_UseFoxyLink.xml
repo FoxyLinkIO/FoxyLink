@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+	<FunctionalOption uuid="051a868b-13e0-4fae-9405-c407f5906b7f">
+		<Properties>
+			<Name>FL_UseFoxyLink</Name>
+			<Synonym>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Use FoxyLink subsystem</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Использовать подсистему FoxyLink</v8:content>
+				</v8:item>
+			</Synonym>
+			<Comment/>
+			<Location>Constant.FL_UseFoxyLink</Location>
+			<PrivilegedGetMode>true</PrivilegedGetMode>
+			<Content>
+				<xr:Object>CommonForm.FL_ResponseHandlerForm</xr:Object>
+				<xr:Object>Constant.FL_JobServerID</xr:Object>
+				<xr:Object>Constant.FL_RetryAttempts</xr:Object>
+				<xr:Object>Constant.FL_WorkerCount</xr:Object>
+				<xr:Object>Catalog.FL_States</xr:Object>
+				<xr:Object>Catalog.FL_Methods</xr:Object>
+				<xr:Object>Catalog.FL_Jobs</xr:Object>
+				<xr:Object>Catalog.FL_Exchanges</xr:Object>
+				<xr:Object>Catalog.FL_Channels</xr:Object>
+				<xr:Object>Enum.FL_RESTMethods</xr:Object>
+				<xr:Object>Enum.FL_CRUDMethods</xr:Object>
+				<xr:Object>DataProcessor.FL_DataProcessorJSON</xr:Object>
+				<xr:Object>DataProcessor.FL_RabbitMQ</xr:Object>
+				<xr:Object>InformationRegister.FL_TasksHeartbeat</xr:Object>
+				<xr:Object>Subsystem.FoxyLink.Subsystem.Integration</xr:Object>
+				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins</xr:Object>
+				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Channels</xr:Object>
+				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats</xr:Object>
+				<xr:Object>Subsystem.FoxyLink.Subsystem.Tasks</xr:Object>
+			</Content>
+		</Properties>
+	</FunctionalOption>
+</MetaDataObject>

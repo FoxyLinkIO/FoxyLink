@@ -19,171 +19,75 @@
 
 #Region ProgramInterface
 
-// Returns a new task structure that represents a single operation 
-// that does not return a value and that usually executes asynchronously.
-//
-// Returns:
-//  Structure - with values:
-//      * MethodName  - String  - the name of exported procedure or a function
-//              of a non-global server module which could be performed at the 
-//              server. 
-//      * Parameters  - Array   - array of parameters passed to the method. 
-//              Number and types of parameters should correspond to the method 
-//              parameters.All passed parameters should support serialization. 
-//              Otherwise, an exception is generated and the background job will
-//              not be launched. If last parameters of the method have default 
-//              values, it is allowed not to set them in the array.
-//      * Key         - String  - task key. If this key is set, it should be 
-//              unique among keys of the active background job, which have 
-//              the same method's name as current background job does.  
-//      * Description - String  - task description.
-//      * SafeMode    - Boolean - executes the method with pre-establishing 
-//              a safe mode of code execution.
-//
-Function NewTask() Export
-    
-    Task = New Structure;
-    Task.Insert("MethodName");
-    Task.Insert("Parameters", New Array);
-    Task.Insert("Key");
-    Task.Insert("Description");
-    Task.Insert("SafeMode", True);
-    // TODO: Under construction. 
-    Task.Insert("CancellationToken");
-    Return Task;
-    
-EndFunction // NewTask()
-
-// Queues the specified work to run on backgroud and returns a BackgroundJob
-// object that represents that work.
+// Runs the specified job server.
 //
 // Parameters:
-//  MethodName  - String  - the name of exported procedure or a function
-//              of a non-global general module which could be performed at the 
-//              server, in the ModuleName.MethodName form.
-//  Parameters  - Array   - array of parameters passed to the method. 
-//              Number and types of parameters should correspond to the method 
-//              parameters.All passed parameters should support serialization. 
-//              Otherwise, an exception is generated and the background job will
-//              not be launched. If last parameters of the method have default 
-//              values, it is allowed not to set them in the array.
-//                      Default value: Undefined.
-//  Key         - String  - task key. If this key is set, it should be 
-//              unique among keys of the active background job, which have 
-//              the same method's name as current background job does.
-//                      Default value: Undefined.
-//  Description - String  - task description.
-//                      Default value: Undefined.
-//  SafeMode    - Boolean - executes the method with pre-establishing 
-//              a safe mode of code execution.
-//                      Default value: True.
+//  JobServer - ScheduledJob - the server to be switched on.
+//                  Default value: Undefined.
 //
-// Returns:
-//  BackgroundJob - object that represents queued work. 
-//
-Function RunTask(MethodName, Parameters = Undefined, Key = Undefined, 
-    Description = Undefined, SafeMode = True) Export
+Procedure RunJobServer(JobServer = Undefined) Export
     
-    Task = NewTask();
-    Task.MethodName  = MethodName;
-    Task.Parameters  = Parameters;
-    Task.Key         = Key;
-    Task.Description = Description;
-    Task.SafeMode    = SafeMode;
-    Return StartTask(Task);
+    If JobServer = Undefined Then
+        JobServer = JobServer();
+    EndIf;
     
-EndFunction // RunTask()
+    Task = FL_Tasks.NewTask();
+    Task.MethodName = JobServer.Metadata.MethodName;
+    Task.Key = String(JobServer.UUID); 
+    Task.Description = JobServer.Description;
+    FL_Tasks.Run(Task); 
+    
+EndProcedure // RunJobServer()
 
-// Starts the Task, scheduling it for execution to the current TaskScheduler.
+// Stops the specified job server.
 //
 // Parameters:
-//  Task - Structure - see function FL_JobServer.NewTask.
+//  JobServer - ScheduledJob - the server to be switched off.
+//                  Default value: Undefined.
 //
-// Returns:
-//  BackgroundJob - object that represents the queued Task. 
+Procedure StopJobServer(JobServer = Undefined) Export
+    
+    If JobServer = Undefined Then
+        JobServer = JobServer();
+    EndIf;
+    
+    BackgroundJob = BackgroundJobByFilter();
+    If BackgroundJob <> Undefined Then
+        BackgroundJob.Cancel();        
+    EndIf;
+    
+EndProcedure // StopJobServer()
+
+// Runs an expiration manager task.
 //
-Function StartTask(Task) Export
+// Parameters:
+//  BackgroundJob - BackgroundJob - the expiration manager task.
+//
+Procedure RunExpirationManager(BackgroundJob) Export
     
-    CallExceptionIfNoAdministrativeRights();
-    
-    Parameters = New Array;
-    Parameters.Add(Task.MethodName);
-    Parameters.Add(Task.Parameters);
-    Parameters.Add(Task.SafeMode);
-    Parameters.Add(CurrentUniversalDateInMilliseconds());
-    
-    BackgroundJob = BackgroundJobs.Execute(
-        "FL_JobServer.TaskAction", 
-        Parameters, 
-        Task.Key,
-        Task.Description);
+    If TypeOf(BackgroundJob) = Type("BackgroundJob") Then
         
-    Return BackgroundJob;
+        BackgroundJob = BackgroundJobByUUID(BackgroundJob.UUID);
+        If BackgroundJob <> Undefined
+            AND TypeOf(BackgroundJob) = Type("BackgroundJob")
+            AND BackgroundJob.State = BackgroundJobState.Active Then 
+            Return;      
+        EndIf;
+        
+    EndIf; 
     
-EndFunction // StartTask()
+    Task = FL_Tasks.NewTask();
+    Task.MethodName = "FL_JobServer.ExpirationManagerAction";
+    Task.Description = "Expiration manager task (FL)";
+    BackgroundJob = FL_Tasks.Run(Task);
+
+EndProcedure // RunExpirationManager()
 
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
 
-// BackgroundJobState.Active
-// BackgroundJobState.Canceled
-// BackgroundJobState.Completed
-// BackgroundJobState.Failed
-
 #Region Actions
-
-// Task action decorator.
-//
-// Parameters:
-//  MethodName - String  - the name of exported procedure or a function
-//              of a non-global server module which could be performed at the 
-//              server.
-//  Parameters - Array   - array of parameters passed to the method. 
-//              Number and types of parameters should correspond to the method 
-//              parameters.All passed parameters should support serialization. 
-//              Otherwise, an exception is generated and the background job will
-//              not be launched. If last parameters of the method have default 
-//              values, it is allowed not to set them in the array.
-//  SafeMode   - Boolean - executes the method with pre-establishing 
-//              a safe mode of code execution.
-//  StartTime  - Number  - the time in milliseconds that helps calculate latency.
-//
-Procedure TaskAction(MethodName, Parameters, SafeMode, StartTime) Export
-    
-    Latency = CurrentUniversalDateInMilliseconds() - StartTime;
-    
-    If TypeOf(Parameters) = Type("Array") Then
-        ParametersCount = Parameters.UBound();
-    Else
-        ParametersCount = -1;       
-    EndIf;
-    
-    MethodParameters = "";
-    For Index = 0 To ParametersCount Do
-        MethodParameters = MethodParameters + "Parameters[" + Index + "]";
-        MethodParameters = MethodParameters + ?(Index = ParametersCount, "", ",");
-    EndDo;
-    
-    Algorithm = StrTemplate("%1(%2)", MethodName, MethodParameters);
-
-    
-    StartPerformance = CurrentUniversalDateInMilliseconds();
-    
-    Try
-        If SafeMode = True Then
-            FL_RunInSafeMode.ExecuteInSafeMode(Algorithm, Parameters);    
-        Else
-            Execute Algorithm;
-        EndIf;
-    Except
-        Raise;
-        // TODO: Handle exception.
-    EndTry;
-    
-    PerformanceDuration = CurrentUniversalDateInMilliseconds() - StartPerformance; 
-    
-EndProcedure // TaskAction() 
 
 // Default JobServer action.
 //
@@ -195,7 +99,7 @@ Procedure JobServerAction() Export
     //Var ExpirationManagerTask;
 
     WorkerCount = GetWorkerCount();
-    If Not ValueIsFilled(WorkerCount) Or WorkerCount = 0 Then
+    If NOT ValueIsFilled(WorkerCount) OR WorkerCount = 0 Then
         WorkerCount = DefaultWorkerCount();    
     EndIf;
     
@@ -243,7 +147,7 @@ Procedure ExpirationManagerAction(NumberOfRecordsInSinglePass = 1000) Export
     Query = New Query;
     Query.Text = QueryTextExpiredJobs(NumberOfRecordsInSinglePass);    
     QueryResult = Query.Execute();
-    If Not QueryResult.IsEmpty() Then
+    If NOT QueryResult.IsEmpty() Then
         
         QueryResultSelection = QueryResult.Select();
         While QueryResultSelection.Next() Do
@@ -263,73 +167,6 @@ EndProcedure // ExpirationManagerAction()
 
 #EndRegion // Actions
 
-// Runs the specified job server.
-//
-// Parameters:
-//  JobServer - ScheduledJob - the server to be switched on.
-//                  Default value: Undefined.
-//
-Procedure RunJobServer(JobServer = Undefined) Export
-    
-    If JobServer = Undefined Then
-        JobServer = JobServer();
-    EndIf;
-    
-    BackgroundJob = RunTask(JobServer.Metadata.MethodName,
-        , 
-        String(JobServer.UUID), 
-        JobServer.Description); 
-    
-EndProcedure // RunJobServer()
-
-// Stops the specified job server.
-//
-// Parameters:
-//  JobServer - ScheduledJob - the server to be switched off.
-//                  Default value: Undefined.
-//
-Procedure StopJobServer(JobServer = Undefined) Export
-    
-    If JobServer = Undefined Then
-        JobServer = JobServer();
-    EndIf;
-    
-    BackgroundJob = BackgroundJobByFilter();
-    If BackgroundJob <> Undefined Then
-        BackgroundJob.Cancel();        
-    EndIf;
-    
-EndProcedure // StopJobServer()
-
-// Runs an expiration manager task.
-//
-// Parameters:
-//  ExpirationManagerTask - BackgroundJob - the expiration manager task.
-//
-Procedure RunExpirationManager(ExpirationManagerTask) Export
-    
-    If TypeOf(ExpirationManagerTask) = Type("BackgroundJob") Then
-        
-        ExpirationManagerTask = BackgroundJobByUUID(ExpirationManagerTask.UUID);
-        If ExpirationManagerTask <> Undefined
-            AND TypeOf(ExpirationManagerTask) = Type("BackgroundJob")
-            AND ExpirationManagerTask.State = BackgroundJobState.Active Then 
-            Return;      
-        EndIf;
-        
-    EndIf; 
-    
-    ExpirationManagerTask = RunTask("FL_JobServer.ExpirationManagerAction", 
-        , 
-        , 
-        "Expiration manager task (FL)");
-    
-EndProcedure // RunExpirationManager()
-
-
-
-
-
 // Returns registered or register the job server in the current infobase.
 // 
 // Returns:
@@ -337,7 +174,7 @@ EndProcedure // RunExpirationManager()
 //
 Function JobServer() Export
 
-    CallExceptionIfNoAdministrativeRights();
+    FL_InteriorUse.AdministrativeRights();
     
     JobServer = ScheduledJobs.FindByUUID(GetJobServerId());
     If JobServer <> Undefined Then
@@ -355,7 +192,7 @@ Function JobServer() Export
     EndIf;
     
     IsOk = SetJobServerId(JobServer.UUID);
-    If IsOk = False Then
+    If NOT IsOk Then
         // TODO: Process exception.    
     EndIf;
     
@@ -383,6 +220,83 @@ Function JobServerIsRunning() Export
     
 EndFunction // JobServerWatchDog()
 
+// Sets a new worker count value.
+//
+// Parameters:
+//  Count - Number - the new worker count value. 
+//
+Procedure SetWorkerCount(Count) Export
+
+    Constants.FL_WorkerCount.Set(Count);
+
+EndProcedure // SetWorkerCount()
+
+// Returns a worker count value.
+//
+// Returns:
+//  Number - the worker count value. 
+//
+Function GetWorkerCount() Export
+
+    Return Constants.FL_WorkerCount.Get();
+    
+EndFunction // GetWorkerCount()
+
+// Returns default worker count value.
+//
+// Returns:
+//  Number - default worker count value. 
+//
+Function DefaultWorkerCount() Export
+    
+    Return 20;
+    
+EndFunction // DefaultWorkerCount() 
+
+// Sets a new retry attempts value.
+//
+// Parameters:
+//  Count - Number - the new retry attempts value. 
+//
+Procedure SetRetryAttempts(Count) Export
+    
+    Constants.FL_RetryAttempts.Set(Count);
+    
+EndProcedure // SetRetryAttempts()
+
+// Returns a retry attemps value.
+//
+// Returns:
+//  Number - the retry attemps value.
+//
+Function GetRetryAttempts() Export
+
+    Return Constants.FL_RetryAttempts.Get();
+    
+EndFunction // GetRetryAttempts()
+
+// Returns default retry attemps value.
+//
+// Returns:
+//  Number - default retry attemps value.
+//
+Function DefaultRetryAttempts() Export
+    
+    Return 5;
+    
+EndFunction // DefaultRetryAttempts() 
+
+// Returns default job server id.
+//
+// Returns:
+//  UUID - default job server id.
+//
+Function DefaultJobServerId() Export
+    
+    Return New UUID("00000000-0000-0000-0000-000000000000");
+    
+EndFunction // DefaultJobServerId() 
+
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
@@ -399,14 +313,14 @@ Procedure PopJobServerState(WorkerCount, DeleteJobs, RetryJobs)
     FinalStates = Catalogs.FL_States.FinalStates();
     
     RetryAttempts = GetRetryAttempts();
-    If Not ValueIsFilled(RetryAttempts) Then
+    If NOT ValueIsFilled(RetryAttempts) Then
         RetryAttempts = DefaultRetryAttempts();    
     EndIf;
   
     Query = New Query;
     Query.Text = QueryTextTasksHeartbeat();
     QueryResult = Query.Execute();
-    If Not QueryResult.IsEmpty() Then
+    If NOT QueryResult.IsEmpty() Then
         
         WorkersTable = QueryResult.Unload();
         For Each Worker In WorkersTable Do
@@ -414,8 +328,8 @@ Procedure PopJobServerState(WorkerCount, DeleteJobs, RetryJobs)
             BackgroundJob = BackgroundJobByUUID(Worker.TaskId);
             If BackgroundJob = Undefined 
                 OR BackgroundJob.State = bjsCanceled
-                Or BackgroundJob.State = bjsCompleted
-                Or BackgroundJob.State = bjsFailed Then
+                OR BackgroundJob.State = bjsCompleted
+                OR BackgroundJob.State = bjsFailed Then
                 
                 If FinalStates.FindByValue(Worker.Job.State) <> Undefined Then
                     DeleteJobs.Add(Worker.Job);
@@ -454,7 +368,7 @@ Procedure PushJobServerState(WorkerCount, RetryJobs)
         Query = New Query;
         Query.Text = QueryTextEnqueuedJobs(WorkerCount);
         QueryResult = Query.Execute();
-        If Not QueryResult.IsEmpty() Then
+        If NOT QueryResult.IsEmpty() Then
             EnqueuedJobs = QueryResult.Unload().UnloadColumn("Job");    
         EndIf;
         
@@ -462,23 +376,25 @@ Procedure PushJobServerState(WorkerCount, RetryJobs)
     
     // Move to EnqueuedState
     For Each Job In RetryJobs Do
+        
+        Task = FL_Tasks.NewTask();
+        Task.MethodName = "Catalogs.FL_Jobs.ProcessMessage";
+        Task.Parameters.Add(Job);
+        Task.Description = "Background job task (FoxyLink)";
+        Task.SafeMode = False;
+        BackgroundJob = FL_Tasks.Run(Task);
+        
         // TODO: correct state change.
         //Catalogs.FL_Jobs.ChangeState(Job, Catalogs.FL_States.
-        Parameters = New Array;
-        Parameters.Add(Job);
-        Task = RunTask("Catalogs.FL_Jobs.ProcessMessage", 
-            Parameters, 
-            , 
-            "Background job task (FoxyLink)",
-            False);
-            
-        RecordManager = InformationRegisters.FL_TasksHeartbeat.CreateRecordManager();
+          
+        RecordManager = InformationRegisters.FL_TasksHeartbeat
+            .CreateRecordManager();
         RecordManager.Job = Job;
         RecordManager.Read();
-        If Not RecordManager.Selected() Then
+        If NOT RecordManager.Selected() Then
             RecordManager.Job = Job;        
         EndIf;
-        RecordManager.TaskId = Task.UUID;
+        RecordManager.TaskId = BackgroundJob.UUID;
         RecordManager.RetryAttempts = RecordManager.RetryAttempts + 1;
         RecordManager.Write();
             
@@ -486,18 +402,16 @@ Procedure PushJobServerState(WorkerCount, RetryJobs)
     
     For Each Job In EnqueuedJobs Do
         
-        Parameters = New Array;
-        Parameters.Add(Job);
-        
-        Task = RunTask("Catalogs.FL_Jobs.ProcessMessage", 
-            Parameters, 
-            , 
-            "Background job task (FoxyLink)",
-            False);
+        Task = FL_Tasks.NewTask();
+        Task.MethodName = "Catalogs.FL_Jobs.ProcessMessage";
+        Task.Parameters.Add(Job);
+        Task.Description = "Background job task (FoxyLink)";
+        Task.SafeMode = False;
+        BackgroundJob = FL_Tasks.Run(Task);
             
         RecordManager = InformationRegisters.FL_TasksHeartbeat.CreateRecordManager();
         RecordManager.Job = Job;
-        RecordManager.TaskId = Task.UUID;
+        RecordManager.TaskId = BackgroundJob.UUID;
         RecordManager.RetryAttempts = 0;    
         RecordManager.Write();
         
@@ -516,23 +430,6 @@ Procedure UpdateWorkerSlots(DeleteJobs)
     
 EndProcedure // UpdateWorkerSlots()
 
-
-
-// Only for internal use.
-//
-Procedure CallExceptionIfNoAdministrativeRights()
-
-    If Not PrivilegedMode() Then
-        VerifyAccessRights("Administration", Metadata);
-    EndIf;
-
-EndProcedure // CallExceptionIfNoAdministrativeRights()
-
-
-
-
-
-
 // Only for internal use.
 //
 Function NewScheduledJobsFilter(Keys = Undefined, UseMetadata = False)
@@ -545,7 +442,7 @@ Function NewScheduledJobsFilter(Keys = Undefined, UseMetadata = False)
     BasicFilter.Insert("Predefined");
     BasicFilter.Insert("Description");
     
-    If UseMetadata = True Then
+    If UseMetadata Then
         MetaSJ                  = Metadata.ScheduledJobs.FL_JobServer;
         BasicFilter.Use         = MetaSJ.Use;
         BasicFilter.Key         = MetaSJ.Key;
@@ -554,7 +451,7 @@ Function NewScheduledJobsFilter(Keys = Undefined, UseMetadata = False)
         BasicFilter.Description = MetaSJ.Name;
     EndIf;
     
-    If TypeOf(Keys) = Type("String") And Not IsBlankString(Keys) Then
+    If TypeOf(Keys) = Type("String") AND NOT IsBlankString(Keys) Then
         SpecificFilter = New Structure(Keys);
         FillPropertyValues(SpecificFilter, BasicFilter);
         Return SpecificFilter;
@@ -578,14 +475,14 @@ Function NewBackgroundJobsFilter(Keys = Undefined, UseMetadata = False)
     BasicFilter.Insert("MethodName");
     BasicFilter.Insert("ScheduledJob");
     
-    If UseMetadata = True Then
+    If UseMetadata Then
         MetaSJ                  = Metadata.ScheduledJobs.FL_JobServer;
         BasicFilter.Key         = String(GetJobServerId());
         BasicFilter.MethodName  = MetaSJ.MethodName;
         BasicFilter.Description = MetaSJ.Name;
     EndIf;
     
-    If TypeOf(Keys) = Type("String") And Not IsBlankString(Keys) Then
+    If TypeOf(Keys) = Type("String") AND NOT IsBlankString(Keys) Then
         SpecificFilter = New Structure(Keys);
         FillPropertyValues(SpecificFilter, BasicFilter);
         Return SpecificFilter;
@@ -594,72 +491,6 @@ Function NewBackgroundJobsFilter(Keys = Undefined, UseMetadata = False)
     Return BasicFilter;
     
 EndFunction // NewBackgroundJobsFilter()
-
-
-
-// Only for internal use.
-//
-Function GetRetryAttempts()
-
-    Return Constants.FL_RetryAttempts.Get();
-    
-EndFunction // GetRetryAttempts()
-
-// Only for internal use.
-//
-Function SetRetryAttempts(Count)
-    
-    Try
-        Constants.FL_RetryAttempts.Set(Count);
-    Except
-        // TODO: Log exception.  
-        Return False;
-    EndTry;
-    
-    Return True;
-    
-EndFunction // SetRetryAttempts()
-
-// Only for internal use.
-//
-Function DefaultRetryAttempts()
-    
-    Return 5;
-    
-EndFunction // DefaultRetryAttempts() 
-
-
-// Only for internal use.
-//
-Function GetWorkerCount()
-
-    Return Constants.FL_WorkerCount.Get();
-    
-EndFunction // GetUniqueJobServerId()
-
-// Only for internal use.
-//
-Function SetWorkerCount(Count)
-    
-    Try
-        Constants.FL_WorkerCount.Set(Count);
-    Except
-        // TODO: Log exception.  
-        Return False;
-    EndTry;
-    
-    Return True;
-    
-EndFunction // SetWorkerCount()
-
-// Only for internal use.
-//
-Function DefaultWorkerCount()
-    
-    Return 20;
-    
-EndFunction // DefaultWorkerCount() 
-
 
 // Only for internal use.
 //
@@ -683,15 +514,6 @@ Function SetJobServerId(Id)
     Return True;
     
 EndFunction // SetJobServerId()
-
-// Only for internal use.
-//
-Function DefaultJobServerId()
-    
-    Return New UUID("00000000-0000-0000-0000-000000000000");
-    
-EndFunction // DefaultJobServerId() 
-
 
 // Only for internal use.
 //
@@ -719,8 +541,6 @@ Function BackgroundJobByFilter(Filter = Undefined)
     Return Undefined;
     
 EndFunction // BackgroundJobByFilter()
-
-
 
 // Only for internal use.
 //

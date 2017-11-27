@@ -19,6 +19,31 @@
 
 #Region ProgramInterface
 
+#Region ConstantsInteraction
+
+// Returns the composition of a set of constants.
+//
+// Parameters:
+//  Set - ConstantsSet - set of constants.
+//
+// Returns:
+//  Structure - with keys:
+//      * Key - String - constant name from set.
+//
+Function SetOfConstants(Set) Export
+
+    Result = New Structure;
+    For Each MetaConstant In Metadata.Constants Do
+        If FL_CommonUseClientServer.IsObjectAttribute(Set, MetaConstant.Name) Then
+            Result.Insert(MetaConstant.Name);
+        EndIf;
+    EndDo;
+    Return Result;
+
+EndFunction // SetOfConstants()
+
+#EndRegion // ConstantsInteraction
+
 #Region HTTPInteraction
 
 // Creates HTTPConnection object. 
@@ -261,6 +286,16 @@ EndProcedure // SetFormItemProperty()
 
 #Region SubsystemInteraction
 
+// Performs initial filling of the subsystem.
+//
+Procedure InitializeSubsystem() Export
+    
+    InitializeStates();
+    InitializeMethods();
+    InitializeConstants();
+    
+EndProcedure // InitializeSubsystem() 
+
 // Returns metadata object: pluggable subsystem.
 //
 // Parameters:
@@ -308,9 +343,35 @@ EndFunction // PluggableSubsystem()
 
 #EndRegion // SubsystemInteraction
 
+#Region RightsInteraction
+
+// Verifies administrative access rights.
+//
+Procedure AdministrativeRights() Export
+
+    If NOT PrivilegedMode() Then
+        VerifyAccessRights("Administration", Metadata);
+    EndIf;
+
+EndProcedure // AdministrativeRights()
+
+#EndRegion // RightsInteraction
+
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
+
+#Region HTTPInteraction
+
+// Only for internal use.
+//
+Function CodeStatusInternalServerError()
+    
+    Return 500;
+    
+EndFunction // CodeStatusInternalServerError()
+
+#EndRegion // HTTPInteraction
 
 #Region FormInteraction
 
@@ -351,17 +412,89 @@ EndFunction // ParametersPropertyValue()
 
 #EndRegion // FormInteraction
 
-#Region HTTPInteraction
+#Region SubsystemInteraction
 
 // Only for internal use.
 //
-Function CodeStatusInternalServerError()
+Procedure InitializeStates()
     
-    Return 500;
+    DeletedState = Catalogs.FL_States.Deleted.GetObject();
+    If NOT DeletedState.IsFinal Then
+        DeletedState.IsFinal = True;
+        DeletedState.Write();
+    EndIf;
     
-EndFunction // CodeStatusInternalServerError()
+    SucceededState = Catalogs.FL_States.Succeeded.GetObject();
+    If NOT SucceededState.IsFinal Then
+        SucceededState.IsFinal = True;
+        SucceededState.Write();
+    EndIf;
+    
+EndProcedure // InitializeStates()
 
-#EndRegion // HTTPInteraction
+// Only for internal use.
+//
+Procedure InitializeMethods()
+    
+    CreateMethod = Catalogs.FL_Methods.Create.GetObject();
+    If CreateMethod.RESTMethod.IsEmpty() 
+        AND CreateMethod.CRUDMethod.IsEmpty() Then
+        
+        CreateMethod.RESTMethod = Enums.FL_RESTMethods.POST;
+        CreateMethod.CRUDMethod = Enums.FL_CRUDMethods.CREATE;
+        CreateMethod.Write();
+        
+    EndIf;
+    
+    ReadMethod = Catalogs.FL_Methods.Read.GetObject();
+    If ReadMethod.RESTMethod.IsEmpty() 
+        AND ReadMethod.CRUDMethod.IsEmpty() Then
+        
+        ReadMethod.RESTMethod = Enums.FL_RESTMethods.GET;
+        ReadMethod.CRUDMethod = Enums.FL_CRUDMethods.READ;
+        ReadMethod.Write();
+        
+    EndIf;
+    
+    UpdateMethod = Catalogs.FL_Methods.Update.GetObject();
+    If UpdateMethod.RESTMethod.IsEmpty() 
+        AND UpdateMethod.CRUDMethod.IsEmpty() Then
+        
+        UpdateMethod.RESTMethod = Enums.FL_RESTMethods.PUT;
+        UpdateMethod.CRUDMethod = Enums.FL_CRUDMethods.UPDATE;
+        UpdateMethod.Write();
+        
+    EndIf;
+    
+    DeleteMethod = Catalogs.FL_Methods.Delete.GetObject();
+    If DeleteMethod.RESTMethod.IsEmpty() 
+        AND DeleteMethod.CRUDMethod.IsEmpty() Then
+        
+        DeleteMethod.RESTMethod = Enums.FL_RESTMethods.DELETE;
+        DeleteMethod.CRUDMethod = Enums.FL_CRUDMethods.DELETE;
+        DeleteMethod.Write();
+        
+    EndIf;
+    
+EndProcedure // InitMethods()
+
+// Only for internal use.
+//
+Procedure InitializeConstants()
+    
+    WorkerCount = FL_JobServer.GetWorkerCount();
+    If WorkerCount = 0 Then
+        FL_JobServer.SetWorkerCount(FL_JobServer.DefaultWorkerCount());    
+    EndIf;
+    
+    RetryAttempts = FL_JobServer.GetRetryAttempts();
+    If RetryAttempts = 0 Then
+        FL_JobServer.SetRetryAttempts(FL_JobServer.DefaultRetryAttempts());    
+    EndIf;
+    
+EndProcedure // InitializeConstants() 
+
+#EndRegion // SubsystemInteraction
 
 #Region LogInteraction 
 

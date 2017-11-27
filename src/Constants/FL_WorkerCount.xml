@@ -16,18 +16,18 @@
 			<Synonym>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Max worker count (FoxyLink)</v8:content>
+					<v8:content>Max worker count</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Максимальное количество фоновых заданий (FoxyLink)</v8:content>
+					<v8:content>Максимальное количество фоновых заданий</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment>The max size of a workers pool that can be used to execute tasks, post work items, process asynchronous I/O, wait on behalf of other workers, and process timers.</Comment>
 			<Type>
 				<v8:Type>xs:decimal</v8:Type>
 				<v8:NumberQualifiers>
-					<v8:Digits>5</v8:Digits>
+					<v8:Digits>3</v8:Digits>
 					<v8:FractionDigits>0</v8:FractionDigits>
 					<v8:AllowedSign>Nonnegative</v8:AllowedSign>
 				</v8:NumberQualifiers>
@@ -59,7 +59,7 @@
 			<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
 			<ChoiceParameterLinks/>
 			<ChoiceParameters/>
-			<QuickChoice>DontUse</QuickChoice>
+			<QuickChoice>Auto</QuickChoice>
 			<ChoiceForm/>
 			<LinkByType/>
 			<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>

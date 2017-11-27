@@ -72,6 +72,8 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_ErrorsClientServer</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUse</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUseReUse</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">FunctionalOption.FL_UseFoxyLink</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUseClient</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

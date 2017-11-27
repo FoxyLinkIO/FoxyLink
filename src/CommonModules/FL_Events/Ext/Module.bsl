@@ -19,6 +19,29 @@
 
 #Region ProgramInterface
 
+// Occurs before license accepted constant recording is executed. A handler 
+// procedure is called after the recording transaction is begun but before 
+// the recording of the constant is begun.
+//
+// Parameters:
+//  Source - ConstantValueManager.FL_LicenseAccepted - constant object.
+//  Cancel - Boolean - write cancel flag. If this parameter is set to True in 
+//                     the body of the handler procedure, the write transaction 
+//                     will not be completed.
+//
+Procedure LicenseAcceptedOnWrite(Source, Cancel) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+    
+    If NOT Source.Value Then
+        Raise NStr("en = 'It is not possible to cancel an accepted license.';
+            |ru = 'Невозможно аннулировать принятую лицензию.'");    
+    EndIf;
+    
+EndProcedure // LicenseAcceptedOnWrite()
+
 // Handler of BeforeWrite catalog event subscription.
 //
 // Parameters:
@@ -28,10 +51,10 @@
 //
 Procedure CatalogBeforeWrite(Source, Cancel) Export
     
-    If Cancel Then
+    If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
-    
+        
     MetadataObject = Source.Metadata().FullName();
     If IsEventPublisher(MetadataObject) Then 
     
@@ -67,7 +90,7 @@ EndProcedure // CatalogBeforeWrite()
 //
 Procedure AccumulationRegisterBeforeWrite(Source, Cancel, Replacing) Export
     
-    If Cancel Then
+    If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
        
@@ -100,10 +123,10 @@ EndProcedure // AccumulationRegisterBeforeWrite()
 //
 Procedure CatalogOnWrite(Source, Cancel) Export
     
-    If Cancel Then
+    If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
-    
+        
     EnqueueEvent(Source);
     
 EndProcedure // CatalogOnWrite()
@@ -120,7 +143,7 @@ EndProcedure // CatalogOnWrite()
 //
 Procedure AccumulationRegisterOnWrite(Source, Cancel, Replacing) Export
     
-    If Cancel Then
+    If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
     

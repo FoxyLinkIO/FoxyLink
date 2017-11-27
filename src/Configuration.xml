@@ -49,7 +49,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.2.17</Version>
+			<Version>0.9.2.18</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -226,6 +226,7 @@
 			<CommonModule>FL_Events</CommonModule>
 			<CommonModule>FL_EventsReUse</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
+			<CommonModule>FL_InteriorUseClient</CommonModule>
 			<CommonModule>FL_InteriorUseReUse</CommonModule>
 			<CommonModule>FL_JobServer</CommonModule>
 			<CommonModule>FL_RecurringJob</CommonModule>
@@ -235,11 +236,14 @@
 			<EventSubscription>FL_AccumulationRegistersOnWrite</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
 			<EventSubscription>FL_CatalogsOnWrite</EventSubscription>
+			<EventSubscription>FL_LicenseAcceptedOnWrite</EventSubscription>
 			<ScheduledJob>FL_JobServer</ScheduledJob>
 			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
+			<FunctionalOption>FL_UseFoxyLink</FunctionalOption>
 			<Constant>FL_JobServerID</Constant>
 			<Constant>FL_LicenseAccepted</Constant>
 			<Constant>FL_RetryAttempts</Constant>
+			<Constant>FL_UseFoxyLink</Constant>
 			<Constant>FL_WorkerCount</Constant>
 			<CommonForm>FL_ResponseHandlerForm</CommonForm>
 			<Catalog>FL_Channels</Catalog>
