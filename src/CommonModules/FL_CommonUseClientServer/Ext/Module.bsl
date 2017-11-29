@@ -177,6 +177,19 @@ Procedure ExtendStructure(Receiver, Source, WithReplacement = Undefined) Export
 
 EndProcedure // ExtendStructure()
 
+// Removes duplicates from source array.
+//
+// Parameters:
+//  Source - Array - array of values to remove duplicates.
+//
+Procedure RemoveDuplicatesFromArray(Source) Export
+    
+    Receiver = New Array;
+    ExtendArray(Receiver, Source, True);
+    Source = Receiver;
+    
+EndProcedure // RemoveDuplicatesFromArray()
+
 // Creates an instance copy of the specified object.
 //
 // Parameters:

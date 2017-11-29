@@ -12,7 +12,6 @@
 	</Title>
 	<AutoTitle>false</AutoTitle>
 	<Customizable>false</Customizable>
-	<ScalingMode>Compact</ScalingMode>
 	<CommandSet>
 		<ExcludedCommand>Create</ExcludedCommand>
 	</CommandSet>

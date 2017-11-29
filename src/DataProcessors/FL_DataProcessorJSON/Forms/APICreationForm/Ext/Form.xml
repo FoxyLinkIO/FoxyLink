@@ -12,7 +12,6 @@
 	</Title>
 	<AutoTitle>false</AutoTitle>
 	<Customizable>false</Customizable>
-	<ScalingMode>Compact</ScalingMode>
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
 	</AutoCommandBar>
@@ -644,7 +643,7 @@
 				</v8:item>
 			</ToolTip>
 			<Picture>
-				<xr:Ref>CommonPicture.FL_RowAdd</xr:Ref>
+				<xr:Ref>CommonPicture.FL_AddRow</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
 			<Action>AddRowAPITable</Action>
@@ -696,7 +695,7 @@
 				</v8:item>
 			</ToolTip>
 			<Picture>
-				<xr:Ref>CommonPicture.FL_RowDelete</xr:Ref>
+				<xr:Ref>CommonPicture.FL_DeleteRow</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
 			<Action>DeleteRowAPITable</Action>

@@ -175,10 +175,16 @@
 			<Language>Russian</Language>
 			<Subsystem>FoxyLink</Subsystem>
 			<CommonPicture>FL_Add</CommonPicture>
+			<CommonPicture>FL_AddLink</CommonPicture>
+			<CommonPicture>FL_AddRow</CommonPicture>
 			<CommonPicture>FL_CodeFile</CommonPicture>
+			<CommonPicture>FL_Connected</CommonPicture>
 			<CommonPicture>FL_Copy</CommonPicture>
 			<CommonPicture>FL_Delete</CommonPicture>
 			<CommonPicture>FL_DeleteFile</CommonPicture>
+			<CommonPicture>FL_DeleteLink</CommonPicture>
+			<CommonPicture>FL_DeleteRow</CommonPicture>
+			<CommonPicture>FL_Disconnected</CommonPicture>
 			<CommonPicture>FL_Download</CommonPicture>
 			<CommonPicture>FL_Edit</CommonPicture>
 			<CommonPicture>FL_Export</CommonPicture>
@@ -188,16 +194,12 @@
 			<CommonPicture>FL_Form</CommonPicture>
 			<CommonPicture>FL_Generate</CommonPicture>
 			<CommonPicture>FL_GenerateAll</CommonPicture>
-			<CommonPicture>FL_Link</CommonPicture>
-			<CommonPicture>FL_LinkAdd</CommonPicture>
-			<CommonPicture>FL_LinkBroken</CommonPicture>
-			<CommonPicture>FL_LinkDelete</CommonPicture>
+			<CommonPicture>FL_Import</CommonPicture>
+			<CommonPicture>FL_InvalidMethodSettings</CommonPicture>
 			<CommonPicture>FL_Logotype16</CommonPicture>
 			<CommonPicture>FL_Logotype32</CommonPicture>
 			<CommonPicture>FL_Logotype64</CommonPicture>
 			<CommonPicture>FL_MetadataObjects</CommonPicture>
-			<CommonPicture>FL_MethodSettingsInvalid</CommonPicture>
-			<CommonPicture>FL_MethodSettingsValid</CommonPicture>
 			<CommonPicture>FL_Order</CommonPicture>
 			<CommonPicture>FL_Parameters</CommonPicture>
 			<CommonPicture>FL_Processing</CommonPicture>
@@ -205,8 +207,6 @@
 			<CommonPicture>FL_ProcessingWarning</CommonPicture>
 			<CommonPicture>FL_Prototype</CommonPicture>
 			<CommonPicture>FL_Response</CommonPicture>
-			<CommonPicture>FL_RowAdd</CommonPicture>
-			<CommonPicture>FL_RowDelete</CommonPicture>
 			<CommonPicture>FL_Save</CommonPicture>
 			<CommonPicture>FL_SaveAndClose</CommonPicture>
 			<CommonPicture>FL_Select</CommonPicture>
@@ -215,6 +215,7 @@
 			<CommonPicture>FL_Structure</CommonPicture>
 			<CommonPicture>FL_Untested</CommonPicture>
 			<CommonPicture>FL_Update</CommonPicture>
+			<CommonPicture>FL_ValidMethodSettings</CommonPicture>
 			<CommonTemplate>FL_LICENSE</CommonTemplate>
 			<CommonModule>FL_BackgroundJob</CommonModule>
 			<CommonModule>FL_BatchJob</CommonModule>

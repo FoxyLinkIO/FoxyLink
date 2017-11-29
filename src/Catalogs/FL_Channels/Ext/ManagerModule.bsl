@@ -77,9 +77,9 @@ Function ExchangeChannels() Export
         ValueTable = QueryResult.Unload();
         For Each Item In ValueTable Do
             If Item.Connected Then 
-                ValueList.Add(Item.Ref, , True, PictureLib.FL_Link);
+                ValueList.Add(Item.Ref, , True, PictureLib.FL_Connected);
             Else
-                ValueList.Add(Item.Ref, , False, PictureLib.FL_LinkBroken);   
+                ValueList.Add(Item.Ref, , False, PictureLib.FL_Disconnected);   
             EndIf;
         EndDo;
         

@@ -11,7 +11,6 @@
 		</v8:item>
 	</Title>
 	<AutoTitle>false</AutoTitle>
-	<ScalingMode>Compact</ScalingMode>
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
 		<ChildItems>
