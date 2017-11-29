@@ -51,9 +51,15 @@ EndProcedure // BasicChannelGuidOnChange()
 Procedure ChannelStandardClick(Item, StandardProcessing)
     
     StandardProcessing = False;
-    BeginRunningApplication(New NotifyDescription(
-            "DoAfterBeginRunningApplication", ThisObject), 
-        ChannelStandardLink(Object.BasicChannelGuid), , True);
+    
+    AppParameters = FL_InteriorUseClient.NewRunApplicationParameters();
+    AppParameters.NotifyDescription = New NotifyDescription(
+        "DoAfterBeginRunningApplication", ThisObject);
+    AppParameters.CommandLine = ChannelStandardLink(Object.BasicChannelGuid);
+    AppParameters.WaitForCompletion = True;
+    
+    FL_InteriorUseClient.Attachable_FileSystemExtension(New NotifyDescription(
+        "Attachable_RunApplication", FL_InteriorUseClient, AppParameters));
     
 EndProcedure // ChannelStandardClick()
 

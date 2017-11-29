@@ -91,10 +91,16 @@ EndProcedure // BasicFormatGuidOnChange()
 Procedure FormatStandardClick(Item, StandardProcessing)
     
     StandardProcessing = False;
-    BeginRunningApplication(New NotifyDescription(
-        "DoAfterBeginRunningApplication", ThisObject), 
-        FormatStandardLink());
     
+    AppParameters = FL_InteriorUseClient.NewRunApplicationParameters();
+    AppParameters.NotifyDescription = New NotifyDescription(
+        "DoAfterBeginRunningApplication", ThisObject);
+    AppParameters.CommandLine = FormatStandardLink();
+    AppParameters.WaitForCompletion = True;
+    
+    FL_InteriorUseClient.Attachable_FileSystemExtension(New NotifyDescription(
+        "Attachable_RunApplication", FL_InteriorUseClient, AppParameters));
+        
 EndProcedure // FormatStandardClick()
 
 &AtClient
