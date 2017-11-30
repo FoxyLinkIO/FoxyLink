@@ -19,6 +19,54 @@
 
 #Region ProgramInterface
 
+// Works with a special dialog that saves a file to selected a directory.
+//
+// Parameters:
+//  FileExtensionAttached - Boolean   - the result value passed by the second parameter when the 
+//                                       method was called with help ExecuteNotifyProcessing. 
+//  AdditionalParameters  - Structure - see function FL_InteriorUseClientServer.NewFileProperties.
+//
+Procedure SaveFileAs(FileExtensionAttached, 
+    AdditionalParameters) Export
+    
+    If FileExtensionAttached Then
+        
+        FileDialog = New FileDialog(FileDialogMode.Save);
+        FileDialog.Multiselect = False;
+        FileDialog.FullFileName = AdditionalParameters.Name;
+        FileDialog.DefaultExt = AdditionalParameters.Extension;
+        FileDialog.Filter = StrTemplate(NStr("en = 'All files (*.%1)|*.%1';
+            |ru = 'Все файлы (*.%1)|*.%1'"), AdditionalParameters.Extension);
+        
+        If NOT FileDialog.Choose() Then
+            Return;
+        EndIf;
+        
+        Ki = 1024;
+        SizeKB = AdditionalParameters.Size / Ki;
+        
+        ShowUserNotification(, , StrTemplate(NStr("en = 'Saving file ""%1"" (%2 KB)
+                    |Please, wait...'; ru = 'Сохраняется файл ""%1"" (%2 KB)
+                    |Пожалуйста, подождите...'"),
+                AdditionalParameters.Name, String(SizeKB)), 
+            PictureLib.FL_Logotype64);
+        
+        TransferableFile = New TransferableFileDescription(
+            FileDialog.FullFileName, AdditionalParameters.StorageAddress);
+        TransferableFiles = New Array;
+        TransferableFiles.Add(TransferableFile);
+        
+        ReceivedFiles = New Array;
+        If GetFiles(TransferableFiles, ReceivedFiles, , False) Then
+            ShowUserNotification(NStr("en = 'The file was successfully saved.';
+                    |ru = 'Файл успешно сохранен.'"), , 
+                FileDialog.FullFileName); 
+        EndIf;
+        
+    EndIf;
+    
+EndProcedure // SaveFileAs()
+
 // Updates the application interface saving the current active window. 
 //
 Procedure RefreshApplicationInterface() Export
@@ -35,14 +83,15 @@ EndProcedure // RefreshApplicationInterface()
 // associated name.
 //
 // Parameters:
-//  Result               - Boolean   - the result value passed by the second 
+//  FileExtensionAttached - Boolean   - the result value passed by the second 
 //                                     parameter when the method was called
 //                                     with help ExecuteNotifyProcessing. 
-//  AdditionalParameters - Structure - see function FL_InteriorUseClient.NewRunApplicationParameters.
+//  AdditionalParameters  - Structure - see function FL_InteriorUseClient.NewRunApplicationParameters.
 //
-Procedure Attachable_RunApplication(Result, AdditionalParameters) Export
+Procedure Attachable_RunApplication(FileExtensionAttached, 
+    AdditionalParameters) Export
     
-    If Result Then
+    If FileExtensionAttached Then
         BeginRunningApplication(AdditionalParameters.NotifyDescription, 
             AdditionalParameters.CommandLine,
             AdditionalParameters.CurrentDirectory,

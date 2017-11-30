@@ -228,6 +228,7 @@
 			<CommonModule>FL_EventsReUse</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
 			<CommonModule>FL_InteriorUseClient</CommonModule>
+			<CommonModule>FL_InteriorUseClientServer</CommonModule>
 			<CommonModule>FL_InteriorUseReUse</CommonModule>
 			<CommonModule>FL_JobServer</CommonModule>
 			<CommonModule>FL_RecurringJob</CommonModule>
