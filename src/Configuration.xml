@@ -242,6 +242,7 @@
 			<ScheduledJob>FL_JobServer</ScheduledJob>
 			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
 			<FunctionalOption>FL_UseFoxyLink</FunctionalOption>
+			<CommonCommand>ExportObject</CommonCommand>
 			<Constant>FL_JobServerID</Constant>
 			<Constant>FL_LicenseAccepted</Constant>
 			<Constant>FL_RetryAttempts</Constant>

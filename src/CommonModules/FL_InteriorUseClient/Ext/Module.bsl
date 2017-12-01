@@ -19,54 +19,6 @@
 
 #Region ProgramInterface
 
-// Works with a special dialog that saves a file to selected a directory.
-//
-// Parameters:
-//  FileExtensionAttached - Boolean   - the result value passed by the second parameter when the 
-//                                       method was called with help ExecuteNotifyProcessing. 
-//  AdditionalParameters  - Structure - see function FL_InteriorUseClientServer.NewFileProperties.
-//
-Procedure SaveFileAs(FileExtensionAttached, 
-    AdditionalParameters) Export
-    
-    If FileExtensionAttached Then
-        
-        FileDialog = New FileDialog(FileDialogMode.Save);
-        FileDialog.Multiselect = False;
-        FileDialog.FullFileName = AdditionalParameters.Name;
-        FileDialog.DefaultExt = AdditionalParameters.Extension;
-        FileDialog.Filter = StrTemplate(NStr("en = 'All files (*.%1)|*.%1';
-            |ru = 'Все файлы (*.%1)|*.%1'"), AdditionalParameters.Extension);
-        
-        If NOT FileDialog.Choose() Then
-            Return;
-        EndIf;
-        
-        Ki = 1024;
-        SizeKB = AdditionalParameters.Size / Ki;
-        
-        ShowUserNotification(, , StrTemplate(NStr("en = 'Saving file ""%1"" (%2 KB)
-                    |Please, wait...'; ru = 'Сохраняется файл ""%1"" (%2 KB)
-                    |Пожалуйста, подождите...'"),
-                AdditionalParameters.Name, String(SizeKB)), 
-            PictureLib.FL_Logotype64);
-        
-        TransferableFile = New TransferableFileDescription(
-            FileDialog.FullFileName, AdditionalParameters.StorageAddress);
-        TransferableFiles = New Array;
-        TransferableFiles.Add(TransferableFile);
-        
-        ReceivedFiles = New Array;
-        If GetFiles(TransferableFiles, ReceivedFiles, , False) Then
-            ShowUserNotification(NStr("en = 'The file was successfully saved.';
-                    |ru = 'Файл успешно сохранен.'"), , 
-                FileDialog.FullFileName); 
-        EndIf;
-        
-    EndIf;
-    
-EndProcedure // SaveFileAs()
-
 // Updates the application interface saving the current active window. 
 //
 Procedure RefreshApplicationInterface() Export
@@ -115,6 +67,31 @@ Procedure Attachable_FileSystemExtension(NotifyDescription) Export
     
 EndProcedure // Attachable_FileSystemExtension()
 
+// Works with a special dialog that saves a file to a selected directory.
+//
+// Parameters:
+//  FileExtensionAttached - Boolean   - the result value passed by the second parameter when the 
+//                                       method was called with help ExecuteNotifyProcessing. 
+//  AdditionalParameters  - Structure - see function FL_InteriorUseClientServer.NewFileProperties.
+//
+Procedure Attachable_SaveFileAs(FileExtensionAttached, 
+    AdditionalParameters) Export
+    
+    If FileExtensionAttached Then
+        
+        FileDialog = New FileDialog(FileDialogMode.Save);
+        FileDialog.Multiselect = False;
+        FileDialog.FullFileName = AdditionalParameters.Name;
+        FileDialog.DefaultExt = AdditionalParameters.Extension;
+        FileDialog.Filter = StrTemplate(NStr("en = 'All files (*%1)|*%1';
+            |ru = 'Все файлы (*%1)|*%1'"), AdditionalParameters.Extension);
+        FileDialog.Show(New NotifyDescription("DoAfterSelectSaveFileAs", 
+            FL_InteriorUseClient, AdditionalParameters)); 
+        
+    EndIf;
+    
+EndProcedure // Attachable_SaveFileAs()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
@@ -155,6 +132,67 @@ Procedure DoAfterInstallFileSystemExtension(NotifyDescription) Export
     
 EndProcedure // DoAfterInstallFileSystemExtension()
 
+// Begins saving the file to the selected directory.
+//
+// Parameters:
+//  SelectedFiles        - Array     - an array of selected file names or 
+//                                     Undefined, if no selection is made. 
+//  AdditionalParameters - Arbitrary - see function FL_InteriorUseClientServer.NewFileProperties.
+//
+Procedure DoAfterSelectSaveFileAs(SelectedFiles, AdditionalParameters) Export
+    
+    If SelectedFiles <> Undefined
+        AND TypeOf(SelectedFiles) = Type("Array") Then
+                                               
+        Ki = 1024;
+        SizeKB = Format(AdditionalParameters.Size / Ki, "NFD=2");
+        
+        ShowUserNotification(, , StrTemplate(NStr("en = 'Saving file ""%1"" (%2 KB)
+                    |Please, wait...'; ru = 'Сохраняется файл ""%1"" (%2 KB)
+                    |Пожалуйста, подождите...'"),
+                AdditionalParameters.Name, String(SizeKB)), 
+            PictureLib.FL_Logotype64);
+            
+        TransferableFiles = New Array;
+        For Each SelectedFile In SelectedFiles Do
+            
+            TransferableFile = New TransferableFileDescription(SelectedFile, 
+                AdditionalParameters.StorageAddress);
+            TransferableFiles.Add(TransferableFile);
+            
+        EndDo;
+        
+        BeginGettingFiles(New NotifyDescription("DoAfterBeginGettingFiles", 
+            FL_InteriorUseClient), TransferableFiles, , False);
+
+    EndIf;
+    
+EndProcedure // DoAfterSelectSaveFileAs() 
+
+// Begins getting a set of files and saves them to the local user's file system.
+//
+// Parameters:
+//  ReceivedFiles        - TransferedFileDescription - array of the objects or 
+//                                  Undefined, if the files are not received.
+//  AdditionalParameters - Arbitrary                 - value specified when 
+//                                  the NotifyDescription object was created. 
+//
+Procedure DoAfterBeginGettingFiles(ReceivedFiles, 
+    AdditionalParameters = Undefined) Export 
+
+    If ReceivedFiles <> Undefined 
+        AND TypeOf(ReceivedFiles) = Type("Array") Then
+        
+        For Each ReceivedFile In ReceivedFiles Do
+            ShowUserNotification(NStr("en = 'The file was successfully saved.';
+                    |ru = 'Файл успешно сохранен.'"), , 
+                ReceivedFile.Name, PictureLib.FL_Logotype64);
+        EndDo;
+        
+    EndIf;
+    
+EndProcedure // DoAfterBeginGettingFiles()     
+    
 // Returns a run application parameters.
 //
 // Returns:

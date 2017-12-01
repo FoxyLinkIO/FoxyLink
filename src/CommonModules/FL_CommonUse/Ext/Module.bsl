@@ -1178,6 +1178,26 @@ EndFunction // IsStandardAttribute()
 
 #Region ValueConversion 
 
+// Serializes an array of reference data type objects into JSONWriter.
+//
+// Parameters:
+//  JSONWriter - JSONWriter - sequentially writes JSON objects and texts.
+//  Source     - Array      - the array of reference data type objects. 
+//      * AnyRef - reference data type object.
+//
+Procedure SerializeArrayOfRefsToJSON(JSONWriter, Source) Export
+    
+    JSONWriter.WriteStartArray();
+    
+    For Each Item In Source Do
+        XDTOSerializer.WriteJSON(JSONWriter, Item.GetObject(), 
+            XMLTypeAssignment.Explicit);
+    EndDo;
+    
+    JSONWriter.WriteEndArray();
+    
+EndProcedure // SerializeArrayOfRefsToJSON()
+
 // Serializes the value into XML string representation.
 //
 // Parameters:
