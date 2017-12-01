@@ -36,6 +36,7 @@
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Channels</xr:Object>
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats</xr:Object>
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Tasks</xr:Object>
+				<xr:Object>CommonCommand.ExportObject</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

@@ -75,6 +75,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">FunctionalOption.FL_UseFoxyLink</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUseClient</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Import</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonCommand.ExportObject</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

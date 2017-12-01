@@ -31,4 +31,194 @@ Procedure RefreshApplicationInterface() Export
 
 EndProcedure // RefreshApplicationInterface()
 
+// Begins running an external application or opens an application file with 
+// associated name.
+//
+// Parameters:
+//  FileExtensionAttached - Boolean   - the result value passed by the second 
+//                                     parameter when the method was called
+//                                     with help ExecuteNotifyProcessing. 
+//  AdditionalParameters  - Structure - see function FL_InteriorUseClient.NewRunApplicationParameters.
+//
+Procedure Attachable_RunApplication(FileExtensionAttached, 
+    AdditionalParameters) Export
+    
+    If FileExtensionAttached Then
+        BeginRunningApplication(AdditionalParameters.NotifyDescription, 
+            AdditionalParameters.CommandLine,
+            AdditionalParameters.CurrentDirectory,
+            AdditionalParameters.WaitForCompletion);
+    EndIf;
+    
+EndProcedure // Attachable_RunApplication()
+    
+// Begins attaching the extension for working with files.
+//
+// Parameters:
+//  NotifyDescription - NotifyDescription - notify description to execute after 
+//                                          attaching extension. 
+//
+Procedure Attachable_FileSystemExtension(NotifyDescription) Export
+    
+    BeginAttachingFileSystemExtension(New NotifyDescription(
+        "DoAfterAttachFileSystemExtension", 
+        FL_InteriorUseClient, 
+        NotifyDescription));
+    
+EndProcedure // Attachable_FileSystemExtension()
+
+// Works with a special dialog that saves a file to a selected directory.
+//
+// Parameters:
+//  FileExtensionAttached - Boolean   - the result value passed by the second parameter when the 
+//                                       method was called with help ExecuteNotifyProcessing. 
+//  AdditionalParameters  - Structure - see function FL_InteriorUseClientServer.NewFileProperties.
+//
+Procedure Attachable_SaveFileAs(FileExtensionAttached, 
+    AdditionalParameters) Export
+    
+    If FileExtensionAttached Then
+        
+        FileDialog = New FileDialog(FileDialogMode.Save);
+        FileDialog.Multiselect = False;
+        FileDialog.FullFileName = AdditionalParameters.Name;
+        FileDialog.DefaultExt = AdditionalParameters.Extension;
+        FileDialog.Filter = StrTemplate(NStr("en = 'All files (*%1)|*%1';
+            |ru = 'Все файлы (*%1)|*%1'"), AdditionalParameters.Extension);
+        FileDialog.Show(New NotifyDescription("DoAfterSelectSaveFileAs", 
+            FL_InteriorUseClient, AdditionalParameters)); 
+        
+    EndIf;
+    
+EndProcedure // Attachable_SaveFileAs()
+
 #EndRegion // ProgramInterface
+
+#Region ServiceInterface
+
+// Attaches the extension for working with files. 
+//
+// Parameters:
+//  Connected         – Boolean           - the connection result. 
+//                              True - extension is successfully connected. 
+//  NotifyDescription - NotifyDescription - value specified when the 
+//                              NotifyDescription object was created.
+//
+Procedure DoAfterAttachFileSystemExtension(Connected, 
+    NotifyDescription) Export
+
+    If Connected AND TypeOf(NotifyDescription) = Type("NotifyDescription") Then
+        ExecuteNotifyProcessing(NotifyDescription, True);        
+    Else
+        BeginInstallFileSystemExtension(New NotifyDescription(
+            "DoAfterInstallFileSystemExtension", 
+            FL_InteriorUseClient, 
+            NotifyDescription));    
+    EndIf;
+    
+EndProcedure // DoAfterAttachFileSystemExtension() 
+
+// Installs the extension for working with files. 
+//
+// Parameters:
+//  NotifyDescription - NotifyDescription - value specified when the 
+//                              NotifyDescription object was created.
+//
+Procedure DoAfterInstallFileSystemExtension(NotifyDescription) Export
+
+    If TypeOf(NotifyDescription) = Type("NotifyDescription") Then
+        ExecuteNotifyProcessing(NotifyDescription, True);           
+    EndIf;
+    
+EndProcedure // DoAfterInstallFileSystemExtension()
+
+// Begins saving the file to the selected directory.
+//
+// Parameters:
+//  SelectedFiles        - Array     - an array of selected file names or 
+//                                     Undefined, if no selection is made. 
+//  AdditionalParameters - Arbitrary - see function FL_InteriorUseClientServer.NewFileProperties.
+//
+Procedure DoAfterSelectSaveFileAs(SelectedFiles, AdditionalParameters) Export
+    
+    If SelectedFiles <> Undefined
+        AND TypeOf(SelectedFiles) = Type("Array") Then
+                                               
+        Ki = 1024;
+        SizeKB = Format(AdditionalParameters.Size / Ki, "NFD=2");
+        
+        ShowUserNotification(, , StrTemplate(NStr("en = 'Saving file ""%1"" (%2 KB)
+                    |Please, wait...'; ru = 'Сохраняется файл ""%1"" (%2 KB)
+                    |Пожалуйста, подождите...'"),
+                AdditionalParameters.Name, String(SizeKB)), 
+            PictureLib.FL_Logotype64);
+            
+        TransferableFiles = New Array;
+        For Each SelectedFile In SelectedFiles Do
+            
+            TransferableFile = New TransferableFileDescription(SelectedFile, 
+                AdditionalParameters.StorageAddress);
+            TransferableFiles.Add(TransferableFile);
+            
+        EndDo;
+        
+        BeginGettingFiles(New NotifyDescription("DoAfterBeginGettingFiles", 
+            FL_InteriorUseClient), TransferableFiles, , False);
+
+    EndIf;
+    
+EndProcedure // DoAfterSelectSaveFileAs() 
+
+// Begins getting a set of files and saves them to the local user's file system.
+//
+// Parameters:
+//  ReceivedFiles        - TransferedFileDescription - array of the objects or 
+//                                  Undefined, if the files are not received.
+//  AdditionalParameters - Arbitrary                 - value specified when 
+//                                  the NotifyDescription object was created. 
+//
+Procedure DoAfterBeginGettingFiles(ReceivedFiles, 
+    AdditionalParameters = Undefined) Export 
+
+    If ReceivedFiles <> Undefined 
+        AND TypeOf(ReceivedFiles) = Type("Array") Then
+        
+        For Each ReceivedFile In ReceivedFiles Do
+            ShowUserNotification(NStr("en = 'The file was successfully saved.';
+                    |ru = 'Файл успешно сохранен.'"), , 
+                ReceivedFile.Name, PictureLib.FL_Logotype64);
+        EndDo;
+        
+    EndIf;
+    
+EndProcedure // DoAfterBeginGettingFiles()     
+    
+// Returns a run application parameters.
+//
+// Returns:
+//  Structure - the invocation data structure with keys:
+//      * NotifyDescription - NotifyDescription - contains description of the 
+//                                  procedure which will be called upon completion. 
+//      * CommandLine       - String            - command line for launching 
+//                                  the application or the file name associated 
+//                                  with a given application. 
+//      * CurrentDirectory  - String            - sets the current directory 
+//                                  of the application being launched.
+//                                  Is ignored in in the web-client mode. 
+//                              Default value: "".
+//      * WaitForCompletion - Boolean           - True - wait for completion of 
+//                                  running application before the work continues.
+//                              Default value: False.
+//
+Function NewRunApplicationParameters() Export
+    
+    RunApplicationParameters = New Structure;
+    RunApplicationParameters.Insert("NotifyDescription");
+    RunApplicationParameters.Insert("CommandLine");
+    RunApplicationParameters.Insert("CurrentDirectory", "");
+    RunApplicationParameters.Insert("WaitForCompletion", False);
+    Return RunApplicationParameters;
+    
+EndFunction // NewRunApplicationParameters()    
+    
+#EndRegion // ServiceInterface

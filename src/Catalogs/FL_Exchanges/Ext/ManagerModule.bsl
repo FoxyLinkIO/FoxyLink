@@ -21,6 +21,8 @@
 
 #Region ProgramInterface
 
+#Region ObjectFormInteraction
+
 // Loads data composition schema, data composition settings and methods 
 // for editing in catalog form.
 //
@@ -101,6 +103,57 @@ Procedure BeforeWriteAtServer(ManagedForm, CurrentObject) Export
     ProcessBeforeWriteAtServer(ManagedForm.Object, CurrentObject);        
     
 EndProcedure // BeforeWriteAtServer()
+
+#EndRegion // ObjectFormInteraction
+
+// Exports the whole object exchange settings.
+//
+// Parameters:
+//  ExchangeRef - CatalogRef.FL_Exchanges - exchange to export.
+//
+// Returns:
+//  Structure - see function FL_InteriorUseClientServer.NewFileProperties.
+//
+Function ExportObject(ExchangeRef) Export
+    
+    MemoryStream = New MemoryStream;
+    
+    JSONWriter = New JSONWriter;
+    JSONWriter.OpenStream(MemoryStream, , , New JSONWriterSettings(, "    "));
+    JSONWriter.WriteStartObject();
+    
+    JSONWriter.WritePropertyName("Exchange");
+    ExchangeObject = ExchangeRef.GetObject();
+    XDTOSerializer.WriteJSON(JSONWriter, ExchangeObject, 
+        XMLTypeAssignment.Explicit);
+    
+    JSONWriter.WritePropertyName("Channels");
+    ResultArray = ExchangeObject.Channels.UnloadColumn("Channel");
+    FL_CommonUseClientServer.RemoveDuplicatesFromArray(ResultArray);
+    FL_CommonUse.SerializeArrayOfRefsToJSON(JSONWriter, ResultArray);
+    
+    JSONWriter.WritePropertyName("Methods");
+    ResultArray = ExchangeObject.Methods.UnloadColumn("Method");
+    FL_CommonUseClientServer.RemoveDuplicatesFromArray(ResultArray);
+    FL_CommonUse.SerializeArrayOfRefsToJSON(JSONWriter, ResultArray);
+     
+    JSONWriter.WriteEndObject();
+    JSONWriter.Close();
+    
+    FileProperties = FL_InteriorUseClientServer.NewFileProperties();
+    FileProperties.Name = StrTemplate("%1.json", ExchangeObject.Description);
+    FileProperties.BaseName = ExchangeObject.Description;
+    FileProperties.Extension = ".json";
+    FileProperties.Size = MemoryStream.Size();
+    FileProperties.IsFile = True;
+    FileProperties.StorageAddress = PutToTempStorage(
+        MemoryStream.CloseAndGetBinaryData());
+    FileProperties.ModificationTime = CurrentSessionDate();
+    FileProperties.ModificationTimeUTC = CurrentUniversalDate();
+    
+    Return FileProperties;
+    
+EndFunction // ExportObject()
 
 // Returns available plugable formats.
 //
@@ -334,6 +387,8 @@ EndFunction // ExchangeSettingsByNames()
 
 #Region ServiceProceduresAndFunctions
 
+#Region ObjectFormInteraction
+
 // Only for internal use.
 //
 Procedure PlaceStorageDataIntoFormObject(Object, Ref, FormUUID)
@@ -449,6 +504,8 @@ Procedure AddMethodOnForm(Items, MethodDescription, Description, Picture)
         NewPage);
 
 EndProcedure // AddMethodOnForm()
+
+#EndRegion // ObjectFormInteraction
 
 // Only for internal use.
 //

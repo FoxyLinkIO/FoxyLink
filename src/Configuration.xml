@@ -228,6 +228,7 @@
 			<CommonModule>FL_EventsReUse</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
 			<CommonModule>FL_InteriorUseClient</CommonModule>
+			<CommonModule>FL_InteriorUseClientServer</CommonModule>
 			<CommonModule>FL_InteriorUseReUse</CommonModule>
 			<CommonModule>FL_JobServer</CommonModule>
 			<CommonModule>FL_RecurringJob</CommonModule>
@@ -241,6 +242,7 @@
 			<ScheduledJob>FL_JobServer</ScheduledJob>
 			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
 			<FunctionalOption>FL_UseFoxyLink</FunctionalOption>
+			<CommonCommand>ExportObject</CommonCommand>
 			<Constant>FL_JobServerID</Constant>
 			<Constant>FL_LicenseAccepted</Constant>
 			<Constant>FL_RetryAttempts</Constant>
