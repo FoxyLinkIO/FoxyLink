@@ -54,162 +54,188 @@
 		<Event name="BeforeWriteAtServer">BeforeWriteAtServer</Event>
 	</Events>
 	<ChildItems>
-		<UsualGroup name="HeaderGroup" id="7">
+		<Pages name="HeaderPages" id="27">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Header group</v8:content>
+					<v8:content>Header pages</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Header group</v8:content>
+					<v8:content>Header pages</v8:content>
 				</v8:item>
 			</ToolTip>
-			<Group>Horizontal</Group>
-			<Representation>None</Representation>
-			<ShowTitle>false</ShowTitle>
-			<ExtendedTooltip name="HeaderGroupExtendedTooltip" id="8"/>
+			<PagesRepresentation>None</PagesRepresentation>
+			<ExtendedTooltip name="HeaderPagesExtendedTooltip" id="28"/>
 			<ChildItems>
-				<UsualGroup name="HeaderGroupLeft" id="9">
+				<Page name="HeaderPageBasicFormat" id="25">
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Basic information</v8:content>
+							<v8:content>Basic format</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
-							<v8:content>Базовая информация</v8:content>
+							<v8:content>Базовый формат</v8:content>
+						</v8:item>
+					</Title>
+					<Group>Horizontal</Group>
+					<ExtendedTooltip name="HeaderPageBasicFormatExtendedTooltip" id="26"/>
+					<ChildItems>
+						<UsualGroup name="HeaderGroupLeft" id="9">
+							<Title>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Basic information</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Базовая информация</v8:content>
+								</v8:item>
+							</Title>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Basic information</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Базовая информация</v8:content>
+								</v8:item>
+							</ToolTip>
+							<Group>Vertical</Group>
+							<Representation>NormalSeparation</Representation>
+							<ThroughAlign>Use</ThroughAlign>
+							<ExtendedTooltip name="HeaderGroupLeftExtendedTooltip" id="10"/>
+							<ChildItems>
+								<InputField name="Description" id="4">
+									<DataPath>Object.Description</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<HorizontalStretch>false</HorizontalStretch>
+									<ContextMenu name="DescriptionContextMenu" id="5"/>
+									<ExtendedTooltip name="DescriptionExtendedTooltip" id="6"/>
+								</InputField>
+								<UsualGroup name="HeaderGroupBasic" id="363">
+									<Group>Horizontal</Group>
+									<Representation>None</Representation>
+									<ShowTitle>false</ShowTitle>
+									<ExtendedTooltip name="HeaderGroupBasicExtendedTooltip" id="364"/>
+									<ChildItems>
+										<InputField name="Version" id="360">
+											<DataPath>Object.Version</DataPath>
+											<MaxWidth>10</MaxWidth>
+											<HorizontalStretch>false</HorizontalStretch>
+											<ContextMenu name="VersionContextMenu" id="361"/>
+											<ExtendedTooltip name="VersionExtendedTooltip" id="362"/>
+										</InputField>
+										<CheckBoxField name="InUse" id="13">
+											<DataPath>Object.InUse</DataPath>
+											<CheckBoxType>Auto</CheckBoxType>
+											<EditFormat>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>BF=OFF; BT=On</v8:content>
+												</v8:item>
+											</EditFormat>
+											<ContextMenu name="InUseContextMenu" id="14"/>
+											<ExtendedTooltip name="InUseExtendedTooltip" id="15"/>
+										</CheckBoxField>
+									</ChildItems>
+								</UsualGroup>
+								<UsualGroup name="HeaderGroupCommandsLeft" id="51">
+									<Group>Horizontal</Group>
+									<Representation>None</Representation>
+									<ShowTitle>false</ShowTitle>
+									<ExtendedTooltip name="HeaderGroupCommandsLeftExtendedTooltip" id="52"/>
+									<ChildItems>
+										<Button name="AddAPIMethod" id="41">
+											<Type>UsualButton</Type>
+											<CommandName>Form.Command.AddAPIMethod</CommandName>
+											<ExtendedTooltip name="AddAPIMethodExtendedTooltip" id="42"/>
+										</Button>
+										<Button name="DeleteAPIMethod" id="49">
+											<Type>UsualButton</Type>
+											<Visible>false</Visible>
+											<CommandName>Form.Command.DeleteAPIMethod</CommandName>
+											<ExtendedTooltip name="DeleteAPIMethodExtendedTooltip" id="50"/>
+										</Button>
+									</ChildItems>
+								</UsualGroup>
+							</ChildItems>
+						</UsualGroup>
+						<UsualGroup name="HeaderGroupRight" id="43">
+							<Title>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Format plugin description</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Описание формата плагина</v8:content>
+								</v8:item>
+							</Title>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Format plugin description</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Описание формата плагина</v8:content>
+								</v8:item>
+							</ToolTip>
+							<Group>Vertical</Group>
+							<Representation>NormalSeparation</Representation>
+							<ExtendedTooltip name="HeaderGroupRightExtendedTooltip" id="44"/>
+							<ChildItems>
+								<LabelField name="FormatName" id="16">
+									<DataPath>FormatName</DataPath>
+									<ContextMenu name="FormatNameContextMenu" id="17"/>
+									<ExtendedTooltip name="FormatNameExtendedTooltip" id="18"/>
+								</LabelField>
+								<LabelField name="FormatStandard" id="19">
+									<DataPath>FormatStandard</DataPath>
+									<Hiperlink>true</Hiperlink>
+									<ContextMenu name="FormatStandardContextMenu" id="20"/>
+									<ExtendedTooltip name="FormatStandardExtendedTooltip" id="21"/>
+									<Events>
+										<Event name="Click">FormatStandardClick</Event>
+									</Events>
+								</LabelField>
+								<LabelField name="FormatPluginVersion" id="22">
+									<DataPath>FormatPluginVersion</DataPath>
+									<Hiperlink>true</Hiperlink>
+									<ContextMenu name="FormatPluginVersionContextMenu" id="23"/>
+									<ExtendedTooltip name="FormatPluginVersionExtendedTooltip" id="24"/>
+								</LabelField>
+							</ChildItems>
+						</UsualGroup>
+					</ChildItems>
+				</Page>
+				<Page name="HeaderPageSelectFormat" id="29">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Select format</v8:content>
 						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Header group left</v8:content>
+							<v8:content>Select format</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Выберите формат</v8:content>
 						</v8:item>
 					</ToolTip>
-					<Group>Vertical</Group>
-					<Representation>StrongSeparation</Representation>
-					<ExtendedTooltip name="HeaderGroupLeftExtendedTooltip" id="10"/>
+					<ExtendedTooltip name="HeaderPageSelectFormatExtendedTooltip" id="30"/>
 					<ChildItems>
-						<InputField name="Description" id="4">
-							<DataPath>Object.Description</DataPath>
-							<EditMode>EnterOnInput</EditMode>
-							<HorizontalStretch>false</HorizontalStretch>
-							<ContextMenu name="DescriptionContextMenu" id="5"/>
-							<ExtendedTooltip name="DescriptionExtendedTooltip" id="6"/>
-						</InputField>
-						<CheckBoxField name="InUse" id="13">
-							<DataPath>Object.InUse</DataPath>
-							<CheckBoxType>Auto</CheckBoxType>
-							<EditFormat>
-								<v8:item>
-									<v8:lang>en</v8:lang>
-									<v8:content>BF=OFF; BT=On</v8:content>
-								</v8:item>
-							</EditFormat>
-							<ContextMenu name="InUseContextMenu" id="14"/>
-							<ExtendedTooltip name="InUseExtendedTooltip" id="15"/>
-						</CheckBoxField>
-						<UsualGroup name="HeaderGroupCommandsLeft" id="51">
-							<Group>Horizontal</Group>
-							<Representation>None</Representation>
-							<ShowTitle>false</ShowTitle>
-							<ExtendedTooltip name="HeaderGroupCommandsLeftExtendedTooltip" id="52"/>
-							<ChildItems>
-								<Button name="AddAPIMethod" id="41">
-									<Type>UsualButton</Type>
-									<CommandName>Form.Command.AddAPIMethod</CommandName>
-									<ExtendedTooltip name="AddAPIMethodExtendedTooltip" id="42"/>
-								</Button>
-								<Button name="DeleteAPIMethod" id="49">
-									<Type>UsualButton</Type>
-									<Visible>false</Visible>
-									<CommandName>Form.Command.DeleteAPIMethod</CommandName>
-									<ExtendedTooltip name="DeleteAPIMethodExtendedTooltip" id="50"/>
-								</Button>
-							</ChildItems>
-						</UsualGroup>
-					</ChildItems>
-				</UsualGroup>
-				<Pages name="HeaderPagesFormat" id="27">
-					<Width>36</Width>
-					<HorizontalStretch>false</HorizontalStretch>
-					<PagesRepresentation>None</PagesRepresentation>
-					<ExtendedTooltip name="HeaderPagesFormatExtendedTooltip" id="28"/>
-					<ChildItems>
-						<Page name="HeaderPageBasicFormat" id="25">
+						<InputField name="BasicFormatGuid" id="34">
+							<DataPath>Object.BasicFormatGuid</DataPath>
 							<Title>
-								<v8:item>
-									<v8:lang>en</v8:lang>
-									<v8:content>Basic format</v8:content>
-								</v8:item>
-								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Базовый формат</v8:content>
-								</v8:item>
-							</Title>
-							<Group>HorizontalIfPossible</Group>
-							<ExtendedTooltip name="HeaderPageBasicFormatExtendedTooltip" id="26"/>
-							<ChildItems>
-								<UsualGroup name="HeaderGroupBasicFormat" id="43">
-									<Title>
-										<v8:item>
-											<v8:lang>en</v8:lang>
-											<v8:content>Format plugin description</v8:content>
-										</v8:item>
-										<v8:item>
-											<v8:lang>ru</v8:lang>
-											<v8:content>Описание формата плагина</v8:content>
-										</v8:item>
-									</Title>
-									<ToolTip>
-										<v8:item>
-											<v8:lang>en</v8:lang>
-											<v8:content>Basic format info</v8:content>
-										</v8:item>
-										<v8:item>
-											<v8:lang>ru</v8:lang>
-											<v8:content>Описание базового формата</v8:content>
-										</v8:item>
-									</ToolTip>
-									<Group>Vertical</Group>
-									<Representation>StrongSeparation</Representation>
-									<ExtendedTooltip name="HeaderGroupBasicFormatExtendedTooltip" id="44"/>
-									<ChildItems>
-										<LabelField name="FormatName" id="16">
-											<DataPath>FormatName</DataPath>
-											<ContextMenu name="FormatNameContextMenu" id="17"/>
-											<ExtendedTooltip name="FormatNameExtendedTooltip" id="18"/>
-										</LabelField>
-										<LabelField name="FormatStandard" id="19">
-											<DataPath>FormatStandard</DataPath>
-											<Hiperlink>true</Hiperlink>
-											<ContextMenu name="FormatStandardContextMenu" id="20"/>
-											<ExtendedTooltip name="FormatStandardExtendedTooltip" id="21"/>
-											<Events>
-												<Event name="Click">FormatStandardClick</Event>
-											</Events>
-										</LabelField>
-										<LabelField name="FormatPluginVersion" id="22">
-											<DataPath>FormatPluginVersion</DataPath>
-											<Hiperlink>true</Hiperlink>
-											<ContextMenu name="FormatPluginVersionContextMenu" id="23"/>
-											<ExtendedTooltip name="FormatPluginVersionExtendedTooltip" id="24"/>
-										</LabelField>
-									</ChildItems>
-								</UsualGroup>
-							</ChildItems>
-						</Page>
-						<Page name="HeaderPageSelectFormat" id="29">
-							<Title>
-								<v8:item>
-									<v8:lang>en</v8:lang>
-									<v8:content>Select format</v8:content>
-								</v8:item>
-							</Title>
-							<ToolTip>
 								<v8:item>
 									<v8:lang>en</v8:lang>
 									<v8:content>Select format</v8:content>
@@ -218,37 +244,21 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Выберите формат</v8:content>
 								</v8:item>
-							</ToolTip>
-							<ExtendedTooltip name="HeaderPageSelectFormatExtendedTooltip" id="30"/>
-							<ChildItems>
-								<InputField name="BasicFormatGuid" id="34">
-									<DataPath>Object.BasicFormatGuid</DataPath>
-									<Title>
-										<v8:item>
-											<v8:lang>en</v8:lang>
-											<v8:content>Select format</v8:content>
-										</v8:item>
-										<v8:item>
-											<v8:lang>ru</v8:lang>
-											<v8:content>Выберите формат</v8:content>
-										</v8:item>
-									</Title>
-									<Width>1</Width>
-									<ListChoiceMode>true</ListChoiceMode>
-									<ChooseType>false</ChooseType>
-									<TextEdit>false</TextEdit>
-									<ContextMenu name="BasicFormatGuidContextMenu" id="35"/>
-									<ExtendedTooltip name="BasicFormatGuidExtendedTooltip" id="36"/>
-									<Events>
-										<Event name="OnChange">BasicFormatGuidOnChange</Event>
-									</Events>
-								</InputField>
-							</ChildItems>
-						</Page>
+							</Title>
+							<Width>1</Width>
+							<ListChoiceMode>true</ListChoiceMode>
+							<ChooseType>false</ChooseType>
+							<TextEdit>false</TextEdit>
+							<ContextMenu name="BasicFormatGuidContextMenu" id="35"/>
+							<ExtendedTooltip name="BasicFormatGuidExtendedTooltip" id="36"/>
+							<Events>
+								<Event name="OnChange">BasicFormatGuidOnChange</Event>
+							</Events>
+						</InputField>
 					</ChildItems>
-				</Pages>
+				</Page>
 			</ChildItems>
-		</UsualGroup>
+		</Pages>
 		<Pages name="MethodPages" id="37">
 			<HorizontalStretch>true</HorizontalStretch>
 			<VerticalStretch>true</VerticalStretch>

@@ -26,7 +26,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         For Each Format In Catalogs.FL_Exchanges.AvailableFormats() Do
             FillPropertyValues(Items.BasicFormatGuid.ChoiceList.Add(), Format);    
         EndDo;
-        Items.HeaderPagesFormat.CurrentPage = Items.HeaderPageSelectFormat;
+        Items.HeaderPages.CurrentPage = Items.HeaderPageSelectFormat;
         Items.HeaderGroupLeft.Visible = False;
     Else
         LoadBasicFormatInfo();    
@@ -81,7 +81,8 @@ EndProcedure // AfterWriteAtServer()
 &AtClient
 Procedure BasicFormatGuidOnChange(Item)
     
-    If Not IsBlankString(Object.BasicFormatGuid) Then
+    If NOT IsBlankString(Object.BasicFormatGuid) Then
+        Object.Version = "1.0.0.0";
         LoadBasicFormatInfo();   
     EndIf;
     
@@ -534,7 +535,7 @@ EndProcedure // DoAfterChooseAPISchemaToDelete()
 Procedure LoadBasicFormatInfo()
 
     Items.HeaderGroupLeft.Visible = True;
-    Items.HeaderPagesFormat.CurrentPage = Items.HeaderPageBasicFormat;
+    Items.HeaderPages.CurrentPage = Items.HeaderPageBasicFormat;
     FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
         Object.BasicFormatGuid);
         

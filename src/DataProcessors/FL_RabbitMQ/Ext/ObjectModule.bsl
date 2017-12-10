@@ -70,16 +70,18 @@ EndFunction // ChannelFullName()
 
 #Region ProgramInterface
 
-// Invalidates the channel data. 
+// Returns array of supplied integrations for this configuration.
 //
 // Returns:
-//  Boolean - if True channel was disconnected successfully.
+//  Array - array filled by supplied integrations.
+//      * ArrayItem - Structure - see function FL_InteriorUse.NewPluggableSettings.
 //
-Function Disconnect() Export
+Function SuppliedIntegrations() Export
     
-    Return True;
-    
-EndFunction // Disconnect() 
+    SuppliedIntegrations = New Array;    
+    Return SuppliedIntegrations;
+          
+EndFunction // SuppliedIntegration()
 
 // Returns the boolean value whether preauthorization is required.
 //
@@ -159,6 +161,17 @@ Function DeliverMessage(Mediator, Payload, Properties) Export
     Return DeliveryResult;
     
 EndFunction // DeliverMessage() 
+
+// Invalidates the channel data. 
+//
+// Returns:
+//  Boolean - if True channel was disconnected successfully.
+//
+Function Disconnect() Export
+    
+    Return True;
+    
+EndFunction // Disconnect() 
 
 #EndRegion // ProgramInterface
 
