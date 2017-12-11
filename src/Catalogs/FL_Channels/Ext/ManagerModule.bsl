@@ -59,6 +59,42 @@ Function AvailableChannels() Export
     
 EndFunction // AvailableChannels()
 
+// Returns array of supplied integrations for this configuration.
+//
+// Returns:
+//  Array - array filled by supplied integrations.
+//      * ArrayItem - Structure - see function FL_InteriorUse.NewPluggableSettings.
+//
+Function SuppliedIntegrations() Export
+    
+    SuppliedIntegrations = New Array;
+    
+    AvailableChannels = AvailableChannels();
+    For Each Channel In AvailableChannels Do
+        
+        Try
+            
+            ChannelProcessor = NewChannelProcessor(Channel.Value);
+            Integrations = ChannelProcessor.SuppliedIntegrations();
+            For Each Integration In Integrations Do
+                Integration.Insert("LibraryGuid", Channel.Value); 
+                Integration.Insert("ChannelName", Channel.Presentation);
+            EndDo;
+            
+            FL_CommonUseClientServer.ExtendArray(SuppliedIntegrations, 
+                Integrations);
+            
+        Except
+            // There is no any exception, integrations not provided.
+            Continue;
+        EndTry;
+               
+    EndDo;
+    
+    Return SuppliedIntegrations;
+    
+EndFunction // SuppliedIntegrations()
+
 // Returns exchange plugable channels.
 //
 // Returns:

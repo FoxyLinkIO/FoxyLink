@@ -36,6 +36,10 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     // No dependencies.
     FormConstantsSet = FL_InteriorUse.SetOfConstants(ConstantsSet);
     
+    Integrations = Catalogs.FL_Channels.SuppliedIntegrations();
+    FL_CommonUseClientServer.ExtendValueTable(Integrations, 
+        SuppliedIntegrations);
+    
     // Update items states.
     SetEnabled();
 

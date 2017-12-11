@@ -28,40 +28,27 @@
 //
 Procedure Output(Mediator, StreamObject, OutputParameters) Export
     
-    // TODO: Check output parameters   
-    
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
     DCTParameters = FL_CommonUseClientServer.CopyStructure(
         OutputParameters.DCTParameters);
         
-    // TODO: Make support of DataCompositionTemplateGenerator.
     // Verify, that supported type of generator is in use.
     DCTParameters.GeneratorType = 
         Type("DataCompositionValueCollectionTemplateGenerator");
         
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     // Create data composition template.
     DataCompositionTemplate = NewDataCompositionTemplate(DCTParameters);
     
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     // Init data composition processor.
     DataCompositionProcessor = New DataCompositionProcessor;
     DataCompositionProcessor.Initialize(DataCompositionTemplate, 
         OutputParameters.ExternalDataSets, 
         OutputParameters.DetailsData, 
         OutputParameters.CanUseExternalFunctions);
-        
-        
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
+          
     ReportStructure = NewReportStructure();
     FillReportStructure(Mediator, ReportStructure, DataCompositionTemplate, 
         DataCompositionTemplate.Body);
         
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     // Init template columns with particular order.
     TemplateColumns = TemplateColumns(Mediator, DCTParameters.Template,
         DataCompositionTemplate, DataCompositionTemplate.Body);
@@ -71,18 +58,12 @@ Procedure Output(Mediator, StreamObject, OutputParameters) Export
     StreamObject.VerifyReportStructure(Mediator, ReportStructure);
     StreamObject.VerifyColumnNames(Mediator, TemplateColumns);
     
-    
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
     // Output start
     DataCompositionProcessor.Next(); // StartElement
     DataCompositionProcessor.Next(); // DataCompositionTemplate
     
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     Item = DataCompositionProcessor.Next(); // Query execution 
     
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     StreamObject.Output(Item, DataCompositionProcessor, 
         ReportStructure, TemplateColumns);    
     
@@ -98,22 +79,15 @@ EndProcedure // Output()
 Procedure OutputInSpreadsheetDocument(Mediator, SpreadsheetDocument, 
     OutputParameters) Export
        
-    // TODO: Check output parameters
-    
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
     DCTParameters = FL_CommonUseClientServer.CopyStructure(
         OutputParameters.DCTParameters);
         
     // Verify, that supported type of generator is in use.
     DCTParameters.GeneratorType = Type("DataCompositionTemplateGenerator");
     
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     // Create data composition template.
     DataCompositionTemplate = NewDataCompositionTemplate(DCTParameters);
 
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     // Init data composition processor.
     DataCompositionProcessor = New DataCompositionProcessor;
     DataCompositionProcessor.Initialize(DataCompositionTemplate, 
@@ -235,7 +209,6 @@ Procedure InitSettingsComposer(Mediator, SettingsComposer,
         
         SettingsComposer.LoadSettings(DataCompositionSchema.DefaultSettings);
         
-        
         // Platform bug is here. We have to copy DefaultSettings.Selection.Items 
         // titles from DataCompositionSchema to SettingsComposer.Settings.Selection.Items.
         Items = SettingsComposer.Settings.Selection.Items;
@@ -347,9 +320,6 @@ EndProcedure // SetDataToSettingsComposer()
 //
 Function NewDataCompositionTemplate(DCTParameters) Export
    
-    // TODO: Проверка параметров макета
-    
- 
     DataCompositionTemplateComposer = New DataCompositionTemplateComposer;
     Return DataCompositionTemplateComposer.Execute(DCTParameters.Schema, 
         DCTParameters.Template, 
@@ -624,9 +594,7 @@ Procedure SetDataCompositionDataParameterValue(DataParameters, ID, Value)
         SearchResult.Value = Value;
     Else
         
-        // TODO: Research is needed whether we can add new parameters.
-        // NewItem = Items.ADD();
-        
+        // Research is needed whether we can add new parameters.        
         Raise StrTemplate(NStr(
                 "en = 'For field [%1] adding new elements into ''DataCompositionParameterValueCollection'' not implemented.'; 
                 |ru = 'Для поля [%1] добавление новых элементов в ''КоллекцияЗначенийПараметровКомпоновкиДанных'' не реализовано.'"),
@@ -680,7 +648,6 @@ Function TemplateColumns(Mediator, DataCompositionSettings,
             DataCompositionSettings.Selection.SelectionAvailableFields.Items);        
                
     EndIf;
-    
     
     For Each ItemBody In DataCompositionTemplateBody Do
         
