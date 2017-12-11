@@ -17,3 +17,18 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#Region FormEventHandlers
+
+&AtServer
+Procedure OnCreateAtServer(Cancel, StandardProcessing)
+
+    If Parameters.Property("AutoTest") Then
+        Return;
+    EndIf;
+
+    Raise NStr("en='Channel form is not intended for usage.';
+        |ru='Форма канала не предназначена для использования.'");
+
+EndProcedure // OnCreateAtServer()
+
+#EndRegion // FormEventHandlers

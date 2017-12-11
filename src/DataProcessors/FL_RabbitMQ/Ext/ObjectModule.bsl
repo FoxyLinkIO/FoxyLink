@@ -70,68 +70,31 @@ EndFunction // ChannelFullName()
 
 #Region ProgramInterface
 
-// Returns array of supplied integrations for this configuration.
-//
-// Returns:
-//  Array - array filled by supplied integrations.
-//      * ArrayItem - Structure - see function FL_InteriorUse.NewPluggableSettings.
-//
-Function SuppliedIntegrations() Export
-    
-    SuppliedIntegrations = New Array;    
-    Return SuppliedIntegrations;
-          
-EndFunction // SuppliedIntegration()
-
-// Returns the boolean value whether preauthorization is required.
-//
-// Returns:
-//  Boolean - if True preauthorization is required.
-//
-Function PreauthorizationRequired() Export
-    
-    Return True;
-    
-EndFunction // PreauthorizationRequired()
-
-// Returns the boolean value whether resources are required.
-//
-// Returns:
-//  Boolean - if True resources are required.
-//
-Function ResourcesRequired() Export
-    
-    Return True;
-    
-EndFunction // ResourcesRequired()
-
-// Delivers a message to the current channel.
+// Delivers a stream object to the current channel.
 //
 // Parameters:
-//  Payload    - Arbitrary - message to deliver.
-//  Properties - Structure - channel parameters.
+//  Stream         - Stream       - a data stream that can be read successively 
+//                              or/and where you can record successively. 
+//                 - MemoryStream - specialized version of Stream object for 
+//                              operation with the data located in the RAM.
+//                 - FileStream   - specialized version of Stream object for 
+//                              operation with the data located in a file on disk.
+//  Properties     - Structure    - channel parameters.
 //
 // Returns:
-//  Structure - message delivery result with values:
-//      * Success          - Boolean   - shows whether delivery was successful.
-//      * OriginalResponse - Arbitrary - original response object.
-//      * StringResponse   - String    - string response presentation.
+//  Structure - see function Catalogs.FL_Channels.NewChannelDeliverResult.
 //
-Function DeliverMessage(Payload, Properties) Export
+Function DeliverMessage(Stream, Properties) Export
     
     Var HTTPMethod, HTTPRequest;
     
-    DeliveryResult = New Structure;
-    DeliveryResult.Insert("Success");
-    DeliveryResult.Insert("StatusCode");
-    DeliveryResult.Insert("StringResponse");
-    DeliveryResult.Insert("OriginalResponse");
-    
+    DeliveryResult = Catalogs.FL_Channels.NewChannelDeliverResult();    
     If TypeOf(Properties) <> Type("Structure") Then   
         Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
             "Properties", Properties, Type("Structure"));
     EndIf;
 
+    PayLoad = GetStringFromBinaryData(Stream.CloseAndGetBinaryData());
     ResolveProperties(Properties, HTTPMethod, HTTPRequest, Payload);
        
     If Log Then
@@ -157,6 +120,7 @@ Function DeliverMessage(Payload, Properties) Export
     
     DeliveryResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
         DeliveryResult.StatusCode);
+    
     Return DeliveryResult;
     
 EndFunction // DeliverMessage() 
@@ -171,6 +135,41 @@ Function Disconnect() Export
     Return True;
     
 EndFunction // Disconnect() 
+
+// Returns the boolean value whether preauthorization is required.
+//
+// Returns:
+//  Boolean - if True preauthorization is required.
+//
+Function PreauthorizationRequired() Export
+    
+    Return True;
+    
+EndFunction // PreauthorizationRequired()
+
+// Returns the boolean value whether resources are required.
+//
+// Returns:
+//  Boolean - if True resources are required.
+//
+Function ResourcesRequired() Export
+    
+    Return True;
+    
+EndFunction // ResourcesRequired()
+
+// Returns array of supplied integrations for this configuration.
+//
+// Returns:
+//  Array - array filled by supplied integrations.
+//      * ArrayItem - Structure - see function FL_InteriorUse.NewPluggableSettings.
+//
+Function SuppliedIntegrations() Export
+    
+    SuppliedIntegrations = New Array;    
+    Return SuppliedIntegrations;
+          
+EndFunction // SuppliedIntegration()
 
 #EndRegion // ProgramInterface
 

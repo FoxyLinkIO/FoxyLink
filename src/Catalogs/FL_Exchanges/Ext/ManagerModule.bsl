@@ -136,8 +136,8 @@ Procedure OutputMessageToStream(Stream, ExchangeSettings,
         DataCompositionSettings);
 
     If MessageSettings <> Undefined Then 
-        FL_DataComposition.SetDataToSettingsComposer(, 
-            SettingsComposer, MessageSettings); 
+        FL_DataComposition.SetDataToSettingsComposer(SettingsComposer, 
+            MessageSettings); 
     EndIf;
         
     DataCompositionTemplate = FL_DataComposition
@@ -199,44 +199,45 @@ EndFunction // ImportObject()
 //
 Function ExportObject(ExchangeRef) Export
     
-    MemoryStream = New MemoryStream;
+    InvocationData = FL_BackgroundJob.NewInvocationData();
+    InvocationData.Arguments = ExchangeRef;
+    InvocationData.MetadataObject = "Catalog.FL_Exchanges";
+    InvocationData.Method = Catalogs.FL_Methods.Read;
+    InvocationData.Owner = Catalogs.FL_Exchanges.Self;
+    InvocationData.SourceObject = ExchangeRef;
     
+    Try 
+        
+        BeginTransaction();
+        
+        Job = FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.Trigger", 
+            InvocationData);
+        TriggerResult = Catalogs.FL_Jobs.Trigger(Job);
     
+        CommitTransaction();
+        
+    Except
+        
+        RollbackTransaction();
+        Raise;
+        
+    EndTry;
     
-    //JSONWriter = New JSONWriter;
-    //JSONWriter.OpenStream(MemoryStream, , , New JSONWriterSettings(, "    "));
-    //JSONWriter.WriteStartObject();
-    //
-    //JSONWriter.WritePropertyName("Exchange");
-    //ExchangeObject = ExchangeRef.GetObject();
-    //XDTOSerializer.WriteJSON(JSONWriter, ExchangeObject, 
-    //    XMLTypeAssignment.Explicit);
-    //
-    //JSONWriter.WritePropertyName("Channels");
-    //ResultArray = ExchangeObject.Channels.UnloadColumn("Channel");
-    //FL_CommonUseClientServer.RemoveDuplicatesFromArray(ResultArray);
-    //FL_CommonUse.SerializeArrayOfRefsToJSON(JSONWriter, ResultArray);
-    //
-    //JSONWriter.WritePropertyName("Methods");
-    //ResultArray = ExchangeObject.Methods.UnloadColumn("Method");
-    //FL_CommonUseClientServer.RemoveDuplicatesFromArray(ResultArray);
-    //FL_CommonUse.SerializeArrayOfRefsToJSON(JSONWriter, ResultArray);
-    // 
-    //JSONWriter.WriteEndObject();
-    //JSONWriter.Close();
+    FileData = TriggerResult.OriginalResponse;
+    FileDescription = FL_CommonUse.ObjectAttributeValue(ExchangeRef, 
+        "Description");
     
-    //FileProperties = FL_InteriorUseClientServer.NewFileProperties();
-    //FileProperties.Name = StrTemplate("%1.json", ExchangeObject.Description);
-    //FileProperties.BaseName = ExchangeObject.Description;
-    //FileProperties.Extension = ".json";
-    //FileProperties.Size = MemoryStream.Size();
-    //FileProperties.IsFile = True;
-    //FileProperties.StorageAddress = PutToTempStorage(
-    //    MemoryStream.CloseAndGetBinaryData());
-    //FileProperties.ModificationTime = CurrentSessionDate();
-    //FileProperties.ModificationTimeUTC = CurrentUniversalDate();
-    //
-    //Return FileProperties;
+    FileProperties = FL_InteriorUseClientServer.NewFileProperties();
+    FileProperties.Name = StrTemplate("%1.json", FileDescription);
+    FileProperties.BaseName = FileDescription;
+    FileProperties.Extension = ".json";
+    FileProperties.Size = FileData.Size();
+    FileProperties.IsFile = True;
+    FileProperties.StorageAddress = PutToTempStorage(FileData);
+    FileProperties.ModificationTime = CurrentSessionDate();
+    FileProperties.ModificationTimeUTC = CurrentUniversalDate();
+    
+    Return FileProperties;
     
 EndFunction // ExportObject()
 

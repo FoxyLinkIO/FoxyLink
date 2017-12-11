@@ -199,7 +199,7 @@ Procedure EnqueueEvent(Source) Export
         While QueryResultSelection.Next() Do
             
             FillPropertyValues(InvocationData, QueryResultSelection);
-            FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.ProcessMessage", 
+            FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.Trigger", 
                 InvocationData);   
         EndDo;
         

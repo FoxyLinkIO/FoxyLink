@@ -108,49 +108,21 @@ Function ChangeState(Job, State, ExpectedState = Undefined) Export
     
 EndFunction // ChangeState()
 
-// Processes exchange message.
+// Used to run a job now. The information about triggered invocation will not 
+// be recorded in the recurring job itself, and its next execution time will 
+// not be recalculated from this running. For example, if you have a weekly job
+// that runs on Wednesday, and you manually trigger it on Friday it will run on 
+// the following Wednesday.
 //
 // Parameters:
-//  Ref - CatalogRef.FL_Jobs - reference to the exchange message. 
+//  Job - CatalogRef.FL_Jobs - reference to the job to be triggered.
 //
 // Returns:
-//  Structure - delivery response.
+//  Structure - trigger result, see function Catalogs.FL_Channels.NewChannelDeliverResult.
 //
-Function ProcessMessage(Ref) Export
+Function Trigger(Job) Export
     
-    //BeginTransaction();
-    //
-    //DataLock = New DataLock;
-    //ItemLock = DataLock.Add("Catalog.FL_Jobs");
-    //ItemLock.Mode = DataLockMode.Exclusive;
-    //ItemLock.SetValue("Ref", Ref);
-    //DataLock.Lock();
-    
-    // It is needed to avoid "Dirty read" from the file infobase.
-    //IsFileInfobase = FL_CommonUse.FileInfobase();
-    //If IsFileInfobase Then
-    //    BeginTransaction();
-    //EndIf;
-    
-    //Query = New Query;
-    //Query.Text = QueryTextMessageData();
-    //Query.SetParameter("Ref", Ref);
-    //QueryResult = Query.Execute();
-    //If QueryResult.IsEmpty() Then
-    //    
-    //    If TransactionActive() Then
-    //        RollbackTransaction();
-    //    EndIf;
-    //    
-    //    Raise Nstr(
-    //        "en = 'Error: Message data not found, it might be set the deletion mark.'; 
-    //        |ru = 'Ошибка: Данные сообщения не найдены, возможно, установлена пометка на удаление.'");
-    //    
-    //EndIf;
-    
-    // MessageData = QueryResult.Select();
-    // MessageObject.Next();
-    MessageObject = Ref.GetObject();
+    MessageObject = Job.GetObject();
     MessageObject.State = Catalogs.FL_States.Succeeded;
         
     MessageSettings = FL_DataComposition.NewMessageSettings();
@@ -162,9 +134,9 @@ Function ProcessMessage(Ref) Export
     ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
         MessageObject.Owner, MessageObject.Method); 
         
-    Payload = Catalogs.FL_Exchanges.GenerateMessageResult( 
-        ExchangeSettings, MessageSettings);
-            
+    MemoryStream = New MemoryStream;
+    Catalogs.FL_Exchanges.OutputMessageToStream(MemoryStream, 
+        ExchangeSettings, MessageSettings);  
     If MessageObject.Subscribers.Count() > 0 Then
         
         FilterParameters = New Structure("Channel");
@@ -177,9 +149,9 @@ Function ProcessMessage(Ref) Export
             
             FilterParameters.Channel = Subscriber.Channel; 
             
-            DeliveryResult = Catalogs.FL_Channels.SendMessageResult(Undefined,
-                Subscriber.Channel, Payload, NewProperties(Resources.FindRows(
-                    FilterParameters)));
+            TriggerResult = Catalogs.FL_Channels.TransferStreamToChannel(
+                Subscriber.Channel, MemoryStream, NewProperties(
+                    Resources.FindRows(FilterParameters)));
                     
             SuccessResponseHandler = True;
             ErrorResponseDescription = "";
@@ -194,7 +166,7 @@ Function ProcessMessage(Ref) Export
                 
             EndIf;
             
-            If DeliveryResult.Success AND SuccessResponseHandler Then
+            If TriggerResult.Success AND SuccessResponseHandler Then
                 Subscriber.Completed = True;
             Else
                 MessageObject.State = Catalogs.FL_States.Failed;
@@ -206,9 +178,9 @@ Function ProcessMessage(Ref) Export
     
     MessageObject.Write();  
         
-    Return DeliveryResult;
+    Return TriggerResult;
             
-EndFunction // ProcessMessage() 
+EndFunction // Trigger() 
 
 #EndRegion // ProgramInterface
 

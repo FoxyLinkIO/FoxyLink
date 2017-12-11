@@ -261,6 +261,7 @@
 			<DataProcessor>FL_AdministrationPanel</DataProcessor>
 			<DataProcessor>FL_DataProcessorJSON</DataProcessor>
 			<DataProcessor>FL_RabbitMQ</DataProcessor>
+			<DataProcessor>FL_Self</DataProcessor>
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
 		</ChildObjects>
 	</Configuration>

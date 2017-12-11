@@ -143,6 +143,27 @@ Function NewChannelProcessor(Val LibraryGuid) Export
     
 EndFunction // NewChannelProcessor()
 
+// Returns new delivery result structure.
+//
+// Returns:
+//  Structure - message delivery result with values:
+//      * Success          - Boolean   - shows whether delivery was successful.
+//      * StatusCode       - Number    - state (reply) code returned by the HTTP service.
+//      * OriginalResponse - Arbitrary - original response object.
+//      * StringResponse   - String    - string response presentation.
+//
+Function NewChannelDeliverResult() Export
+
+    ChannelDeliveryResult = New Structure;
+    ChannelDeliveryResult.Insert("Success", False);
+    ChannelDeliveryResult.Insert("StatusCode");
+    ChannelDeliveryResult.Insert("StringResponse");
+    ChannelDeliveryResult.Insert("OriginalResponse");
+    
+    Return ChannelDeliveryResult;
+    
+EndFunction // ChannelDeliveryResult()
+
 // Returns a new channel parameters structure.
 //
 // Parameters:
@@ -177,19 +198,24 @@ Function NewChannelParameters(Val LibraryGuid, FormName) Export
     
 EndFunction // NewChannelParameters()
 
-// Sends the resulting message to the specified exchange channel.
+// Transfers the stream to the specified exchange channel.
 //
 // Parameters:
 //  Channel    - CatalogRef.FL_Channels - exchange channel.
-//  Payload    - Arbitrary              - data to deliver.
+//  Stream     - Stream                 - a data stream that can be read successively 
+//                                          or/and where you can record successively. 
+//             - MemoryStream           - specialized version of Stream object for 
+//                                          operation with the data located in the RAM.
+//             - FileStream             - specialized version of Stream object for 
+//                                          operation with the data located in a file on disk.
 //  Properties - Structure              - channel properties.
 //      * Key   - String - property name.
 //      * Value - String - property value.
 //
 // Returns:
-//  Arbitrary - the send result.
+//  Structure - the deliver result, see function Catalogs.FL_Channels.NewChannelDeliverResult.
 //
-Function SendMessageResult(Channel, Payload, Properties) Export
+Function TransferStreamToChannel(Channel, Stream, Properties) Export
     
     Query = New Query;
     Query.Text = QueryTextChannelSettings();
@@ -208,13 +234,10 @@ Function SendMessageResult(Channel, Payload, Properties) Export
     ChannelProcessor = NewChannelProcessor(ChannelSettings.BasicChannelGuid);
     ChannelProcessor.ChannelData.Load(ChannelSettings.ChannelData.Unload());
     ChannelProcessor.EncryptedData.Load(
-        ChannelSettings.EncryptedData.Unload()); 
+        ChannelSettings.EncryptedData.Unload());    
+    Return ChannelProcessor.DeliverMessage(Stream, Properties);    
     
-    DeliverResult = ChannelProcessor.DeliverMessage(Payload, 
-        Properties);
-    Return DeliverResult;    
-    
-EndFunction // SendMessageResult()
+EndFunction // TransferStreamToChannel()
 
 #EndRegion // ProgramInterface
 
@@ -283,7 +306,7 @@ Function NewChannelParametersStructure()
     Return Parameters;
     
 EndFunction // NewChannelParametersStructure()
-
+    
 #EndRegion // ServiceProceduresAndFunctions
 
 #EndIf
