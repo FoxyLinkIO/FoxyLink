@@ -147,19 +147,22 @@ EndFunction // NewChannelProcessor()
 //
 // Returns:
 //  Structure - message delivery result with values:
-//      * Success          - Boolean   - shows whether delivery was successful.
-//      * StatusCode       - Number    - state (reply) code returned by the HTTP service.
-//      * OriginalResponse - Arbitrary - original response object.
-//      * StringResponse   - String    - string response presentation.
+//      * LogAttribute     - String       - detailed log of the channel operations.
+//      * OriginalResponse - ValueStorage - original response object.
+//      * StatusCode       - Number       - state (reply) code returned by the HTTP service.
+//      * StringResponse   - String       - string response presentation.
+//      * Success          - Boolean      - shows whether delivery was successful.
 //
 Function NewChannelDeliverResult() Export
 
     ChannelDeliveryResult = New Structure;
-    ChannelDeliveryResult.Insert("Success", False);
+    ChannelDeliveryResult.Insert("LogAttribute");
+    ChannelDeliveryResult.Insert("OriginalResponse", 
+        New ValueStorage(Undefined));
     ChannelDeliveryResult.Insert("StatusCode");
     ChannelDeliveryResult.Insert("StringResponse");
-    ChannelDeliveryResult.Insert("OriginalResponse");
-    
+    ChannelDeliveryResult.Insert("Success", False);
+
     Return ChannelDeliveryResult;
     
 EndFunction // ChannelDeliveryResult()
@@ -219,7 +222,7 @@ Function TransferStreamToChannel(Channel, Stream, Properties) Export
     
     Query = New Query;
     Query.Text = QueryTextChannelSettings();
-    Query.SetParameter("ExchangeChannel", Channel);
+    Query.SetParameter("ChannelRef", Channel);
     QueryResult = Query.Execute();
     If QueryResult.IsEmpty() Then
         // Error    
@@ -232,6 +235,7 @@ Function TransferStreamToChannel(Channel, Stream, Properties) Export
     EndIf;
     
     ChannelProcessor = NewChannelProcessor(ChannelSettings.BasicChannelGuid);
+    ChannelProcessor.Log = ChannelSettings.Log;
     ChannelProcessor.ChannelData.Load(ChannelSettings.ChannelData.Unload());
     ChannelProcessor.EncryptedData.Load(
         ChannelSettings.EncryptedData.Unload());    
@@ -268,8 +272,11 @@ Function QueryTextChannelSettings()
         |SELECT
         |   Channels.Ref                AS Ref,
         |   Channels.Description        AS Description,
+        |
         |   Channels.BasicChannelGuid   AS BasicChannelGuid,
         |   Channels.Connected          AS Connected,
+        |   Channels.Log                AS Log,
+        |   Channels.Version            AS Version,  
         |
         |   Channels.ChannelData.(
         |       FieldName   AS FieldName,
@@ -286,7 +293,7 @@ Function QueryTextChannelSettings()
         |   Catalog.FL_Channels AS Channels
         |   
         |WHERE
-        |    Channels.Ref = &ExchangeChannel
+        |    Channels.Ref = &ChannelRef
         |AND Channels.DeletionMark = FALSE
         |";  
     Return QueryText;

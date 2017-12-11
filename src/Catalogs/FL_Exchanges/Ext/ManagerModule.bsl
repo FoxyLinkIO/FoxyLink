@@ -106,7 +106,7 @@ EndProcedure // BeforeWriteAtServer()
 
 #EndRegion // ObjectFormInteraction
 
-// Outputs the resulting message based on the specified exchange settings.
+// Outputs the resulting message into stream based on the specified exchange settings.
 //
 // Parameters:
 //  Stream           - Stream         - a data stream that can be read successively 
@@ -122,7 +122,7 @@ EndProcedure // BeforeWriteAtServer()
 // Returns:
 //  Arbitrary - the resulting message.
 //
-Procedure OutputMessageToStream(Stream, ExchangeSettings, 
+Procedure OutputMessageIntoStream(Stream, ExchangeSettings, 
     MessageSettings = Undefined) Export
     
     DataCompositionSchema = GetValueFromStorage(ExchangeSettings, 
@@ -156,7 +156,7 @@ Procedure OutputMessageToStream(Stream, ExchangeSettings,
     FL_DataComposition.Output(StreamObject, OutputParameters);    
     StreamObject.Close();    
     
-EndProcedure // OutputMessageToStream()
+EndProcedure // OutputMessageIntoStream()
 
 // Returns the whole object exchange settings.
 //
@@ -212,7 +212,7 @@ Function ExportObject(ExchangeRef) Export
         
         Job = FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.Trigger", 
             InvocationData);
-        TriggerResult = Catalogs.FL_Jobs.Trigger(Job);
+        Catalogs.FL_Jobs.Trigger(Job);
     
         CommitTransaction();
         
@@ -223,21 +223,27 @@ Function ExportObject(ExchangeRef) Export
         
     EndTry;
     
-    FileData = TriggerResult.OriginalResponse;
-    FileDescription = FL_CommonUse.ObjectAttributeValue(ExchangeRef, 
-        "Description");
+    If Job.State = Catalogs.FL_States.Succeeded 
+        AND Job.SubscribersLog.Count() > 0 Then
+        
+        FileData = Job.SubscribersLog[0].OriginalResponse.Get();
+        FileDescription = FL_CommonUse.ObjectAttributeValue(ExchangeRef, 
+            "Description");
     
-    FileProperties = FL_InteriorUseClientServer.NewFileProperties();
-    FileProperties.Name = StrTemplate("%1.json", FileDescription);
-    FileProperties.BaseName = FileDescription;
-    FileProperties.Extension = ".json";
-    FileProperties.Size = FileData.Size();
-    FileProperties.IsFile = True;
-    FileProperties.StorageAddress = PutToTempStorage(FileData);
-    FileProperties.ModificationTime = CurrentSessionDate();
-    FileProperties.ModificationTimeUTC = CurrentUniversalDate();
+        FileProperties = FL_InteriorUseClientServer.NewFileProperties();
+        FileProperties.Name = StrTemplate("%1.json", FileDescription);
+        FileProperties.BaseName = FileDescription;
+        FileProperties.Extension = ".json";
+        FileProperties.Size = FileData.Size();
+        FileProperties.IsFile = True;
+        FileProperties.StorageAddress = PutToTempStorage(FileData);
+        FileProperties.ModificationTime = CurrentSessionDate();
+        FileProperties.ModificationTimeUTC = CurrentUniversalDate();
+        Return FileProperties;
+        
+    EndIf;
     
-    Return FileProperties;
+    Return Undefined;
     
 EndFunction // ExportObject()
 

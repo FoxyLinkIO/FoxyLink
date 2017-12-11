@@ -21,6 +21,38 @@
     
 #Region ProgramInterface    
 
+// Used to run a job now. The information about triggered invocation will not 
+// be recorded in the recurring job itself, and its next execution time will 
+// not be recalculated from this running. For example, if you have a weekly job
+// that runs on Wednesday, and you manually trigger it on Friday it will run on 
+// the following Wednesday.
+//
+// Parameters:
+//  Job - CatalogRef.FL_Jobs - reference to the job to be triggered.
+//
+Procedure Trigger(Job) Export
+    
+    JobObject = Job.GetObject();
+    JobObject.State = Catalogs.FL_States.Succeeded;
+        
+    MessageSettings = FL_DataComposition.NewMessageSettings();
+    For Each DCSParameter In JobObject.DCSParameters Do
+        MessageSettings.Body.Parameters.Insert(DCSParameter.Parameter, 
+            DCSParameter.ValueStorage.Get());
+    EndDo;
+
+    ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
+        JobObject.Owner, JobObject.Method); 
+        
+    MemoryStream = New MemoryStream;
+    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
+        ExchangeSettings, MessageSettings);  
+    NotifyChannels(JobObject, MemoryStream);     
+    
+    JobObject.Write();       
+            
+EndProcedure // Trigger() 
+
 // Creates a new background job in a specified state.
 //
 // Parameters:
@@ -108,83 +140,58 @@ Function ChangeState(Job, State, ExpectedState = Undefined) Export
     
 EndFunction // ChangeState()
 
-// Used to run a job now. The information about triggered invocation will not 
-// be recorded in the recurring job itself, and its next execution time will 
-// not be recalculated from this running. For example, if you have a weekly job
-// that runs on Wednesday, and you manually trigger it on Friday it will run on 
-// the following Wednesday.
-//
-// Parameters:
-//  Job - CatalogRef.FL_Jobs - reference to the job to be triggered.
-//
-// Returns:
-//  Structure - trigger result, see function Catalogs.FL_Channels.NewChannelDeliverResult.
-//
-Function Trigger(Job) Export
-    
-    MessageObject = Job.GetObject();
-    MessageObject.State = Catalogs.FL_States.Succeeded;
-        
-    MessageSettings = FL_DataComposition.NewMessageSettings();
-    For Each DCSParameter In MessageObject.DCSParameters Do
-        MessageSettings.Body.Parameters.Insert(DCSParameter.Parameter, 
-            DCSParameter.ValueStorage.Get());
-    EndDo;
-
-    ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
-        MessageObject.Owner, MessageObject.Method); 
-        
-    MemoryStream = New MemoryStream;
-    Catalogs.FL_Exchanges.OutputMessageToStream(MemoryStream, 
-        ExchangeSettings, MessageSettings);  
-    If MessageObject.Subscribers.Count() > 0 Then
-        
-        FilterParameters = New Structure("Channel");
-        Resources = MessageObject.SubscriberResources.Unload();
-        For Each Subscriber In MessageObject.Subscribers Do 
-            
-            If Subscriber.Completed Then
-                Continue;    
-            EndIf;
-            
-            FilterParameters.Channel = Subscriber.Channel; 
-            
-            TriggerResult = Catalogs.FL_Channels.TransferStreamToChannel(
-                Subscriber.Channel, MemoryStream, NewProperties(
-                    Resources.FindRows(FilterParameters)));
-                    
-            SuccessResponseHandler = True;
-            ErrorResponseDescription = "";
-            If Not IsBlankString(Subscriber.ResponseHandler) Then
-                
-                Try
-                    Execute(Subscriber.ResponseHandler);
-                Except
-                    ErrorResponseHandler = False;
-                    ErrorResponseDescription = ErrorDescription();
-                EndTry;
-                
-            EndIf;
-            
-            If TriggerResult.Success AND SuccessResponseHandler Then
-                Subscriber.Completed = True;
-            Else
-                MessageObject.State = Catalogs.FL_States.Failed;
-            EndIf;
-                    
-        EndDo;
-             
-    EndIf;
-    
-    MessageObject.Write();  
-        
-    Return TriggerResult;
-            
-EndFunction // Trigger() 
-
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Procedure NotifyChannels(JobObject, Stream)
+    
+    If JobObject.Subscribers.Count() = 0 Then
+        Return;    
+    EndIf;
+    
+    FilterParameters = New Structure("Channel");
+    Resources = JobObject.SubscriberResources.Unload();
+    For Each Subscriber In JobObject.Subscribers Do 
+        
+        If Subscriber.Completed Then
+            Continue;    
+        EndIf;
+        
+        FilterParameters.Channel = Subscriber.Channel; 
+        
+        TriggerResult = Catalogs.FL_Channels.TransferStreamToChannel(
+            Subscriber.Channel, Stream, NewProperties(Resources.FindRows(
+                FilterParameters)));
+                
+        SuccessResponseHandler = True;
+        ErrorResponseDescription = "";
+        If Not IsBlankString(Subscriber.ResponseHandler) Then
+            
+            Try
+                Execute(Subscriber.ResponseHandler);
+            Except
+                SuccessResponseHandler = False;
+                ErrorResponseDescription = ErrorDescription();
+            EndTry;
+            
+        EndIf;
+        
+        If TriggerResult.Success AND SuccessResponseHandler Then
+            Subscriber.Completed = True;
+        Else
+            JobObject.State = Catalogs.FL_States.Failed;
+        EndIf;
+        
+        NewLogRow = JobObject.SubscribersLog.Add();
+        NewLogRow.Channel = Subscriber.Channel;
+        FillPropertyValues(NewLogRow, TriggerResult);
+                
+    EndDo;
+             
+EndProcedure // NotifyChannels()
 
 // Only for internal use.
 //

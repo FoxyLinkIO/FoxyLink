@@ -738,7 +738,7 @@ Procedure GenerateSpecificDocumentAtServer()
     ExchangeSettings.CanUseExternalFunctions = RowCanUseExternalFunctions;
     
     MemoryStream = New MemoryStream;
-    Catalogs.FL_Exchanges.OutputMessageToStream(MemoryStream,
+    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream,
         New FixedStructure(ExchangeSettings));
             
     // End measuring.

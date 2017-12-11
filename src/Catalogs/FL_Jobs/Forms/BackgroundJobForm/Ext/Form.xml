@@ -332,6 +332,97 @@
 						</Table>
 					</ChildItems>
 				</Page>
+				<Page name="GroupSubscribersLog" id="126">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Subscribers log</v8:content>
+						</v8:item>
+					</Title>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Subscribers log</v8:content>
+						</v8:item>
+					</ToolTip>
+					<Group>HorizontalIfPossible</Group>
+					<ExtendedTooltip name="GroupSubscribersLogExtendedTooltip" id="127"/>
+					<ChildItems>
+						<Table name="SubscribersLog" id="128">
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Object.SubscribersLog</DataPath>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="SubscribersLogContextMenu" id="129"/>
+							<AutoCommandBar name="SubscribersLogCommandBar" id="130"/>
+							<ExtendedTooltip name="SubscribersLogExtendedTooltip" id="131"/>
+							<SearchStringAddition name="SubscribersLogSearchString" id="132">
+								<AdditionSource>
+									<Item>SubscribersLog</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscribersLogSearchStringContextMenu" id="133"/>
+								<ExtendedTooltip name="SubscribersLogSearchStringExtendedTooltip" id="134"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="SubscribersLogViewStatus" id="135">
+								<AdditionSource>
+									<Item>SubscribersLog</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscribersLogViewStatusContextMenu" id="136"/>
+								<ExtendedTooltip name="SubscribersLogViewStatusExtendedTooltip" id="137"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="SubscribersLogSearchControl" id="138">
+								<AdditionSource>
+									<Item>SubscribersLog</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscribersLogSearchControlContextMenu" id="139"/>
+								<ExtendedTooltip name="SubscribersLogSearchControlExtendedTooltip" id="140"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<LabelField name="SubscribersLogLineNumber" id="141">
+									<DataPath>Object.SubscribersLog.LineNumber</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLogLineNumberContextMenu" id="142"/>
+									<ExtendedTooltip name="SubscribersLogLineNumberExtendedTooltip" id="143"/>
+								</LabelField>
+								<InputField name="SubscribersLogChannel" id="144">
+									<DataPath>Object.SubscribersLog.Channel</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLogChannelContextMenu" id="145"/>
+									<ExtendedTooltip name="SubscribersLogChannelExtendedTooltip" id="146"/>
+								</InputField>
+								<InputField name="SubscribersLogLogAttribute" id="147">
+									<DataPath>Object.SubscribersLog.LogAttribute</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLogLogAttributeContextMenu" id="148"/>
+									<ExtendedTooltip name="SubscribersLogLogAttributeExtendedTooltip" id="149"/>
+								</InputField>
+								<InputField name="SubscribersLogStatusCode" id="150">
+									<DataPath>Object.SubscribersLog.StatusCode</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLogStatusCodeContextMenu" id="151"/>
+									<ExtendedTooltip name="SubscribersLogStatusCodeExtendedTooltip" id="152"/>
+								</InputField>
+								<InputField name="SubscribersLogStringResponse" id="153">
+									<DataPath>Object.SubscribersLog.StringResponse</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLogStringResponseContextMenu" id="154"/>
+									<ExtendedTooltip name="SubscribersLogStringResponseExtendedTooltip" id="155"/>
+								</InputField>
+								<CheckBoxField name="SubscribersLogSuccess" id="156">
+									<DataPath>Object.SubscribersLog.Success</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<CheckBoxType>Auto</CheckBoxType>
+									<ContextMenu name="SubscribersLogSuccessContextMenu" id="157"/>
+									<ExtendedTooltip name="SubscribersLogSuccessExtendedTooltip" id="158"/>
+								</CheckBoxField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
 			</ChildItems>
 		</Pages>
 	</ChildItems>

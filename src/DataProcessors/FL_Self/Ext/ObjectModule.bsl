@@ -92,13 +92,16 @@ Function DeliverMessage(Stream, Properties) Export
     If TypeOf(Stream) = Type("MemoryStream") Then
         
         BinaryData = Stream.CloseAndGetBinaryData();
-        DeliveryResult.OriginalResponse = BinaryData;
+        
+        DeliveryResult.OriginalResponse = New ValueStorage(BinaryData, 
+            New Deflation(9));
         DeliveryResult.StringResponse = GetStringFromBinaryData(BinaryData);
         DeliveryResult.StatusCode = SuccessCode;
         DeliveryResult.Success = True;
         
     EndIf;
-        
+    
+    DeliveryResult.LogAttribute = LogAttribute;
     Return DeliveryResult;
     
 EndFunction // DeliverMessage() 
