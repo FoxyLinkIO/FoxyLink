@@ -105,12 +105,16 @@ EndFunction // FormatMediaType()
 // Constructor of stream object.
 //
 // Parameters:
-//  APISchema - Arbitrary - user defined API schema.
-//                  Default value: Undefined.
-//  FileName  - String    - output filename.
+//  Stream    - Stream       - a data stream that can be read successively 
+//                              or/and where you can record successively. 
+//            - MemoryStream - specialized version of Stream object for 
+//                              operation with the data located in the RAM.
+//            - FileStream   - specialized version of Stream object for 
+//                              operation with the data located in a file on disk.
+//  APISchema - Arbitrary    - user defined API schema.
 //                  Default value: Undefined.
 //
-Procedure Initialize(APISchema = Undefined, FileName = Undefined) Export
+Procedure Initialize(Stream, APISchema = Undefined) Export
     
     RefTypesCache = New Map;
     RefTypesCache.Insert(Type("String"), False);
@@ -128,11 +132,7 @@ Procedure Initialize(APISchema = Undefined, FileName = Undefined) Export
     
     StreamWriter = New JSONWriter;
     StreamWriter.ValidateStructure = False;
-    If FileName <> Undefined Then 
-        StreamWriter.OpenFile(FileName);        
-    Else
-        StreamWriter.SetString();    
-    EndIf;
+    StreamWriter.OpenStream(Stream);
     
 EndProcedure // Initialize()
 
@@ -154,10 +154,9 @@ EndFunction // Close()
 // This object can have naming restrictions and this problems should be handled. 
 //
 // Parameters:
-//  Mediator   - Arbitrary - reserved, currently not in use.
 //  ReportStructure - Structure - see function FL_DataComposition.NewReportStructure.
 //
-Procedure VerifyReportStructure(Mediator, ReportStructure) Export
+Procedure VerifyReportStructure(ReportStructure) Export
     
     // No naming restrictions.
     
@@ -166,10 +165,9 @@ EndProcedure // VerifyReportStructure()
 // This object can have naming restrictions and this problems should be handled. 
 //
 // Parameters:
-//  Mediator        - Arbitrary - reserved, currently not in use.
 //  TemplateColumns - Structure - see function FL_DataComposition.TemplateColumns.
 //
-Procedure VerifyColumnNames(Mediator, TemplateColumns) Export
+Procedure VerifyColumnNames(TemplateColumns) Export
     
     // No naming restrictions.
     

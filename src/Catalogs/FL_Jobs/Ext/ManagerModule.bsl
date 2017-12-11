@@ -162,7 +162,7 @@ Function ProcessMessage(Ref) Export
     ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
         MessageObject.Owner, MessageObject.Method); 
         
-    Payload = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined, 
+    Payload = Catalogs.FL_Exchanges.GenerateMessageResult( 
         ExchangeSettings, MessageSettings);
             
     If MessageObject.Subscribers.Count() > 0 Then

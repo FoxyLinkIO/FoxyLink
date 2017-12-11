@@ -234,7 +234,7 @@ EndProcedure // DeleteAPIMethod()
 Procedure AddEvent(Command)
     
     OpenForm("Catalog.FL_Exchanges.Form.EventsSelectionForm", 
-        New Structure("SelectedEvents", SelectedEvents()), 
+        New Structure("MarkedEvents", MarkedEvents()), 
         ThisObject,
         New UUID, 
         , 
@@ -700,8 +700,8 @@ Procedure GenerateSpreadsheetDocumentAtServer()
     OutputParameters.DCTParameters = DataCompositionTemplate;
     OutputParameters.CanUseExternalFunctions = RowCanUseExternalFunctions;
     
-    FL_DataComposition.OutputInSpreadsheetDocument(Undefined, // Reserved
-        ResultSpreadsheetDocument, OutputParameters);     
+    FL_DataComposition.OutputInSpreadsheetDocument(ResultSpreadsheetDocument, 
+        OutputParameters);     
             
     // End measuring.
     TestingExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
@@ -737,13 +737,16 @@ Procedure GenerateSpecificDocumentAtServer()
         .GetSettings();
     ExchangeSettings.CanUseExternalFunctions = RowCanUseExternalFunctions;
     
-    ResultMessage = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined,
+    MemoryStream = New MemoryStream;
+    Catalogs.FL_Exchanges.OutputMessageToStream(MemoryStream,
         New FixedStructure(ExchangeSettings));
             
     // End measuring.
     TestingExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
     
-    ResultTextDocument.AddLine(ResultMessage);
+    ResultTextDocument.AddLine(GetStringFromBinaryData(
+        MemoryStream.CloseAndGetBinaryData()));
+    
     Items.HiddenPageTestingResults.CurrentPage = 
         Items.HiddenPageTestingTextDocument;
     
@@ -816,8 +819,7 @@ Procedure UpdateDataCompositionSchema(DataCompositionSchema)
     If Changes Then
         
         // Init data composer by new data composition schema.
-        FL_DataComposition.InitSettingsComposer(Undefined, // Reserved
-            RowComposerSettings, 
+        FL_DataComposition.InitSettingsComposer(RowComposerSettings, 
             DataCompositionSchemaEditAddress);
 
     EndIf;
@@ -864,8 +866,7 @@ Procedure LoadMethodSettings()
         // if configuration is changed.
         Try
             
-            FL_DataComposition.InitSettingsComposer(Undefined, // Reserved
-                RowComposerSettings, 
+            FL_DataComposition.InitSettingsComposer(RowComposerSettings, 
                 CurrentData.DataCompositionSchemaAddress, 
                 CurrentData.DataCompositionSettingsAddress);
                 
@@ -1174,21 +1175,21 @@ EndProcedure // FireEventAtServer()
 // Only for internal use.
 //
 &AtServer
-Function SelectedEvents()
+Function MarkedEvents()
     
     CurrentData = CurrentMethodData(RowMethod);
     FilterParameters = NewEventFilterParameters();
     FillPropertyValues(FilterParameters, CurrentData, "APIVersion, Method");
     FilterResults = Object.Events.FindRows(FilterParameters);
     
-    SelectedEvents = New ValueList;
+    MarkedEvents = New ValueList;
     For Each FilterResult In FilterResults Do
-        SelectedEvents.Add(FilterResult.MetadataObject);    
+        MarkedEvents.Add(FilterResult.MetadataObject);    
     EndDo;
     
-    Return SelectedEvents;
+    Return MarkedEvents;
     
-EndFunction // SelectedEvents()
+EndFunction // MarkedEvents()
 
 // Only for internal use.
 //

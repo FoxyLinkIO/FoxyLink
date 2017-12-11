@@ -14,11 +14,11 @@
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
 		<ChildItems>
-			<Button name="FormSelect" id="26">
+			<Button name="SaveAndClose" id="26">
 				<Type>CommandBarButton</Type>
 				<DefaultButton>true</DefaultButton>
-				<CommandName>Form.Command.Select</CommandName>
-				<ExtendedTooltip name="FormSelectExtendedTooltip" id="27"/>
+				<CommandName>Form.Command.SaveAndClose</CommandName>
+				<ExtendedTooltip name="SaveAndCloseExtendedTooltip" id="27"/>
 			</Button>
 		</ChildItems>
 	</AutoCommandBar>
@@ -239,37 +239,32 @@
 		</Attribute>
 	</Attributes>
 	<Commands>
-		<Command name="Select" id="1">
+		<Command name="SaveAndClose" id="1">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Select</v8:content>
+					<v8:content>Save and close</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Выбрать</v8:content>
+					<v8:content>Сохранить и закрыть</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Select</v8:content>
+					<v8:content>Save and close</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Выбрать</v8:content>
+					<v8:content>Сохранить и закрыть</v8:content>
 				</v8:item>
 			</ToolTip>
-			<Picture>
-				<xr:Ref>CommonPicture.FL_Select</xr:Ref>
-				<xr:LoadTransparent>true</xr:LoadTransparent>
-			</Picture>
-			<Action>Select</Action>
-			<Representation>TextPicture</Representation>
+			<Action>SaveAndClose</Action>
 		</Command>
 	</Commands>
 	<Parameters>
-		<Parameter name="SelectedEvents">
+		<Parameter name="MarkedEvents">
 			<Type>
 				<v8:Type>v8:ValueListType</v8:Type>
 			</Type>

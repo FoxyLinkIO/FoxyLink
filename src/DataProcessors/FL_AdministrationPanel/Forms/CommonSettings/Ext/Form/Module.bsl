@@ -70,7 +70,41 @@ Procedure FL_RetryAttemptsOnChange(Item)
     
 EndProcedure // FL_RetryAttemptsOnChange()
 
+&AtClient
+Procedure SuppliedIntegrationsOnActivateRow(Item)
+    
+    CurrentData = Item.CurrentData; 
+    If CurrentData <> Undefined Then
+        Items.Tooltip.Title = CurrentData.Tooltip;
+    EndIf;
+    
+EndProcedure // SuppliedIntegrationsOnActivateRow()
+
 #EndRegion // FormItemsEventHandlers
+
+#Region FormCommandHandlers
+
+&AtClient
+Procedure InstallIntegration(Command)
+    
+    CurrentData = Items.SuppliedIntegrations.CurrentData;
+    If CurrentData <> Undefined Then
+        
+        OpenForm("CommonForm.FL_Import",
+            New Structure("LibraryGuid, Template", CurrentData.LibraryGuid, 
+                CurrentData.Template),
+            ThisForm,
+            ,
+            ,
+            ,
+            ,
+            FormWindowOpeningMode.LockOwnerWindow);
+
+    EndIf;
+    
+EndProcedure // InstallIntegration() 
+
+#EndRegion // FormCommandHandlers
 
 #Region ServiceProceduresAndFunctions
 

@@ -9,10 +9,6 @@
 				<Type>CommandBarButton</Type>
 				<DefaultButton>true</DefaultButton>
 				<CommandName>Form.StandardCommand.WriteAndClose</CommandName>
-				<Picture>
-					<xr:Ref>CommonPicture.FL_SaveAndClose</xr:Ref>
-					<xr:LoadTransparent>true</xr:LoadTransparent>
-				</Picture>
 				<Title>
 					<v8:item>
 						<v8:lang>en</v8:lang>

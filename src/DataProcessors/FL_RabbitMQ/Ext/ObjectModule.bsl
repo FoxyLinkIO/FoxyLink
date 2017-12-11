@@ -108,7 +108,6 @@ EndFunction // ResourcesRequired()
 // Delivers a message to the current channel.
 //
 // Parameters:
-//  Mediator   - Arbitrary - reserved, currently not in use.
 //  Payload    - Arbitrary - message to deliver.
 //  Properties - Structure - channel parameters.
 //
@@ -118,7 +117,7 @@ EndFunction // ResourcesRequired()
 //      * OriginalResponse - Arbitrary - original response object.
 //      * StringResponse   - String    - string response presentation.
 //
-Function DeliverMessage(Mediator, Payload, Properties) Export
+Function DeliverMessage(Payload, Properties) Export
     
     Var HTTPMethod, HTTPRequest;
     

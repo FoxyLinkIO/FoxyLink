@@ -32,6 +32,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_CRUDMethods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_RESTMethods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Channels</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonForm.FL_Import</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

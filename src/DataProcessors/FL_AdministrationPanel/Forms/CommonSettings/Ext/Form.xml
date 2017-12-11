@@ -122,6 +122,9 @@
 							<ExtendedTooltip name="FL_RetryAttemptsExtendedTooltip" id="20">
 								<TextColor>style:FieldSelectionBackColor</TextColor>
 							</ExtendedTooltip>
+							<Events>
+								<Event name="OnChange">FL_RetryAttemptsOnChange</Event>
+							</Events>
 						</InputField>
 					</ChildItems>
 				</UsualGroup>
@@ -146,6 +149,7 @@
 							<v8:content>Поставляемые интеграции</v8:content>
 						</v8:item>
 					</ToolTip>
+					<Group>Vertical</Group>
 					<Representation>NormalSeparation</Representation>
 					<ExtendedTooltip name="GroupSuppliedIntegrationsExtendedTooltip" id="22"/>
 					<ChildItems>
@@ -159,9 +163,23 @@
 							<RowFilter xsi:nil="true"/>
 							<ContextMenu name="SuppliedIntegrationsContextMenu" id="24">
 								<Autofill>false</Autofill>
+								<ChildItems>
+									<Button name="SuppliedIntegrationsContextMenuInstallIntegration" id="59">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.InstallIntegration</CommandName>
+										<ExtendedTooltip name="SuppliedIntegrationsContextMenuInstallIntegrationExtendedTooltip" id="60"/>
+									</Button>
+								</ChildItems>
 							</ContextMenu>
 							<AutoCommandBar name="SuppliedIntegrationsCommandBar" id="25">
 								<Autofill>false</Autofill>
+								<ChildItems>
+									<Button name="SuppliedIntegrationsInstallIntegration" id="57">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.InstallIntegration</CommandName>
+										<ExtendedTooltip name="SuppliedIntegrationsInstallIntegrationExtendedTooltip" id="58"/>
+									</Button>
+								</ChildItems>
 							</AutoCommandBar>
 							<ExtendedTooltip name="SuppliedIntegrationsExtendedTooltip" id="26"/>
 							<SearchStringAddition name="SuppliedIntegrationsSearchString" id="27">
@@ -188,6 +206,9 @@
 								<ContextMenu name="SuppliedIntegrationsSearchControlContextMenu" id="34"/>
 								<ExtendedTooltip name="SuppliedIntegrationsSearchControlExtendedTooltip" id="35"/>
 							</SearchControlAddition>
+							<Events>
+								<Event name="OnActivateRow">SuppliedIntegrationsOnActivateRow</Event>
+							</Events>
 							<ChildItems>
 								<InputField name="SuppliedIntegrationsChannel" id="36">
 									<DataPath>SuppliedIntegrations.LibraryGuid</DataPath>
@@ -230,6 +251,23 @@
 								</InputField>
 							</ChildItems>
 						</Table>
+						<LabelDecoration name="Tooltip" id="54">
+							<AutoMaxWidth>false</AutoMaxWidth>
+							<HorizontalStretch>true</HorizontalStretch>
+							<TextColor>style:FieldSelectionBackColor</TextColor>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Tooltip</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Подсказка</v8:content>
+								</v8:item>
+							</ToolTip>
+							<ContextMenu name="TooltipContextMenu" id="55"/>
+							<ExtendedTooltip name="TooltipExtendedTooltip" id="56"/>
+						</LabelDecoration>
 					</ChildItems>
 				</UsualGroup>
 			</ChildItems>
@@ -388,4 +426,37 @@
 			</Columns>
 		</Attribute>
 	</Attributes>
+	<Commands>
+		<Command name="InstallIntegration" id="1">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Install integration</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Установить интеграцию</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Install integration</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Установить интеграцию</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Install</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>InstallIntegration</Action>
+			<FunctionalOptions>
+				<Item>FunctionalOption.FL_UseFoxyLink</Item>
+			</FunctionalOptions>
+			<Representation>TextPicture</Representation>
+		</Command>
+	</Commands>
 </Form>

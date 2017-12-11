@@ -180,7 +180,6 @@ EndFunction // NewChannelParameters()
 // Sends the resulting message to the specified exchange channel.
 //
 // Parameters:
-//  Mediator   - Arbitrary              - reserved, currently not in use.
 //  Channel    - CatalogRef.FL_Channels - exchange channel.
 //  Payload    - Arbitrary              - data to deliver.
 //  Properties - Structure              - channel properties.
@@ -190,7 +189,7 @@ EndFunction // NewChannelParameters()
 // Returns:
 //  Arbitrary - the send result.
 //
-Function SendMessageResult(Mediator, Channel, Payload, Properties) Export
+Function SendMessageResult(Channel, Payload, Properties) Export
     
     Query = New Query;
     Query.Text = QueryTextChannelSettings();
@@ -211,7 +210,7 @@ Function SendMessageResult(Mediator, Channel, Payload, Properties) Export
     ChannelProcessor.EncryptedData.Load(
         ChannelSettings.EncryptedData.Unload()); 
     
-    DeliverResult = ChannelProcessor.DeliverMessage(Mediator, Payload, 
+    DeliverResult = ChannelProcessor.DeliverMessage(Payload, 
         Properties);
     Return DeliverResult;    
     
