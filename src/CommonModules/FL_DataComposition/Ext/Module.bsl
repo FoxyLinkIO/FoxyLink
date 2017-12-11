@@ -135,7 +135,7 @@ Procedure CopyDataCompositionSchema(DestinationAddress, SourceAddress,
         DataCompositionSchema = New DataCompositionSchema;
     EndIf;
     
-    If CheckForChanges = True Then
+    If CheckForChanges Then
         Changed = False;
         If IsTempStorageURL(DestinationAddress) Then
             
@@ -149,7 +149,7 @@ Procedure CopyDataCompositionSchema(DestinationAddress, SourceAddress,
             
         Else
             Changed = True; 
-        Endif;
+        EndIf;
     EndIf;
 
     FL_CommonUseClientServer.PutSerializedValueToTempStorage(
@@ -220,7 +220,7 @@ Procedure InitSettingsComposer(Mediator, SettingsComposer,
         EndDo;
         
         For Each Item In DefaultItems Do 
-            If IsBlankString(Item.Title) = False Then
+            If NOT IsBlankString(Item.Title) Then
                 
                 Value = MapSelection[Item.Field]; 
                 If Value <> Undefined Then
@@ -268,7 +268,7 @@ Procedure SetDataToSettingsComposer(Mediator, SettingsComposer,
             "MessageSettings", MessageSettings, Type("Structure"));     
     EndIf;
     
-    If MessageSettings.Property("Body", MessageBody) = False Then
+    If NOT MessageSettings.Property("Body", MessageBody) Then
         Raise FL_ErrorsClientServer.ErrorKeyIsMissingInObject(
             "MessageSettings", MessageSettings, "Body");    
     EndIf;
@@ -295,7 +295,7 @@ Procedure SetDataToSettingsComposer(Mediator, SettingsComposer,
             SettingsInitialized = Parameters.Count() > 0; 
         EndIf;
         
-        If ParametersInitialized And SettingsInitialized Then
+        If ParametersInitialized AND SettingsInitialized Then
             FillDataCompositionParameterValueCollection(Mediator, 
                 DataParameters, Parameters);
         EndIf;            
@@ -502,7 +502,6 @@ Procedure FillDataCompositionParameterValueCollection(Mediator, DataParameters,
             
         EndIf;
         
-        
         SupportedTypes = DataCompositionAvailableParameter.Type.Types();
         ConversionResult = FL_CommonUse.ConvertValueIntoPlatformObject(
             Parameter.Value, SupportedTypes);
@@ -595,12 +594,13 @@ Procedure SetDataCompositionDataParameterValue(DataParameters, ID, Value)
     Else
         
         // Research is needed whether we can add new parameters.        
-        Raise StrTemplate(NStr(
-                "en = 'For field [%1] adding new elements into ''DataCompositionParameterValueCollection'' not implemented.'; 
-                |ru = 'Для поля [%1] добавление новых элементов в ''КоллекцияЗначенийПараметровКомпоновкиДанных'' не реализовано.'"),
+        Raise StrTemplate(NStr("en = 'For field [%1] adding new elements into 
+                |''DataCompositionParameterValueCollection'' not implemented.'; 
+                |ru = 'Для поля [%1] добавление новых элементов в 
+                |''КоллекцияЗначенийПараметровКомпоновкиДанных'' не реализовано.'"),
             ID);
         
-    Endif;
+    EndIf;
 
 EndProcedure // SetValueOfDataCompositionAvailableParameter()
 
@@ -634,8 +634,8 @@ Function TemplateColumns(Mediator, DataCompositionSettings,
     ResourcesCache = Undefined, ColumnsToSkip = Undefined)
     
     // Precache columns, resources and objects.
-    If TemplateColumns = Undefined And ColumnsCache = Undefined
-        And ResourcesCache = Undefined And ColumnsToSkip = Undefined Then
+    If TemplateColumns = Undefined AND ColumnsCache = Undefined
+        AND ResourcesCache = Undefined AND ColumnsToSkip = Undefined Then
      
         ColumnsToSkip = New Map;
         TemplateColumns = New Structure;
@@ -802,9 +802,9 @@ Function NewColumnsCache(DataCompositionTemplate)
             //CellFromMain.ValueType.ContainsType(Type("Number"))
             
             CellFromMain = MainTemplateCells[Index];
-            If IsBlankString(CellFromMain.Title) = False Then
+            If NOT IsBlankString(CellFromMain.Title) Then
                 Value = NormalizeColumnName(CellFromMain.Title);    
-            ElsIf IsBlankString(Cell.Column) = False Then
+            ElsIf NOT IsBlankString(Cell.Column) Then
                 Value = NormalizeColumnName(Cell.Column);    
             Else
                 Value = NormalizeColumnName(CellFromMain.Name);    
@@ -834,7 +834,7 @@ EndFunction // NewColumnsCache()
 //
 Function NewResourcesCache(Items, ResourcesCache = Undefined)
 
-    If (ResourcesCache = Undefined) Then
+    If ResourcesCache = Undefined Then
         ResourcesCache = New Structure;       
     EndIf;
     
@@ -891,14 +891,14 @@ EndFunction // NormalizeColumnName()
 // that is matched to data composition template body.  
 //
 // Parameters:
-//  Mediator                    - Arbitrary               - reserved, currently not in use.
-//  DataCompositionTemplate     - DataCompositionTemplate - main data composition template. 
-//  DataCompositionTemplateBody - DataCompositionTemplateGroup, 
-//                                DataCompositionTemplateChart,
-//                                DataCompositionTemplateTableHierarchicalGroup,
-//                                DataCompositionTemplateRecords, 
-//                                DataCompositionTemplateTable,
-//                                DataCompositionTemplateNestedObject. 
+//  Mediator                - Arbitrary               - reserved, currently not in use.
+//  DataCompositionTemplate - DataCompositionTemplate - main data composition template. 
+//  BodyElement             - DataCompositionTemplateGroup, 
+//                            DataCompositionTemplateChart,
+//                            DataCompositionTemplateTableHierarchicalGroup,
+//                            DataCompositionTemplateRecords, 
+//                            DataCompositionTemplateTable,
+//                            DataCompositionTemplateNestedObject. 
 //  
 // Returns:
 //  DataCompositionTemplateAreaTemplateDefinition.
@@ -1002,11 +1002,14 @@ EndFunction // GroupTemplateItem()
 //
 Function NewReportStructure()
     
+    MaxLengthOfAreaName = 13; // 99999 Templates in one data composition schema.
+    MaxLengthOfBodyName = 50;
+    
     Hierarchy = New ValueTree;
-    Hierarchy.Columns.Add("Template", New TypeDescription("String", , 
-        New StringQualifiers(13)));
-    Hierarchy.Columns.Add("Name", New TypeDescription("String", , 
-        New StringQualifiers(50)));
+    Hierarchy.Columns.Add("Template", FL_CommonUse.StringTypeDescription(
+        MaxLengthOfAreaName));
+    Hierarchy.Columns.Add("Name", FL_CommonUse.StringTypeDescription(
+        MaxLengthOfBodyName));
     
     ReportStructure = New Structure;
     ReportStructure.Insert("Names", New Structure);

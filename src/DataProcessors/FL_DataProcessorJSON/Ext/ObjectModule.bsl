@@ -519,6 +519,8 @@ EndProcedure // CertainlyCloseArrObj()
 //
 Procedure FillParamName(ReportStructure, TemplateColumns)
     
+    MaxLengthOfAreaName = 13;
+    
     Hierarchy = ReportStructure.Hierarchy;
     
     // It is needed to verify duplicate property names.
@@ -527,7 +529,8 @@ Procedure FillParamName(ReportStructure, TemplateColumns)
     // It is needed to check if a parameter has been listed in the 
     // StreamObject at that level of hierarchy.
     APISchema.Columns.Add("Done", New TypeDescription("Boolean"));
-    APISchema.Columns.Add("Template", FL_CommonUse.StringTypeDescription(12));
+    APISchema.Columns.Add("Template", FL_CommonUse.StringTypeDescription(
+        MaxLengthOfAreaName));
     APISchema.Columns.Add("Parameter", New TypeDescription("String"));
         
     // Inverted columns cache.
