@@ -378,7 +378,7 @@ Procedure PushJobServerState(WorkerCount, RetryJobs)
     For Each Job In RetryJobs Do
         
         Task = FL_Tasks.NewTask();
-        Task.MethodName = "Catalogs.FL_Jobs.ProcessMessage";
+        Task.MethodName = "Catalogs.FL_Jobs.Trigger";
         Task.Parameters.Add(Job);
         Task.Description = "Background job task (FoxyLink)";
         Task.SafeMode = False;
@@ -403,7 +403,7 @@ Procedure PushJobServerState(WorkerCount, RetryJobs)
     For Each Job In EnqueuedJobs Do
         
         Task = FL_Tasks.NewTask();
-        Task.MethodName = "Catalogs.FL_Jobs.ProcessMessage";
+        Task.MethodName = "Catalogs.FL_Jobs.Trigger";
         Task.Parameters.Add(Job);
         Task.Description = "Background job task (FoxyLink)";
         Task.SafeMode = False;

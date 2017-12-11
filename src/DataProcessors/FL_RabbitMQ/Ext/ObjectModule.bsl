@@ -70,6 +70,61 @@ EndFunction // ChannelFullName()
 
 #Region ProgramInterface
 
+// Delivers a stream object to the current channel.
+//
+// Parameters:
+//  Stream         - Stream       - a data stream that can be read successively 
+//                              or/and where you can record successively. 
+//                 - MemoryStream - specialized version of Stream object for 
+//                              operation with the data located in the RAM.
+//                 - FileStream   - specialized version of Stream object for 
+//                              operation with the data located in a file on disk.
+//  Properties     - Structure    - channel parameters.
+//
+// Returns:
+//  Structure - see function Catalogs.FL_Channels.NewChannelDeliverResult.
+//
+Function DeliverMessage(Stream, Properties) Export
+    
+    Var HTTPMethod, HTTPRequest;
+    
+    DeliveryResult = Catalogs.FL_Channels.NewChannelDeliverResult();    
+    If TypeOf(Properties) <> Type("Structure") Then   
+        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
+            "Properties", Properties, Type("Structure"));
+    EndIf;
+
+    PayLoad = GetStringFromBinaryData(Stream.CloseAndGetBinaryData());
+    ResolveProperties(Properties, HTTPMethod, HTTPRequest, Payload);
+       
+    If Log Then
+        
+        DeliveryResult.OriginalResponse = FL_InteriorUse.CallHTTPMethod(
+            NewHTTPConnection(), 
+            HTTPRequest, 
+            HTTPMethod, 
+            DeliveryResult.StatusCode, 
+            DeliveryResult.StringResponse, 
+            LogAttribute);
+            
+    Else
+        
+        DeliveryResult.OriginalResponse = FL_InteriorUse.CallHTTPMethod(
+            NewHTTPConnection(), 
+            HTTPRequest, 
+            HTTPMethod, 
+            DeliveryResult.StatusCode, 
+            DeliveryResult.StringResponse);
+            
+    EndIf;
+    
+    DeliveryResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        DeliveryResult.StatusCode);
+    
+    Return DeliveryResult;
+    
+EndFunction // DeliverMessage() 
+
 // Invalidates the channel data. 
 //
 // Returns:
@@ -103,62 +158,18 @@ Function ResourcesRequired() Export
     
 EndFunction // ResourcesRequired()
 
-// Delivers a message to the current channel.
-//
-// Parameters:
-//  Mediator   - Arbitrary - reserved, currently not in use.
-//  Payload    - Arbitrary - message to deliver.
-//  Properties - Structure - channel parameters.
+// Returns array of supplied integrations for this configuration.
 //
 // Returns:
-//  Structure - message delivery result with values:
-//      * Success          - Boolean   - shows whether delivery was successful.
-//      * OriginalResponse - Arbitrary - original response object.
-//      * StringResponse   - String    - string response presentation.
+//  Array - array filled by supplied integrations.
+//      * ArrayItem - Structure - see function FL_InteriorUse.NewPluggableSettings.
 //
-Function DeliverMessage(Mediator, Payload, Properties) Export
+Function SuppliedIntegrations() Export
     
-    Var HTTPMethod, HTTPRequest;
-    
-    DeliveryResult = New Structure;
-    DeliveryResult.Insert("Success");
-    DeliveryResult.Insert("StatusCode");
-    DeliveryResult.Insert("StringResponse");
-    DeliveryResult.Insert("OriginalResponse");
-    
-    If TypeOf(Properties) <> Type("Structure") Then   
-        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "Properties", Properties, Type("Structure"));
-    EndIf;
-
-    ResolveProperties(Properties, HTTPMethod, HTTPRequest, Payload);
-       
-    If Log Then
-        
-        DeliveryResult.OriginalResponse = FL_InteriorUse.CallHTTPMethod(
-            NewHTTPConnection(), 
-            HTTPRequest, 
-            HTTPMethod, 
-            DeliveryResult.StatusCode, 
-            DeliveryResult.StringResponse, 
-            LogAttribute);
-            
-    Else
-        
-        DeliveryResult.OriginalResponse = FL_InteriorUse.CallHTTPMethod(
-            NewHTTPConnection(), 
-            HTTPRequest, 
-            HTTPMethod, 
-            DeliveryResult.StatusCode, 
-            DeliveryResult.StringResponse);
-            
-    EndIf;
-    
-    DeliveryResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-        DeliveryResult.StatusCode);
-    Return DeliveryResult;
-    
-EndFunction // DeliverMessage() 
+    SuppliedIntegrations = New Array;    
+    Return SuppliedIntegrations;
+          
+EndFunction // SuppliedIntegration()
 
 #EndRegion // ProgramInterface
 

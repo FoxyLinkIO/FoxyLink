@@ -341,6 +341,26 @@ Function PluggableSubsystem(SubsystemName) Export
     
 EndFunction // PluggableSubsystem()
 
+// Returns a new pluggable settings structure.
+//
+// Returns:
+//  Structure - with keys:
+//      * Name     - String - name of settings.
+//      * Template - String - name of template with data settings.
+//      * ToolTip  - String - short settings description.
+//      * Version  - String - version of current settings.
+//
+Function NewPluggableSettings() Export
+    
+    PluggableSettings = New Structure;
+    PluggableSettings.Insert("Name");
+    PluggableSettings.Insert("Template");
+    PluggableSettings.Insert("ToolTip");
+    PluggableSettings.Insert("Version");
+    Return PluggableSettings;
+    
+EndFunction // NewPluggableSettings()
+
 #EndRegion // SubsystemInteraction
 
 #Region RightsInteraction

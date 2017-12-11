@@ -17,3 +17,24 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#Region FormEventHandlers
+
+&AtServer
+Procedure OnCreateAtServer(Cancel, StandardProcessing)
+    
+    Parameters.Property("LibraryGuid", LibraryGuid);
+    Parameters.Property("Template", Template);
+    
+    If NOT IsBlankString(LibraryGuid) AND NOT IsBlankString(Template) Then 
+        
+        ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
+            LibraryGuid);
+        ImportObject = Catalogs.FL_Exchanges.ImportObject(
+            ChannelProcessor.GetTemplate(Template));
+        
+        
+    EndIf;
+    
+EndProcedure // OnCreateAtServer() 
+
+#EndRegion // FormEventHandlers

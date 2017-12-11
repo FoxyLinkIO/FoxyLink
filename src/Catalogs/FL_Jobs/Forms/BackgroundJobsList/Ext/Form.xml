@@ -153,18 +153,18 @@
 						<CommandName>Form.Item.List.StandardCommand.Refresh</CommandName>
 						<ExtendedTooltip name="UpdateListExtendedTooltip" id="80"/>
 					</Button>
-					<Button name="ProcessSelectedMessages" id="67">
+					<Button name="TriggerSelectedMessages" id="67">
 						<Type>CommandBarButton</Type>
-						<CommandName>Form.Command.ProcessSelectedMessages</CommandName>
-						<ExtendedTooltip name="ProcessSelectedMessagesExtendedTooltip" id="68"/>
+						<CommandName>Form.Command.TriggerSelectedMessages</CommandName>
+						<ExtendedTooltip name="TriggerSelectedMessagesExtendedTooltip" id="68"/>
 					</Button>
 					<ButtonGroup name="ListContextMenuGroup1" id="71">
 						<ExtendedTooltip name="ListContextMenuGroup1ExtendedTooltip" id="72"/>
 						<ChildItems>
-							<Button name="ProcessMessages" id="69">
+							<Button name="TriggerMessages" id="69">
 								<Type>CommandBarButton</Type>
-								<CommandName>Form.Command.ProcessMessages</CommandName>
-								<ExtendedTooltip name="ProcessMessagesExtendedTooltip" id="70"/>
+								<CommandName>Form.Command.TriggerMessages</CommandName>
+								<ExtendedTooltip name="TriggerMessagesExtendedTooltip" id="70"/>
 							</Button>
 						</ChildItems>
 					</ButtonGroup>
@@ -301,15 +301,15 @@
 		</ConditionalAppearance>
 	</Attributes>
 	<Commands>
-		<Command name="ProcessSelectedMessages" id="1">
+		<Command name="TriggerSelectedMessages" id="1">
 			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Trigger selected</v8:content>
+				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Обработать выделенные</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Process selected</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
@@ -319,17 +319,17 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Process selected messages</v8:content>
+					<v8:content>Trigger selected messages</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
 				<xr:Ref>CommonPicture.FL_Generate</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>ProcessSelectedMessages</Action>
+			<Action>TriggerSelectedMessages</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
-		<Command name="ProcessMessages" id="2">
+		<Command name="TriggerMessages" id="2">
 			<Title>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
@@ -337,7 +337,7 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Process messages</v8:content>
+					<v8:content>Trigger messages</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
@@ -347,14 +347,14 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Process messages</v8:content>
+					<v8:content>Trigger messages</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
 				<xr:Ref>CommonPicture.FL_GenerateAll</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>ProcessMessages</Action>
+			<Action>TriggerMessages</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 		<Command name="StartJobServer" id="3">

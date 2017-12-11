@@ -36,8 +36,8 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     Filter.Insert("MetadataObjectClass", Array);
     ValueTree = FL_CommonUse.ConfigurationMetadataTree(Filter);
     
-    For Each SelectedEvent In Parameters.SelectedEvents Do
-        SearchResult = ValueTree.Rows.Find(SelectedEvent.Value, "FullName", 
+    For Each MarkedEvent In Parameters.MarkedEvents Do
+        SearchResult = ValueTree.Rows.Find(MarkedEvent.Value, "FullName", 
             True);
         If SearchResult <> Undefined Then
             SearchResult.Check = 1;
@@ -66,7 +66,7 @@ EndProcedure // EventsTreeCheckOnChange()
 #Region FormCommandHandlers
 
 &AtClient
-Procedure Select(Command)
+Procedure SaveAndClose(Command)
     
     Array = New Array;
     For Each Events In EventsTree.GetItems() Do
@@ -79,6 +79,6 @@ Procedure Select(Command)
     
     Close(Array);
     
-EndProcedure // Select()
+EndProcedure // SaveAndClose()
 
 #EndRegion // FormCommandHandlers

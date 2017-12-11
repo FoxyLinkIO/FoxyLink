@@ -1198,22 +1198,22 @@ Procedure SerializeArrayOfRefsToJSON(JSONWriter, Source) Export
     
 EndProcedure // SerializeArrayOfRefsToJSON()
 
-// Serializes the value into XML string representation.
+// Serializes the value into JSON string representation.
 //
 // Parameters:
 //  Value - Arbitrary - the value to be serialized.
 //
 // Returns:
-//  String - XML string representation.
+//  String - JSON string representation.
 //
-Function ValueToXMLString(Value) Export
+Function ValueToJSONString(Value) Export
 
-    XMLWriter = New XMLWriter();
-    XMLWriter.SetString();
-    XDTOSerializer.WriteXML(XMLWriter, Value, XMLTypeAssignment.Explicit);
-    Return XMLWriter.Close();
+    JSONWriter = New JSONWriter();
+    JSONWriter.SetString();
+    XDTOSerializer.WriteJSON(JSONWriter, Value, XMLTypeAssignment.Explicit);
+    Return JSONWriter.Close();
 
-EndFunction // ValueToXMLString()
+EndFunction // ValueToJSONString()
 
 // Returns conversion result.
 //
@@ -1396,7 +1396,6 @@ EndProcedure // ConvertValueIntoString()
 //
 // Returns:
 //  Structure - convertion result structure.
-//      * Mediator       - Arbitrary - reserved, currently not in use.
 //      * ConvertedValue - Arbitrary - converted value.
 //      * TypeConverted  - Boolean   - initial value 'False', when 'True' is set 
 //                                    it means value conversion was successful.
@@ -1405,7 +1404,6 @@ EndProcedure // ConvertValueIntoString()
 Function NewConversionResult()
 
     ConversionResult = New Structure;
-    ConversionResult.Insert("Mediator");
     ConversionResult.Insert("ConvertedValue");
     ConversionResult.Insert("TypeConverted", False);
     Return ConversionResult;
@@ -1427,7 +1425,6 @@ Function ValueTypeMatchExpected(Value, ExpectedType, ConversionResult)
 
     If TypeOf(Value) <> ExpectedType Then
         
-        // Mediator
         // FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
         //      "SettingsComposer", Value, ExpectedType);
         

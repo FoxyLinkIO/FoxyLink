@@ -37,6 +37,7 @@
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats</xr:Object>
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Tasks</xr:Object>
 				<xr:Object>CommonCommand.ExportObject</xr:Object>
+				<xr:Object>CommonForm.FL_Import</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

@@ -22,67 +22,47 @@
 // Outputs the result of the data composition schema in the stream object.
 //
 // Parameters:
-//  Mediator         - Arbitrary - reserved, currently not in use.
 //  StreamObject     - Arbitrary - an object is designed for character output by data composition processor.
 //  OutputParameters - Structure - see function FL_DataComposition.NewOutputParameters.
 //
-Procedure Output(Mediator, StreamObject, OutputParameters) Export
+Procedure Output(StreamObject, OutputParameters) Export
     
-    // TODO: Check output parameters   
-    
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
     DCTParameters = FL_CommonUseClientServer.CopyStructure(
         OutputParameters.DCTParameters);
         
-    // TODO: Make support of DataCompositionTemplateGenerator.
     // Verify, that supported type of generator is in use.
     DCTParameters.GeneratorType = 
         Type("DataCompositionValueCollectionTemplateGenerator");
         
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     // Create data composition template.
     DataCompositionTemplate = NewDataCompositionTemplate(DCTParameters);
     
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     // Init data composition processor.
     DataCompositionProcessor = New DataCompositionProcessor;
     DataCompositionProcessor.Initialize(DataCompositionTemplate, 
         OutputParameters.ExternalDataSets, 
         OutputParameters.DetailsData, 
         OutputParameters.CanUseExternalFunctions);
-        
-        
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
+          
     ReportStructure = NewReportStructure();
-    FillReportStructure(Mediator, ReportStructure, DataCompositionTemplate, 
+    FillReportStructure(ReportStructure, DataCompositionTemplate, 
         DataCompositionTemplate.Body);
         
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     // Init template columns with particular order.
-    TemplateColumns = TemplateColumns(Mediator, DCTParameters.Template,
+    TemplateColumns = TemplateColumns(DCTParameters.Template,
         DataCompositionTemplate, DataCompositionTemplate.Body);
         
     // Handle naming restrictions.
     // Object can have naming restrictions and this problems should be handled in place.
-    StreamObject.VerifyReportStructure(Mediator, ReportStructure);
-    StreamObject.VerifyColumnNames(Mediator, TemplateColumns);
+    StreamObject.VerifyReportStructure(ReportStructure);
+    StreamObject.VerifyColumnNames(TemplateColumns);
     
-    
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
     // Output start
     DataCompositionProcessor.Next(); // StartElement
     DataCompositionProcessor.Next(); // DataCompositionTemplate
     
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     Item = DataCompositionProcessor.Next(); // Query execution 
     
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     StreamObject.Output(Item, DataCompositionProcessor, 
         ReportStructure, TemplateColumns);    
     
@@ -91,29 +71,21 @@ EndProcedure // Output()
 // Outputs the result of the data composition schema in the spreadsheet document.
 //
 // Parameters:
-//  Mediator            - Arbitrary           - reserved, currently not in use.
 //  SpreadsheetDocument - SpreadsheetDocument - spreadsheet document.
 //  OutputParameters    - Structure           - see function FL_DataComposition.NewOutputParameters.
 //
-Procedure OutputInSpreadsheetDocument(Mediator, SpreadsheetDocument, 
+Procedure OutputInSpreadsheetDocument(SpreadsheetDocument, 
     OutputParameters) Export
        
-    // TODO: Check output parameters
-    
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
     DCTParameters = FL_CommonUseClientServer.CopyStructure(
         OutputParameters.DCTParameters);
         
     // Verify, that supported type of generator is in use.
     DCTParameters.GeneratorType = Type("DataCompositionTemplateGenerator");
     
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     // Create data composition template.
     DataCompositionTemplate = NewDataCompositionTemplate(DCTParameters);
 
-    // TODO: Mediator.Logger (Trace, Debug, Warning+)
-    // TODO: Mediator.Performance (APDEX, OPDEX)
     // Init data composition processor.
     DataCompositionProcessor = New DataCompositionProcessor;
     DataCompositionProcessor.Initialize(DataCompositionTemplate, 
@@ -161,21 +133,21 @@ Procedure CopyDataCompositionSchema(DestinationAddress, SourceAddress,
         DataCompositionSchema = New DataCompositionSchema;
     EndIf;
     
-    If CheckForChanges = True Then
+    If CheckForChanges Then
         Changed = False;
         If IsTempStorageURL(DestinationAddress) Then
             
             CurrentDCS = GetFromTempStorage(DestinationAddress);
             If TypeOf(CurrentDCS) = Type("DataCompositionSchema") Then
-                Changed = FL_CommonUse.ValueToXMLString(CurrentDCS) <> 
-                    FL_CommonUse.ValueToXMLString(DataCompositionSchema);
+                Changed = FL_CommonUse.ValueToJSONString(CurrentDCS) <> 
+                    FL_CommonUse.ValueToJSONString(DataCompositionSchema);
             Else
                 Changed = True;
             EndIf;
             
         Else
             Changed = True; 
-        Endif;
+        EndIf;
     EndIf;
 
     FL_CommonUseClientServer.PutSerializedValueToTempStorage(
@@ -187,7 +159,6 @@ EndProcedure // CopyDataCompositionSchema()
 // data composition settings.
 //
 // Parameters:
-//  Mediator         - Arbitrary - reserved, currently not in use.
 //  SettingsComposer - DataCompositionSettingsComposer   - describes relation of 
 //                              data composition settings and data composition schema.
 //  DataCompositionSchemaURL   - String                  - the address in temp storage.
@@ -196,8 +167,8 @@ EndProcedure // CopyDataCompositionSchema()
 //                             - DataCompositionSettings - data composition settings.
 //                                  Default value: Undefined.
 //
-Procedure InitSettingsComposer(Mediator, SettingsComposer, 
-    DataCompositionSchemaURL, DataCompositionSettingsURL = Undefined) Export
+Procedure InitSettingsComposer(SettingsComposer, DataCompositionSchemaURL, 
+    DataCompositionSettingsURL = Undefined) Export
 
     If IsTempStorageURL(DataCompositionSchemaURL) Then
         DataCompositionSchema = GetFromTempStorage(DataCompositionSchemaURL);
@@ -235,7 +206,6 @@ Procedure InitSettingsComposer(Mediator, SettingsComposer,
         
         SettingsComposer.LoadSettings(DataCompositionSchema.DefaultSettings);
         
-        
         // Platform bug is here. We have to copy DefaultSettings.Selection.Items 
         // titles from DataCompositionSchema to SettingsComposer.Settings.Selection.Items.
         Items = SettingsComposer.Settings.Selection.Items;
@@ -247,7 +217,7 @@ Procedure InitSettingsComposer(Mediator, SettingsComposer,
         EndDo;
         
         For Each Item In DefaultItems Do 
-            If IsBlankString(Item.Title) = False Then
+            If NOT IsBlankString(Item.Title) Then
                 
                 Value = MapSelection[Item.Field]; 
                 If Value <> Undefined Then
@@ -275,13 +245,11 @@ EndProcedure // InitSettingsComposer()
 // Sets the message settings into data composition settings composer.
 //
 // Parameters:
-//  Mediator         - Arbitrary                       - reserved, currently not in use.
 //  SettingsComposer - DataCompositionSettingsComposer - describes relation of 
 //                              data composition settings and data composition schema.
 //  MessageSettings  - FixedStructure                  - body of the message settings.
 //
-Procedure SetDataToSettingsComposer(Mediator, SettingsComposer, 
-    MessageSettings) Export
+Procedure SetDataToSettingsComposer(SettingsComposer, MessageSettings) Export
     
     Var MessageBody, Parameters, Filter;
     
@@ -295,7 +263,7 @@ Procedure SetDataToSettingsComposer(Mediator, SettingsComposer,
             "MessageSettings", MessageSettings, Type("Structure"));     
     EndIf;
     
-    If MessageSettings.Property("Body", MessageBody) = False Then
+    If NOT MessageSettings.Property("Body", MessageBody) Then
         Raise FL_ErrorsClientServer.ErrorKeyIsMissingInObject(
             "MessageSettings", MessageSettings, "Body");    
     EndIf;
@@ -322,9 +290,9 @@ Procedure SetDataToSettingsComposer(Mediator, SettingsComposer,
             SettingsInitialized = Parameters.Count() > 0; 
         EndIf;
         
-        If ParametersInitialized And SettingsInitialized Then
-            FillDataCompositionParameterValueCollection(Mediator, 
-                DataParameters, Parameters);
+        If ParametersInitialized AND SettingsInitialized Then
+            FillDataCompositionParameterValueCollection(DataParameters, 
+                Parameters);
         EndIf;            
         
     EndIf;
@@ -347,9 +315,6 @@ EndProcedure // SetDataToSettingsComposer()
 //
 Function NewDataCompositionTemplate(DCTParameters) Export
    
-    // TODO: Проверка параметров макета
-    
- 
     DataCompositionTemplateComposer = New DataCompositionTemplateComposer;
     Return DataCompositionTemplateComposer.Execute(DCTParameters.Schema, 
         DCTParameters.Template, 
@@ -461,7 +426,6 @@ EndFunction // NewMessageSettings()
 //  in ~17.62% or ~1967 ms for 100000 executions.
 // 
 // Parameters:
-//  Mediator        - Arbitrary - reserved, currently not in use.
 //  ReportStructure - Structure - see function FL_DataComposition.NewReportStructure.
 //  DataCompositionTemplate - DataCompositionTemplate - main data composition 
 //                          template, for which is needed to fill a structure 
@@ -469,7 +433,7 @@ EndFunction // NewMessageSettings()
 //  DataCompositionTemplateBody - DataCompositionTemplateBody - the body of current 
 //                          data composition layout. 
 //
-Procedure FillReportStructure(Mediator, ReportStructure, 
+Procedure FillReportStructure(ReportStructure, 
     DataCompositionTemplate, DataCompositionTemplateBody)
         
     For Each ItemBody In DataCompositionTemplateBody Do
@@ -478,8 +442,8 @@ Procedure FillReportStructure(Mediator, ReportStructure,
             Continue; 
         EndIf;
         
-        AreaTemplateDefinition = AreaTemplateDefinition(Mediator, 
-            DataCompositionTemplate, ItemBody);
+        AreaTemplateDefinition = AreaTemplateDefinition(DataCompositionTemplate, 
+            ItemBody);
             
         ReportStructure.Names.Insert(AreaTemplateDefinition.Name, 
             ItemBody.Name);    
@@ -491,7 +455,7 @@ Procedure FillReportStructure(Mediator, ReportStructure,
         If ItemBody.Body.Count() > 1 Then
             
             ReportStructure.Hierarchy = NewTreeRow; 
-            FillReportStructure(Mediator, ReportStructure, DataCompositionTemplate, 
+            FillReportStructure(ReportStructure, DataCompositionTemplate, 
                 ItemBody.Body);
             If NewTreeRow.Parent = Undefined Then
                 ReportStructure.Hierarchy = NewTreeRow.Owner();
@@ -508,12 +472,11 @@ EndProcedure // FillReportStructure()
 // Fills data composition parameter value collection from MessageSettings.Body.Parameters.
 //
 // Parameters:
-//  Mediator        - Arbitrary                      - reserved, currently not in use.
 //  DataParameters  - DataCompositionParameterValues - values of data parameters. 
 //                                          They are implemented as parameter values.
 //  Parameters      - FixedStructure                 - MessageSettings.Body.Parameters.
 //
-Procedure FillDataCompositionParameterValueCollection(Mediator, DataParameters, 
+Procedure FillDataCompositionParameterValueCollection(DataParameters, 
     Parameters)
 
     AvailableParameters = DataParameters.AvailableParameters;
@@ -524,14 +487,12 @@ Procedure FillDataCompositionParameterValueCollection(Mediator, DataParameters,
             DataCompositionParameter);
         If DataCompositionAvailableParameter = Undefined Then
             
-            // Mediator   
             //Nstr("en = 'Warning: Available parameter not found for [Key: %1].'; 
             //    |ru = 'Предупреждение: Доступный параметр не найден для [Ключ: %1].'")
                                           
             Continue;
             
         EndIf;
-        
         
         SupportedTypes = DataCompositionAvailableParameter.Type.Types();
         ConversionResult = FL_CommonUse.ConvertValueIntoPlatformObject(
@@ -541,9 +502,7 @@ Procedure FillDataCompositionParameterValueCollection(Mediator, DataParameters,
             
             SetDataCompositionDataParameterValue(DataParameters, Parameter.Key,
                 ConversionResult.ConvertedValue);
-                
-            // Mediator     
-                
+                 
             // Добавить предупреждения
             //Для Каждого ЗаписьЖурнала Из РезультатПреобразования.ЗаписиЖурналаРегистрации Цикл
             //	
@@ -572,8 +531,6 @@ Procedure FillDataCompositionParameterValueCollection(Mediator, DataParameters,
             //КонецЦикла;
             
         Else
-            
-            // Mediator 
             
             //Для Каждого ЗаписьЖурнала Из РезультатПреобразования.ЗаписиЖурналаРегистрации Цикл
             //    
@@ -624,22 +581,20 @@ Procedure SetDataCompositionDataParameterValue(DataParameters, ID, Value)
         SearchResult.Value = Value;
     Else
         
-        // TODO: Research is needed whether we can add new parameters.
-        // NewItem = Items.ADD();
-        
-        Raise StrTemplate(NStr(
-                "en = 'For field [%1] adding new elements into ''DataCompositionParameterValueCollection'' not implemented.'; 
-                |ru = 'Для поля [%1] добавление новых элементов в ''КоллекцияЗначенийПараметровКомпоновкиДанных'' не реализовано.'"),
+        // Research is needed whether we can add new parameters.        
+        Raise StrTemplate(NStr("en = 'For field [%1] adding new elements into 
+                |''DataCompositionParameterValueCollection'' not implemented.'; 
+                |ru = 'Для поля [%1] добавление новых элементов в 
+                |''КоллекцияЗначенийПараметровКомпоновкиДанных'' не реализовано.'"),
             ID);
         
-    Endif;
+    EndIf;
 
 EndProcedure // SetValueOfDataCompositionAvailableParameter()
 
 // Returns the structure with template columns which is needed for output processor. 
 //
 // Parameters:
-//  Mediator                    - Arbitrary - reserved, currently not in use.
 //  DataCompositionSettings     - DataCompositionSettings     - settings, for which template has been created.
 //  DataCompositionTemplate     - DataCompositionTemplate     - main data composition template, for which is needed 
 //                                  to create a structure with the names of columns nested in data composition layouts.
@@ -660,14 +615,14 @@ EndProcedure // SetValueOfDataCompositionAvailableParameter()
 //          ** Key   - String - cell string values of the certain data composition layout (P1, P2, ... Pn).
 //          ** Value - String - normalized column name.
 //
-Function TemplateColumns(Mediator, DataCompositionSettings, 
+Function TemplateColumns(DataCompositionSettings, 
     DataCompositionTemplate, DataCompositionTemplateBody, 
     TemplateColumns = Undefined, ColumnsCache = Undefined, 
     ResourcesCache = Undefined, ColumnsToSkip = Undefined)
     
     // Precache columns, resources and objects.
-    If TemplateColumns = Undefined And ColumnsCache = Undefined
-        And ResourcesCache = Undefined And ColumnsToSkip = Undefined Then
+    If TemplateColumns = Undefined AND ColumnsCache = Undefined
+        AND ResourcesCache = Undefined AND ColumnsToSkip = Undefined Then
      
         ColumnsToSkip = New Map;
         TemplateColumns = New Structure;
@@ -681,7 +636,6 @@ Function TemplateColumns(Mediator, DataCompositionSettings,
                
     EndIf;
     
-    
     For Each ItemBody In DataCompositionTemplateBody Do
         
         If TypeOf(ItemBody) = Type("DataCompositionTemplateAreaTemplate") Then
@@ -690,8 +644,8 @@ Function TemplateColumns(Mediator, DataCompositionSettings,
         
         NextLevelColumnsToSkip = New Map;
          
-        AreaTemplateDefinition = AreaTemplateDefinition(Mediator, 
-            DataCompositionTemplate, ItemBody);    
+        AreaTemplateDefinition = AreaTemplateDefinition(DataCompositionTemplate, 
+            ItemBody);    
             
         TemplateColumns.Insert(AreaTemplateDefinition.Name, New Structure);
         
@@ -761,9 +715,13 @@ Function TemplateColumns(Mediator, DataCompositionSettings,
                 NextLevelColumnsToSkip.Insert(Column.Key, Column.Value);
             EndDo;
             
-            TemplateColumns(Mediator, DataCompositionSettings, 
-                DataCompositionTemplate, ItemBody.Body, TemplateColumns, 
-                ColumnsCache, ResourcesCache, NextLevelColumnsToSkip);
+            TemplateColumns(DataCompositionSettings, 
+                DataCompositionTemplate, 
+                ItemBody.Body, 
+                TemplateColumns, 
+                ColumnsCache, 
+                ResourcesCache, 
+                NextLevelColumnsToSkip);
             
         EndIf;
         
@@ -835,9 +793,9 @@ Function NewColumnsCache(DataCompositionTemplate)
             //CellFromMain.ValueType.ContainsType(Type("Number"))
             
             CellFromMain = MainTemplateCells[Index];
-            If IsBlankString(CellFromMain.Title) = False Then
+            If NOT IsBlankString(CellFromMain.Title) Then
                 Value = NormalizeColumnName(CellFromMain.Title);    
-            ElsIf IsBlankString(Cell.Column) = False Then
+            ElsIf NOT IsBlankString(Cell.Column) Then
                 Value = NormalizeColumnName(Cell.Column);    
             Else
                 Value = NormalizeColumnName(CellFromMain.Name);    
@@ -867,7 +825,7 @@ EndFunction // NewColumnsCache()
 //
 Function NewResourcesCache(Items, ResourcesCache = Undefined)
 
-    If (ResourcesCache = Undefined) Then
+    If ResourcesCache = Undefined Then
         ResourcesCache = New Structure;       
     EndIf;
     
@@ -924,19 +882,18 @@ EndFunction // NormalizeColumnName()
 // that is matched to data composition template body.  
 //
 // Parameters:
-//  Mediator                    - Arbitrary               - reserved, currently not in use.
-//  DataCompositionTemplate     - DataCompositionTemplate - main data composition template. 
-//  DataCompositionTemplateBody - DataCompositionTemplateGroup, 
-//                                DataCompositionTemplateChart,
-//                                DataCompositionTemplateTableHierarchicalGroup,
-//                                DataCompositionTemplateRecords, 
-//                                DataCompositionTemplateTable,
-//                                DataCompositionTemplateNestedObject. 
+//  DataCompositionTemplate - DataCompositionTemplate - main data composition template. 
+//  BodyElement             - DataCompositionTemplateGroup, 
+//                            DataCompositionTemplateChart,
+//                            DataCompositionTemplateTableHierarchicalGroup,
+//                            DataCompositionTemplateRecords, 
+//                            DataCompositionTemplateTable,
+//                            DataCompositionTemplateNestedObject. 
 //  
 // Returns:
 //  DataCompositionTemplateAreaTemplateDefinition.
 //
-Function AreaTemplateDefinition(Mediator, DataCompositionTemplate, BodyElement)
+Function AreaTemplateDefinition(DataCompositionTemplate, BodyElement)
     
     // Now, it is a fatal error. However, in future it might be handled.
     If BodyElement.Body.Count() = 0 Then
@@ -1035,11 +992,14 @@ EndFunction // GroupTemplateItem()
 //
 Function NewReportStructure()
     
+    MaxLengthOfAreaName = 13; // 99999 Templates in one data composition schema.
+    MaxLengthOfBodyName = 50;
+    
     Hierarchy = New ValueTree;
-    Hierarchy.Columns.Add("Template", New TypeDescription("String", , 
-        New StringQualifiers(13)));
-    Hierarchy.Columns.Add("Name", New TypeDescription("String", , 
-        New StringQualifiers(50)));
+    Hierarchy.Columns.Add("Template", FL_CommonUse.StringTypeDescription(
+        MaxLengthOfAreaName));
+    Hierarchy.Columns.Add("Name", FL_CommonUse.StringTypeDescription(
+        MaxLengthOfBodyName));
     
     ReportStructure = New Structure;
     ReportStructure.Insert("Names", New Structure);

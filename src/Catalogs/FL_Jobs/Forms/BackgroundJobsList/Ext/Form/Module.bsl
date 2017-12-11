@@ -55,30 +55,30 @@ EndProcedure // ListOnActivateRow()
 
 #Region FormCommandHandlers
 
-// See function Catalogs.FL_Jobs.ProcessMessage.
+// See function Catalogs.FL_Jobs.Trigger.
 //
 &AtClient
-Procedure ProcessSelectedMessages(Command)
+Procedure TriggerSelectedMessages(Command)
     
     CurrentData = Items.List.CurrentData;
     If CurrentData <> Undefined Then
-        ProcessSelectedMessagesAtServer(Items.List.SelectedRows);
+        TriggerSelectedMessagesAtServer(Items.List.SelectedRows);
     Else
         FL_CommonUseClientServer.NotifyUser(NStr("
             |en = 'Select a message to process from the list.'; 
             |ru = 'Выберите сообщение для обработки из списка.'"));
     EndIf;
     
-EndProcedure // ProcessSelectedMessages()
+EndProcedure // TriggerSelectedMessages()
 
-// See function Catalogs.FL_Jobs.ProcessMessage.
+// See function Catalogs.FL_Jobs.Trigger.
 //
 &AtClient
-Procedure ProcessMessages(Command)
+Procedure TriggerMessages(Command)
     
-    ProcessMessagesAtServer();
+    TriggerMessagesAtServer();
     
-EndProcedure // ProcessMessages()
+EndProcedure // TriggerMessages()
 
 // See procedure FL_JobServer.JobServerActivator.
 //
@@ -141,21 +141,21 @@ Procedure UpdateJobServerStateAtServer()
     
 EndProcedure // UpdateJobServerStateAtServer() 
 
-// See function Catalogs.FL_Jobs.ProcessMessage.
+// See function Catalogs.FL_Jobs.Trigger.
 //
 &AtServer
-Procedure ProcessSelectedMessagesAtServer(Val Messages)
+Procedure TriggerSelectedMessagesAtServer(Val Jobs)
 
-    For Each Message In Messages Do
-        Catalogs.FL_Jobs.ProcessMessage(Message);
+    For Each Job In Jobs Do
+        Catalogs.FL_Jobs.Trigger(Job);
     EndDo;
 
-EndProcedure // ProcessSelectedMessagesAtServer() 
+EndProcedure // TriggerSelectedMessagesAtServer() 
 
-// See function Catalogs.FL_Jobs.ProcessMessage.
+// See function Catalogs.FL_Jobs.Trigger.
 //
 &AtServer
-Procedure ProcessMessagesAtServer()
+Procedure TriggerMessagesAtServer()
     
     Query = New Query;
     Query.Text = "
@@ -171,11 +171,10 @@ Procedure ProcessMessagesAtServer()
     
     SelectionDetailRecords = QueryResult.Select();
     While SelectionDetailRecords.Next() Do
-        Catalogs.FL_Jobs.ProcessMessage(
-            SelectionDetailRecords.Ref);
+        Catalogs.FL_Jobs.Trigger(SelectionDetailRecords.Ref);
     EndDo;
   
-EndProcedure // ProcessMessageAtServer() 
+EndProcedure // TriggerMessagesAtServer() 
 
 // See procedure FL_JobServer.JobServerActivator.
 // 

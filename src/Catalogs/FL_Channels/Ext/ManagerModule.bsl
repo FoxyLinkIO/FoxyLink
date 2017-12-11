@@ -59,6 +59,42 @@ Function AvailableChannels() Export
     
 EndFunction // AvailableChannels()
 
+// Returns array of supplied integrations for this configuration.
+//
+// Returns:
+//  Array - array filled by supplied integrations.
+//      * ArrayItem - Structure - see function FL_InteriorUse.NewPluggableSettings.
+//
+Function SuppliedIntegrations() Export
+    
+    SuppliedIntegrations = New Array;
+    
+    AvailableChannels = AvailableChannels();
+    For Each Channel In AvailableChannels Do
+        
+        Try
+            
+            ChannelProcessor = NewChannelProcessor(Channel.Value);
+            Integrations = ChannelProcessor.SuppliedIntegrations();
+            For Each Integration In Integrations Do
+                Integration.Insert("LibraryGuid", Channel.Value); 
+                Integration.Insert("ChannelName", Channel.Presentation);
+            EndDo;
+            
+            FL_CommonUseClientServer.ExtendArray(SuppliedIntegrations, 
+                Integrations);
+            
+        Except
+            // There is no any exception, integrations not provided.
+            Continue;
+        EndTry;
+               
+    EndDo;
+    
+    Return SuppliedIntegrations;
+    
+EndFunction // SuppliedIntegrations()
+
 // Returns exchange plugable channels.
 //
 // Returns:
@@ -107,6 +143,30 @@ Function NewChannelProcessor(Val LibraryGuid) Export
     
 EndFunction // NewChannelProcessor()
 
+// Returns new delivery result structure.
+//
+// Returns:
+//  Structure - message delivery result with values:
+//      * LogAttribute     - String       - detailed log of the channel operations.
+//      * OriginalResponse - ValueStorage - original response object.
+//      * StatusCode       - Number       - state (reply) code returned by the HTTP service.
+//      * StringResponse   - String       - string response presentation.
+//      * Success          - Boolean      - shows whether delivery was successful.
+//
+Function NewChannelDeliverResult() Export
+
+    ChannelDeliveryResult = New Structure;
+    ChannelDeliveryResult.Insert("LogAttribute");
+    ChannelDeliveryResult.Insert("OriginalResponse", 
+        New ValueStorage(Undefined));
+    ChannelDeliveryResult.Insert("StatusCode");
+    ChannelDeliveryResult.Insert("StringResponse");
+    ChannelDeliveryResult.Insert("Success", False);
+
+    Return ChannelDeliveryResult;
+    
+EndFunction // ChannelDeliveryResult()
+
 // Returns a new channel parameters structure.
 //
 // Parameters:
@@ -141,24 +201,28 @@ Function NewChannelParameters(Val LibraryGuid, FormName) Export
     
 EndFunction // NewChannelParameters()
 
-// Sends the resulting message to the specified exchange channel.
+// Transfers the stream to the specified exchange channel.
 //
 // Parameters:
-//  Mediator   - Arbitrary              - reserved, currently not in use.
 //  Channel    - CatalogRef.FL_Channels - exchange channel.
-//  Payload    - Arbitrary              - data to deliver.
+//  Stream     - Stream                 - a data stream that can be read successively 
+//                                          or/and where you can record successively. 
+//             - MemoryStream           - specialized version of Stream object for 
+//                                          operation with the data located in the RAM.
+//             - FileStream             - specialized version of Stream object for 
+//                                          operation with the data located in a file on disk.
 //  Properties - Structure              - channel properties.
 //      * Key   - String - property name.
 //      * Value - String - property value.
 //
 // Returns:
-//  Arbitrary - the send result.
+//  Structure - the deliver result, see function Catalogs.FL_Channels.NewChannelDeliverResult.
 //
-Function SendMessageResult(Mediator, Channel, Payload, Properties) Export
+Function TransferStreamToChannel(Channel, Stream, Properties) Export
     
     Query = New Query;
     Query.Text = QueryTextChannelSettings();
-    Query.SetParameter("ExchangeChannel", Channel);
+    Query.SetParameter("ChannelRef", Channel);
     QueryResult = Query.Execute();
     If QueryResult.IsEmpty() Then
         // Error    
@@ -171,15 +235,13 @@ Function SendMessageResult(Mediator, Channel, Payload, Properties) Export
     EndIf;
     
     ChannelProcessor = NewChannelProcessor(ChannelSettings.BasicChannelGuid);
+    ChannelProcessor.Log = ChannelSettings.Log;
     ChannelProcessor.ChannelData.Load(ChannelSettings.ChannelData.Unload());
     ChannelProcessor.EncryptedData.Load(
-        ChannelSettings.EncryptedData.Unload()); 
+        ChannelSettings.EncryptedData.Unload());    
+    Return ChannelProcessor.DeliverMessage(Stream, Properties);    
     
-    DeliverResult = ChannelProcessor.DeliverMessage(Mediator, Payload, 
-        Properties);
-    Return DeliverResult;    
-    
-EndFunction // SendMessageResult()
+EndFunction // TransferStreamToChannel()
 
 #EndRegion // ProgramInterface
 
@@ -210,8 +272,11 @@ Function QueryTextChannelSettings()
         |SELECT
         |   Channels.Ref                AS Ref,
         |   Channels.Description        AS Description,
+        |
         |   Channels.BasicChannelGuid   AS BasicChannelGuid,
         |   Channels.Connected          AS Connected,
+        |   Channels.Log                AS Log,
+        |   Channels.Version            AS Version,  
         |
         |   Channels.ChannelData.(
         |       FieldName   AS FieldName,
@@ -228,7 +293,7 @@ Function QueryTextChannelSettings()
         |   Catalog.FL_Channels AS Channels
         |   
         |WHERE
-        |    Channels.Ref = &ExchangeChannel
+        |    Channels.Ref = &ChannelRef
         |AND Channels.DeletionMark = FALSE
         |";  
     Return QueryText;
@@ -248,7 +313,7 @@ Function NewChannelParametersStructure()
     Return Parameters;
     
 EndFunction // NewChannelParametersStructure()
-
+    
 #EndRegion // ServiceProceduresAndFunctions
 
 #EndIf

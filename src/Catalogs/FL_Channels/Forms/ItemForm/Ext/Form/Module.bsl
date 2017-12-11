@@ -230,6 +230,8 @@ Procedure LoadBasicChannelInfo()
         Items.Connect.Visible = Not Object.Connected;
         Items.ChannelForm.Visible = Object.Connected;
         Items.Disconnect.Visible = Object.Connected;
+    Else
+        Object.Connected = True;    
     EndIf;
      
 EndProcedure // LoadBasicChannelInfo()

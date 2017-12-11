@@ -106,6 +106,89 @@ EndProcedure // BeforeWriteAtServer()
 
 #EndRegion // ObjectFormInteraction
 
+// Outputs the resulting message into stream based on the specified exchange settings.
+//
+// Parameters:
+//  Stream           - Stream         - a data stream that can be read successively 
+//                                       or/and where you can record successively. 
+//                   - MemoryStream   - specialized version of Stream object for 
+//                                       operation with the data located in the RAM.
+//                   - FileStream     - specialized version of Stream object for 
+//                                       operation with the data located in a file on disk.
+//  ExchangeSettings - FixedStructure - exchange settings.
+//  MessageSettings  - FixedStructure - message settings.
+//                          Default value: Undefined.
+//
+// Returns:
+//  Arbitrary - the resulting message.
+//
+Procedure OutputMessageIntoStream(Stream, ExchangeSettings, 
+    MessageSettings = Undefined) Export
+    
+    DataCompositionSchema = GetValueFromStorage(ExchangeSettings, 
+        "DataCompositionSchema");
+    DataCompositionSettings = GetValueFromStorage(ExchangeSettings, 
+        "DataCompositionSettings");
+    
+    SettingsComposer = New DataCompositionSettingsComposer;
+    FL_DataComposition.InitSettingsComposer(SettingsComposer,
+        DataCompositionSchema,
+        DataCompositionSettings);
+
+    If MessageSettings <> Undefined Then 
+        FL_DataComposition.SetDataToSettingsComposer(SettingsComposer, 
+            MessageSettings); 
+    EndIf;
+        
+    DataCompositionTemplate = FL_DataComposition
+        .NewTemplateComposerParameters();
+    DataCompositionTemplate.Schema   = DataCompositionSchema;
+    DataCompositionTemplate.Template = SettingsComposer.GetSettings();
+    
+    OutputParameters = FL_DataComposition.NewOutputParameters();
+    OutputParameters.DCTParameters = DataCompositionTemplate;
+    OutputParameters.CanUseExternalFunctions = ExchangeSettings
+        .CanUseExternalFunctions;
+    
+    StreamObject = NewFormatProcessor(ExchangeSettings.BasicFormatGuid);
+    StreamObject.Initialize(Stream, GetValueFromStorage(ExchangeSettings, 
+            "APISchema"));    
+    FL_DataComposition.Output(StreamObject, OutputParameters);    
+    StreamObject.Close();    
+    
+EndProcedure // OutputMessageIntoStream()
+
+// Returns the whole object exchange settings.
+//
+// Parameters:
+//  BinaryData - BinaryData - the value contains binary data read from the file.
+//
+// Returns:
+//  Structure - structure with import settings.
+//
+Function ImportObject(BinaryData) Export
+    
+    JSONReader = New JSONReader;
+    JSONReader.OpenStream(BinaryData.OpenStreamForRead());
+    
+    ExchangeStructure = NewExchangeStructure();
+    While JSONReader.Read() Do
+        
+        If JSONReader.CurrentValueType = JSONValueType.PropertyName AND 
+            Upper(JSONReader.CurrentValue) = Upper("Exchange") Then
+            JSONReader.Read();
+            ExchangeStructure.Exchange = XDTOSerializer.ReadJSON(JSONReader);     
+        EndIf;
+        
+    EndDo;
+    
+    //ObjectStructure = ReadJSON(JSONReader);
+    JSONReader.Close();
+    
+    Return ExchangeStructure;
+    
+EndFunction // ImportObject()
+
 // Exports the whole object exchange settings.
 //
 // Parameters:
@@ -116,42 +199,51 @@ EndProcedure // BeforeWriteAtServer()
 //
 Function ExportObject(ExchangeRef) Export
     
-    MemoryStream = New MemoryStream;
+    InvocationData = FL_BackgroundJob.NewInvocationData();
+    InvocationData.Arguments = ExchangeRef;
+    InvocationData.MetadataObject = "Catalog.FL_Exchanges";
+    InvocationData.Method = Catalogs.FL_Methods.Read;
+    InvocationData.Owner = Catalogs.FL_Exchanges.Self;
+    InvocationData.SourceObject = ExchangeRef;
     
-    JSONWriter = New JSONWriter;
-    JSONWriter.OpenStream(MemoryStream, , , New JSONWriterSettings(, "    "));
-    JSONWriter.WriteStartObject();
+    Try 
+        
+        BeginTransaction();
+        
+        Job = FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.Trigger", 
+            InvocationData);
+        Catalogs.FL_Jobs.Trigger(Job);
     
-    JSONWriter.WritePropertyName("Exchange");
-    ExchangeObject = ExchangeRef.GetObject();
-    XDTOSerializer.WriteJSON(JSONWriter, ExchangeObject, 
-        XMLTypeAssignment.Explicit);
+        CommitTransaction();
+        
+    Except
+        
+        RollbackTransaction();
+        Raise;
+        
+    EndTry;
     
-    JSONWriter.WritePropertyName("Channels");
-    ResultArray = ExchangeObject.Channels.UnloadColumn("Channel");
-    FL_CommonUseClientServer.RemoveDuplicatesFromArray(ResultArray);
-    FL_CommonUse.SerializeArrayOfRefsToJSON(JSONWriter, ResultArray);
+    If Job.State = Catalogs.FL_States.Succeeded 
+        AND Job.SubscribersLog.Count() > 0 Then
+        
+        FileData = Job.SubscribersLog[0].OriginalResponse.Get();
+        FileDescription = FL_CommonUse.ObjectAttributeValue(ExchangeRef, 
+            "Description");
     
-    JSONWriter.WritePropertyName("Methods");
-    ResultArray = ExchangeObject.Methods.UnloadColumn("Method");
-    FL_CommonUseClientServer.RemoveDuplicatesFromArray(ResultArray);
-    FL_CommonUse.SerializeArrayOfRefsToJSON(JSONWriter, ResultArray);
-     
-    JSONWriter.WriteEndObject();
-    JSONWriter.Close();
+        FileProperties = FL_InteriorUseClientServer.NewFileProperties();
+        FileProperties.Name = StrTemplate("%1.json", FileDescription);
+        FileProperties.BaseName = FileDescription;
+        FileProperties.Extension = ".json";
+        FileProperties.Size = FileData.Size();
+        FileProperties.IsFile = True;
+        FileProperties.StorageAddress = PutToTempStorage(FileData);
+        FileProperties.ModificationTime = CurrentSessionDate();
+        FileProperties.ModificationTimeUTC = CurrentUniversalDate();
+        Return FileProperties;
+        
+    EndIf;
     
-    FileProperties = FL_InteriorUseClientServer.NewFileProperties();
-    FileProperties.Name = StrTemplate("%1.json", ExchangeObject.Description);
-    FileProperties.BaseName = ExchangeObject.Description;
-    FileProperties.Extension = ".json";
-    FileProperties.Size = MemoryStream.Size();
-    FileProperties.IsFile = True;
-    FileProperties.StorageAddress = PutToTempStorage(
-        MemoryStream.CloseAndGetBinaryData());
-    FileProperties.ModificationTime = CurrentSessionDate();
-    FileProperties.ModificationTimeUTC = CurrentUniversalDate();
-    
-    Return FileProperties;
+    Return Undefined;
     
 EndFunction // ExportObject()
 
@@ -211,55 +303,6 @@ Function NewFormatProcessor(Val LibraryGuid) Export
     Return DataProcessors[DataProcessorName].Create();
         
 EndFunction // NewFormatProcessor()
-
-// Returns the resulting message based on the specified exchange settings.
-//
-// Parameters:
-//  Mediator            - Arbitrary      - reserved, currently not in use.
-//  ExchangeSettings    - FixedStructure - exchange settings.
-//  MessageSettings     - FixedStructure - message settings.
-//                          Default value: Undefined.
-//
-// Returns:
-//  Arbitrary - the resulting message.
-//
-Function GenerateMessageResult(Mediator, ExchangeSettings, 
-    MessageSettings = Undefined) Export
-    
-    DataCompositionSchema = GetValueFromStorage(ExchangeSettings, 
-        "DataCompositionSchema");
-    DataCompositionSettings = GetValueFromStorage(ExchangeSettings, 
-        "DataCompositionSettings");
-    
-    SettingsComposer = New DataCompositionSettingsComposer;
-    FL_DataComposition.InitSettingsComposer(Mediator, // Reserved
-        SettingsComposer,
-        DataCompositionSchema,
-        DataCompositionSettings);
-
-    If MessageSettings <> Undefined Then 
-        FL_DataComposition.SetDataToSettingsComposer(Mediator, 
-            SettingsComposer, MessageSettings); 
-    EndIf;
-        
-    DataCompositionTemplate = FL_DataComposition
-        .NewTemplateComposerParameters();
-    DataCompositionTemplate.Schema   = DataCompositionSchema;
-    DataCompositionTemplate.Template = SettingsComposer.GetSettings();
-    
-    OutputParameters = FL_DataComposition.NewOutputParameters();
-    OutputParameters.DCTParameters = DataCompositionTemplate;
-    OutputParameters.CanUseExternalFunctions = ExchangeSettings
-        .CanUseExternalFunctions;
-    
-    StreamObject = NewFormatProcessor(ExchangeSettings.BasicFormatGuid);
-    StreamObject.Initialize(GetValueFromStorage(ExchangeSettings, "APISchema"));    
-    
-    FL_DataComposition.Output(Undefined, StreamObject, OutputParameters); 
-        
-    Return StreamObject.Close();    
-    
-EndFunction // GenerateMessageResult()
 
 // Returns a new exchange settings structure.
 //
@@ -506,6 +549,18 @@ Procedure AddMethodOnForm(Items, MethodDescription, Description, Picture)
 EndProcedure // AddMethodOnForm()
 
 #EndRegion // ObjectFormInteraction
+
+// Only for internal use.
+//
+Function NewExchangeStructure()
+    
+    ExchangeStructure = New Structure;
+    ExchangeStructure.Insert("Exchange");
+    ExchangeStructure.Insert("Channels", New Array);
+    ExchangeStructure.Insert("Methods", New Array);
+    Return ExchangeStructure;
+    
+EndFunction // NewExchangeStructure()
 
 // Only for internal use.
 //
