@@ -1,4 +1,5 @@
-﻿// This file is part of FoxyLink.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
 // Copyright © 2016-2017 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
@@ -13,29 +14,21 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #If Server Or ThickClientOrdinaryApplication Or ExternalConnection Then
 
 #Region ProgramInterface
 
-Procedure AddRecords(NewRecord) Export
-    
-    //AvailableFilterFields();
-    
-    //RecordSet = InformationRegisters.FL_TasksHeartbeat.CreateRecordSet();
-    //RecordSet.Filter.Job.Add(Filter);
-    //RecordSet.Write();
-    
-EndProcedure // AddRecords()
-
+// Deletes records by filter.
+//
+// Parameters:
+//  Filter - Strucutre - with filter item.
+//
 Procedure DeleteRecordsByFilter(Filter) Export
     
-    
-    // TODO: Full refactor.
-    
     RecordSet = InformationRegisters.FL_TasksHeartbeat.CreateRecordSet();
-    // RecordSet.Filter.Job.ComparisonType = ComparisonType.InList;
-    // RecordSet.Filter.Job.
     For Each FilterItem In Filter.Job Do
         RecordSet.Filter.Job.Set(FilterItem);
         RecordSet.Write();

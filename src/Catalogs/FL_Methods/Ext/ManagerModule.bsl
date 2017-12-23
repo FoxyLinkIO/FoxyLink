@@ -40,6 +40,25 @@ Function MethodByDescription(Description) Export
     
 EndFunction // MethodByDescription()
 
+// Returns method reference by a predefined data name.
+//
+// Parameters:
+//  PredefinedDataName - String - method predefined data name. 
+//
+// Returns:
+//  CatalogRef.FL_Methods - method reference. 
+//
+Function MethodByPredefinedDataName(PredefinedDataName) Export
+    
+    Query = New Query;
+    Query.Text = QueryTextMethodByPredefinedDataName();
+    Query.SetParameter("PredefinedDataName", PredefinedDataName);
+    QueryResultSelection = Query.Execute().Select();
+    
+    Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
+    
+EndFunction // MethodByPredefinedDataName()
+
 // Returns list of available methods from catalog.
 //
 // Returns:
@@ -97,6 +116,22 @@ Function QueryTextMethodByDescription()
     Return QueryText;
 
 EndFunction // QueryTextMethodByDescription()
+
+// Only for internal use.
+//
+Function QueryTextMethodByPredefinedDataName()
+
+    QueryText = "
+        |SELECT
+        |   Methods.Ref AS Ref   
+        |FROM
+        |   Catalog.FL_Methods AS Methods
+        |WHERE
+        |   Methods.PredefinedDataName = &PredefinedDataName
+        |";
+    Return QueryText;
+
+EndFunction // QueryTextMethodByPredefinedDataName()
 
 #EndRegion // ServiceProceduresAndFunctions
 

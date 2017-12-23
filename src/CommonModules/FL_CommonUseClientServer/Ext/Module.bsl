@@ -366,6 +366,22 @@ Function IsObjectAttribute(Object, AttributeName) Export
 
 EndFunction // IsObjectAttribute()
 
+// Creates an absolute color from three constituent colors.
+//
+// Parameters:
+//  Red   - Number - value for the amount of red in the color. 
+//  Green - Number - value for the amount of green in the color.
+//  Blue  - Number - value for the amount of blue in the color.
+//
+// Returns:
+//  Color - the absolute color from three constituent colors.     
+//
+Function NewColor(Red, Green, Blue) Export
+    
+    Return New Color(Red, Green, Blue);
+    
+EndFunction // NewColor()
+
 #Region StringOperations
 
 // Removes insignificant characters to the left of the first significant 

@@ -433,7 +433,16 @@
 					<PasswordMode>false</PasswordMode>
 					<Format/>
 					<EditFormat/>
-					<ToolTip/>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Activates the channel log to collect the detail information about interaction with a service provider.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Активирует журнал каналов для сбора подробной информации о взаимодействии с поставщиком услуг.</v8:content>
+						</v8:item>
+					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
 					<Mask/>
 					<MultiLine>false</MultiLine>
@@ -462,11 +471,11 @@
 					<Synonym>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Version</v8:content>
+							<v8:content>Current version</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
-							<v8:content>Версия</v8:content>
+							<v8:content>Текущая версия</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -483,11 +492,11 @@
 					<ToolTip>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Numbers to unique the state of this exchange. Within a given version number category (major, minor), these numbers are generally assigned in increasing order and correspond to new developments in the software.</v8:content>
+							<v8:content>Numbers to unique the state of this channel. Within a given version number category (major, minor), these numbers are generally assigned in increasing order and correspond to new developments in the software.</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
-							<v8:content>Номер уникального состояния этого обмена. В данной категории номера версии (основной, второстепенной), номера обычно назначаются в порядке возрастания и соответствуют новым изменениям в программном обеспечении.</v8:content>
+							<v8:content>Номер уникального состояния этого канала. В данной категории номера версии (основной, второстепенной), номера обычно назначаются в порядке возрастания и соответствуют новым изменениям в программном обеспечении.</v8:content>
 						</v8:item>
 					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>

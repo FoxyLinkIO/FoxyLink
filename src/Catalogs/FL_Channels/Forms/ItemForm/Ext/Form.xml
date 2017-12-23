@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
 	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
+	<Customizable>false</Customizable>
 	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
@@ -51,203 +52,223 @@
 		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
 	</Events>
 	<ChildItems>
-		<UsualGroup name="HeaderGroup" id="1">
+		<Pages name="HeaderPages" id="47">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Header group</v8:content>
+					<v8:content>Header pages</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Страницы шапки</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Header group</v8:content>
+					<v8:content>Header pages</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Страницы шапки</v8:content>
 				</v8:item>
 			</ToolTip>
-			<Group>Horizontal</Group>
-			<Representation>None</Representation>
-			<ShowTitle>false</ShowTitle>
-			<ExtendedTooltip name="HeaderGroupExtendedTooltip" id="2"/>
+			<PagesRepresentation>None</PagesRepresentation>
+			<ExtendedTooltip name="HeaderPagesExtendedTooltip" id="48"/>
 			<ChildItems>
-				<UsualGroup name="HeaderGroupLeft" id="3">
+				<Page name="HeaderPageBasicChannel" id="19">
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Channel information</v8:content>
+							<v8:content>Basic channel</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
-							<v8:content>Информация об канале</v8:content>
+							<v8:content>Базовый канал</v8:content>
 						</v8:item>
 					</Title>
-					<ToolTip>
-						<v8:item>
-							<v8:lang>en</v8:lang>
-							<v8:content>Channel information</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Информация об канале</v8:content>
-						</v8:item>
-					</ToolTip>
-					<Group>Vertical</Group>
-					<Representation>StrongSeparation</Representation>
-					<ExtendedTooltip name="HeaderGroupLeftExtendedTooltip" id="4"/>
+					<Group>Horizontal</Group>
+					<ExtendedTooltip name="HeaderPageBasicChannelExtendedTooltip" id="20"/>
 					<ChildItems>
-						<InputField name="Description" id="5">
-							<DataPath>Object.Description</DataPath>
-							<EditMode>EnterOnInput</EditMode>
-							<ContextMenu name="DescriptionContextMenu" id="6"/>
-							<ExtendedTooltip name="DescriptionExtendedTooltip" id="7"/>
-						</InputField>
-						<UsualGroup name="HeaderGroupCommandsLeft" id="11">
-							<Group>Horizontal</Group>
-							<Representation>None</Representation>
-							<ShowTitle>false</ShowTitle>
-							<ExtendedTooltip name="HeaderGroupCommandsLeftExtendedTooltip" id="12"/>
-							<ChildItems>
-								<Button name="ChannelForm" id="45">
-									<Type>UsualButton</Type>
-									<Visible>false</Visible>
-									<CommandName>Form.Command.ChannelForm</CommandName>
-									<ExtendedTooltip name="ChannelFormExtendedTooltip" id="46"/>
-								</Button>
-								<Button name="Connect" id="37">
-									<Type>UsualButton</Type>
-									<Visible>false</Visible>
-									<CommandName>Form.Command.Connect</CommandName>
-									<ExtendedTooltip name="ConnectExtendedTooltip" id="38"/>
-								</Button>
-								<Button name="Disconnect" id="39">
-									<Type>UsualButton</Type>
-									<Visible>false</Visible>
-									<CommandName>Form.Command.Disconnect</CommandName>
-									<ExtendedTooltip name="DisconnectExtendedTooltip" id="40"/>
-								</Button>
-							</ChildItems>
-						</UsualGroup>
-					</ChildItems>
-				</UsualGroup>
-				<Pages name="HeaderPagesChannel" id="17">
-					<Width>36</Width>
-					<HorizontalStretch>false</HorizontalStretch>
-					<PagesRepresentation>None</PagesRepresentation>
-					<ExtendedTooltip name="HeaderPagesChannelExtendedTooltip" id="18"/>
-					<ChildItems>
-						<Page name="HeaderPageBasicChannel" id="19">
+						<UsualGroup name="HeaderGroupLeft" id="3">
 							<Title>
 								<v8:item>
 									<v8:lang>en</v8:lang>
-									<v8:content>Basic channel</v8:content>
+									<v8:content>Channel information</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>ru</v8:lang>
-									<v8:content>Базовый канал</v8:content>
-								</v8:item>
-							</Title>
-							<Group>Horizontal</Group>
-							<ExtendedTooltip name="HeaderPageBasicChannelExtendedTooltip" id="20"/>
-							<ChildItems>
-								<UsualGroup name="HeaderGroupBasicChannel" id="21">
-									<Title>
-										<v8:item>
-											<v8:lang>en</v8:lang>
-											<v8:content>Plugin description</v8:content>
-										</v8:item>
-										<v8:item>
-											<v8:lang>ru</v8:lang>
-											<v8:content>Описание плагина</v8:content>
-										</v8:item>
-									</Title>
-									<ToolTip>
-										<v8:item>
-											<v8:lang>en</v8:lang>
-											<v8:content>Plugin description</v8:content>
-										</v8:item>
-										<v8:item>
-											<v8:lang>ru</v8:lang>
-											<v8:content>Описание плагина</v8:content>
-										</v8:item>
-									</ToolTip>
-									<Group>Vertical</Group>
-									<Representation>StrongSeparation</Representation>
-									<ExtendedTooltip name="HeaderGroupBasicChannelExtendedTooltip" id="22"/>
-									<ChildItems>
-										<LabelField name="ChannelName" id="23">
-											<DataPath>ChannelName</DataPath>
-											<ContextMenu name="ChannelNameContextMenu" id="24"/>
-											<ExtendedTooltip name="ChannelNameExtendedTooltip" id="25"/>
-										</LabelField>
-										<LabelField name="ChannelStandard" id="26">
-											<DataPath>ChannelStandard</DataPath>
-											<Hiperlink>true</Hiperlink>
-											<ContextMenu name="ChannelStandardContextMenu" id="27"/>
-											<ExtendedTooltip name="ChannelStandardExtendedTooltip" id="28"/>
-											<Events>
-												<Event name="Click">ChannelStandardClick</Event>
-											</Events>
-										</LabelField>
-										<LabelField name="ChannelPluginVersion" id="29">
-											<DataPath>ChannelPluginVersion</DataPath>
-											<Hiperlink>true</Hiperlink>
-											<ContextMenu name="ChannelPluginVersionContextMenu" id="30"/>
-											<ExtendedTooltip name="ChannelPluginVersionExtendedTooltip" id="31"/>
-										</LabelField>
-									</ChildItems>
-								</UsualGroup>
-							</ChildItems>
-						</Page>
-						<Page name="HeaderPageSelectChannel" id="32">
-							<Title>
-								<v8:item>
-									<v8:lang>en</v8:lang>
-									<v8:content>Select channel</v8:content>
-								</v8:item>
-								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Выберите канал</v8:content>
+									<v8:content>Информация об канале</v8:content>
 								</v8:item>
 							</Title>
 							<ToolTip>
 								<v8:item>
 									<v8:lang>en</v8:lang>
+									<v8:content>Channel information</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Информация об канале</v8:content>
+								</v8:item>
+							</ToolTip>
+							<Group>Vertical</Group>
+							<Representation>NormalSeparation</Representation>
+							<ExtendedTooltip name="HeaderGroupLeftExtendedTooltip" id="4"/>
+							<ChildItems>
+								<InputField name="Description" id="5">
+									<DataPath>Object.Description</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="DescriptionContextMenu" id="6"/>
+									<ExtendedTooltip name="DescriptionExtendedTooltip" id="7"/>
+								</InputField>
+								<UsualGroup name="HeaderGroupBasic" id="55">
+									<Group>Horizontal</Group>
+									<Representation>None</Representation>
+									<ShowTitle>false</ShowTitle>
+									<ExtendedTooltip name="HeaderGroupBasicExtendedTooltip" id="56"/>
+									<ChildItems>
+										<InputField name="Version" id="49">
+											<DataPath>Object.Version</DataPath>
+											<Enabled>false</Enabled>
+											<ToolTipRepresentation>Button</ToolTipRepresentation>
+											<ContextMenu name="VersionContextMenu" id="50"/>
+											<ExtendedTooltip name="VersionExtendedTooltip" id="51"/>
+										</InputField>
+										<CheckBoxField name="Log" id="52">
+											<DataPath>Object.Log</DataPath>
+											<ToolTipRepresentation>Button</ToolTipRepresentation>
+											<CheckBoxType>Auto</CheckBoxType>
+											<ContextMenu name="LogContextMenu" id="53"/>
+											<ExtendedTooltip name="LogExtendedTooltip" id="54"/>
+										</CheckBoxField>
+									</ChildItems>
+								</UsualGroup>
+								<UsualGroup name="HeaderGroupCommandsLeft" id="11">
+									<Group>Horizontal</Group>
+									<Representation>None</Representation>
+									<ShowTitle>false</ShowTitle>
+									<ExtendedTooltip name="HeaderGroupCommandsLeftExtendedTooltip" id="12"/>
+									<ChildItems>
+										<Button name="ChannelForm" id="45">
+											<Type>UsualButton</Type>
+											<Visible>false</Visible>
+											<CommandName>Form.Command.ChannelForm</CommandName>
+											<ExtendedTooltip name="ChannelFormExtendedTooltip" id="46"/>
+										</Button>
+										<Button name="Connect" id="37">
+											<Type>UsualButton</Type>
+											<Visible>false</Visible>
+											<CommandName>Form.Command.Connect</CommandName>
+											<ExtendedTooltip name="ConnectExtendedTooltip" id="38"/>
+										</Button>
+										<Button name="Disconnect" id="39">
+											<Type>UsualButton</Type>
+											<Visible>false</Visible>
+											<CommandName>Form.Command.Disconnect</CommandName>
+											<ExtendedTooltip name="DisconnectExtendedTooltip" id="40"/>
+										</Button>
+									</ChildItems>
+								</UsualGroup>
+							</ChildItems>
+						</UsualGroup>
+						<UsualGroup name="HeaderGroupRight" id="21">
+							<Title>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Plugin description</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Описание плагина</v8:content>
+								</v8:item>
+							</Title>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Plugin description</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Описание плагина</v8:content>
+								</v8:item>
+							</ToolTip>
+							<Group>Vertical</Group>
+							<Representation>NormalSeparation</Representation>
+							<ExtendedTooltip name="HeaderGroupRightExtendedTooltip" id="22"/>
+							<ChildItems>
+								<LabelField name="ChannelName" id="23">
+									<DataPath>ChannelName</DataPath>
+									<ContextMenu name="ChannelNameContextMenu" id="24"/>
+									<ExtendedTooltip name="ChannelNameExtendedTooltip" id="25"/>
+								</LabelField>
+								<LabelField name="ChannelStandard" id="26">
+									<DataPath>ChannelStandard</DataPath>
+									<Hiperlink>true</Hiperlink>
+									<ContextMenu name="ChannelStandardContextMenu" id="27"/>
+									<ExtendedTooltip name="ChannelStandardExtendedTooltip" id="28"/>
+									<Events>
+										<Event name="Click">ChannelStandardClick</Event>
+									</Events>
+								</LabelField>
+								<LabelField name="ChannelPluginVersion" id="29">
+									<DataPath>ChannelPluginVersion</DataPath>
+									<Hiperlink>true</Hiperlink>
+									<ContextMenu name="ChannelPluginVersionContextMenu" id="30"/>
+									<ExtendedTooltip name="ChannelPluginVersionExtendedTooltip" id="31"/>
+								</LabelField>
+							</ChildItems>
+						</UsualGroup>
+					</ChildItems>
+				</Page>
+				<Page name="HeaderPageSelectChannel" id="32">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Select channel</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Выберите канал</v8:content>
+						</v8:item>
+					</Title>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Select channel</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Выберите канал</v8:content>
+						</v8:item>
+					</ToolTip>
+					<ExtendedTooltip name="HeaderPageSelectChannelExtendedTooltip" id="33"/>
+					<ChildItems>
+						<InputField name="BasicChannelGuid" id="34">
+							<DataPath>Object.BasicChannelGuid</DataPath>
+							<Title>
+								<v8:item>
+									<v8:lang>en</v8:lang>
 									<v8:content>Select channel</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Выберите канал</v8:content>
 								</v8:item>
-							</ToolTip>
-							<ExtendedTooltip name="HeaderPageSelectChannelExtendedTooltip" id="33"/>
-							<ChildItems>
-								<InputField name="BasicChannelGuid" id="34">
-									<DataPath>Object.BasicChannelGuid</DataPath>
-									<Title>
-										<v8:item>
-											<v8:lang>en</v8:lang>
-											<v8:content>Select channel</v8:content>
-										</v8:item>
-										<v8:item>
-											<v8:lang>ru</v8:lang>
-											<v8:content>Выберите канал</v8:content>
-										</v8:item>
-									</Title>
-									<Width>1</Width>
-									<ListChoiceMode>true</ListChoiceMode>
-									<ChooseType>false</ChooseType>
-									<TextEdit>false</TextEdit>
-									<ContextMenu name="BasicChannelGuidContextMenu" id="35"/>
-									<ExtendedTooltip name="BasicChannelGuidExtendedTooltip" id="36"/>
-									<Events>
-										<Event name="OnChange">BasicChannelGuidOnChange</Event>
-									</Events>
-								</InputField>
-							</ChildItems>
-						</Page>
+							</Title>
+							<Width>1</Width>
+							<ListChoiceMode>true</ListChoiceMode>
+							<ChooseType>false</ChooseType>
+							<TextEdit>false</TextEdit>
+							<ContextMenu name="BasicChannelGuidContextMenu" id="35"/>
+							<ExtendedTooltip name="BasicChannelGuidExtendedTooltip" id="36"/>
+							<Events>
+								<Event name="OnChange">BasicChannelGuidOnChange</Event>
+							</Events>
+						</InputField>
 					</ChildItems>
-				</Pages>
+				</Page>
 			</ChildItems>
-		</UsualGroup>
+		</Pages>
 	</ChildItems>
 	<Attributes>
 		<Attribute name="Object" id="1">

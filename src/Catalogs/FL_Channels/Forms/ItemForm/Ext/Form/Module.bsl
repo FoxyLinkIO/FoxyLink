@@ -217,7 +217,7 @@ EndProcedure // DoAfterChannelDisconnect()
 Procedure LoadBasicChannelInfo()
 
     Items.HeaderGroupLeft.Visible = True;
-    Items.HeaderPagesChannel.CurrentPage = Items.HeaderPageBasicChannel;
+    Items.HeaderPages.CurrentPage = Items.HeaderPageBasicChannel;
     ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
         Object.BasicChannelGuid);
         
@@ -227,11 +227,15 @@ Procedure LoadBasicChannelInfo()
     ChannelPluginVersion = ChannelProcessor.Version();
     
     If ChannelProcessor.PreAuthorizationRequired() Then
-        Items.Connect.Visible = Not Object.Connected;
+        Items.Connect.Visible = NOT Object.Connected;
         Items.ChannelForm.Visible = Object.Connected;
         Items.Disconnect.Visible = Object.Connected;
     Else
         Object.Connected = True;    
+    EndIf;
+    
+    If IsBlankString(Object.Version) Then
+        Object.Version = ChannelPluginVersion;        
     EndIf;
      
 EndProcedure // LoadBasicChannelInfo()
