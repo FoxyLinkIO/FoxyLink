@@ -67,7 +67,7 @@ Open-source projects develop more smoothly when discussions are public.
 
 If you've discovered a bug, please report it to the [FoxyLink GitHub Issues](https://github.com/pbazeliuk/FoxyLink/issues?state=open). Detailed reports with stack traces, actual and expected behavours are welcome.
 
-If you have any questions, problems related to the FoxyLink subsystem usage or if you want to discuss new features, please visit the chatroom [Gitter](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
+If you have any questions, problems related to the FoxyLink subsystem usage or if you want to discuss new features, please visit the chatroom [Slack](https://foxylinkio.herokuapp.com/).
 
 ## Documentation 
 
