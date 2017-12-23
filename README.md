@@ -41,7 +41,7 @@ FoxyLink subsystem is available as configuration, so you can install it using co
 
 ## Status
 
-[![Gitter](https://badges.gitter.im/UpdateExpress/OutputProcessorExtension.svg)](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Slack](https://img.shields.io/badge/chat-on%20slack-3BB9FF.svg)](https://foxylinkio.herokuapp.com/)
 [![Quality Gate](https://sonar.silverbulleters.org/api/badges/gate?key=ktc-foxylink)](https://sonar.silverbulleters.org/dashboard?id=ktc-foxylink)
 
 
@@ -67,7 +67,7 @@ Open-source projects develop more smoothly when discussions are public.
 
 If you've discovered a bug, please report it to the [FoxyLink GitHub Issues](https://github.com/pbazeliuk/FoxyLink/issues?state=open). Detailed reports with stack traces, actual and expected behavours are welcome.
 
-If you have any questions, problems related to the FoxyLink subsystem usage or if you want to discuss new features, please visit the chatroom [Gitter](https://gitter.im/UpdateExpress/OutputProcessorExtension?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
+If you have any questions, problems related to the FoxyLink subsystem usage or if you want to discuss new features, please visit the chatroom [Slack](https://foxylinkio.herokuapp.com/).
 
 ## Documentation 
 
