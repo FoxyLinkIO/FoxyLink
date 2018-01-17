@@ -158,37 +158,6 @@ Procedure OutputMessageIntoStream(Stream, ExchangeSettings,
     
 EndProcedure // OutputMessageIntoStream()
 
-// Returns the whole object exchange settings.
-//
-// Parameters:
-//  BinaryData - BinaryData - the value contains binary data read from the file.
-//
-// Returns:
-//  Structure - structure with import settings.
-//
-Function ImportObject(BinaryData) Export
-    
-    JSONReader = New JSONReader;
-    JSONReader.OpenStream(BinaryData.OpenStreamForRead());
-    
-    ExchangeStructure = NewExchangeStructure();
-    While JSONReader.Read() Do
-        
-        If JSONReader.CurrentValueType = JSONValueType.PropertyName AND 
-            Upper(JSONReader.CurrentValue) = Upper("Exchange") Then
-            JSONReader.Read();
-            ExchangeStructure.Exchange = XDTOSerializer.ReadJSON(JSONReader);     
-        EndIf;
-        
-    EndDo;
-    
-    //ObjectStructure = ReadJSON(JSONReader);
-    JSONReader.Close();
-    
-    Return ExchangeStructure;
-    
-EndFunction // ImportObject()
-
 // Exports the whole object exchange settings.
 //
 // Parameters:
@@ -549,18 +518,6 @@ Procedure AddMethodOnForm(Items, MethodDescription, Description, Picture)
 EndProcedure // AddMethodOnForm()
 
 #EndRegion // ObjectFormInteraction
-
-// Only for internal use.
-//
-Function NewExchangeStructure()
-    
-    ExchangeStructure = New Structure;
-    ExchangeStructure.Insert("Exchange");
-    ExchangeStructure.Insert("Channels", New Array);
-    ExchangeStructure.Insert("Methods", New Array);
-    Return ExchangeStructure;
-    
-EndFunction // NewExchangeStructure()
 
 // Only for internal use.
 //

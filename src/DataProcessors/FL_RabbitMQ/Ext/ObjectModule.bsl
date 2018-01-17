@@ -86,7 +86,7 @@ EndFunction // ChannelFullName()
 //
 Function DeliverMessage(Stream, Properties) Export
     
-    Var HTTPMethod, HTTPRequest;
+    Var HTTPMethod, HTTPRequest, PayLoad;
     
     DeliveryResult = Catalogs.FL_Channels.NewChannelDeliverResult();    
     If TypeOf(Properties) <> Type("Structure") Then   
@@ -94,7 +94,10 @@ Function DeliverMessage(Stream, Properties) Export
             "Properties", Properties, Type("Structure"));
     EndIf;
 
-    PayLoad = GetStringFromBinaryData(Stream.CloseAndGetBinaryData());
+    If TypeOf(Stream) = Type("MemoryStream") Then 
+        PayLoad = GetStringFromBinaryData(Stream.CloseAndGetBinaryData());
+    EndIf;
+    
     ResolveProperties(Properties, HTTPMethod, HTTPRequest, Payload);
        
     If Log Then

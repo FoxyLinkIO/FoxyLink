@@ -215,6 +215,8 @@ Procedure ExtendValueTableFromArray(SourceArray, TargetTable) Export
 
     If TypeOf(TargetTable) = Type("FormDataCollection") Then
         Columns = FormDataToValue(TargetTable, Type("ValueTable")).Columns;
+    Else
+        Columns = TargetTable.Columns;    
     EndIf;
     
     For Each SourceItem In SourceArray Do
@@ -225,6 +227,55 @@ Procedure ExtendValueTableFromArray(SourceArray, TargetTable) Export
     EndDo;
 
 EndProcedure // ExtendValueTableFromArray()
+
+// Removes duplicates from source value table.
+//
+// Parameters:
+//  Source - ValueTable - value table to remove duplicates.
+//
+Procedure RemoveDuplicatesFromValueTable(Source) Export
+    
+    If TypeOf(Source) = Type("FormDataCollection") Then
+        TemporaryTable = Source.Unload();
+    Else
+        TemporaryTable = Source;    
+    EndIf;
+    
+    Query = New Query;
+    Query.Text = "
+        |SELECT DISTINCT
+        |   Source.*
+        |INTO SourceTable
+        |FROM
+        |   &Source AS Source
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |SELECT
+        |   *
+        |FROM
+        |   SourceTable
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |DROP SourceTable
+        |;
+        |
+        |";
+    If TypeOf(Source) = Type("FormDataCollection") Then
+        Query.SetParameter("Source", Source.Unload());
+    Else
+        Query.SetParameter("Source", Source);    
+    EndIf;
+    
+    ValueTable = Query.Execute().Unload();
+    If TypeOf(Source) = Type("FormDataCollection") Then
+        Source.Load(ValueTable);
+    Else
+        Source = ValueTable;    
+    EndIf;
+    
+EndProcedure // RemoveDuplicatesFromValueTable() 
 
 // Handles three state checkbox in the ValueTree object.
 //
@@ -372,7 +423,6 @@ EndFunction // FixedData()
 //
 Function ConfigurationMetadataTree(Filter = Undefined) Export
 
-    UseFilter = Filter <> Undefined;
     PictureIndexSize = 2;
     PictureCatalogOrder                   = 1;
     PictureDocumentOrder                  = 2;
@@ -383,6 +433,7 @@ Function ConfigurationMetadataTree(Filter = Undefined) Export
     PictureBusinessProcessOrder           = 7;
     PictureCalculationRegisterOrder       = 8;
     PictureChartOfCalculationTypeOrder    = 9;
+    PictureConstantOrder                  = 10;
     PictureTaskOrder                      = 16;
     PictureChartOfAccountOrder            = 32;
 
@@ -398,7 +449,7 @@ Function ConfigurationMetadataTree(Filter = Undefined) Export
         NStr("en='Constants';ru='Константы'"),                 
         PictureLib.Constant,              
         PictureLib.Constant,        
-        10,
+        PictureConstantOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameCatalogs(),             
@@ -487,53 +538,11 @@ Function ConfigurationMetadataTree(Filter = Undefined) Export
     MetadataTree.Columns.Add("Check", New TypeDescription("Number"));
     MetadataTree.Columns.Add("PictureIndex", New TypeDescription("Number"));
     
-    For Each CollectionRow In CollectionsOfMetadataObjects Do
-        
-        TreeRow = MetadataTree.Rows.Add();
-        FillPropertyValues(TreeRow, CollectionRow);
-        For Each MetadataObject In Metadata[CollectionRow.Name] Do
-            
-            If UseFilter Then
-                
-                ObjectPassedFilter = True;
-                For Each FilterItem In Filter Do
-                    
-                    If FilterItem.Key = "MetadataObjectClass" Then
-                        FullNameMO = MetadataObject.FullName();
-                        Position = StrFind(FullNameMO, "."); 
-                        Value = StrTemplate("%1%2", Left(FullNameMO, Position), "*");
-                    ElsIf FilterItem.Key = "FullName" Then
-                        Value = MetadataObject.FullName();
-                    Else
-                        Value = MetadataObject[FilterItem.Key];
-                    EndIf;
-                    
-                    If FilterItem.Value.Find(Value) = Undefined Then
-                        ObjectPassedFilter = False;
-                        Break;
-                    EndIf;
-                    
-                EndDo;
-                
-                If Not ObjectPassedFilter Then
-                    Continue;
-                EndIf;
-                
-            EndIf;
-            
-            MOTreeRow = TreeRow.Rows.Add();
-            MOTreeRow.Name         = MetadataObject.Name;
-            MOTreeRow.FullName     = MetadataObject.FullName();
-            MOTreeRow.Synonym      = MetadataObject.Synonym;
-            MOTreeRow.Picture      = CollectionRow.ObjectPicture;
-            MOTreeRow.PictureIndex = CollectionRow.PictureIndex;
-            
-        EndDo;
-        
-    EndDo;
+    FillMetadataTreeCollection(MetadataTree, CollectionsOfMetadataObjects, 
+        Filter);
 
     // Delete rows without subordinate items.
-    If UseFilter Then
+    If Filter <> Undefined Then
         
         // Use the reverse order of the tree values bypass.
         CollectionItemsQuantity = MetadataTree.Rows.Count();
@@ -579,6 +588,48 @@ Function IsReference(Type) Export
         OR ExchangePlans.AllRefsType().ContainsType(Type));
     
 EndFunction // IsReference()
+
+// Checks if the record about the passed reference value is actually in the data infobase.
+// 
+// Parameters:
+//  AnyRef - value of any data infobase reference.
+// 
+// Returns:
+//  Boolean - True if reference exists.
+//
+Function RefExists(AnyRef) Export
+
+    QueryText = StrTemplate("SELECT
+        |   Ref AS Ref
+        |FROM
+        |   %1
+        |WHERE
+        |   Ref = &Ref
+        |", TableNameByRef(AnyRef));
+    
+    Query = New Query;
+    Query.Text = QueryText;
+    Query.SetParameter("Ref", AnyRef);
+
+    SetPrivilegedMode(True);
+
+    Return NOT Query.Execute().IsEmpty();
+
+EndFunction // RefExists()
+
+// Returns a full name of metadata object by the passed reference value.
+// 
+// Parameters:
+//  Ref - AnyRef - object for which it is required to receive table name.
+// 
+// Returns:
+//  String - the full name of the metadata object for the specified reference.
+//
+Function TableNameByRef(Ref) Export
+
+    Return Ref.Metadata().FullName();
+
+EndFunction // TableNameByRef()
 
 // Constructs a TypeDescription that contains the String type.
 //
@@ -639,8 +690,6 @@ Function DateTypeDescription(DateFractions) Export
     Return New TypeDescription("Date", , , New DateQualifiers(DateFractions));
 
 EndFunction // DateTypeDescription()
-
-#EndRegion // ObjectTypes
 
 #Region MetadataObjectTypes
  
@@ -926,12 +975,37 @@ Function IsReferenceTypeObjectByMetadataObjectName(MetadataObjectName) Export
     
 EndFunction // IsReferenceTypeObjectByFullName()
 
+// Checks if the passed attribute name is included in the subset of standard attributes.
+// 
+// Parameters:
+//  StandardAttributes - StandardAttributesDescription - type and value describes the
+//                          collection of settings for various standard attributes.
+//  AttributeName      - String - attribute name to be checked.
+// 
+// Returns:
+//  Boolean - True if the attribute is included in the subset of standard attributes.
+//
+Function IsStandardAttribute(StandardAttributes, AttributeName) Export
+
+    Synonyms = FL_CommonUseReUse.StandardAttributeSynonyms();
+    
+    Name = Upper(AttributeName);
+    For Each Attribute In StandardAttributes Do
+        If Upper(Attribute.Name) = Name Or Upper(Attribute.Name) = Synonyms[Name] Then
+            Return True;
+        EndIf;
+    EndDo;
+    Return False;
+
+EndFunction // IsStandardAttribute()
+
 #EndRegion // MetadataObjectTypesDefinition
 
 // Returns the name of base type based on the metadata object.
 // 
 // Parameters:
-//  MetadataObject - metadata object for which it is necessary to define the base type.
+//  MetadataObject - MetadataObject - metadata object for which it is necessary 
+//                                      to define the base type.
 // 
 // Returns:
 //  String - the name of base type based on the metadata object.
@@ -1152,29 +1226,33 @@ Function ObjectManagerByFullName(FullName) Export
     
 EndFunction // ObjectManagerByFullName()
 
-// Checks if the passed attribute name is included in the subset of standard attributes.
+#EndRegion // ObjectTypes
+
+// Returns a value table mock for a metadata object.
 // 
 // Parameters:
-//  StandardAttributes - StandardAttributesDescription - type and value describes the
-//                          collection of settings for various standard attributes.
-//  AttributeName      - String - attribute name to be checked.
+//  MetadataObject - MetadataObject - metadata object for which it is necessary 
+//                                      to create the value table mock.
 // 
 // Returns:
-//  Boolean - True if the attribute is included in the subset of standard attributes.
+//  ValueTable - the mock of metadata object.
 //
-Function IsStandardAttribute(StandardAttributes, AttributeName) Export
-
-    Synonyms = FL_CommonUseReUse.StandardAttributeSynonyms();
+Function NewMockOfMetadataObjectAttributes(MetadataObject) Export
     
-    Name = Upper(AttributeName);
-    For Each Attribute In StandardAttributes Do
-        If Upper(Attribute.Name) = Name Or Upper(Attribute.Name) = Synonyms[Name] Then
-            Return True;
-        EndIf;
+    // Return value of the function.
+    Mock = New ValueTable;
+    
+    For Each Attribute In MetadataObject.Attributes Do
+        Mock.Columns.Add(Attribute.Name, Attribute.Type, Attribute.Synonym); 
     EndDo;
-    Return False;
 
-EndFunction // IsStandardAttribute()
+    For Each Attribute In MetadataObject.StandardAttributes Do
+        Mock.Columns.Add(Attribute.Name, Attribute.Type, Attribute.Synonym);
+    EndDo;
+
+    Return Mock;
+    
+EndFunction // NewMockOfMetadataObjectAttributes()
 
 #Region ValueConversion 
 
@@ -1330,6 +1408,68 @@ Procedure NewMetadataObjectCollectionRow(Name, Synonym, Picture, ObjectPicture,
     NewRow.PictureIndex  = PictureIndex;
 
 EndProcedure // NewMetadataObjectCollectionRow()
+
+// Only for internal use.
+//
+Procedure FillMetadataTreeCollection(MetadataTree, CollectionsOfMetadataObjects, 
+    Filter)
+    
+    For Each CollectionRow In CollectionsOfMetadataObjects Do
+        
+        TreeRow = MetadataTree.Rows.Add();
+        FillPropertyValues(TreeRow, CollectionRow);
+        For Each MetadataObject In Metadata[CollectionRow.Name] Do
+            
+            AddToMetadataTreeCollection(TreeRow, CollectionRow, MetadataObject, 
+                Filter);
+            
+        EndDo;
+        
+    EndDo;
+    
+EndProcedure // FillMetadataTreeCollection() 
+
+// Only for internal use.
+//
+Procedure AddToMetadataTreeCollection(MetadataTreeRow, CollectionRow, 
+    MetadataObject, Filter)
+                
+    If Filter <> Undefined Then
+        
+        ObjectPassedFilter = True;
+        For Each FilterItem In Filter Do
+            
+            If FilterItem.Key = "MetadataObjectClass" Then
+                FullNameMO = MetadataObject.FullName();
+                Position = StrFind(FullNameMO, "."); 
+                Value = StrTemplate("%1%2", Left(FullNameMO, Position), "*");
+            ElsIf FilterItem.Key = "FullName" Then
+                Value = MetadataObject.FullName();
+            Else
+                Value = MetadataObject[FilterItem.Key];
+            EndIf;
+            
+            If FilterItem.Value.Find(Value) = Undefined Then
+                ObjectPassedFilter = False;
+                Break;
+            EndIf;
+            
+        EndDo;
+        
+        If NOT ObjectPassedFilter Then
+            Return;
+        EndIf;
+        
+    EndIf;
+    
+    MOTreeRow = MetadataTreeRow.Rows.Add();
+    MOTreeRow.Name         = MetadataObject.Name;
+    MOTreeRow.FullName     = MetadataObject.FullName();
+    MOTreeRow.Synonym      = MetadataObject.Synonym;
+    MOTreeRow.Picture      = CollectionRow.ObjectPicture;
+    MOTreeRow.PictureIndex = CollectionRow.PictureIndex;
+                
+EndProcedure // AddToMetadataTreeCollection() 
 
 // Only for internal use.
 //

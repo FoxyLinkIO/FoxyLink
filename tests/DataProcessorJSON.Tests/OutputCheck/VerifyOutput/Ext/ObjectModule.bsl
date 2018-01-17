@@ -29,23 +29,19 @@ EndProcedure // ЗаполнитьНаборТестов()
 Procedure Fact_EmptyDataCompositionSchema() Export
     
     DataCompositionSchema = New DataCompositionSchema;
+
+    ExchangeSettings = Catalogs.FL_Exchanges.NewExchangeSettings();
+    ExchangeSettings.BasicFormatGuid = "3ca485fe-3fcc-445b-9843-48c5ed370c0f";
+    ExchangeSettings.DataCompositionSchema = DataCompositionSchema;
+    ExchangeSettings.DataCompositionSettings = DataCompositionSchema
+        .DefaultSettings;
+              
+    MemoryStream = New MemoryStream;
+    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
+        ExchangeSettings);
+    ResultMessage = GetStringFromBinaryData(MemoryStream.CloseAndGetBinaryData());
     
-    DataCompositionTemplate = FL_DataComposition.NewTemplateComposerParameters();
-    DataCompositionTemplate.Schema   = DataCompositionSchema;
-    DataCompositionTemplate.Template = DataCompositionSchema.DefaultSettings;
-    
-    OutputParameters = FL_DataComposition.NewOutputParameters();
-    OutputParameters.DCTParameters = DataCompositionTemplate;
-    OutputParameters.CanUseExternalFunctions = True;
-    
-    StreamObject = DataProcessors.FL_DataProcessorJSON.Create();
-    StreamObject.Initialize();
-    
-    FL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
-    
-    Result = StreamObject.Close();
-    
-    Assertions.ПроверитьРавенство(Result, "{}");
+    Assertions.ПроверитьРавенство(ResultMessage, "{}");
         
 EndProcedure // Fact_EmptyDataCompositionSchema() 
 
@@ -67,7 +63,7 @@ Procedure Fact_OneLevelDetailRecord() Export
         |}
         |";
 
-    VerifyAssertion("OneLevelDetailedRecord", "READ", BenchmarkData);
+    VerifyAssertion("OneLevelDetailedRecord", BenchmarkData);
     
 EndProcedure // Fact_OneLevelDetailRecord()
 
@@ -109,7 +105,7 @@ Procedure Fact_OneLevelDetailRecords() Export
         |}
         |";
         
-    VerifyAssertion("OneLevelDetailedRecords", "READ", BenchmarkData);
+    VerifyAssertion("OneLevelDetailedRecords", BenchmarkData);
 
 EndProcedure // Fact_OneLevelDetailRecords()
 
@@ -156,7 +152,7 @@ Procedure Fact_OLDetailRecord_SLDeatailRecord() Export
         |]
         |}";
         
-    VerifyAssertion("TwoLevelDetailRecords", "READ", BenchmarkData);
+    VerifyAssertion("TwoLevelDetailRecords", BenchmarkData);
         
 EndProcedure // Fact_OLDetailRecord_SLDeatailRecord()
 
@@ -173,7 +169,7 @@ Procedure Fact_OneLevelGrouping() Export
         |]
         |}";
         
-    VerifyAssertion("OneLevelGrouping", "READ", BenchmarkData);
+    VerifyAssertion("OneLevelGrouping", BenchmarkData);
 
 EndProcedure // Fact_OneLevelGrouping()
 
@@ -210,7 +206,7 @@ Procedure Fact_OLGrouping_SLDetailRecords() Export
         |]
         |}";
 
-    VerifyAssertion("L1Group-L2DetailedRecords", "READ", BenchmarkData);
+    VerifyAssertion("L1Group-L2DetailedRecords", BenchmarkData);
         
 EndProcedure // Fact_OLGrouping_SLDetailRecords()
 
@@ -308,7 +304,7 @@ Procedure Fact_OLGrouping_SLDetailRecords_SLGrouping_ThirdLevelDetailRecords() E
         |]
         |}";
         
-    VerifyAssertion("Lv1G-Lv2D-Lv2G-Lv3D", "READ", BenchmarkData);
+    VerifyAssertion("Lv1G-Lv2D-Lv2G-Lv3D", BenchmarkData);
 
 EndProcedure // Fact_OLGrouping_SLDetailRecords_SLGrouping_ThirdLevelDetailRecords()
 
@@ -421,7 +417,7 @@ Procedure Fact_OLGrouping_SLDetailRecords_TLGrouping_WithResource() Export
         |]
         |}";
 
-    VerifyAssertion("Resources+Lv1G-Lv2D-Lv3G", "READ", BenchmarkData);
+    VerifyAssertion("Resources+Lv1G-Lv2D-Lv3G", BenchmarkData);
 
 EndProcedure // Fact_OLGrouping_SLDetailRecords_TLGrouping_WithResource()
 
@@ -466,7 +462,7 @@ Procedure Fact_OLGrouping_SLGrouping_TLDetailRecords_NestedResource() Export
         |]
         |}";
 
-    VerifyAssertion("ResInTable-Lv1G-Lv2G-Lv3D", "READ", BenchmarkData);
+    VerifyAssertion("ResInTable-Lv1G-Lv2G-Lv3D", BenchmarkData);
 
 EndProcedure // Fact_OLGrouping_SLGrouping_TLDetailRecords_NestedResource()
 
@@ -474,14 +470,16 @@ EndProcedure // Fact_OLGrouping_SLGrouping_TLDetailRecords_NestedResource()
 
 #Region ServiceProceduresAndFunctions
 
-Procedure VerifyAssertion(CatalogRefName, MethodName, BenchmarkData)
+Procedure VerifyAssertion(CatalogRefName, BenchmarkData)
     
     ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
         Catalogs.FL_Exchanges.FindByDescription(CatalogRefName), 
-        Catalogs.FL_Methods.FindByDescription(MethodName)); 
-        
-    ResultMessage = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined, 
+        Catalogs.FL_Methods.Read); 
+                
+    MemoryStream = New MemoryStream;
+    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
         ExchangeSettings);
+    ResultMessage = GetStringFromBinaryData(MemoryStream.CloseAndGetBinaryData());
     
     Assertions.ПроверитьРавенство(DeleteCRLF(ResultMessage), DeleteCRLF(BenchmarkData));
         

@@ -632,6 +632,7 @@
 				</ChildObjects>
 			</TabularSection>
 			<Form>ChannelForm</Form>
+			<Template>Self</Template>
 		</ChildObjects>
 	</DataProcessor>
 </MetaDataObject>
