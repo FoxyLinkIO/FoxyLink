@@ -42,7 +42,7 @@ Procedure Fact_StringValue() Export
     
     BenchmarkData = """This is string value""";
 
-    VerifyAssertion("StringValueOutput", "READ", BenchmarkData);
+    VerifyAssertion("StringValueOutput", BenchmarkData);
     
 EndProcedure // Fact_StringValue()
 
@@ -50,7 +50,7 @@ Procedure Fact_NumberValue() Export
     
     BenchmarkData = 15.6464669489979796464313546498;
 
-    VerifyAssertion("NumberValueOutput", "READ", BenchmarkData);
+    VerifyAssertion("NumberValueOutput", BenchmarkData);
     
 EndProcedure // Fact_NumberValue()
 
@@ -58,7 +58,7 @@ Procedure Fact_TrueValue() Export
     
     BenchmarkData = True;
 
-    VerifyAssertion("TrueValueOutput", "READ", BenchmarkData);
+    VerifyAssertion("TrueValueOutput", BenchmarkData);
     
 EndProcedure // Fact_TrueValue()
 
@@ -66,7 +66,7 @@ Procedure Fact_FalseValue() Export
     
     BenchmarkData = False;
 
-    VerifyAssertion("FalseValueOutput", "READ", BenchmarkData);
+    VerifyAssertion("FalseValueOutput", BenchmarkData);
     
 EndProcedure // Fact_FalseValue()
 
@@ -74,21 +74,21 @@ Procedure Fact_NullValue() Export
     
     BenchmarkData = Null;
 
-    VerifyAssertion("NullValueOutput", "READ", BenchmarkData);
+    VerifyAssertion("NullValueOutput", BenchmarkData);
     
 EndProcedure // Fact_NullValue()
 
 Procedure Fact_EmptyObjectValue() Export
     
     BenchmarkData = "{}";
-    VerifyAssertion("EmptyObjectValueOutput", "READ", BenchmarkData);
+    VerifyAssertion("EmptyObjectValueOutput", BenchmarkData);
 
 EndProcedure // Fact_EmptyObjectValue() 
 
 Procedure Fact_EmptyArrayValue() Export
     
     BenchmarkData = "[]";
-    VerifyAssertion("EmptyArrayValueOutput", "READ", BenchmarkData);
+    VerifyAssertion("EmptyArrayValueOutput", BenchmarkData);
 
 EndProcedure // Fact_EmptyArrayValue() 
 
@@ -102,7 +102,7 @@ Procedure Fact_TwoEmptyObjectValue() Export
         |}
         |";
 
-    VerifyAssertion("{ """": { }, """": { } }", "READ", BenchmarkData);
+    VerifyAssertion("{ """": { }, """": { } }", BenchmarkData);
     
 EndProcedure // Fact_TwoEmptyObjectValue()
 
@@ -116,7 +116,7 @@ Procedure Fact_TwoEmptyObjectStringValue() Export
         |}
         |";
 
-    VerifyAssertion("{ """": {}, """": {}, """": """"}", "READ", BenchmarkData);
+    VerifyAssertion("{ """": {}, """": {}, """": """"}", BenchmarkData);
     
 EndProcedure // Fact_TwoEmptyObjectStringValue()
 
@@ -129,7 +129,7 @@ Procedure Fact_TwoEmptyArrayValue() Export
         |}
         |";
 
-    VerifyAssertion("{ """": [ ], """": [ ] }", "READ", BenchmarkData);
+    VerifyAssertion("{ """": [ ], """": [ ] }", BenchmarkData);
     
 EndProcedure // Fact_TwoEmptyArrayValue()
 
@@ -143,7 +143,7 @@ Procedure Fact_TwoEmptyArrayStringValue() Export
         |}
         |";
 
-    VerifyAssertion("{ """": [], """": [], """": """"}", "READ", BenchmarkData);
+    VerifyAssertion("{ """": [], """": [], """": """"}", BenchmarkData);
     
 EndProcedure // Fact_TwoEmptyArrayStringValue()
 
@@ -156,7 +156,7 @@ Procedure Fact_TwoEmptyArrayInArray() Export
         |]
         |";
 
-    VerifyAssertion("[ [ ], [ ] ]", "READ", BenchmarkData);
+    VerifyAssertion("[ [ ], [ ] ]", BenchmarkData);
     
 EndProcedure // Fact_TwoEmptyArrayInArray()
 
@@ -170,7 +170,7 @@ Procedure Fact_TwoEmptyArrayStringInArray() Export
         |]
         |";
 
-    VerifyAssertion("[ """", [ ], [ ] ]", "READ", BenchmarkData);
+    VerifyAssertion("[ """", [ ], [ ] ]", BenchmarkData);
     
 EndProcedure // Fact_TwoEmptyArrayStringInArray()
 
@@ -189,7 +189,7 @@ Procedure Fact_TwoInnerObjectValue() Export
         |}
         |";
 
-    VerifyAssertion("{ """": {F,F}, """": {F} }", "READ", BenchmarkData);
+    VerifyAssertion("{ """": {F,F}, """": {F} }", BenchmarkData);
     
 EndProcedure // Fact_TwoInnerObjectValue()
 
@@ -213,7 +213,7 @@ Procedure Fact_ObjectValue() Export
         |}
         |";
 
-    VerifyAssertion("ObjectValueOutput", "READ", BenchmarkData);
+    VerifyAssertion("ObjectValueOutput", BenchmarkData);
     
 EndProcedure // Fact_ObjectValue()
 
@@ -243,7 +243,7 @@ Procedure Fact_ObjectArraySeveralTypes() Export
         |]
         |}";
 
-    VerifyAssertion("ObjectArraySeveralTypes", "READ", BenchmarkData);
+    VerifyAssertion("ObjectArraySeveralTypes", BenchmarkData);
     
 EndProcedure // Fact_ObjectArraySeveralTypes()
 
@@ -262,7 +262,7 @@ Procedure Fact_ArrayObjectDetailRecords() Export
     |}
     |]";
 
-    VerifyAssertion("#46 Bug: JSON Array", "READ", BenchmarkData);
+    VerifyAssertion("#46 Bug: JSON Array", BenchmarkData);
     
 EndProcedure // Fact_ArrayObjectDetailRecords()
 
@@ -286,7 +286,7 @@ Procedure Fact_ComplexHierarchy_1() Export
         |]
         |";
 
-    VerifyAssertion("[[{}],[{:,{:}}]]", "READ", BenchmarkData);
+    VerifyAssertion("[[{}],[{:,{:}}]]", BenchmarkData);
     
 EndProcedure // Fact_ComplexHierarchy_1()
 
@@ -295,14 +295,16 @@ EndProcedure // Fact_ComplexHierarchy_1()
 
 #Region ServiceProceduresAndFunctions
 
-Procedure VerifyAssertion(CatalogRefName, MethodName, BenchmarkData)
+Procedure VerifyAssertion(CatalogRefName, BenchmarkData)
     
     ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
         Catalogs.FL_Exchanges.FindByDescription(CatalogRefName), 
-        Catalogs.FL_Methods.FindByDescription(MethodName)); 
-        
-    ResultMessage = Catalogs.FL_Exchanges.GenerateMessageResult(Undefined, 
+        Catalogs.FL_Methods.Read); 
+                
+    MemoryStream = New MemoryStream;
+    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
         ExchangeSettings);
+    ResultMessage = GetStringFromBinaryData(MemoryStream.CloseAndGetBinaryData());
 
     If TypeOf(BenchmarkData) = Type("Number") Then
         Assertions.ПроверитьРавенство(Number(ResultMessage), BenchmarkData);       
