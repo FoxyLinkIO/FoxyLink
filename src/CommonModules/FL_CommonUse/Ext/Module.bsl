@@ -122,6 +122,51 @@ Function ObjectAttributeValue(Ref, AttributeName) Export
 
 EndFunction // ObjectAttributeValue()
 
+// Returns reference by a description.
+//
+// Parameters:
+//  MetadataObject - MetadataObject - metadata object from which it is required 
+//                                      to receive reference by description. 
+//  Description    - String         - the description of reference. 
+//
+// Returns:
+//  AnyRef, Undefined - reference by the description. 
+//
+Function ReferenceByDescription(MetadataObject, Description) Export
+    
+    Query = New Query;
+    Query.Text = StrTemplate(QueryTextReferenceByDescription(), 
+        MetadataObject.FullName());
+    Query.SetParameter("Description", Description);
+    QueryResultSelection = Query.Execute().Select();
+    
+    Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
+    
+EndFunction // ReferenceByDescription()
+
+// Returns reference by a predefined data name.
+//
+// Parameters:
+//  MetadataObject - MetadataObject - metadata object from which it is required 
+//                                      to receive reference by predefined data name.
+//  PredefinedDataName - String - the predefined data name of reference. 
+//
+// Returns:
+//  AnyRef, Undefined - reference by the predefined data name. 
+//
+Function ReferenceByPredefinedDataName(MetadataObject, 
+    PredefinedDataName) Export
+    
+    Query = New Query;
+    Query.Text = StrTemplate(QueryTextReferenceByPredefinedDataName(), 
+        MetadataObject.FullName());
+    Query.SetParameter("PredefinedDataName", PredefinedDataName);
+    QueryResultSelection = Query.Execute().Select();
+    
+    Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
+    
+EndFunction // ReferenceByPredefinedDataName()
+
 // Creates a value table and copies all records of the set to it. 
 // The structure of the resulting table matches the structure of the recordset.
 //
@@ -445,6 +490,13 @@ Function ConfigurationMetadataTree(Filter = Undefined) Export
     CollectionsOfMetadataObjects.Columns.Add("PictureIndex", 
         NumberTypeDescription(PictureIndexSize));
 
+    NewMetadataObjectCollectionRow(TypeNameScheduledJobs(),               
+        NStr("en='Scheduled jobs';ru='Регламентные задания'"),                 
+        PictureLib.ScheduledJob,              
+        PictureLib.ScheduledJob,        
+        0,
+        CollectionsOfMetadataObjects);     
+        
     NewMetadataObjectCollectionRow(TypeNameConstants(),               
         NStr("en='Constants';ru='Константы'"),                 
         PictureLib.Constant,              
@@ -991,7 +1043,7 @@ Function IsStandardAttribute(StandardAttributes, AttributeName) Export
     
     Name = Upper(AttributeName);
     For Each Attribute In StandardAttributes Do
-        If Upper(Attribute.Name) = Name Or Upper(Attribute.Name) = Synonyms[Name] Then
+        If Upper(Attribute.Name) = Name Or Upper(Attribute.Name) = Synonyms.Get(Name) Then
             Return True;
         EndIf;
     EndDo;
@@ -1439,8 +1491,8 @@ Procedure AddToMetadataTreeCollection(MetadataTreeRow, CollectionRow,
         ObjectPassedFilter = True;
         For Each FilterItem In Filter Do
             
+            FullNameMO = MetadataObject.FullName();
             If FilterItem.Key = "MetadataObjectClass" Then
-                FullNameMO = MetadataObject.FullName();
                 Position = StrFind(FullNameMO, "."); 
                 Value = StrTemplate("%1%2", Left(FullNameMO, Position), "*");
             ElsIf FilterItem.Key = "FullName" Then
@@ -1449,7 +1501,8 @@ Procedure AddToMetadataTreeCollection(MetadataTreeRow, CollectionRow,
                 Value = MetadataObject[FilterItem.Key];
             EndIf;
             
-            If FilterItem.Value.Find(Value) = Undefined Then
+            If FilterItem.Value.Find(Value) = Undefined 
+                AND FilterItem.Value.Find(FullNameMO) = Undefined Then
                 ObjectPassedFilter = False;
                 Break;
             EndIf;
@@ -1575,6 +1628,38 @@ Function ValueTypeMatchExpected(Value, ExpectedType, ConversionResult)
     Return True;
 
 EndFunction // ValueTypeMatchExpected()
+
+// Only for internal use.
+//
+Function QueryTextReferenceByDescription()
+
+    QueryText = "
+        |SELECT
+        |   MetadataObject.Ref AS Ref   
+        |FROM
+        |   %1 AS MetadataObject
+        |WHERE
+        |   MetadataObject.Description = &Description
+        |";
+    Return QueryText;
+
+EndFunction // QueryTextReferenceByDescription() 
+
+// Only for internal use.
+//
+Function QueryTextReferenceByPredefinedDataName()
+
+    QueryText = "
+        |SELECT
+        |   MetadataObject.Ref AS Ref   
+        |FROM
+        |   %1 AS MetadataObject
+        |WHERE
+        |   MetadataObject.PredefinedDataName = &PredefinedDataName
+        |";
+    Return QueryText;
+
+EndFunction // QueryTextReferenceByPredefinedDataName()
 
 #EndRegion // ValueConversion
 

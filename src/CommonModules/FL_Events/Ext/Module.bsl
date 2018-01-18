@@ -78,6 +78,85 @@ Procedure CatalogBeforeWrite(Source, Cancel) Export
     
 EndProcedure // CatalogBeforeWrite()
 
+// Handler of BeforeWrite document event subscription.
+//
+// Parameters:
+//  Source      - DocumentObject      - document object.
+//  Cancel      - Boolean             - write cancel flag. If this parameter is
+//                  set to True in the body of the handler procedure, the write 
+//                  transaction will not be completed.
+//  WriteMode   - DocumentWriteMode   - write cancel flag. If the parameter value 
+//                  is set to True in the body of the handler procedure, writing 
+//                  is not performed and the exception is raised.
+//  PostingMode - DocumentPostingMode - a current posting mode is passed to this 
+//                  parameter. Changing this parameter enables the user to change 
+//                  the posting mode. 
+//
+Procedure DocumentBeforeWrite(Source, Cancel, WriteMode, PostingMode) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+        
+    MetadataObject = Source.Metadata().FullName();
+    If IsEventPublisher(MetadataObject) Then 
+    
+        InvocationData = FL_BackgroundJob.NewInvocationData();
+        InvocationData.MetadataObject = MetadataObject;
+        
+        If Source.IsNew() Then
+            InvocationData.Method = Catalogs.FL_Methods.Create;        
+        Else
+            If Source.DeletionMark Then
+                InvocationData.Method = Catalogs.FL_Methods.Delete;       
+            Else
+                InvocationData.Method = Catalogs.FL_Methods.Update;         
+            EndIf;
+        EndIf;
+    
+        Source.AdditionalProperties.Insert("InvocationData", 
+            InvocationData);
+        
+    EndIf;
+    
+EndProcedure // DocumentBeforeWrite()
+
+// Handler of BeforeWrite information register event subscription.
+//
+// Parameters:
+//  Source    - InformationRegisterRecordSet - represents a collection of 
+//                                  records of information register in memory.
+//  Cancel    - Boolean - action execution cancel flag. 
+//  Replacing - Boolean - sets write mode. 
+//          True  - the set records in the database are replaced by writing.
+//          False - the current record set is added to the database by writing. 
+//
+Procedure InformationRegisterBeforeWrite(Source, Cancel, Replacing) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+       
+    SourceMetadata = Source.Metadata();
+    MetadataObject = SourceMetadata.FullName();
+    If IsEventPublisher(MetadataObject) Then
+        
+        //InvocationData = FL_BackgroundJob.NewInvocationData();
+        //InvocationData.MetadataObject = MetadataObject;
+        //InvocationData.Method = Catalogs.FL_Methods.Update;
+        //
+        //If Replacing Then
+        //    InvocationData.Arguments = FL_CommonUse.RegisterRecordsValues(
+        //        SourceMetadata, Source.Filter);
+        //EndIf;
+        //
+        //Source.AdditionalProperties.Insert("InvocationData", 
+        //    InvocationData);
+        
+    EndIf;    
+          
+EndProcedure // InformationRegisterBeforeWrite()
+
 // Handler of BeforeWrite accumulation register event subscription.
 //
 // Parameters:
@@ -130,6 +209,43 @@ Procedure CatalogOnWrite(Source, Cancel) Export
     EnqueueEvent(Source);
     
 EndProcedure // CatalogOnWrite()
+
+// Handler of OnWrite document event subscription.
+//
+// Parameters:
+//  Source - DocumentObject - document object.
+//  Cancel - Boolean       - write cancel flag. If this parameter is set to True in the body 
+//                  of the handler procedure, the write transaction will not be completed.
+//
+Procedure DocumentOnWrite(Source, Cancel) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+        
+    EnqueueEvent(Source);
+    
+EndProcedure // DocumentOnWrite()
+
+// Handler of OnWrite information register event subscription.
+//
+// Parameters:
+//  Source    - InformationRegisterRecordSet - represents a collection of 
+//                                  records of information register in memory.
+//  Cancel    - Boolean - action execution cancel flag. 
+//  Replacing - Boolean - sets write mode. 
+//          True  - the set records in the database are replaced by writing.
+//          False - the current record set is added to the database by writing. 
+//
+Procedure InformationRegisterOnWrite(Source, Cancel, Replacing) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+    
+    //EnqueueEvent(Source);
+    
+EndProcedure // InformationRegisterOnWrite()
 
 // Handler of OnWrite accumulation register event subscription.
 //
@@ -272,10 +388,17 @@ Function QueryTextSubscribers(Owner)
     
     QueryText = StrTemplate("
         |SELECT
+        |   Events.APIVersion       AS APIVersion,
         |   Events.Ref              AS Owner,
-        |   Events.APIVersion       AS APIVersion
+        |   Methods.Priority        AS Priority
         |FROM
         |   Catalog.FL_Exchanges.Events AS Events
+        |
+        |INNER JOIN Catalog.FL_Exchanges.Methods AS Methods
+        |ON  Methods.Ref        = Events.Ref
+        |AND Methods.Method     = Events.Method
+        |AND Methods.APIVersion = Events.APIVersion
+        |
         |WHERE
         // [OPPX|OPHP1 +] Attribute + Ref
         |    Events.MetadataObject = &MetadataObject 

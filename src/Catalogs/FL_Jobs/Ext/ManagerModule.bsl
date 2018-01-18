@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -42,7 +42,7 @@ Procedure Trigger(Job) Export
     EndDo;
 
     ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
-        JobObject.Owner, JobObject.Method); 
+        JobObject.Owner, JobObject.Method);          
         
     MemoryStream = New MemoryStream;
     Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
@@ -160,26 +160,29 @@ Procedure NotifyChannels(JobObject, Stream)
             Continue;    
         EndIf;
         
-        FilterParameters.Channel = Subscriber.Channel; 
-        
-        TriggerResult = Catalogs.FL_Channels.TransferStreamToChannel(
-            Subscriber.Channel, Stream, NewProperties(Resources.FindRows(
-                FilterParameters)));
+        //Try
+            FilterParameters.Channel = Subscriber.Channel;   
+            TriggerResult = Catalogs.FL_Channels.TransferStreamToChannel(
+                Subscriber.Channel, Stream, NewProperties(JobObject, 
+                    Resources.FindRows(FilterParameters)));
+        //Except
+            //TODO: Exceptions!
+        //EndTry;
                 
-        SuccessResponseHandler = True;
-        ErrorResponseDescription = "";
-        If Not IsBlankString(Subscriber.ResponseHandler) Then
-            
-            Try
-                Execute(Subscriber.ResponseHandler);
-            Except
-                SuccessResponseHandler = False;
-                ErrorResponseDescription = ErrorDescription();
-            EndTry;
-            
-        EndIf;
+        //SuccessResponseHandler = True;
+        //ErrorResponseDescription = "";
+        //If Not IsBlankString(Subscriber.ResponseHandler) Then
+        //    
+        //    Try
+        //        Execute(Subscriber.ResponseHandler);
+        //    Except
+        //        SuccessResponseHandler = False;
+        //        ErrorResponseDescription = ErrorDescription();
+        //    EndTry;
+        //    
+        //EndIf;
         
-        If TriggerResult.Success AND SuccessResponseHandler Then
+        If TriggerResult.Success Then //AND SuccessResponseHandler Then
             Subscriber.Completed = True;
         Else
             JobObject.State = Catalogs.FL_States.Failed;
@@ -195,12 +198,17 @@ EndProcedure // NotifyChannels()
 
 // Only for internal use.
 //
-Function NewProperties(Resources)
+Function NewProperties(JobObject, Resources)
     
     Properties = New Structure;
     For Each Resource In Resources Do
         Properties.Insert(Resource.FieldName, Resource.FieldValue);        
     EndDo;
+    
+    JobProperties = New Structure;
+    JobProperties.Insert("Method", JobObject.Method);
+    //JobProperties.Insert("MediaType", JobObject.MediaType);
+    Properties.Insert("JobProperties", JobProperties);
     Return Properties;
     
 EndFunction // NewProperties()

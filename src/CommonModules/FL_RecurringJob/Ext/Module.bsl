@@ -17,3 +17,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// Default RecurringServer action.
+//
+Procedure RecurringServerAction() Export
+    
+EndProcedure // RecurringServerAction()

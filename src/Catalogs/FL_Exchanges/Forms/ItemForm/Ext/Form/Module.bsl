@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -246,20 +246,20 @@ Procedure AddEvent(Command)
 EndProcedure // AddEvent()
 
 &AtClient
-Procedure FireEvent(Command)
+Procedure DispatchEvent(Command)
     
     CurrentData = Items.Events.CurrentData;
     If CurrentData <> Undefined Then
         
-        ShowQueryBox(New NotifyDescription("DoAfterChooseEventToFire", 
+        ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDispatch", 
             ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en = 'Fire the event for all objects from the metadata?';
+            NStr("en = 'Dispatch the event for all objects from the metadata?';
                  |ru = 'Вызвать событие для всех объектов из метаданного?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);
         
     EndIf;
     
-EndProcedure // FireEvent()
+EndProcedure // DispatchEvent()
 
 &AtClient
 Procedure DeleteEvent(Command)
@@ -536,16 +536,12 @@ Procedure LoadBasicFormatInfo()
 
     Items.HeaderGroupLeft.Visible = True;
     Items.HeaderPages.CurrentPage = Items.HeaderPageBasicFormat;
+    
     FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
         Object.BasicFormatGuid);
-        
-    FormatName = StrTemplate("%1 (%2)", FormatProcessor.FormatFullName(),
-        FormatProcessor.FormatShortName());
-        
-    FormatStandard = FormatProcessor.FormatStandard();
-        
-    FormatPluginVersion = FormatProcessor.Version();
     
+    Catalogs.FL_Exchanges.FillFormatDescription(ThisObject, FormatProcessor);    
+        
     FPMetadata = FormatProcessor.Metadata();
     FormatAPISchemaSupport = FPMetadata.Forms.Find("APICreationForm") <> Undefined;
 
@@ -562,9 +558,9 @@ EndProcedure // LoadBasicFormatInfo()
 &AtServer
 Function FormatStandardLink() 
     
-     FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
+    FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
         Object.BasicFormatGuid);     
-     Return FormatProcessor.FormatStandardLink();
+    Return FormatProcessor.FormatStandardLink();
     
 EndFunction // FormatStandardLink()
 
@@ -613,6 +609,8 @@ EndFunction // NewAPISchemaData()
 Procedure DoAfterChooseMethodToAdd(SelectedElement, 
     AdditionalParameters) Export
     
+    NormalPriority = 5;
+    
     If SelectedElement <> Undefined Then
         
         FilterParameters = New Structure("APIVersion, Method", "1.0.0", 
@@ -626,7 +624,8 @@ Procedure DoAfterChooseMethodToAdd(SelectedElement,
             NewMethod = Object.Methods.Add();
             NewMethod.Method = SelectedElement.Value;
             NewMethod.APIVersion = "1.0.0";
-            
+            NewMethod.Priority = NormalPriority;
+    
             UpdateMethodsView();
                         
         EndIf;
@@ -848,6 +847,7 @@ Procedure LoadMethodSettings()
            
         CurrentData = CurrentMethodData(RowMethod);
         RowAPIVersion = CurrentData.APIVersion;
+        RowPriority = CurrentData.Priority;
         RowCanUseExternalFunctions = CurrentData.CanUseExternalFunctions;
         
         UpdateMethodView(CurrentData);
@@ -898,6 +898,7 @@ Procedure SaveMethodSettings()
         If Items.MethodPages.ChildItems.Find(RowMethod) <> Undefined Then
         
             ChangedData = CurrentMethodData(RowMethod);
+            ChangedData.Priority = RowPriority;
             ChangedData.CanUseExternalFunctions = RowCanUseExternalFunctions;
             
             If RowDataCompositionSchemaModified Then
@@ -991,7 +992,8 @@ EndFunction // CurrentMethodsWithAPISchema()
 &AtServer
 Function CurrentMethodData(Val RowMethod)
 
-    Method = Catalogs.FL_Methods.MethodByDescription(RowMethod);
+    Method = FL_CommonUse.ReferenceByDescription(Metadata.Catalogs.FL_Methods,
+        RowMethod);
     
     FilterParameters = New Structure("Method", Method);
     FilterResult = TransitionMethodPagesHistory.FindRows(FilterParameters);
@@ -1066,7 +1068,7 @@ EndProcedure // DoAfterChooseEventToAdd()
 //                              NotifyDescription object was created.
 //
 &AtClient
-Procedure DoAfterChooseEventToFire(QuestionResult, 
+Procedure DoAfterChooseEventToDispatch(QuestionResult, 
     AdditionalParameters) Export
     
     Var Identifier;
@@ -1075,11 +1077,11 @@ Procedure DoAfterChooseEventToFire(QuestionResult,
         AND TypeOf(AdditionalParameters) = Type("Structure")
         AND AdditionalParameters.Property("Identifier", Identifier) Then
         
-        FireEventAtServer(Identifier);            
+        DispatchEventAtServer(Identifier);            
  
     EndIf;
     
-EndProcedure // DoAfterChooseEventsToAdd() 
+EndProcedure // DoAfterChooseEventToDispatch() 
 
 // Deletes the selected event.
 //
@@ -1138,7 +1140,7 @@ EndProcedure // AddEventAtServer()
 // Only for internal use.
 //
 &AtServer
-Procedure FireEventAtServer(Identifier)
+Procedure DispatchEventAtServer(Identifier)
     
     SearchResult = Object.Events.FindByID(Identifier);
     If SearchResult = Undefined Then
@@ -1170,7 +1172,7 @@ Procedure FireEventAtServer(Identifier)
         FL_Events.EnqueueEvent(SourceMock);
     EndDo;
         
-EndProcedure // FireEventAtServer() 
+EndProcedure // DispatchEventAtServer() 
 
 // Only for internal use.
 //
@@ -1339,6 +1341,7 @@ EndProcedure // DoAfterCloseResponseHandlerForm()
 &AtClient
 Procedure OpenChannelResourceForm(ChannelParameters, ChannelRef)
     
+    ChannelParameters.Insert("Channel", ChannelRef);
     ChannelParameters.Insert("ChannelResources", TransitionChannelResources);
     OpenForm(ChannelParameters.FormName, 
         ChannelParameters, 

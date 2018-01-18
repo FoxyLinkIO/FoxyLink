@@ -160,7 +160,7 @@ EndFunction // CallHTTPMethod()
 #EndRegion // HTTPInteraction
 
 #Region FormInteraction
-
+ 
 // Moves a collection item.
 //
 // Parameters:
@@ -297,101 +297,60 @@ Procedure InitializeSubsystem() Export
     
 EndProcedure // InitializeSubsystem() 
 
-// Returns mock object (ValueTable) with imported methods.
+// Loads imported exchange data into a mock object.
 //
 // Parameters:
-//  Methods - Array - an array with imported methods.
-//
-// Returns:
-//  ValueTable - the mock object with imported methods.
+//  MockObject - Arbitrary - the mock object. 
+//  Exchange   - Structure - an structure with imported exchange.
 // 
-Function LoadImportedMethods(Methods) Export
+Procedure LoadImportedExchange(MockObject, Exchange) Export
     
     GuidLength = 36;
     
-    MockObject = FL_CommonUse.NewMockOfMetadataObjectAttributes(
-        Metadata.Catalogs.FL_Methods);
-    MockObject.Columns.Add("Method", FL_CommonUse.StringTypeDescription(
-        GuidLength));
-
-    For Each Method In Methods Do
-        
-        MockRow = MockObject.Add();
-        FillPropertyValues(MockRow, Method, , "CRUDMethod, RESTMethod");
-        MockRow.CRUDMethod = Enums.FL_CRUDMethods[Method.CRUDMethod];
-        MockRow.RESTMethod = Enums.FL_RESTMethods[Method.RESTMethod];
-        
-        Result = Catalogs.FL_Methods.MethodByPredefinedDataName(
-            Method.PredefinedDataName);
-        If Result <> Undefined Then
-            MockRow.Ref = Result;
-            Continue;
-        EndIf;
-        
-        Result = Catalogs.FL_Methods.GetRef(New UUID(Method.Method));
-        If FL_CommonUse.RefExists(Result) Then
-            MockRow.Ref = Result;
-            Continue;
-        EndIf;
-        
-        Result = Catalogs.FL_Methods.MethodByDescription(
-            Method.Description);
-        If Result <> Undefined Then
-            MockRow.Ref = Result;    
-        EndIf;
-        
-    EndDo;
+    FillPropertyValues(MockObject, Exchange, , "Methods, Channels, Events");
     
-    Return MockObject;
+     // Methods load.
+    FL_CommonUseClientServer.ExtendValueTable(LoadImportedMethods(
+            Exchange.Methods), 
+        MockObject.Methods);
     
-EndFunction // LoadImportedMethods()
-
-// Returns mock object (ValueTable) with imported channels.
-//
-// Parameters:
-//  Channels - Array - an array with imported channels.
-//
-// Returns:
-//  ValueTable - the mock object with imported channels.
-// 
-Function LoadImportedChannels(Channels) Export
+    // Channels load.
+    FL_CommonUseClientServer.ExtendValueTable(LoadImportedChannels(
+            Exchange.Channels), 
+        MockObject.Channels);
+    FL_CommonUse.RemoveDuplicatesFromValueTable(MockObject.Channels);
     
-    GuidLength = 36;
+    // Events load.
+    FL_CommonUseClientServer.ExtendValueTable(Exchange.Events, 
+        MockObject.Events);
+    FL_CommonUse.RemoveDuplicatesFromValueTable(MockObject.Events);
     
-    MockObject = FL_CommonUse.NewMockOfMetadataObjectAttributes(
-        Metadata.Catalogs.FL_Channels);
-    MockObject.Columns.Add("Channel", FL_CommonUse.StringTypeDescription(
-        GuidLength));
-
-    For Each Channel In Channels Do
-        
-        MockRow = MockObject.Add();
-        FillPropertyValues(MockRow, Channel);
-        
-        Result = Catalogs.FL_Channels.ChannelByPredefinedDataName(
-            Channel.PredefinedDataName);
-        If Result <> Undefined Then
-            MockRow.Ref = Result;
-            Continue;
-        EndIf;
-        
-        Result = Catalogs.FL_Channels.GetRef(New UUID(Channel.Channel));
-        If FL_CommonUse.RefExists(Result) Then
-            MockRow.Ref = Result;
-            Continue;
-        EndIf;
-        
-        Result = Catalogs.FL_Channels.ChannelByDescription(
-            Channel.Description);
-        If Result <> Undefined Then
-            MockRow.Ref = Result;    
-        EndIf;
-        
-    EndDo;
     
-    Return MockObject;
+    //MockRow = MockObject.Add();
+    //FillPropertyValues(MockRow, Method, , "CRUDMethod, RESTMethod");
+    //MockRow.CRUDMethod = Enums.FL_CRUDMethods[Method.CRUDMethod];
+    //MockRow.RESTMethod = Enums.FL_RESTMethods[Method.RESTMethod];
     
-EndFunction // LoadImportedChannels()
+    //Result = Catalogs.FL_Methods.MethodByPredefinedDataName(
+    //    Method.PredefinedDataName);
+    //If Result <> Undefined Then
+    //    MockRow.Ref = Result;
+    //    Return;
+    //EndIf;
+    //
+    //Result = Catalogs.FL_Methods.GetRef(New UUID(Method.Method));
+    //If FL_CommonUse.RefExists(Result) Then
+    //    MockRow.Ref = Result;
+    //    Return;
+    //EndIf;
+    //
+    //Result = Catalogs.FL_Methods.MethodByDescription(
+    //    Method.Description);
+    //If Result <> Undefined Then
+    //    MockRow.Ref = Result;    
+    //EndIf;
+            
+EndProcedure // LoadImportedExchange()
 
 // Returns metadata object: pluggable subsystem.
 //
@@ -610,6 +569,102 @@ Procedure InitializeConstants()
     EndIf;
     
 EndProcedure // InitializeConstants() 
+
+// Returns mock object (ValueTable) with imported methods.
+//
+// Parameters:
+//  Methods - Array - an array with imported methods.
+//
+// Returns:
+//  ValueTable - the mock object with imported methods.
+// 
+Function LoadImportedMethods(Methods)
+    
+    GuidLength = 36;
+    
+    MockObject = FL_CommonUse.NewMockOfMetadataObjectAttributes(
+        Metadata.Catalogs.FL_Methods);
+    MockObject.Columns.Add("Method", FL_CommonUse.StringTypeDescription(
+        GuidLength));
+
+    For Each Method In Methods Do
+        
+        MockRow = MockObject.Add();
+        FillPropertyValues(MockRow, Method, , "CRUDMethod, RESTMethod");
+        MockRow.CRUDMethod = Enums.FL_CRUDMethods[Method.CRUDMethod];
+        MockRow.RESTMethod = Enums.FL_RESTMethods[Method.RESTMethod];
+        
+        Result = FL_CommonUse.ReferenceByPredefinedDataName(
+            Metadata.Catalogs.FL_Methods, Method.PredefinedDataName);
+        If Result <> Undefined Then
+            MockRow.Ref = Result;
+            Continue;
+        EndIf;
+        
+        Result = Catalogs.FL_Methods.GetRef(New UUID(Method.Method));
+        If FL_CommonUse.RefExists(Result) Then
+            MockRow.Ref = Result;
+            Continue;
+        EndIf;
+        
+        Result = FL_CommonUse.ReferenceByDescription(
+            Metadata.Catalogs.FL_Methods, Method.Description);
+        If Result <> Undefined Then
+            MockRow.Ref = Result;    
+        EndIf;
+        
+    EndDo;
+    
+    Return MockObject;
+    
+EndFunction // LoadImportedMethods()
+
+// Returns mock object (ValueTable) with imported channels.
+//
+// Parameters:
+//  Channels - Array - an array with imported channels.
+//
+// Returns:
+//  ValueTable - the mock object with imported channels.
+// 
+Function LoadImportedChannels(Channels)
+    
+    GuidLength = 36;
+    
+    MockObject = FL_CommonUse.NewMockOfMetadataObjectAttributes(
+        Metadata.Catalogs.FL_Channels);
+    MockObject.Columns.Add("Channel", FL_CommonUse.StringTypeDescription(
+        GuidLength));
+
+    For Each Channel In Channels Do
+        
+        MockRow = MockObject.Add();
+        FillPropertyValues(MockRow, Channel);
+        
+        Result = FL_CommonUse.ReferenceByPredefinedDataName(
+            Metadata.Catalogs.FL_Channels, Channel.PredefinedDataName);
+        If Result <> Undefined Then
+            MockRow.Ref = Result;
+            Continue;
+        EndIf;
+        
+        Result = Catalogs.FL_Channels.GetRef(New UUID(Channel.Channel));
+        If FL_CommonUse.RefExists(Result) Then
+            MockRow.Ref = Result;
+            Continue;
+        EndIf;
+        
+        Result = FL_CommonUse.ReferenceByDescription(
+            Metadata.Catalogs.FL_Channels, Channel.Description);
+        If Result <> Undefined Then
+            MockRow.Ref = Result;    
+        EndIf;
+        
+    EndDo;
+    
+    Return MockObject;
+    
+EndFunction // LoadImportedChannels()
 
 #EndRegion // SubsystemInteraction
 
