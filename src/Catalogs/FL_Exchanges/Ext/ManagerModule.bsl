@@ -70,7 +70,8 @@ Procedure UpdateMethodsView(ManagedForm) Export
     
     For Each Item In Items.MethodPages.ChildItems Do
         
-        Method = Catalogs.FL_Methods.MethodByDescription(Item.Name);
+        Method = FL_CommonUse.ReferenceByDescription(
+            Metadata.Catalogs.FL_Methods, Item.Name);
         FilterResult = Methods.FindRows(New Structure("Method", Method));
         If FilterResult.Count() = 0 Then
             
@@ -103,6 +104,21 @@ Procedure BeforeWriteAtServer(ManagedForm, CurrentObject) Export
     ProcessBeforeWriteAtServer(ManagedForm.Object, CurrentObject);        
     
 EndProcedure // BeforeWriteAtServer()
+
+// Fills format description on managed form.
+//
+// Parameters:
+//  ManagedForm     - ManagedForm                               - catalog form.
+//  FormatProcessor - DataProcessorObject.<Data processor name> - format data processor.
+//
+Procedure FillFormatDescription(ManagedForm, FormatProcessor) Export
+    
+    ManagedForm.FormatName = StrTemplate("%1 (%2)", 
+        FormatProcessor.FormatFullName(), FormatProcessor.FormatShortName());  
+    ManagedForm.FormatStandard = FormatProcessor.FormatStandard();   
+    ManagedForm.FormatPluginVersion = FormatProcessor.Version();
+    
+EndProcedure // FillFormatDescription()
 
 #EndRegion // ObjectFormInteraction
 
@@ -268,7 +284,12 @@ Function NewFormatProcessor(Val LibraryGuid) Export
     
     DataProcessorName = FL_InteriorUseReUse.IdentifyPluginProcessorName(
         LibraryGuid, "Formats");
-           
+        
+    If DataProcessorName = Undefined Then
+        Raise NStr("en = 'Requested format processor is not installed.'; 
+            |ru = 'Запрашиваемый процессор формата не установлен.'");    
+    EndIf;
+        
     Return DataProcessors[DataProcessorName].Create();
         
 EndFunction // NewFormatProcessor()
@@ -451,7 +472,8 @@ Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
         FilterResults = CMethods.FindRows(FilterParameters);
         For Each FilterResult In FilterResults Do
             
-            FillPropertyValues(FilterResult, FMethod, "CanUseExternalFunctions"); 
+            FillPropertyValues(FilterResult, FMethod, "CanUseExternalFunctions, 
+                |Priority"); 
             
             If IsTempStorageURL(FMethod.DataCompositionSchemaAddress) Then
                 FilterResult.DataCompositionSchema = New ValueStorage(

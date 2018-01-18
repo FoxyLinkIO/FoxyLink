@@ -22,11 +22,16 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
+    If Parameters.Property("AutoTest") Then
+        // Return if the form for analysis is received.
+        Return;
+    EndIf;
+    
     If IsBlankString(Object.BasicChannelGuid) Then
         For Each Channel In Catalogs.FL_Channels.AvailableChannels() Do
             FillPropertyValues(Items.BasicChannelGuid.ChoiceList.Add(), Channel);    
         EndDo;
-        Items.HeaderPagesChannel.CurrentPage = Items.HeaderPageSelectChannel;
+        Items.HeaderPages.CurrentPage = Items.HeaderPageSelectChannel;
         Items.HeaderGroupLeft.Visible = False;
     Else
         LoadBasicChannelInfo();    

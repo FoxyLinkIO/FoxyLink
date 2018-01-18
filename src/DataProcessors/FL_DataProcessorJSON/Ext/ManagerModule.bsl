@@ -1,5 +1,6 @@
-﻿// This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+﻿////////////////////////////////////////////////////////////////////////////////
+// This file is part of FoxyLink.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -13,3 +14,5 @@
 //
 // You should have received a copy of the GNU Affero General Public License 
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+//
+////////////////////////////////////////////////////////////////////////////////

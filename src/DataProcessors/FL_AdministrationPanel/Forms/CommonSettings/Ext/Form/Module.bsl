@@ -30,6 +30,7 @@ Var RefreshInterface;
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
     If Parameters.Property("AutoTest") Then
+        // Return if the form for analysis is received.
         Return;
     EndIf;
     
@@ -90,7 +91,7 @@ Procedure InstallIntegration(Command)
     CurrentData = Items.SuppliedIntegrations.CurrentData;
     If CurrentData <> Undefined Then
         
-        OpenForm("CommonForm.FL_Import",
+        OpenForm("Catalog.FL_Exchanges.Form.ImportForm",
             New Structure("LibraryGuid, Template", CurrentData.LibraryGuid, 
                 CurrentData.Template),
             ThisForm,

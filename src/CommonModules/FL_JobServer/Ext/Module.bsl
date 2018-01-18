@@ -580,8 +580,10 @@ Function QueryTextEnqueuedJobs(WorkerCount)
         |   Catalog.FL_Jobs AS Jobs
         |WHERE
         |    Jobs.State = Value(Catalog.FL_States.Enqueued)  
-        |And Jobs.Ref NOT IN (Select Job From TasksHeartbeatCache)
+        |AND Jobs.Ref NOT IN (Select Job From TasksHeartbeatCache)
         |
+        |ORDER BY
+        |   Jobs.Priority ASC   
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////

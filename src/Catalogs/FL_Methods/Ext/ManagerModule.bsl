@@ -21,44 +21,6 @@
     
 #Region ProgramInterface
 
-// Returns method reference by a method description.
-//
-// Parameters:
-//  Description - String - method description. 
-//
-// Returns:
-//  CatalogRef.FL_Methods - method reference. 
-//
-Function MethodByDescription(Description) Export
-    
-    Query = New Query;
-    Query.Text = QueryTextMethodByDescription();
-    Query.SetParameter("Description", Description);
-    QueryResultSelection = Query.Execute().Select();
-    
-    Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
-    
-EndFunction // MethodByDescription()
-
-// Returns method reference by a predefined data name.
-//
-// Parameters:
-//  PredefinedDataName - String - method predefined data name. 
-//
-// Returns:
-//  CatalogRef.FL_Methods - method reference. 
-//
-Function MethodByPredefinedDataName(PredefinedDataName) Export
-    
-    Query = New Query;
-    Query.Text = QueryTextMethodByPredefinedDataName();
-    Query.SetParameter("PredefinedDataName", PredefinedDataName);
-    QueryResultSelection = Query.Execute().Select();
-    
-    Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
-    
-EndFunction // MethodByPredefinedDataName()
-
 // Returns list of available methods from catalog.
 //
 // Returns:
@@ -100,38 +62,6 @@ Function QueryTextMethods()
     Return QueryText;
 
 EndFunction // QueryTextMethods()
-
-// Only for internal use.
-//
-Function QueryTextMethodByDescription()
-
-    QueryText = "
-        |SELECT
-        |   Methods.Ref AS Ref   
-        |FROM
-        |   Catalog.FL_Methods AS Methods
-        |WHERE
-        |   Methods.Description = &Description
-        |";
-    Return QueryText;
-
-EndFunction // QueryTextMethodByDescription()
-
-// Only for internal use.
-//
-Function QueryTextMethodByPredefinedDataName()
-
-    QueryText = "
-        |SELECT
-        |   Methods.Ref AS Ref   
-        |FROM
-        |   Catalog.FL_Methods AS Methods
-        |WHERE
-        |   Methods.PredefinedDataName = &PredefinedDataName
-        |";
-    Return QueryText;
-
-EndFunction // QueryTextMethodByPredefinedDataName()
 
 #EndRegion // ServiceProceduresAndFunctions
 

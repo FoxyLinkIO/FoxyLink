@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -55,7 +55,7 @@ Function QueryTextFinalStates()
         |SELECT
         |   States.Ref AS Ref   
         |FROM
-        |   Catalog.IHL_States AS States
+        |   Catalog.FL_States AS States
         |WHERE
         |    States.DeletionMark = False
         |AND States.IsFinal      = True

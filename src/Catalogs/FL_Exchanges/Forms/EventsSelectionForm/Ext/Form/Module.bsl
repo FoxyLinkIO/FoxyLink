@@ -22,18 +22,27 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
-    Array = New Array;
-    Array.Add("Catalog.*");
-    Array.Add("Справочник.*");
-    Array.Add("Document.*");
-    Array.Add("Документ.*");
-    Array.Add("InformationRegister.*");
-    Array.Add("РегистрСведений.*");
-    Array.Add("AccumulationRegister.*");
-    Array.Add("РегистрНакопления.*");
+    If Parameters.Property("AutoTest") Then
+        // Return if the form for analysis is received.
+        Return;
+    EndIf;
+    
+    MetadataObjectArray = New Array;
+    //MetadataObjectArray.Add("ScheduledJob.FL_JobServer");
+    //MetadataObjectArray.Add("РегламентноеЗадание.FL_JobServer");
+    //MetadataObjectArray.Add("ScheduledJob.FL_RecurringServer");
+    //MetadataObjectArray.Add("РегламентноеЗадание.FL_RecurringServer");
+    MetadataObjectArray.Add("Catalog.*");
+    MetadataObjectArray.Add("Справочник.*");
+    MetadataObjectArray.Add("Document.*");
+    MetadataObjectArray.Add("Документ.*");
+    MetadataObjectArray.Add("InformationRegister.*");
+    MetadataObjectArray.Add("РегистрСведений.*");
+    MetadataObjectArray.Add("AccumulationRegister.*");
+    MetadataObjectArray.Add("РегистрНакопления.*");
 
     Filter = New Structure;
-    Filter.Insert("MetadataObjectClass", Array);
+    Filter.Insert("MetadataObjectClass", MetadataObjectArray);
     ValueTree = FL_CommonUse.ConfigurationMetadataTree(Filter);
     
     For Each MarkedEvent In Parameters.MarkedEvents Do

@@ -21,44 +21,6 @@
 
 #Region ProgramInterface
 
-// Returns channel reference by a channel description.
-//
-// Parameters:
-//  Description - String - channel description. 
-//
-// Returns:
-//  CatalogRef.FL_Channels - channel reference. 
-//
-Function ChannelByDescription(Description) Export
-    
-    Query = New Query;
-    Query.Text = QueryTextChannelByDescription();
-    Query.SetParameter("Description", Description);
-    QueryResultSelection = Query.Execute().Select();
-    
-    Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
-    
-EndFunction // ChannelByDescription()
-
-// Returns channel reference by a predefined data name.
-//
-// Parameters:
-//  PredefinedDataName - String - channel predefined data name. 
-//
-// Returns:
-//  CatalogRef.FL_Channels - channel reference. 
-//
-Function ChannelByPredefinedDataName(PredefinedDataName) Export
-    
-    Query = New Query;
-    Query.Text = QueryTextChannelByPredefinedDataName();
-    Query.SetParameter("PredefinedDataName", PredefinedDataName);
-    QueryResultSelection = Query.Execute().Select();
-    
-    Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
-    
-EndFunction // ChannelByPredefinedDataName()
-
 // Returns available plugable channels.
 //
 // Returns:
@@ -351,38 +313,6 @@ Function QueryTextChannelSettings()
     Return QueryText;
     
 EndFunction // QueryTextChannelSettings()
-
-// Only for internal use.
-//
-Function QueryTextChannelByDescription()
-
-    QueryText = "
-        |SELECT
-        |   Channels.Ref AS Ref   
-        |FROM
-        |   Catalog.FL_Channels AS Channels
-        |WHERE
-        |   Channels.Description = &Description
-        |";
-    Return QueryText;
-
-EndFunction // QueryTextChannelByDescription()
-
-// Only for internal use.
-//
-Function QueryTextChannelByPredefinedDataName()
-
-    QueryText = "
-        |SELECT
-        |   Channels.Ref AS Ref   
-        |FROM
-        |   Catalog.FL_Channels AS Channels
-        |WHERE
-        |   Channels.PredefinedDataName = &PredefinedDataName
-        |";
-    Return QueryText;
-
-EndFunction // QueryTextChannelByPredefinedDataName()
 
 #EndRegion // ServiceProceduresAndFunctions
 

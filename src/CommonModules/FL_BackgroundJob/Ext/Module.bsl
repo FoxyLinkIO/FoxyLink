@@ -147,12 +147,16 @@ EndFunction // Schedule()
 //                              Default value: Undefined.
 //      * Parameters     - Structure               - сontains values of data 
 //                                                   receiving parameters.
+//      * Priority       - Number(1,0)             - job priority.
+//                              Default value: 5.
 //      * SourceObject   - AnyRef                  - an event source object.
 //                              Default value: Undefined.
 //      * State          - CatalogRef.FL_States    - new state for a background job.
 //                              Default value: Catalogs.FL_States.Enqueued.
 //
 Function NewInvocationData() Export
+    
+    NormalPriority = 5;
     
     InvocationData = New Structure;
     InvocationData.Insert("APIVersion", "1.0.0"); 
@@ -161,6 +165,7 @@ Function NewInvocationData() Export
     InvocationData.Insert("Method");
     InvocationData.Insert("Owner");
     InvocationData.Insert("Parameters", New Structure);
+    InvocationData.Insert("Priority", NormalPriority);
     InvocationData.Insert("SourceObject");
     InvocationData.Insert("State", Catalogs.FL_States.Enqueued);
     Return InvocationData;
@@ -357,6 +362,7 @@ Function NewBackgroundJob()
     BackgroundJob.Insert("MetadataObject", "");
     BackgroundJob.Insert("Method");
     BackgroundJob.Insert("Owner");
+    BackgroundJob.Insert("Priority");
     BackgroundJob.Insert("SourceObject");
     BackgroundJob.Insert("Subscribers", NewSubscribers());
     BackgroundJob.Insert("SubscriberResources", NewSubscriberResources());
@@ -442,7 +448,6 @@ Function QueryTextSubscribersData()
         |   Channels.Channel              AS Channel,
         |   Channels.ResponseHandler      AS ResponseHandler,
         |   Methods.DataCompositionSchema AS DataCompositionSchema
-        |
         |FROM
         |   ChannelsCache AS Channels
         |

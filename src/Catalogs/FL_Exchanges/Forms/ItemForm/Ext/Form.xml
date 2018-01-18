@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
 	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
 	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
 	<AutoCommandBar name="FormCommandBar" id="-1">
@@ -319,11 +319,61 @@
 											<ShowTitle>false</ShowTitle>
 											<ExtendedTooltip name="HiddenGroupBasicSettingsExtendedTooltip" id="58"/>
 											<ChildItems>
+												<UsualGroup name="HiddenGroupBasic" id="330">
+													<Title>
+														<v8:item>
+															<v8:lang>en</v8:lang>
+															<v8:content>Data composition schema description</v8:content>
+														</v8:item>
+														<v8:item>
+															<v8:lang>ru</v8:lang>
+															<v8:content>Описание схемы компоновки данных</v8:content>
+														</v8:item>
+													</Title>
+													<ToolTip>
+														<v8:item>
+															<v8:lang>en</v8:lang>
+															<v8:content>Data composition schema description</v8:content>
+														</v8:item>
+														<v8:item>
+															<v8:lang>ru</v8:lang>
+															<v8:content>Описание схемы компоновки данных</v8:content>
+														</v8:item>
+													</ToolTip>
+													<Group>Horizontal</Group>
+													<Representation>None</Representation>
+													<ExtendedTooltip name="HiddenGroupBasicExtendedTooltip" id="331"/>
+													<ChildItems>
+														<Button name="EditDataCompositionSchema" id="197">
+															<Type>UsualButton</Type>
+															<CommandName>Form.Command.EditDataCompositionSchema</CommandName>
+															<ExtendedTooltip name="EditDataCompositionSchemaExtendedTooltip" id="198"/>
+														</Button>
+														<CheckBoxField name="RowUseExternalFunctions" id="327">
+															<DataPath>RowCanUseExternalFunctions</DataPath>
+															<ToolTipRepresentation>Button</ToolTipRepresentation>
+															<CheckBoxType>Auto</CheckBoxType>
+															<ContextMenu name="RowUseExternalFunctionsContextMenu" id="328"/>
+															<ExtendedTooltip name="RowUseExternalFunctionsExtendedTooltip" id="329">
+																<Title formatted="true">
+																	<v8:item>
+																		<v8:lang>ru</v8:lang>
+																		<v8:content>&lt;color #455185&gt;Указывает возможность использования функции общих модулей конфигурации в выражениях компоновки данных.&lt;/&gt;</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>en</v8:lang>
+																		<v8:content>&lt;color #45518b&gt;Indicates the possibility to use the function of common configuration modules in expressions of data composition.&lt;/&gt;</v8:content>
+																	</v8:item>
+																</Title>
+															</ExtendedTooltip>
+														</CheckBoxField>
+													</ChildItems>
+												</UsualGroup>
 												<UsualGroup name="HiddenGroupAPISchemeDescription" id="81">
 													<Title>
 														<v8:item>
 															<v8:lang>en</v8:lang>
-															<v8:content>API scheme description</v8:content>
+															<v8:content>API schema description</v8:content>
 														</v8:item>
 														<v8:item>
 															<v8:lang>ru</v8:lang>
@@ -333,7 +383,7 @@
 													<ToolTip>
 														<v8:item>
 															<v8:lang>en</v8:lang>
-															<v8:content>API scheme description</v8:content>
+															<v8:content>API schema description</v8:content>
 														</v8:item>
 														<v8:item>
 															<v8:lang>ru</v8:lang>
@@ -341,7 +391,7 @@
 														</v8:item>
 													</ToolTip>
 													<Group>Horizontal</Group>
-													<Representation>StrongSeparation</Representation>
+													<Representation>None</Representation>
 													<ExtendedTooltip name="HiddenGroupAPISchemeDescriptionExtendedTooltip" id="82"/>
 													<ChildItems>
 														<Button name="DescribeAPI" id="75">
@@ -387,6 +437,7 @@
 											<Behavior>Collapsible</Behavior>
 											<Collapsed>true</Collapsed>
 											<ControlRepresentation>Picture</ControlRepresentation>
+											<Representation>None</Representation>
 											<ExtendedTooltip name="HiddenGroupEventsExtendedTooltip" id="296"/>
 											<ChildItems>
 												<UsualGroup name="HiddenGroupEventCommands" id="348">
@@ -400,6 +451,111 @@
 															<CommandName>Form.Command.AddEvent</CommandName>
 															<ExtendedTooltip name="AddEventExtendedTooltip" id="351"/>
 														</Button>
+														<RadioButtonField name="RowPriority" id="365">
+															<DataPath>RowPriority</DataPath>
+															<ToolTipRepresentation>Button</ToolTipRepresentation>
+															<RadioButtonType>Tumbler</RadioButtonType>
+															<ChoiceList>
+																<xr:Item>
+																	<xr:Presentation/>
+																	<xr:CheckState>0</xr:CheckState>
+																	<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																		<Presentation>
+																			<v8:item>
+																				<v8:lang>en</v8:lang>
+																				<v8:content>Lowest</v8:content>
+																			</v8:item>
+																			<v8:item>
+																				<v8:lang>ru</v8:lang>
+																				<v8:content>Самый низкий</v8:content>
+																			</v8:item>
+																		</Presentation>
+																		<Value xsi:type="xs:decimal">9</Value>
+																	</xr:Value>
+																</xr:Item>
+																<xr:Item>
+																	<xr:Presentation/>
+																	<xr:CheckState>0</xr:CheckState>
+																	<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																		<Presentation>
+																			<v8:item>
+																				<v8:lang>en</v8:lang>
+																				<v8:content>Low</v8:content>
+																			</v8:item>
+																			<v8:item>
+																				<v8:lang>ru</v8:lang>
+																				<v8:content>Низкий</v8:content>
+																			</v8:item>
+																		</Presentation>
+																		<Value xsi:type="xs:decimal">7</Value>
+																	</xr:Value>
+																</xr:Item>
+																<xr:Item>
+																	<xr:Presentation/>
+																	<xr:CheckState>0</xr:CheckState>
+																	<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																		<Presentation>
+																			<v8:item>
+																				<v8:lang>en</v8:lang>
+																				<v8:content>Normal</v8:content>
+																			</v8:item>
+																			<v8:item>
+																				<v8:lang>ru</v8:lang>
+																				<v8:content>Обычный</v8:content>
+																			</v8:item>
+																		</Presentation>
+																		<Value xsi:type="xs:decimal">5</Value>
+																	</xr:Value>
+																</xr:Item>
+																<xr:Item>
+																	<xr:Presentation/>
+																	<xr:CheckState>0</xr:CheckState>
+																	<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																		<Presentation>
+																			<v8:item>
+																				<v8:lang>en</v8:lang>
+																				<v8:content>High</v8:content>
+																			</v8:item>
+																			<v8:item>
+																				<v8:lang>ru</v8:lang>
+																				<v8:content>Высокий</v8:content>
+																			</v8:item>
+																		</Presentation>
+																		<Value xsi:type="xs:decimal">3</Value>
+																	</xr:Value>
+																</xr:Item>
+																<xr:Item>
+																	<xr:Presentation/>
+																	<xr:CheckState>0</xr:CheckState>
+																	<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																		<Presentation>
+																			<v8:item>
+																				<v8:lang>en</v8:lang>
+																				<v8:content>Highest</v8:content>
+																			</v8:item>
+																			<v8:item>
+																				<v8:lang>ru</v8:lang>
+																				<v8:content>Самый высокий</v8:content>
+																			</v8:item>
+																		</Presentation>
+																		<Value xsi:type="xs:decimal">1</Value>
+																	</xr:Value>
+																</xr:Item>
+															</ChoiceList>
+															<ContextMenu name="RowPriorityContextMenu" id="366"/>
+															<ExtendedTooltip name="RowPriorityExtendedTooltip" id="367">
+																<Title formatted="true">
+																	<v8:item>
+																		<v8:lang>en</v8:lang>
+																		<v8:content>&lt;color #45518b&gt;FoxyLink can handle several jobs. All jobs are placed in a queue, from which they are fetched as resources are freed and are executed. Each job has a priority, denoted by a positive integer. The lower the number, the higher priority. If priority is not specified explicitly when creating a job, it is automatically assigned.&lt;/&gt;</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>ru</v8:lang>
+																		<v8:content>&lt;color #45518b&gt;FoxyLink может обрабатывать несколько заданий. Все задания помещаются в очередь, откуда они ивзлекаются по мере освобождения ресурсов и выполняются. У каждого задания есть приоритет, обозначаемый положительным целым числом. Чем меньше это число, тем выше приоритет. Если приоритет не указан явно при создании задания, он назначается автоматически.&lt;/&gt;</v8:content>
+																	</v8:item>
+																</Title>
+															</ExtendedTooltip>
+														</RadioButtonField>
 													</ChildItems>
 												</UsualGroup>
 												<Table name="Events" id="297">
@@ -427,7 +583,7 @@
 															</Button>
 															<Button name="FireEvent" id="358">
 																<Type>CommandBarButton</Type>
-																<CommandName>Form.Command.FireEvent</CommandName>
+																<CommandName>Form.Command.DispatchEvent</CommandName>
 																<ExtendedTooltip name="FireEventExtendedTooltip" id="359"/>
 															</Button>
 														</ChildItems>
@@ -504,6 +660,7 @@
 											<Behavior>Collapsible</Behavior>
 											<Collapsed>true</Collapsed>
 											<ControlRepresentation>Picture</ControlRepresentation>
+											<Representation>None</Representation>
 											<ExtendedTooltip name="HiddenGroupChannelsExtendedTooltip" id="254"/>
 											<ChildItems>
 												<UsualGroup name="HiddenGroupChannelCommands" id="346">
@@ -625,37 +782,6 @@
 									</Picture>
 									<ExtendedTooltip name="HiddenPageStructureExtendedTooltip" id="84"/>
 									<ChildItems>
-										<UsualGroup name="HiddenGroupBasic" id="330">
-											<Group>Horizontal</Group>
-											<Representation>None</Representation>
-											<ShowTitle>false</ShowTitle>
-											<ExtendedTooltip name="HiddenGroupBasicExtendedTooltip" id="331"/>
-											<ChildItems>
-												<Button name="EditDataCompositionSchema" id="197">
-													<Type>UsualButton</Type>
-													<CommandName>Form.Command.EditDataCompositionSchema</CommandName>
-													<ExtendedTooltip name="EditDataCompositionSchemaExtendedTooltip" id="198"/>
-												</Button>
-												<CheckBoxField name="RowUseExternalFunctions" id="327">
-													<DataPath>RowCanUseExternalFunctions</DataPath>
-													<ToolTipRepresentation>Button</ToolTipRepresentation>
-													<CheckBoxType>Auto</CheckBoxType>
-													<ContextMenu name="RowUseExternalFunctionsContextMenu" id="328"/>
-													<ExtendedTooltip name="RowUseExternalFunctionsExtendedTooltip" id="329">
-														<Title formatted="true">
-															<v8:item>
-																<v8:lang>ru</v8:lang>
-																<v8:content>&lt;color #455185&gt;Указывает возможность использования функции общих модулей конфигурации в выражениях компоновки данных.&lt;/&gt;</v8:content>
-															</v8:item>
-															<v8:item>
-																<v8:lang>en</v8:lang>
-																<v8:content>&lt;color #45518b&gt;Indicates the possibility to use the function of common configuration modules in  expressions of data composition.&lt;/&gt;</v8:content>
-															</v8:item>
-														</Title>
-													</ExtendedTooltip>
-												</CheckBoxField>
-											</ChildItems>
-										</UsualGroup>
 										<Table name="RowComposerSettings" id="85">
 											<Representation>Tree</Representation>
 											<Autofill>true</Autofill>
@@ -1618,6 +1744,27 @@
 				<v8:Type>xs:boolean</v8:Type>
 			</Type>
 		</Attribute>
+		<Attribute name="RowPriority" id="22">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Priority</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Приоритет</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:decimal</v8:Type>
+				<v8:NumberQualifiers>
+					<v8:Digits>1</v8:Digits>
+					<v8:FractionDigits>0</v8:FractionDigits>
+					<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+				</v8:NumberQualifiers>
+			</Type>
+			<SavedData>true</SavedData>
+		</Attribute>
 	</Attributes>
 	<Commands>
 		<Command name="AddAPIMethod" id="1">
@@ -2002,38 +2149,38 @@
 				</v8:item>
 			</ToolTip>
 			<Picture>
-				<xr:Ref>CommonPicture.FL_DeleteFile</xr:Ref>
+				<xr:Ref>CommonPicture.FL_Delete</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
 			<Action>DeleteAPI</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
-		<Command name="FireEvent" id="15">
+		<Command name="DispatchEvent" id="15">
 			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Dispatch event</v8:content>
+				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Вызвать событие</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Fire event</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Вызвать событие</v8:content>
+					<v8:lang>en</v8:lang>
+					<v8:content>Triggers an registered event.</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Fire event</v8:content>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Вызвает зарегистрированное событие.</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
 				<xr:Ref>CommonPicture.FL_Fire</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>FireEvent</Action>
+			<Action>DispatchEvent</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>
