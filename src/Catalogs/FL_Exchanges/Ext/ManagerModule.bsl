@@ -222,7 +222,13 @@ Function ExportObject(ExchangeRef) Export
         FileProperties.Size = FileData.Size();
         FileProperties.IsFile = True;
         FileProperties.StorageAddress = PutToTempStorage(FileData);
+        
+        #If MobileAppServer Then
+        FileProperties.ModificationTime = CurrentDate();
+        #ElsIf Server Or ThickClientOrdinaryApplication Or ExternalConnection Then
         FileProperties.ModificationTime = CurrentSessionDate();
+        #EndIf
+
         FileProperties.ModificationTimeUTC = CurrentUniversalDate();
         Return FileProperties;
         

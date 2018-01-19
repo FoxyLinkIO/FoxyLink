@@ -45,11 +45,12 @@
 			<DefaultRunMode>ManagedApplication</DefaultRunMode>
 			<UsePurposes>
 				<v8:Value xsi:type="app:ApplicationUsePurpose">PersonalComputer</v8:Value>
+				<v8:Value xsi:type="app:ApplicationUsePurpose">MobileDevice</v8:Value>
 			</UsePurposes>
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.3.35</Version>
+			<Version>0.9.3.36</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -187,6 +188,7 @@
 			<Language>Russian</Language>
 			<Subsystem>FoxyLink</Subsystem>
 			<CommonPicture>FL_Add</CommonPicture>
+			<CommonPicture>FL_AddEvent</CommonPicture>
 			<CommonPicture>FL_AddLink</CommonPicture>
 			<CommonPicture>FL_AddRow</CommonPicture>
 			<CommonPicture>FL_CodeFile</CommonPicture>
@@ -199,11 +201,11 @@
 			<CommonPicture>FL_Disconnected</CommonPicture>
 			<CommonPicture>FL_Download</CommonPicture>
 			<CommonPicture>FL_Edit</CommonPicture>
+			<CommonPicture>FL_Event</CommonPicture>
 			<CommonPicture>FL_ExplanationMark</CommonPicture>
 			<CommonPicture>FL_Export</CommonPicture>
 			<CommonPicture>FL_Fields</CommonPicture>
 			<CommonPicture>FL_Filter</CommonPicture>
-			<CommonPicture>FL_Fire</CommonPicture>
 			<CommonPicture>FL_Form</CommonPicture>
 			<CommonPicture>FL_Generate</CommonPicture>
 			<CommonPicture>FL_GenerateAll</CommonPicture>
@@ -217,6 +219,7 @@
 			<CommonPicture>FL_Ok</CommonPicture>
 			<CommonPicture>FL_Order</CommonPicture>
 			<CommonPicture>FL_Parameters</CommonPicture>
+			<CommonPicture>FL_Preview</CommonPicture>
 			<CommonPicture>FL_Processing</CommonPicture>
 			<CommonPicture>FL_ProcessingError</CommonPicture>
 			<CommonPicture>FL_ProcessingWarning</CommonPicture>
@@ -268,6 +271,7 @@
 			<Constant>FL_RetryAttempts</Constant>
 			<Constant>FL_UseFoxyLink</Constant>
 			<Constant>FL_WorkerCount</Constant>
+			<CommonForm>FL_DispatchEventsForm</CommonForm>
 			<CommonForm>FL_ResponseHandlerForm</CommonForm>
 			<Catalog>FL_Channels</Catalog>
 			<Catalog>FL_Exchanges</Catalog>

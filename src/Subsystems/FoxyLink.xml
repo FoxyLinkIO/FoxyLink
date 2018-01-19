@@ -57,7 +57,6 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_DeleteRow</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_DeleteFile</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype16</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Fire</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype32</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Stop</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype64</xr:Item>
@@ -81,6 +80,9 @@
 				<xr:Item xsi:type="xr:MDObjectRef">FunctionalOption.FL_UseFoxyLink</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">FunctionalOption.FL_LicenseAccepted</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_LicenseAcceptedOnWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Event</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_AddEvent</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Preview</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

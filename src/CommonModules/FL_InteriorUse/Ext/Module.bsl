@@ -197,6 +197,25 @@ Procedure MoveItemInItemFormCollectionNoSearch(Items, Item,
 
 EndProcedure // MoveItemInItemFormCollectionNoSearch()
 
+// Sets the value into property of the form item.
+// Applied when the form item can not be on form because user does not have 
+// rights to an object, attribute or command.
+//
+// Parameters:
+//  FormItems    - FormItems - property of the managed form.
+//  ItemName     - String    - form item name.
+//  PropertyName - String    - name of the set form item property.
+//  Value        - Arbitrary - new item value.
+// 
+Procedure SetFormItemProperty(FormItems, ItemName, PropertyName, Value) Export
+
+    FormItem = FormItems.Find(ItemName);
+    If FormItem <> Undefined AND FormItem[PropertyName] <> Value Then
+        FormItem[PropertyName] = Value;
+    EndIf;
+
+EndProcedure // SetFormItemProperty() 
+
 // Add an item to item form collection.
 // 
 // Parameters:
@@ -263,24 +282,72 @@ Function AddItemToItemFormCollection(Items, Parameters,
     
 EndFunction // AddItemToItemFormCollection()
 
-// Sets the value into property of the form item.
-// Applied when the form item can not be on form because user does not have 
-// rights to an object, attribute or command.
+// Returns a new form field.
 //
 // Parameters:
-//  FormItems    - FormItems - property of the managed form.
-//  ItemName     - String    - form item name.
-//  PropertyName - String    - name of the set form item property.
-//  Value        - Arbitrary - new item value.
+//  Type - FormFieldType - the managed form field type.
+//
+// Returns:
+//  Structure - with all available properties for the field.
 // 
-Procedure SetFormItemProperty(FormItems, ItemName, PropertyName, Value) Export
+Function NewFormField(Type) Export
+    
+    FormField = New Structure;
+    FormField.Insert("AutoCellHeight", False);    
+    FormField.Insert("CellHyperlink", False);
+    FormField.Insert("ContextMenu");
+    FormField.Insert("DataPath");
+    FormField.Insert("DefaultItem", False);
+    
+    #If NOT MobileAppServer Then
+    FormField.Insert("EditMode", ColumnEditMode.EnterOnInput);
+    #EndIf
 
-    FormItem = FormItems.Find(ItemName);
-    If FormItem <> Undefined AND FormItem[PropertyName] <> Value Then
-        FormItem[PropertyName] = Value;
+    FormField.Insert("Enabled", True);
+    FormField.Insert("ExtendedTooltip");
+    FormField.Insert("FixingInTable", FixingInTable.None);
+    FormField.Insert("FooterBackColor", StyleColors.TableFooterBackColor);
+    FormField.Insert("FooterDataPath");
+    FormField.Insert("FooterFont", StyleFonts.NormalTextFont);
+    FormField.Insert("FooterHorizontalAlign", ItemHorizontalLocation.Auto);
+    FormField.Insert("FooterPicture", New Picture);
+    FormField.Insert("FooterText");
+    FormField.Insert("FooterTextColor", StyleColors.TableFooterTextColor);
+    FormField.Insert("HeaderHorizontalAlign", ItemHorizontalLocation.Left);
+    FormField.Insert("HeaderPicture", New Picture);
+    FormField.Insert("HorizontalAlign", ItemHorizontalLocation.Auto);
+    FormField.Insert("HorizontalAlignInGroup", ItemHorizontalLocation.Auto);
+    FormField.Insert("Name");
+    FormField.Insert("Parent");
+    FormField.Insert("ReadOnly", False);
+    // Unexpected behaviour. FormField.Insert("Shortcut");
+    FormField.Insert("ShowInFooter", True);
+    FormField.Insert("ShowInHeader", True);
+    FormField.Insert("SkipOnInput");
+    FormField.Insert("Title");
+    FormField.Insert("TitleBackColor", StyleColors.TableHeaderBackColor);
+    FormField.Insert("TitleFont", StyleFonts.NormalTextFont);
+    FormField.Insert("TitleHeight", 0);
+    FormField.Insert("TitleLocation",  FormItemTitleLocation.Auto);
+    FormField.Insert("TitleTextColor", StyleColors.TableHeaderTextColor);
+    FormField.Insert("ToolTip");
+    FormField.Insert("ToolTipRepresentation", ToolTipRepresentation.Auto);
+    FormField.Insert("Type", Type);
+    // Unexpected behaviour. FormField.Insert("TypeRestriction");
+    FormField.Insert("VerticalAlign", ItemVerticalAlign.Auto);
+    FormField.Insert("VerticalAlignInGroup", ItemVerticalAlign.Auto);
+    FormField.Insert("Visible", True);
+    FormField.Insert("WarningOnEdit");
+    FormField.Insert("WarningOnEditRepresentation", WarningOnEditRepresentation.Auto);
+    
+    If Type = FormFieldType.InputField Then
+        AddFormFieldExtensionForTextBox(FormField);
     EndIf;
-
-EndProcedure // SetFormItemProperty() 
+    
+    FormField.Insert("ElementType", Type("FormField"));
+    Return FormField;
+    
+EndFunction // NewFormField()
 
 #Endregion // FormInteraction
 
@@ -450,6 +517,97 @@ EndFunction // CodeStatusInternalServerError()
 #EndRegion // HTTPInteraction
 
 #Region FormInteraction
+
+// Only for internal use.
+//
+Procedure AddFormFieldExtensionForTextBox(FormField)
+    
+    #If MobileAppServer Then
+    FormField.Insert("AutoCapitalizationOnTextInput", AutoCapitalizationOnTextInput.Auto);
+    #EndIf
+  
+    FormField.Insert("AutoChoiceIncomplete");
+   
+    #If MobileAppServer Then
+    FormField.Insert("AutoCorrectionOnTextInput", AutoCorrectionOnTextInput.Auto);
+    #EndIf
+
+    FormField.Insert("AutoMarkIncomplete");
+    FormField.Insert("AutoMaxHeight", True);
+    FormField.Insert("AutoMaxWidth", True);
+    
+    #If MobileAppServer Then
+    FormField.Insert("AutoShowClearButton", AutoShowClearButtonMode.Auto);
+    FormField.Insert("AutoShowOpenButton", AutoShowOpenButtonMode.Auto);
+    #EndIf
+    
+    // Unexpected behaviour. FormField.Insert("AvailableTypes");
+    FormField.Insert("BackColor", StyleColors.FieldBackColor);
+    FormField.Insert("BorderColor", StyleColors.BorderColor);
+    FormField.Insert("ChoiceButton");
+    FormField.Insert("ChoiceButtonPicture", New Picture);
+    FormField.Insert("ChoiceButtonRepresentation", ChoiceButtonRepresentation.Auto);
+    FormField.Insert("ChoiceFoldersAndItems", FoldersAndItems.Auto);
+    FormField.Insert("ChoiceForm", "");
+    FormField.Insert("ChoiceHistoryOnInput", ChoiceHistoryOnInput.Auto);
+    FormField.Insert("ChoiceList");
+    FormField.Insert("ChoiceListHeight", 0);
+    // Unexpected behaviour. FormField.Insert("ChoiceParameterLinks");
+    // Unexpected behaviour. FormField.Insert("ChoiceParameters");
+    FormField.Insert("ChooseType", True);
+    FormField.Insert("ClearButton");
+    FormField.Insert("CreateButton");
+    FormField.Insert("DropListButton");
+    FormField.Insert("DropListWidth", 0);
+    FormField.Insert("EditFormat");
+    FormField.Insert("EditText");
+    FormField.Insert("EditTextUpdate", EditTextUpdate.Auto);
+    FormField.Insert("ExtendedEdit");
+    FormField.Insert("Font", StyleFonts.NormalTextFont);
+    FormField.Insert("Format");
+    FormField.Insert("Height", 0);
+    
+    #If MobileAppServer Then
+    FormField.Insert("HeightControlVariant", ItemHeightControlVariant.Auto);
+    #EndIf
+
+    FormField.Insert("HorizontalStretch");
+    FormField.Insert("IncompleteChoiceMode", IncompleteChoiceMode.OnEnterPressed);
+    FormField.Insert("InputHint");
+    FormField.Insert("ListChoiceMode", False);
+    FormField.Insert("MarkIncomplete", False);
+    FormField.Insert("MarkNegatives");
+    FormField.Insert("Mask");
+    FormField.Insert("MaxHeight", 0);
+    FormField.Insert("MaxValue");
+    FormField.Insert("MaxWidth", 0);
+    FormField.Insert("MinValue");
+    FormField.Insert("MultiLine");
+    
+    #If MobileAppServer Then
+    FormField.Insert("OnScreenKeyboardReturnKeyText", OnScreenKeyboardReturnKeyText.Auto);
+    #EndIf
+    
+    FormField.Insert("OpenButton");
+    FormField.Insert("PasswordMode");
+    FormField.Insert("QuickChoice");
+    // Unexpected behaviour. FormField.Insert("SelectedText");
+    
+    #If MobileAppServer Then
+    FormField.Insert("SpecialTextInputMode", SpecialTextInputMode.Auto);
+    FormField.Insert("SpellCheckingOnTextInput", SpellCheckingOnTextInput.Auto);
+    #EndIf
+    
+    FormField.Insert("SpinButton");
+    FormField.Insert("TextColor", StyleColors.FieldTextColor);
+    FormField.Insert("TextEdit", True);
+    FormField.Insert("TypeDomainEnabled", True);
+    // Unexpected behaviour. FormField.Insert("TypeLink");
+    FormField.Insert("VerticalStretch");
+    FormField.Insert("Width", 0);
+    FormField.Insert("Wrap", True);       
+    
+EndProcedure // AddFormFieldExtensionForTextBox() 
 
 // Returns property value from structure.
 // 
