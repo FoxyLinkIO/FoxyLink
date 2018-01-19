@@ -59,7 +59,7 @@ Procedure ChannelStandardClick(Item, StandardProcessing)
     
     AppParameters = FL_InteriorUseClient.NewRunApplicationParameters();
     AppParameters.NotifyDescription = New NotifyDescription(
-        "DoAfterBeginRunningApplication", ThisObject);
+        "DoAfterBeginRunningApplication", FL_InteriorUseClient);
     AppParameters.CommandLine = ChannelStandardLink(Object.BasicChannelGuid);
     AppParameters.WaitForCompletion = True;
     
@@ -131,29 +131,6 @@ EndProcedure // Disconnect()
 #EndRegion // FormCommandHandlers
 
 #Region ServiceProceduresAndFunctions
-
-// Begins running an external application or opens an application file with 
-// the associated name.
-//
-// Parameters:
-//  CodeReturn           - Number, Undefined - the code of return, if a relevant
-//                          input parameter <WaitForCompletion> is not specified. 
-//  AdditionalParameters - Arbitrary         - the value specified when the 
-//                              NotifyDescription object was created.
-//
-&AtClient
-Procedure DoAfterBeginRunningApplication(CodeReturn, AdditionalParameters) Export
-    
-    If CodeReturn <> 0 Then 
-        Explanation = NStr("
-            |en = 'Unexpected error has happened.';
-            |ru = 'Произошла непредвиденная ошибка.'");
-    
-        ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
-        
-    EndIf;
-    
-EndProcedure // DoAfterBeginRunningApplication()
 
 // Saves a connection to this channel into database if it was established.
 //

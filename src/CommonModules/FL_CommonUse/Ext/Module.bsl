@@ -1076,13 +1076,12 @@ Function PrimaryKeysByMetadataObject(MetadataObject) Export
     
     PrimaryKeys = New Structure;
     If IsReferenceTypeObjectByMetadataObjectName(FullName) Then
+
+        ObjectManager = ObjectManagerByFullName(FullName);
         
-        Parts = StrSplit(FullName, ".");
-        ManagerType = Parts[0];
-        ObjectType = Parts[1];
-        
-        PrimaryKeys.Insert("Ref", StrTemplate("%1REF.%2", ManagerType, 
-                ObjectType));
+        Types = New Array;
+        Types.Add(TypeOf(ObjectManager.EmptyRef()));
+        PrimaryKeys.Insert("Ref", Types);
                 
     EndIf;
 

@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -184,15 +184,69 @@ Procedure DoAfterBeginGettingFiles(ReceivedFiles,
         AND TypeOf(ReceivedFiles) = Type("Array") Then
         
         For Each ReceivedFile In ReceivedFiles Do
+            
+            AppParameters = NewRunApplicationParameters();
+            AppParameters.NotifyDescription = New NotifyDescription(
+                "DoAfterBeginRunningApplication", FL_InteriorUseClient);
+            AppParameters.CommandLine = ReceivedFile.Name;
+            AppParameters.WaitForCompletion = True;
+            NotifyDescription =  New NotifyDescription(
+                "DoActionOpenFolderOnClick", FL_InteriorUseClient, AppParameters);
+            
             ShowUserNotification(NStr("en = 'The file was successfully saved.';
-                    |ru = 'Файл успешно сохранен.'"), , 
-                ReceivedFile.Name, PictureLib.FL_Logotype64);
+                    |ru = 'Файл успешно сохранен.'"), 
+                NotifyDescription, 
+                ReceivedFile.Name, 
+                PictureLib.FL_Logotype64);
+                
         EndDo;
         
     EndIf;
     
 EndProcedure // DoAfterBeginGettingFiles()     
+
+// Begins opening file folder after click on the user notification.
+//
+//  AdditionalParameters - Arbitrary - value specified when the NotifyDescription
+//                                     object was created.
+//
+Procedure DoActionOpenFolderOnClick(AdditionalParameters) Export
     
+    File = New File(AdditionalParameters.CommandLine);
+    BeginRunningApplication(AdditionalParameters.NotifyDescription, 
+        File.Path, 
+        AdditionalParameters.CurrentDirectory, 
+        AdditionalParameters.WaitForCompletion);      
+    
+EndProcedure // DoActionOpenFolderOnClick() 
+
+// Begins running an external application or opens an application file with 
+// the associated name.
+//
+// Parameters:
+//  CodeReturn           - Number, Undefined - the code of return, if a relevant
+//                          input parameter <WaitForCompletion> is not specified. 
+//  AdditionalParameters - Arbitrary         - the value specified when the 
+//                              NotifyDescription object was created.
+//
+Procedure DoAfterBeginRunningApplication(CodeReturn, AdditionalParameters) Export
+    
+    If CodeReturn <> 0 Then 
+        
+        Explanation = NStr("
+            |en = 'Unexpected error has happened.';
+            |ru = 'Произошла непредвиденная ошибка.'");
+    
+        ShowUserNotification(NStr("en = 'Something went wrong.';
+                |ru = 'Что-то пошло не так.'"), 
+            , 
+            Explanation, 
+            PictureLib.FL_Logotype64);
+        
+    EndIf;
+    
+EndProcedure // DoAfterBeginRunningApplication()
+
 // Returns a run application parameters.
 //
 // Returns:
