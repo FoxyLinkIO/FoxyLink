@@ -100,16 +100,92 @@ Procedure OutputInSpreadsheetDocument(SpreadsheetDocument,
     
 EndProcedure // OutputInSpreadsheetDocument()
 
+// Outputs the result of the data composition schema in the value collection.
+//
+// Parameters:
+//  ValueCollection  - ValueTable, ValueTree - value collection.
+//  OutputParameters - Structure             - see function FL_DataComposition.NewOutputParameters.
+//
+Procedure OutputInValueCollection(ValueCollection, OutputParameters) Export
+       
+    DCTParameters = FL_CommonUseClientServer.CopyStructure(
+        OutputParameters.DCTParameters);
+        
+    // Verify, that supported type of generator is in use.
+    DCTParameters.GeneratorType = 
+        Type("DataCompositionValueCollectionTemplateGenerator");
+    
+    // Create data composition template.
+    DataCompositionTemplate = NewDataCompositionTemplate(DCTParameters);
+
+    // Init data composition processor.
+    DataCompositionProcessor = New DataCompositionProcessor;
+    DataCompositionProcessor.Initialize(DataCompositionTemplate, 
+        OutputParameters.ExternalDataSets, 
+        OutputParameters.DetailsData, 
+        OutputParameters.CanUseExternalFunctions);
+
+    // Output result
+    OutputProcessor = New DataCompositionResultValueCollectionOutputProcessor;
+    OutputProcessor.SetObject(ValueCollection);
+    OutputProcessor.Output(DataCompositionProcessor);    
+    
+EndProcedure // OutputInValueCollection()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
 
-// Copies data composition schema(DCS) from the source address to the destination address.
+// Creates data composition schema from the data sources and data sets and
+// copies data composition schema to the destination address.
 //
 // Parameters:
-//  DestinationAddress - String                - the address to copy DCS in.
-//  SourceAddress      - String                - the address to copy DCS from.
-//                     - DataCompositionSchema - the source DCS to copy from.
+//  DataSources        - Array  - data source items.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSource.
+//  DataSets           - Array  - data set items.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSetQuery.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSetObject.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSetUnion.
+//  DestinationAddress - String - the address to copy data composition schema in.
+//  UUID               - UUID   - an unique identifier of the form in the 
+//          temporary storage of which the data should be placed
+//
+Procedure CreateDataCompositionSchema(DataSources, DataSets, DestinationAddress, 
+    UUID) Export
+    
+    // Create a data composition schema.
+    DataCompositiomSchema = New DataCompositionSchema;
+    
+    // Determine the data sources for the schema.
+    For Each DataSource In DataSources Do
+        FillPropertyValues(DataCompositiomSchema.DataSources.Add(), 
+            DataSource);
+    EndDo;
+
+    // Determine the data sets for the schema.
+    For Each DataSet In DataSets Do
+        
+        NewDataSet = DataCompositiomSchema.DataSets.Add(DataSet.Type);
+        FillPropertyValues(NewDataSet, DataSet, , "Fields"); 
+        
+        // Determine the data fields for the data set.
+        For Each Field In DataSet.Fields Do
+            NewField = NewDataSet.Fields.Add(Field.Type);
+            FillPropertyValues(NewField, Field);
+        EndDo;
+        
+    EndDo;
+    
+    DestinationAddress = PutToTempStorage(DataCompositiomSchema, UUID);
+    
+EndProcedure // CreateDataCompositionSchema() 
+
+// Copies data composition schema from the source address to the destination address.
+//
+// Parameters:
+//  DestinationAddress - String                - the address to copy data composition schema in.
+//  SourceAddress      - String                - the address to copy data composition schema from.
+//                     - DataCompositionSchema - the source data composition schema to copy from.
 //  CheckForChanges    - Boolean               - if value is 'True', source and destination 
 //                                              address is checked for changes.
 //                          Default value: False.
@@ -305,6 +381,277 @@ Procedure SetDataToSettingsComposer(SettingsComposer, MessageSettings) Export
                         
 EndProcedure // SetDataToSettingsComposer()
 
+// Creates description of data source of data composition schema.
+//
+// Returns:
+//  Structure - with keys:
+//      * ConnectionString - String - connection string with data source. 
+//                                    For current infobase - an empty string.
+//                              Default value: "".
+//      * DataSourceType   - String - data source type. For current infobase - "Local".
+//                              Default value: "Local".                
+//      * Name             - String - data source name.
+//                              Default value: "DataSource".
+//
+Function NewDataCompositionSchemaDataSource() Export
+
+    DataCompositionSchemaDataSource = New Structure;
+    DataCompositionSchemaDataSource.Insert("ConnectionString", "");
+    DataCompositionSchemaDataSource.Insert("DataSourceType", "Local");
+    DataCompositionSchemaDataSource.Insert("Name", "DataSource");
+    Return DataCompositionSchemaDataSource;
+    
+EndFunction // NewDataCompositionSchemaDataSource()
+
+// Creates description of a data set of data composition schema (query).
+//
+// Returns:
+//  Structure - with keys:
+//      * AutoFillAvailableFields - Boolean - specifies necessity of automatic 
+//                                            filling of accessible fields on 
+//                                            the basis of the text of inquiry.
+//                                      Default value: True.
+//      * DataSource              - String  - name of data source, from which
+//                                            data will be obtained.
+//                                      Default value: "DataSource".  
+//      * Fields                  - Array   - descriptions of fields of data set.
+//      * Name                    - String  - data set name.
+//                                      Default value: "DataSetQuery".
+//      * Query                   - String  - query text for obtaining data of the set.
+//      * Type                    - Type    - type of added element.
+//                                      Default value: DataCompositionSchemaDataSetQuery.
+//
+Function NewDataCompositionSchemaDataSetQuery() Export
+    
+    DataCompositionSchemaDataSetQuery = New Structure;
+    DataCompositionSchemaDataSetQuery.Insert("AutoFillAvailableFields", True);
+    DataCompositionSchemaDataSetQuery.Insert("DataSource", "DataSource");
+    DataCompositionSchemaDataSetQuery.Insert("Fields", New Array);
+    DataCompositionSchemaDataSetQuery.Insert("Name", "DataSetQuery");
+    DataCompositionSchemaDataSetQuery.Insert("Query");
+    DataCompositionSchemaDataSetQuery.Insert("Type", 
+        Type("DataCompositionSchemaDataSetQuery"));
+    Return DataCompositionSchemaDataSetQuery;
+    
+EndFunction // NewDataCompositionSchemaDataSet()
+
+// Creates description of a data set of data composition schema (object).
+//
+// Returns:
+//  Structure - with keys:
+//      * DataSource - String - name of data source, from which data will be obtained.
+//                          Default value: "DataSource".  
+//      * Fields     - Array  - descriptions of fields of data set.
+//      * Name       - String - data set name.
+//                          Default value: "DataSetObject".
+//      * ObjectName - String - name of object where data have to be retrieved from.
+//      * Type       - Type    - type of added element.
+//                          Default value: DataCompositionSchemaDataSetObject.
+//
+Function NewDataCompositionSchemaDataSetObject() Export
+    
+    DataCompositionSchemaDataSetObject = New Structure;
+    DataCompositionSchemaDataSetObject.Insert("DataSource", "DataSource");
+    DataCompositionSchemaDataSetObject.Insert("Fields", New Array);
+    DataCompositionSchemaDataSetObject.Insert("Name", "DataSetObject");
+    DataCompositionSchemaDataSetObject.Insert("ObjectName");
+    DataCompositionSchemaDataSetObject.Insert("Type", 
+        Type("DataCompositionSchemaDataSetObject"));
+    Return DataCompositionSchemaDataSetObject;
+    
+EndFunction // NewDataCompositionSchemaDataSetObject()
+
+// Creates description of a data set of data composition schema (union).
+//
+// Returns:
+//  Structure - with keys:
+//      * Fields - Array  - descriptions of fields of data set.
+//      * Items  - Array  - union parts. 
+//      * Name   - String - data set name.
+//                  Default value: "DataSetUnion".
+//      * Type   - Type   - type of added element.
+//                  Default value: DataCompositionSchemaDataSetUnion.
+//
+Function NewDataCompositionSchemaDataSetUnion() Export
+    
+    DataCompositionSchemaDataSetUnion = New Structure;
+    DataCompositionSchemaDataSetUnion.Insert("Fields", New Array);
+    DataCompositionSchemaDataSetUnion.Insert("Items", New Array);    
+    DataCompositionSchemaDataSetUnion.Insert("Name", "DataSetUnion");
+    DataCompositionSchemaDataSetUnion.Insert("Type", 
+        Type("DataCompositionSchemaDataSetUnion"));
+    Return DataCompositionSchemaDataSetUnion;
+    
+EndFunction // NewDataCompositionSchemaDataSetUnion()
+
+// Creates description for data set field of data composition schema (field).
+//
+// Returns:
+//  Structure - with keys:
+//      * Appearance - Array - description of the formatting to be applied.   
+//      * AttributeUseRestriction - DataCompositionSchemaFieldUseRestriction - 
+//          indicates a given field restriction of use in the user settings. 
+//          The same types of use are subject to restriction as field use 
+//          restrictions. Behavior of this property is similar to property 
+//          UseRestriction. Is used for fields of object type. At the same 
+//          time, you can choose a field, but you can not choose its attributes.
+//      * DataPath - String - contains data path under which the field will 
+//          appear in settings and expressions. Note that the field will 
+//          appear exactly under this name, and not under a name specified 
+//          in the property Field. If several data sets have fields with the
+//          same data paths, a data set field that is parent data set will be 
+//          used. Specifying similar data paths of fields of not connected data
+//          sets is not allowed.
+//          In the data composition system it is not allowed to specify names, 
+//          that match the following keywords, as the data path:
+//              • CASE
+//              • IS
+//              • ELSE
+//              • WHEN
+//              • END
+//              • NOT
+//              • LIKE
+//              • DISTINCT
+//              • ESCAPE
+//              • THEN 
+//      * EditParameters        - Array  - editing parameters for a field value
+//          in a filter.
+//      * Field                 - String - name of described data set field.
+//      * HierarchyCheckDataSet - String - if field condition InHierarchy need 
+//          to be processed in a non-standard way, this property specifies data
+//          set name where data for checking reference belonging to a hierarchy 
+//          of a certain value is obtained.
+//                  Default value: "".            
+//      * HierarchyCheckDataSetParameter - String - parameter where a value is
+//          substituted that require obtaining daughter elements.
+//                  Default value: "".
+//      * OrderExpressions - Array - description of expressions used for ordering
+//          data set when ordering by a given field is required. 
+//      * PresentationExpression - String - an expression used for calculation 
+//          field presentation. Can be used for redefining standard field presentation.
+//                  Default value: "".
+//      * Role  - DataCompositionDataSetFieldRole - field role.
+//      * Title - String - string displayed in user settings and in the results
+//          header for a given field.
+//      * UseRestriction - DataCompositionSchemaFieldUseRestriction - indicates
+//          a given field restriction of use in the settings. Note that field 
+//          use is defined by data set itself. Using this property you can only 
+//          restrict use, but you cannot permit what is denied in data set 
+//          description. For example, when a query indicates that a field may 
+//          be selected, but does not indicate that this field may be used in 
+//          a filter, then absence of filter restriction in this property does 
+//          not make this field available for use in a filter.
+//      * ValueType - TypeDescription - field data type.
+//      * Type   - Type   - type of added element.
+//                  Default value: DataCompositionSchemaDataSetField.
+//
+Function NewDataCompositionSchemaDataSetField() Export
+    
+    DataCompositionSchemaDataSetField = New Structure;
+    DataCompositionSchemaDataSetField.Insert("Appearance");
+    DataCompositionSchemaDataSetField.Insert("AttributeUseRestriction");
+    DataCompositionSchemaDataSetField.Insert("DataPath");
+    DataCompositionSchemaDataSetField.Insert("EditParameters", New Array);
+    DataCompositionSchemaDataSetField.Insert("Field");
+    DataCompositionSchemaDataSetField.Insert("HierarchyCheckDataSet", "");
+    DataCompositionSchemaDataSetField.Insert("HierarchyCheckDataSetParameter", "");
+    DataCompositionSchemaDataSetField.Insert("OrderExpressions", New Array);
+    DataCompositionSchemaDataSetField.Insert("PresentationExpression", "");
+    DataCompositionSchemaDataSetField.Insert("Role");
+    DataCompositionSchemaDataSetField.Insert("Title");
+    DataCompositionSchemaDataSetField.Insert("UseRestriction");
+    DataCompositionSchemaDataSetField.Insert("ValueType");
+    DataCompositionSchemaDataSetField.Insert("Type",
+        Type("DataCompositionSchemaDataSetField"));
+    Return DataCompositionSchemaDataSetField;
+    
+EndFunction // NewDataCompositionSchemaDataSetField()
+
+// Creates description for data set field of data composition schema (folder).
+//
+// Returns:
+//  Structure - with keys:
+//      * DataPath - String - contains data path under which the field will 
+//          appear in settings and expressions. Note that the field will 
+//          appear exactly under this name, and not under a name specified 
+//          in the property Field. If several data sets have fields with the
+//          same data paths, a data set field that is parent data set will be 
+//          used. Specifying similar data paths of fields of not connected data
+//          sets is not allowed.
+//          In the data composition system it is not allowed to specify names, 
+//          that match the following keywords, as the data path:
+//              • CASE
+//              • IS
+//              • ELSE
+//              • WHEN
+//              • END
+//              • NOT
+//              • LIKE
+//              • DISTINCT
+//              • ESCAPE
+//              • THEN 
+//      * Title - String - string displayed in user settings and in the results
+//          header for a given field.
+//      * UseRestriction - DataCompositionSchemaFieldUseRestriction - indicates
+//          a given field restriction of use in the settings. Note that field 
+//          use is defined by data set itself. Using this property you can only 
+//          restrict use, but you cannot permit what is denied in data set 
+//          description. For example, when a query indicates that a field may 
+//          be selected, but does not indicate that this field may be used in 
+//          a filter, then absence of filter restriction in this property does 
+//          not make this field available for use in a filter. 
+//      * Type  - Type   - type of added element.
+//                  Default value: DataCompositionSchemaDataSetFieldFolder.
+//
+Function NewDataCompositionSchemaDataSetFieldFolder() Export
+    
+    DataCompositionSchemaDataSetFieldFolder = New Structure;
+    DataCompositionSchemaDataSetFieldFolder.Insert("DataPath");
+    DataCompositionSchemaDataSetFieldFolder.Insert("Title");
+    DataCompositionSchemaDataSetFieldFolder.Insert("UseRestriction");
+    DataCompositionSchemaDataSetFieldFolder.Insert("Type",
+        Type("DataCompositionSchemaDataSetFieldFolder"));
+    Return DataCompositionSchemaDataSetFieldFolder;
+    
+EndFunction // NewDataCompositionSchemaDataSetFieldFolder()
+
+// Creates description for nested data set-field.
+//
+// Returns:
+//  Structure - with keys:
+//      * DataPath - String - contains data path under which the nested dataset
+//          will appear in data composition schema and settings.
+//          In the data composition system it is not allowed to specify names, 
+//          that match the following keywords, as the data path:
+//              • CASE
+//              • IS
+//              • ELSE
+//              • WHEN
+//              • END
+//              • NOT
+//              • LIKE
+//              • DISTINCT
+//              • ESCAPE
+//              • THEN 
+//      * Field - String - the name of a dataset field from which the nested 
+//          dataset data will be obtained.
+//      * Title - String - the nested dataset title. This title will be used
+//          for displaying in the report settings and report result. 
+//      * Type  - Type   - type of added element.
+//                  Default value: DataCompositionSchemaNestedDataSet.
+//
+Function NewDataCompositionSchemaNestedDataSet() Export
+    
+    DataCompositionSchemaNestedDataSet = New Structure;
+    DataCompositionSchemaNestedDataSet.Insert("DataPath");
+    DataCompositionSchemaNestedDataSet.Insert("Field");
+    DataCompositionSchemaNestedDataSet.Insert("Title");
+    DataCompositionSchemaNestedDataSet.Insert("Type", 
+        Type("DataCompositionSchemaNestedDataSet"));
+    Return DataCompositionSchemaNestedDataSet;    
+    
+EndFunction // NewDataCompositionSchemaNestedDataSet()
+
 // Creates layout template according passed parameters.
 //
 // Parameters:
@@ -386,7 +733,7 @@ Function NewOutputParameters() Export
     OutputParameters = New Structure;
     OutputParameters.Insert("ExternalDataSets");
     OutputParameters.Insert("DetailsData");
-    OutputParameters.Insert("CanUseExternalFunctions");
+    OutputParameters.Insert("CanUseExternalFunctions", False);
     OutputParameters.Insert("DCTParameters");
     Return OutputParameters;
     

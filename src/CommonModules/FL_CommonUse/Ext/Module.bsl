@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -644,7 +644,7 @@ EndFunction // IsReference()
 // Checks if the record about the passed reference value is actually in the data infobase.
 // 
 // Parameters:
-//  AnyRef - value of any data infobase reference.
+//  AnyRef - AnyRef - value of any data infobase reference.
 // 
 // Returns:
 //  Boolean - True if reference exists.
@@ -1052,6 +1052,43 @@ Function IsStandardAttribute(StandardAttributes, AttributeName) Export
 EndFunction // IsStandardAttribute()
 
 #EndRegion // MetadataObjectTypesDefinition
+
+// Returns the name of base type based on the metadata object.
+// 
+// Parameters:
+//  MetadataObject - MetadataObject - metadata object for which it is necessary 
+//                                      to define primary keys.
+//                 - String         - object name for which it is required 
+//                                      to define primary keys.
+//
+//  Returns:
+//      Structure - with primary keys:
+//          * Key   - String - name of the primary key.
+//          * Value - String - type name of primary key.
+//
+Function PrimaryKeysByMetadataObject(MetadataObject) Export
+     
+    If TypeOf(MetadataObject) = Type("MetadataObject") Then
+        FullName = MetadataObject.FullName();    
+    Else
+        FullName = MetadataObject;
+    EndIf;
+    
+    PrimaryKeys = New Structure;
+    If IsReferenceTypeObjectByMetadataObjectName(FullName) Then
+        
+        Parts = StrSplit(FullName, ".");
+        ManagerType = Parts[0];
+        ObjectType = Parts[1];
+        
+        PrimaryKeys.Insert("Ref", StrTemplate("%1REF.%2", ManagerType, 
+                ObjectType));
+                
+    EndIf;
+
+    Return PrimaryKeys;
+    
+EndFunction // PrimaryKeysByMetadataObject()
 
 // Returns the name of base type based on the metadata object.
 // 

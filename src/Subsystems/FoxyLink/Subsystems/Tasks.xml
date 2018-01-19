@@ -33,6 +33,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_TasksHeartbeat</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_States</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_RecurringServer</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonForm.FL_DispatchEventsForm</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

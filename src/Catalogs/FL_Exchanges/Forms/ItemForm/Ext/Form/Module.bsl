@@ -22,6 +22,11 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
+    If Parameters.Property("AutoTest") Then
+        // Return if the form for analysis is received.
+        Return;
+    EndIf;
+    
     If IsBlankString(Object.BasicFormatGuid) Then
         For Each Format In Catalogs.FL_Exchanges.AvailableFormats() Do
             FillPropertyValues(Items.BasicFormatGuid.ChoiceList.Add(), Format);    
@@ -239,8 +244,7 @@ Procedure AddEvent(Command)
         New UUID, 
         , 
         ,
-        New NotifyDescription("DoAfterChooseEventToAdd", ThisObject)
-        , 
+        New NotifyDescription("DoAfterChooseEventToAdd", ThisObject), 
         FormWindowOpeningMode.LockOwnerWindow);    
     
 EndProcedure // AddEvent()
@@ -251,12 +255,19 @@ Procedure DispatchEvent(Command)
     CurrentData = Items.Events.CurrentData;
     If CurrentData <> Undefined Then
         
-        ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDispatch", 
-            ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en = 'Dispatch the event for all objects from the metadata?';
-                 |ru = 'Вызвать событие для всех объектов из метаданного?'"),
-            QuestionDialogMode.YesNo, , DialogReturnCode.No);
-        
+        OpenForm("CommonForm.FL_DispatchEventsForm", 
+            New Structure("APIVersion, Exchange, MetadataObject, Method", 
+                CurrentData.APIVersion, 
+                Object.Ref, 
+                CurrentData.MetadataObject, 
+                CurrentData.Method), 
+            ThisObject,
+            New UUID, 
+            , 
+            ,
+            , 
+            FormWindowOpeningMode.LockOwnerWindow);    
+                
     EndIf;
     
 EndProcedure // DispatchEvent()
@@ -1058,31 +1069,6 @@ Procedure DoAfterChooseEventToAdd(ClosureResult,
     
 EndProcedure // DoAfterChooseEventToAdd() 
 
-// Adds new subscriptions on events.
-//
-// Parameters:
-//  QuestionResult       - DialogReturnCode - system enumeration value 
-//                  or a value related to a clicked button. If a dialog 
-//                  is closed on timeout, the value is Timeout. 
-//  AdditionalParameters - Arbitrary        - the value specified when the 
-//                              NotifyDescription object was created.
-//
-&AtClient
-Procedure DoAfterChooseEventToDispatch(QuestionResult, 
-    AdditionalParameters) Export
-    
-    Var Identifier;
-    
-    If QuestionResult = DialogReturnCode.Yes
-        AND TypeOf(AdditionalParameters) = Type("Structure")
-        AND AdditionalParameters.Property("Identifier", Identifier) Then
-        
-        DispatchEventAtServer(Identifier);            
- 
-    EndIf;
-    
-EndProcedure // DoAfterChooseEventToDispatch() 
-
 // Deletes the selected event.
 //
 // Parameters:
@@ -1136,43 +1122,6 @@ Procedure AddEventAtServer(EventsArray)
     EndDo;
     
 EndProcedure // AddEventAtServer() 
-
-// Only for internal use.
-//
-&AtServer
-Procedure DispatchEventAtServer(Identifier)
-    
-    SearchResult = Object.Events.FindByID(Identifier);
-    If SearchResult = Undefined Then
-        Return;          
-    EndIf;
-    
-    CurrentData = CurrentMethodData(RowMethod);
-    
-    // Event mock
-    SourceMock = FL_Events.NewSourceMock();
-    InvocationData = SourceMock.AdditionalProperties.InvocationData;
-    InvocationData.APIVersion = CurrentData.APIVersion;
-    InvocationData.MetadataObject = SearchResult.MetadataObject;
-    InvocationData.Method = CurrentData.Method;
-    InvocationData.Owner = Object.Ref;
-    
-    Query = New Query;
-    Query.Text = StrTemplate("
-            |SELECT 
-            |   Ref AS Ref 
-            |FROM 
-            |   %1", 
-        SearchResult.MetadataObject);    
-        
-    QueryResultSelection = Query.Execute().Select();
-    While QueryResultSelection.Next() Do
-        SourceMock.Ref = QueryResultSelection.Ref;
-        InvocationData.Arguments = QueryResultSelection.Ref;
-        FL_Events.EnqueueEvent(SourceMock);
-    EndDo;
-        
-EndProcedure // DispatchEventAtServer() 
 
 // Only for internal use.
 //
