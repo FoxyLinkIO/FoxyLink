@@ -360,12 +360,12 @@
 		<Command name="StartJobServer" id="3">
 			<Title>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Запустить сервер</v8:content>
+					<v8:lang>en</v8:lang>
+					<v8:content>Start job server</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Start job</v8:content>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Запустить сервер заданий</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
@@ -388,12 +388,12 @@
 		<Command name="StopJobServer" id="4">
 			<Title>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Остановить сервер</v8:content>
+					<v8:lang>en</v8:lang>
+					<v8:content>Stop job server</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Stop server</v8:content>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Остановить сервер заданий</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>

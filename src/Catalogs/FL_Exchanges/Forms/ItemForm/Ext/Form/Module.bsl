@@ -100,7 +100,7 @@ Procedure FormatStandardClick(Item, StandardProcessing)
     
     AppParameters = FL_InteriorUseClient.NewRunApplicationParameters();
     AppParameters.NotifyDescription = New NotifyDescription(
-        "DoAfterBeginRunningApplication", ThisObject);
+        "DoAfterBeginRunningApplication", FL_InteriorUseClient);
     AppParameters.CommandLine = FormatStandardLink();
     AppParameters.WaitForCompletion = True;
     
@@ -255,12 +255,14 @@ Procedure DispatchEvent(Command)
     CurrentData = Items.Events.CurrentData;
     If CurrentData <> Undefined Then
         
+        FormParameters = New Structure;
+        FormParameters.Insert("APIVersion", CurrentData.APIVersion);
+        FormParameters.Insert("Exchange", Object.Ref); 
+        FormParameters.Insert("MetadataObject", CurrentData.MetadataObject);
+        FormParameters.Insert("Method", CurrentData.Method);
+        
         OpenForm("CommonForm.FL_DispatchEventsForm", 
-            New Structure("APIVersion, Exchange, MetadataObject, Method", 
-                CurrentData.APIVersion, 
-                Object.Ref, 
-                CurrentData.MetadataObject, 
-                CurrentData.Method), 
+            FormParameters, 
             ThisObject,
             New UUID, 
             , 
@@ -437,29 +439,6 @@ EndProcedure // DeleteAPI()
 #Region ServiceProceduresAndFunctions
 
 #Region Formats
-
-// Begins running an external application or opens an application file with 
-// the associated name.
-//
-// Parameters:
-//  CodeReturn           - Number, Undefined - the code of return, if a relevant
-//                          input parameter <WaitForCompletion> is not specified. 
-//  AdditionalParameters - Arbitrary         - the value specified when the 
-//                              NotifyDescription object was created.
-//
-&AtClient
-Procedure DoAfterBeginRunningApplication(CodeReturn, AdditionalParameters) Export
-    
-    If CodeReturn <> 0 Then 
-        Explanation = NStr("
-            |en = 'Unexpected error has happened.';
-            |ru = 'Произошла непредвиденная ошибка.'");
-    
-        ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
-        
-    EndIf;   
-    
-EndProcedure // DoAfterBeginRunningApplication() 
 
 // Rewrites the current method APISchema form the ClosureResult.
 // Changes are applied only for the form Object.

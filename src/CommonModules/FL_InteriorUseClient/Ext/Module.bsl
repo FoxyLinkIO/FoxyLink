@@ -207,6 +207,7 @@ EndProcedure // DoAfterBeginGettingFiles()
 
 // Begins opening file folder after click on the user notification.
 //
+// Parameters:
 //  AdditionalParameters - Arbitrary - value specified when the NotifyDescription
 //                                     object was created.
 //
