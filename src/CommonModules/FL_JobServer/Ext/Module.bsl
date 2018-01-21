@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -19,43 +19,43 @@
 
 #Region ProgramInterface
 
-// Runs the specified job server.
+// Runs the job server in this infobase immediately.
 //
 // Parameters:
-//  JobServer - ScheduledJob - the server to be switched on.
-//                  Default value: Undefined.
+//  SafeMode   - Boolean - executes the method with pre-establishing 
+//              a safe mode of code execution.
+//                  Default value: True.
 //
-Procedure RunJobServer(JobServer = Undefined) Export
+Procedure RunJobServer(SafeMode = True) Export
     
-    If JobServer = Undefined Then
-        JobServer = JobServer();
-    EndIf;
+    JobServer = JobServer();
     
     Task = FL_Tasks.NewTask();
-    Task.MethodName = JobServer.Metadata.MethodName;
-    Task.Key = String(JobServer.UUID); 
     Task.Description = JobServer.Description;
+    Task.Key = JobServer.Key;
+    Task.MethodName = JobServer.Metadata.MethodName; 
+    Task.SafeMode = SafeMode;
+    
     FL_Tasks.Run(Task); 
     
 EndProcedure // RunJobServer()
 
-// Stops the specified job server.
+// Stops the specified job server immediately.
 //
-// Parameters:
-//  JobServer - ScheduledJob - the server to be switched off.
-//                  Default value: Undefined.
-//
-Procedure StopJobServer(JobServer = Undefined) Export
+Procedure StopJobServer() Export
     
-    If JobServer = Undefined Then
-        JobServer = JobServer();
-    EndIf;
+    JobServer = JobServer();
     
-    BackgroundJob = BackgroundJobByFilter();
-    If BackgroundJob <> Undefined Then
+    BackgroundJobsFilter = NewBackgroundJobsFilter();
+    BackgroundJobsFilter.State = BackgroundJobState.Active;
+    FillPropertyValues(BackgroundJobsFilter, JobServer, , "Description, UUID");
+    FL_CommonUseClientServer.RemoveValueFromStructure(BackgroundJobsFilter);
+        
+    BackgroundJobsByFilter = BackgroundJobsByFilter(BackgroundJobsFilter);
+    For Each BackgroundJob In BackgroundJobsByFilter Do
         BackgroundJob.Cancel();        
-    EndIf;
-    
+    EndDo;
+            
 EndProcedure // StopJobServer()
 
 // Runs an expiration manager task.
@@ -83,9 +83,93 @@ Procedure RunExpirationManager(BackgroundJob) Export
 
 EndProcedure // RunExpirationManager()
 
+// Returns registered or register the job server in the current infobase.
+// 
+// Returns:
+//  ScheduledJob - job server.
+//
+Function JobServer() Export
+
+    JobServer = ScheduledJob(Metadata.ScheduledJobs.FL_JobServer);
+    Return JobServer;
+
+EndFunction // JobServer()
+
+// Returns the server state - active or non-active.
+// 
+// Returns:
+//  Boolean - True if the server state is active.
+//
+Function JobServerWatchDog() Export
+    
+    JobServer = JobServer();
+    
+    BackgroundJobsFilter = NewBackgroundJobsFilter();
+    BackgroundJobsFilter.State = BackgroundJobState.Active;
+    FillPropertyValues(BackgroundJobsFilter, JobServer, , "Description, UUID");
+    FL_CommonUseClientServer.RemoveValueFromStructure(BackgroundJobsFilter);
+        
+    BackgroundJobsByFilter = BackgroundJobsByFilter(BackgroundJobsFilter);
+    Return BackgroundJobsByFilter.Count() > 0; 
+    
+EndFunction // JobServerWatchDog()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
+
+// Returns ScheduledJob from infobase.
+// 
+// Parameters:
+//  ID - MetadataObject - metadata object of scheduled job for predefined 
+//                          scheduled job search.
+//     - String         - scheduled job name for which it is required to define 
+//                          metadata object of scheduled job for predefined 
+//                          scheduled job search.
+//     - String         - scheduled job unique UUID string.
+//     - UUID           - scheduled job UUID.
+//     - ScheduledJob   - scheduled job from which need to get unique identifier
+//                          for get fresh copy of scheduled job.
+// 
+// Returns:
+//  ScheduledJob - it is read from database.
+//
+Function ScheduledJob(Val ID) Export
+    
+    FL_InteriorUse.AdministrativeRights();
+    SetPrivilegedMode(True);
+
+    If TypeOf(ID) = Type("ScheduledJob") Then
+        ID = ID.UUID;
+    EndIf;
+
+    If TypeOf(ID) = Type("String") Then
+        
+        SearchResult = Metadata.FindByFullName(ID);
+        If SearchResult <> Undefined Then
+            ID = SearchResult;
+        Else
+            ID = New UUID(ID);
+        EndIf;
+        
+    EndIf;
+
+    If TypeOf(ID) = Type("MetadataObject") Then
+        ScheduledJob = ScheduledJobs.FindPredefined(ID);
+    Else
+        ScheduledJob = ScheduledJobs.FindByUUID(ID);
+    EndIf;
+
+    If ScheduledJob = Undefined Then
+        Raise NStr("en='Scheduled job is not found.
+            |Perhaps, it has been deleted by another user.';
+            |ru='Регламентное задание не найдено.
+            |Возможно, оно удалено другим пользователем.'");
+    EndIf;
+
+    Return ScheduledJob;
+
+EndFunction // ScheduledJob()
 
 #Region Actions
 
@@ -107,10 +191,6 @@ Procedure JobServerAction() Export
     UpdateWorkerSlots(DeleteJobs);
     PushJobServerState(WorkerCount, RetryJobs);
     
-    
-    
-    
-    
     //While True Do
     
     // Read Jobs 
@@ -119,9 +199,6 @@ Procedure JobServerAction() Export
     //
     // Read from register 
     // check jobs
-        
-        
-        
         
         // Sleep function.
         //StartDate = CurrentUniversalDate();
@@ -166,59 +243,6 @@ Procedure ExpirationManagerAction(NumberOfRecordsInSinglePass = 1000) Export
 EndProcedure // ExpirationManagerAction()
 
 #EndRegion // Actions
-
-// Returns registered or register the job server in the current infobase.
-// 
-// Returns:
-//  ScheduledJob - job server.
-//
-Function JobServer() Export
-
-    FL_InteriorUse.AdministrativeRights();
-    
-    JobServer = ScheduledJobs.FindByUUID(GetJobServerId());
-    If JobServer <> Undefined Then
-        Return JobServer;
-    EndIf;
-        
-    FilterResult = ScheduledJobs.GetScheduledJobs(
-        NewScheduledJobsFilter("Key, Metadata", True));
-    If FilterResult.Count() = 0 Then
-        JobServer = ScheduledJobs.CreateScheduledJob(
-            Metadata.ScheduledJobs.FL_JobServer);
-        JobServer.Write();
-    Else
-        JobServer = FilterResult[0];
-    EndIf;
-    
-    IsOk = SetJobServerId(JobServer.UUID);
-    If NOT IsOk Then
-        // TODO: Process exception.    
-    EndIf;
-    
-    Return JobServer;
-
-EndFunction // JobServer()
-
-Function JobServerIsRunning() Export
-    
-    JobServer = ScheduledJobs.FindByUUID(GetJobServerId());
-    If JobServer <> Undefined Then
-                
-        BackgroundJob = BackgroundJobByFilter();
-        If BackgroundJob = Undefined Then
-            Return False;        
-        EndIf;
-        
-        If BackgroundJob.State = BackgroundJobState.Active Then
-            Return True;    
-        EndIf;
-        
-    EndIf; 
-    
-    Return False;
-    
-EndFunction // JobServerWatchDog()
 
 // Sets a new worker count value.
 //
@@ -286,17 +310,6 @@ Function DefaultRetryAttempts() Export
     
 EndFunction // DefaultRetryAttempts() 
 
-// Returns default job server id.
-//
-// Returns:
-//  UUID - default job server id.
-//
-Function DefaultJobServerId() Export
-    
-    Return New UUID("00000000-0000-0000-0000-000000000000");
-    
-EndFunction // DefaultJobServerId() 
-
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
@@ -305,11 +318,11 @@ EndFunction // DefaultJobServerId()
 //
 Procedure PopJobServerState(WorkerCount, DeleteJobs, RetryJobs) 
     
-    bjsActive    = BackgroundJobState.Active;
-    bjsCanceled  = BackgroundJobState.Canceled;
-    bjsCompleted = BackgroundJobState.Completed;
-    bjsFailed    = BackgroundJobState.Failed;
-    
+    BJSActive    = BackgroundJobState.Active;
+    BJSCanceled  = BackgroundJobState.Canceled;
+    BJSCompleted = BackgroundJobState.Completed;
+    BJSFailed    = BackgroundJobState.Failed;
+   
     FinalStates = Catalogs.FL_States.FinalStates();
     
     RetryAttempts = GetRetryAttempts();
@@ -319,40 +332,34 @@ Procedure PopJobServerState(WorkerCount, DeleteJobs, RetryJobs)
   
     Query = New Query;
     Query.Text = QueryTextTasksHeartbeat();
-    QueryResult = Query.Execute();
-    If NOT QueryResult.IsEmpty() Then
-        
-        WorkersTable = QueryResult.Unload();
-        For Each Worker In WorkersTable Do
+    WorkersTable = Query.Execute().Unload();
+    For Each Worker In WorkersTable Do
+            
+        BackgroundJob = BackgroundJobByUUID(Worker.TaskId);
+        If BackgroundJob = Undefined 
+            OR BackgroundJob.State = BJSCanceled
+            OR BackgroundJob.State = BJSCompleted
+            OR BackgroundJob.State = BJSFailed Then
+            
+            If FinalStates.FindByValue(Worker.Job.State) <> Undefined 
+                OR Worker.RetryAttempts >= RetryAttempts Then
                 
-            BackgroundJob = BackgroundJobByUUID(Worker.TaskId);
-            If BackgroundJob = Undefined 
-                OR BackgroundJob.State = bjsCanceled
-                OR BackgroundJob.State = bjsCompleted
-                OR BackgroundJob.State = bjsFailed Then
+                DeleteJobs.Add(Worker.Job);
                 
-                If FinalStates.FindByValue(Worker.Job.State) <> Undefined Then
-                    DeleteJobs.Add(Worker.Job);
-                Else
-                    
-                    If Worker.RetryAttempts >= RetryAttempts Then
-                        DeleteJobs.Add(Worker.Job);   
-                    Else
-                        RetryJobs.Add(Worker.Job);        
-                    EndIf;        
-                    
-                EndIf;
+            Else
                 
-            Else // BackgroundJob.State = bjsActive
-                
-                WorkerCount = WorkerCount - 1;    
+                RetryJobs.Add(Worker.Job);
                 
             EndIf;
             
-        EndDo;
+        ElsIf BackgroundJob.State = BJSActive Then
+            
+            WorkerCount = WorkerCount - 1;    
+            
+        EndIf;
         
-    EndIf;
-    
+    EndDo;
+ 
 EndProcedure // PopJobServerState()
 
 // Only for internal use.
@@ -432,88 +439,37 @@ EndProcedure // UpdateWorkerSlots()
 
 // Only for internal use.
 //
-Function NewScheduledJobsFilter(Keys = Undefined, UseMetadata = False)
+Function NewScheduledJobsFilter()
     
-    BasicFilter = New Structure;
-    BasicFilter.Insert("Use");
-    BasicFilter.Insert("Key");
-    BasicFilter.Insert("UUID");
-    BasicFilter.Insert("Metadata");
-    BasicFilter.Insert("Predefined");
-    BasicFilter.Insert("Description");
+    ScheduledJobsFilter = New Structure;
+    ScheduledJobsFilter.Insert("Use");
+    ScheduledJobsFilter.Insert("Key");
+    ScheduledJobsFilter.Insert("UUID");
+    ScheduledJobsFilter.Insert("Metadata");
+    ScheduledJobsFilter.Insert("Predefined");
+    ScheduledJobsFilter.Insert("Description");
     
-    If UseMetadata Then
-        MetaSJ                  = Metadata.ScheduledJobs.FL_JobServer;
-        BasicFilter.Use         = MetaSJ.Use;
-        BasicFilter.Key         = MetaSJ.Key;
-        BasicFilter.Metadata    = MetaSJ;
-        BasicFilter.Predefined  = MetaSJ.Predefined;
-        BasicFilter.Description = MetaSJ.Name;
-    EndIf;
-    
-    If TypeOf(Keys) = Type("String") AND NOT IsBlankString(Keys) Then
-        SpecificFilter = New Structure(Keys);
-        FillPropertyValues(SpecificFilter, BasicFilter);
-        Return SpecificFilter;
-    EndIf;
-    
-    Return BasicFilter;
+    Return ScheduledJobsFilter;
     
 EndFunction // NewScheduledJobsFilter()
 
 // Only for internal use.
 //
-Function NewBackgroundJobsFilter(Keys = Undefined, UseMetadata = False)
+Function NewBackgroundJobsFilter()
     
-    BasicFilter = New Structure;
-    BasicFilter.Insert("Key");
-    BasicFilter.Insert("UUID");
-    BasicFilter.Insert("State");
-    BasicFilter.Insert("Begin");
-    BasicFilter.Insert("End");
-    BasicFilter.Insert("Description");
-    BasicFilter.Insert("MethodName");
-    BasicFilter.Insert("ScheduledJob");
-    
-    If UseMetadata Then
-        MetaSJ                  = Metadata.ScheduledJobs.FL_JobServer;
-        BasicFilter.Key         = String(GetJobServerId());
-        BasicFilter.MethodName  = MetaSJ.MethodName;
-        BasicFilter.Description = MetaSJ.Name;
-    EndIf;
-    
-    If TypeOf(Keys) = Type("String") AND NOT IsBlankString(Keys) Then
-        SpecificFilter = New Structure(Keys);
-        FillPropertyValues(SpecificFilter, BasicFilter);
-        Return SpecificFilter;
-    EndIf;
-    
-    Return BasicFilter;
+    BackgroundJobsFilter = New Structure; 
+    BackgroundJobsFilter.Insert("UUID");
+    BackgroundJobsFilter.Insert("Key");
+    BackgroundJobsFilter.Insert("State");
+    BackgroundJobsFilter.Insert("Begin");
+    BackgroundJobsFilter.Insert("End");
+    BackgroundJobsFilter.Insert("Description");
+    BackgroundJobsFilter.Insert("MethodName");
+    BackgroundJobsFilter.Insert("ScheduledJob");
+        
+    Return BackgroundJobsFilter;
     
 EndFunction // NewBackgroundJobsFilter()
-
-// Only for internal use.
-//
-Function GetJobServerId()
-
-    Return Constants.FL_JobServerID.Get();
-    
-EndFunction // GetJobServerId()
-
-// Only for internal use.
-//
-Function SetJobServerId(Id)
-    
-    Try
-        Constants.FL_JobServerID.Set(Id);
-    Except
-        // TODO: Log exception.  
-        Return False;
-    EndTry;
-    
-    Return True;
-    
-EndFunction // SetJobServerId()
 
 // Only for internal use.
 //
@@ -525,22 +481,11 @@ EndFunction // BackgroundJobByUUID()
 
 // Only for internal use.
 //
-Function BackgroundJobByFilter(Filter = Undefined)
+Function BackgroundJobsByFilter(Filter)
     
-    If Filter = Undefined Then
-        BackgroundJobsFilter = NewBackgroundJobsFilter("Key", True);    
-    Else
-        BackgroundJobsFilter = Filter;    
-    EndIf;
+    Return BackgroundJobs.GetBackgroundJobs(Filter);    
     
-    FilterResult = BackgroundJobs.GetBackgroundJobs(BackgroundJobsFilter);
-    If FilterResult.Count() > 0 Then
-        Return FilterResult[0]; 
-    EndIf; 
-    
-    Return Undefined;
-    
-EndFunction // BackgroundJobByFilter()
+EndFunction // BackgroundJobsByFilter()
 
 // Only for internal use.
 //

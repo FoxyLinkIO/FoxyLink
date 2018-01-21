@@ -250,7 +250,7 @@ Procedure AddEvent(Command)
 EndProcedure // AddEvent()
 
 &AtClient
-Procedure DispatchEvent(Command)
+Procedure EnqueueEvents(Command)
     
     CurrentData = Items.Events.CurrentData;
     If CurrentData <> Undefined Then
@@ -261,7 +261,7 @@ Procedure DispatchEvent(Command)
         FormParameters.Insert("MetadataObject", CurrentData.MetadataObject);
         FormParameters.Insert("Method", CurrentData.Method);
         
-        OpenForm("CommonForm.FL_DispatchEventsForm", 
+        OpenForm("Catalog.FL_Jobs.Form.EnqueueEventsForm", 
             FormParameters, 
             ThisObject,
             New UUID, 
@@ -272,7 +272,7 @@ Procedure DispatchEvent(Command)
                 
     EndIf;
     
-EndProcedure // DispatchEvent()
+EndProcedure // EnqueueEvents()
 
 &AtClient
 Procedure DeleteEvent(Command)

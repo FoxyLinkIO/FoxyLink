@@ -31,6 +31,43 @@ Procedure RefreshApplicationInterface() Export
 
 EndProcedure // RefreshApplicationInterface()
 
+// Prompts whether the action that results in loss of changes should be 
+// continued. For use in the BeforeClosing event handler of forms modules.
+//  
+// Parameters:
+//  NotifyDescription - NotifyDescription - contains the name of the procedure
+//                                          that is called when you click the OK.
+//  Cancel            - Boolean           - return parameter, shows that you 
+//                                          canceled the executed action.
+//  WarningText       - String            - overridable alert text displayed to 
+//                                          user.
+//
+Procedure ShowFormClosingConfirmation(NotifyDescription, Cancel, 
+    WarningText = "") Export
+
+    ManagedForm = NotifyDescription.Module;
+    If NOT ManagedForm.Modified Then
+        Return;
+    EndIf;
+
+    Cancel = True;
+
+    If IsBlankString(WarningText) Then
+        QuestionText = NStr("en = 'Data was changed. Save the changes?';
+            |ru = 'Данные были изменены. Сохранить изменения?'");
+    Else
+        QuestionText = WarningText;
+    EndIf;
+    
+    ShowQueryBox(New NotifyDescription("DoAfterConfirmFormClosing", ThisObject, 
+            NotifyDescription), 
+        QuestionText, 
+        QuestionDialogMode.YesNoCancel, 
+        ,
+        DialogReturnCode.No);
+
+EndProcedure // ShowFormClosingConfirmation()
+
 // Begins running an external application or opens an application file with 
 // associated name.
 //
@@ -95,6 +132,29 @@ EndProcedure // Attachable_SaveFileAs()
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
+
+// Processes the confirmation result on BeforeClosing event of forms modules.
+// 
+// Parameters:
+//  QuestionResult    - DialogReturnCode  - system enumeration value or a value
+//                                          related to a clicked button.
+//  NotifyDescription - NotifyDescription - the value specified when the 
+//                                          NotifyDescription object was created.
+//
+Procedure DoAfterConfirmFormClosing(QuestionResult, NotifyDescription) Export
+
+    If QuestionResult = DialogReturnCode.Yes Then
+        ExecuteNotifyProcessing(NotifyDescription);
+    ElsIf QuestionResult = DialogReturnCode.No Then
+        ManagedForm = NotifyDescription.Module;
+        ManagedForm.Modified = False;
+        ManagedForm.Close();
+    Else
+        ManagedForm = NotifyDescription.Module;
+        ManagedForm.Modified = True;
+    EndIf;
+
+EndProcedure // DoAfterConfirmFormClosing()
 
 // Attaches the extension for working with files. 
 //

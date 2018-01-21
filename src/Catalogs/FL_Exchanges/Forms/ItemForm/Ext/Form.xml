@@ -581,10 +581,10 @@
 																<CommandName>Form.Command.DeleteEvent</CommandName>
 																<ExtendedTooltip name="DeleteEventExtendedTooltip" id="353"/>
 															</Button>
-															<Button name="DispatchEvent" id="358">
+															<Button name="EnqueueEvents" id="358">
 																<Type>CommandBarButton</Type>
-																<CommandName>Form.Command.DispatchEvent</CommandName>
-																<ExtendedTooltip name="DispatchEventExtendedTooltip" id="359"/>
+																<CommandName>Form.Command.EnqueueEvents</CommandName>
+																<ExtendedTooltip name="EnqueueEventsExtendedTooltip" id="359"/>
 															</Button>
 														</ChildItems>
 													</ContextMenu>
@@ -2163,32 +2163,32 @@
 			<Action>DeleteAPI</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
-		<Command name="DispatchEvent" id="15">
+		<Command name="EnqueueEvents" id="15">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Dispatch event</v8:content>
+					<v8:content>Enqueue events</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Вызвать событие</v8:content>
+					<v8:content>Отправить события в очередь</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Triggers an registered event.</v8:content>
+					<v8:content>Creates a new fire-and-forget jobs based on this exchange object.</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Вызвает зарегистрированное событие.</v8:content>
+					<v8:content>Создает новые задания «выполнить-и-забыть», основанные на этом объекте обмена.</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
 				<xr:Ref>CommonPicture.FL_Event</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>DispatchEvent</Action>
+			<Action>EnqueueEvents</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>
