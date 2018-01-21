@@ -26,14 +26,14 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_JobServer</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_RecurringJob</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobServer</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_JobServerID</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">9e97fc4e-49d8-4ea4-8210-fe8e99fcee75</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_RetryAttempts</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_WorkerCount</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Jobs</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_TasksHeartbeat</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_States</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_RecurringServer</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonForm.FL_DispatchEventsForm</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">bfb8e856-65e8-460c-82f6-9c1e154a388b</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

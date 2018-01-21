@@ -190,6 +190,28 @@ Procedure RemoveDuplicatesFromArray(Source) Export
     
 EndProcedure // RemoveDuplicatesFromArray()
 
+// Removes value from source structure.
+//
+// Parameters:
+//  Source - Structure - structure of keys and values to remove from.
+//  Value  - Arbitrary - value to remove.
+//                  Default value: Undefined.
+//
+Procedure RemoveValueFromStructure(Source, Value = Undefined) Export
+    
+    RemoveArray = New Array;
+    For Each KeyValue In Source Do
+        If KeyValue.Value = Value Then
+            RemoveArray.Add(KeyValue.Key);    
+        EndIf;
+    EndDo;
+    
+    For Each Item In RemoveArray Do
+        Source.Delete(Item);        
+    EndDo;
+    
+EndProcedure // RemoveValuesFromStructure()
+
 // Creates an instance copy of the specified object.
 //
 // Parameters:
@@ -365,22 +387,6 @@ Function IsObjectAttribute(Object, AttributeName) Export
     Return AttributeStructure[AttributeName] <> UniquenessKey;
 
 EndFunction // IsObjectAttribute()
-
-// Creates an absolute color from three constituent colors.
-//
-// Parameters:
-//  Red   - Number - value for the amount of red in the color. 
-//  Green - Number - value for the amount of green in the color.
-//  Blue  - Number - value for the amount of blue in the color.
-//
-// Returns:
-//  Color - the absolute color from three constituent colors.     
-//
-Function NewColor(Red, Green, Blue) Export
-    
-    Return New Color(Red, Green, Blue);
-    
-EndFunction // NewColor()
 
 #Region StringOperations
 

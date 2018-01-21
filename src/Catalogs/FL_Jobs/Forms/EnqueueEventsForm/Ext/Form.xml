@@ -594,11 +594,11 @@
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Enqueue events</v8:content>
+					<v8:content>Creates a new fire-and-forget jobs based on the given exchange object.</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Отправить события в очередь</v8:content>
+					<v8:content>Создает новые задания «выполнить-и-забыть», основанные на переданном объекте обмена.</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>

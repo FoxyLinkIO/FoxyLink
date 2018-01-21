@@ -18,7 +18,6 @@
 			<PrivilegedGetMode>true</PrivilegedGetMode>
 			<Content>
 				<xr:Object>CommonForm.FL_ResponseHandlerForm</xr:Object>
-				<xr:Object>Constant.FL_JobServerID</xr:Object>
 				<xr:Object>Constant.FL_RetryAttempts</xr:Object>
 				<xr:Object>Constant.FL_WorkerCount</xr:Object>
 				<xr:Object>Catalog.FL_States</xr:Object>
@@ -37,7 +36,7 @@
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats</xr:Object>
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Tasks</xr:Object>
 				<xr:Object>CommonCommand.ExportObject</xr:Object>
-				<xr:Object>CommonForm.FL_DispatchEventsForm</xr:Object>
+				<xr:Object>Catalog.FL_Jobs.Command.ConfigureJobServerStartUp</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

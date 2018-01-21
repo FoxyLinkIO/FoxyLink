@@ -99,33 +99,47 @@
 							<v8:content>Сервер заданий</v8:content>
 						</v8:item>
 					</ToolTip>
+					<Group>Vertical</Group>
 					<Representation>NormalSeparation</Representation>
 					<ExtendedTooltip name="GroupJobServerExtendedTooltip" id="14"/>
 					<ChildItems>
-						<InputField name="FL_WorkerCount" id="15">
-							<DataPath>ConstantsSet.FL_WorkerCount</DataPath>
-							<TitleLocation>Right</TitleLocation>
-							<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
-							<ContextMenu name="FL_WorkerCountContextMenu" id="16"/>
-							<ExtendedTooltip name="FL_WorkerCountExtendedTooltip" id="17">
-								<TextColor>style:FieldSelectionBackColor</TextColor>
-							</ExtendedTooltip>
-							<Events>
-								<Event name="OnChange">FL_WorkerCountOnChange</Event>
-							</Events>
-						</InputField>
-						<InputField name="FL_RetryAttempts" id="18">
-							<DataPath>ConstantsSet.FL_RetryAttempts</DataPath>
-							<TitleLocation>Right</TitleLocation>
-							<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
-							<ContextMenu name="FL_RetryAttemptsContextMenu" id="19"/>
-							<ExtendedTooltip name="FL_RetryAttemptsExtendedTooltip" id="20">
-								<TextColor>style:FieldSelectionBackColor</TextColor>
-							</ExtendedTooltip>
-							<Events>
-								<Event name="OnChange">FL_RetryAttemptsOnChange</Event>
-							</Events>
-						</InputField>
+						<Button name="ConfigureJobServerStartUp" id="61">
+							<Type>UsualButton</Type>
+							<Representation>PictureAndText</Representation>
+							<CommandName>Catalog.FL_Jobs.Command.ConfigureJobServerStartUp</CommandName>
+							<ExtendedTooltip name="ConfigureJobServerStartUpExtendedTooltip" id="62"/>
+						</Button>
+						<UsualGroup name="GroupJobSettings" id="63">
+							<Representation>None</Representation>
+							<ShowTitle>false</ShowTitle>
+							<ExtendedTooltip name="GroupJobSettingsExtendedTooltip" id="64"/>
+							<ChildItems>
+								<InputField name="FL_WorkerCount" id="15">
+									<DataPath>ConstantsSet.FL_WorkerCount</DataPath>
+									<TitleLocation>Right</TitleLocation>
+									<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+									<ContextMenu name="FL_WorkerCountContextMenu" id="16"/>
+									<ExtendedTooltip name="FL_WorkerCountExtendedTooltip" id="17">
+										<TextColor>style:FieldSelectionBackColor</TextColor>
+									</ExtendedTooltip>
+									<Events>
+										<Event name="OnChange">FL_WorkerCountOnChange</Event>
+									</Events>
+								</InputField>
+								<InputField name="FL_RetryAttempts" id="18">
+									<DataPath>ConstantsSet.FL_RetryAttempts</DataPath>
+									<TitleLocation>Right</TitleLocation>
+									<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+									<ContextMenu name="FL_RetryAttemptsContextMenu" id="19"/>
+									<ExtendedTooltip name="FL_RetryAttemptsExtendedTooltip" id="20">
+										<TextColor>style:FieldSelectionBackColor</TextColor>
+									</ExtendedTooltip>
+									<Events>
+										<Event name="OnChange">FL_RetryAttemptsOnChange</Event>
+									</Events>
+								</InputField>
+							</ChildItems>
+						</UsualGroup>
 					</ChildItems>
 				</UsualGroup>
 				<UsualGroup name="GroupSuppliedIntegrations" id="21">

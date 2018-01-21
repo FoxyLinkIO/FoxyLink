@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -22,6 +22,7 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
+    SafeMode = True;
     UpdateJobServerStateAtServer();   
     
 EndProcedure // OnCreateAtServer()
@@ -29,7 +30,7 @@ EndProcedure // OnCreateAtServer()
 &AtClient
 Procedure OnOpen(Cancel)
     
-    AttachIdleHandler("UpdateJobServerState", 60, True);
+    AttachIdleHandler("UpdateJobServerState", 5, False);
     
 EndProcedure // OnOpen()
 
@@ -37,19 +38,7 @@ EndProcedure // OnOpen()
 
 #Region FormItemsEventHandlers
 
-&AtClient
-Procedure ListOnActivateRow(Item)
-    
-    Count = Items.List.SelectedRows.Count();
-    If Count = 0 Then
-        StatusBar = NStr("en = 'Select the messages you want to process'; 
-            |ru = 'Выделите сообщения которые необходимо обработать'");        
-    Else
-        StatusBar = StrTemplate(NStr("en = 'Selected messages (%1)'; 
-            |ru = 'Выделенные сообщения (%1)'"), Format(Count, "NG = 0"));    
-    EndIf;
-    
-EndProcedure // ListOnActivateRow()
+
 
 #EndRegion // FormItemsEventHandlers
 
@@ -99,14 +88,10 @@ Procedure StopJobServer(Command)
     ShowUserNotification(NStr("en = 'Job server (FoxyLink)'; 
             |ru = 'Сервер заданий (FoxyLink)'"),
         ,
-        NStr("en = 'Job server is stopped, but the stopped status 
-            |will be set by the server just in a few seconds.'; 
-            |ru = 'Сервер заданий остановлен, но состояние остановки будет
-            |установлено сервером через несколько секунд.'"),
+        NStr("en = 'Job server is stopped, but the stopped status will be set by the server just in a few seconds.'; 
+            |ru = 'Сервер заданий остановлен, но состояние остановки будет установлено сервером через несколько секунд.'"),
         PictureLib.FL_Logotype64
         );
-        
-    AttachIdleHandler("UpdateJobServerState", 5, True);
          
 EndProcedure // StopJobServer()
 
@@ -121,22 +106,17 @@ Procedure UpdateJobServerState() Export
     
     UpdateJobServerStateAtServer();
     
-    AttachIdleHandler("UpdateJobServerState", 60, True);
-    
 EndProcedure // UpdateJobServerState() 
 
 // Only for internal use.
 //
 &AtServer
 Procedure UpdateJobServerStateAtServer()
-    
-    JobServerState = FL_JobServer.JobServerIsRunning();   
-    If JobServerState Then
+     
+    If FL_JobServer.JobServerWatchDog() Then
         Items.GroupJobServerPages.CurrentPage = Items.GroupJobServerRunning;
-        Items.ServerStatus.Picture = PictureLib.FL_Processing;
     Else
         Items.GroupJobServerPages.CurrentPage = Items.GroupJobServerStopped; 
-        Items.ServerStatus.Picture = PictureLib.FL_Stop;
     EndIf;
     
 EndProcedure // UpdateJobServerStateAtServer() 
@@ -181,7 +161,7 @@ EndProcedure // TriggerMessagesAtServer()
 &AtServer
 Procedure StartJobServerAtServer()
     
-    FL_JobServer.RunJobServer(); 
+    FL_JobServer.RunJobServer(SafeMode); 
     UpdateJobServerStateAtServer();
     
 EndProcedure // StartJobServerAtServer()
