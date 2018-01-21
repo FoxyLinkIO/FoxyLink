@@ -31,7 +31,7 @@
 ## Quick start
 
 It's easy to start using it with any configuration on "1C:Enterprise 8" platform, requirements:
-- Platform version: **8.3.10.2252** and higher
+- Platform version: 8.3.10.2252 (minimal), **recommended 8.3.11.2924** and higher
 - Data lock control mode: **Managed**
 - Compatibility mode: **8.3.7** and higher
 - 1C:Enterprise server cluster and Database server for the best performance 
