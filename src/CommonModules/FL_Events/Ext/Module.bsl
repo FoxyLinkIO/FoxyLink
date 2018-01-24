@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -136,22 +136,39 @@ Procedure InformationRegisterBeforeWrite(Source, Cancel, Replacing) Export
     If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
-       
+    
     SourceMetadata = Source.Metadata();
     MetadataObject = SourceMetadata.FullName();
     If IsEventPublisher(MetadataObject) Then
         
-        //InvocationData = FL_BackgroundJob.NewInvocationData();
-        //InvocationData.MetadataObject = MetadataObject;
-        //InvocationData.Method = Catalogs.FL_Methods.Update;
-        //
-        //If Replacing Then
-        //    InvocationData.Arguments = FL_CommonUse.RegisterRecordsValues(
-        //        SourceMetadata, Source.Filter);
-        //EndIf;
-        //
-        //Source.AdditionalProperties.Insert("InvocationData", 
-        //    InvocationData);
+        InvocationData = FL_BackgroundJob.NewInvocationData();
+        InvocationData.MetadataObject = MetadataObject;
+        
+        If Replacing Then
+            
+            Records = FL_CommonUse.RegisterRecordsValues(SourceMetadata, 
+                Source.Filter);
+                
+            InvocationData.Arguments = Records;
+            InvocationData.Method = Catalogs.FL_Methods.Delete;
+            InvocationData.State = Catalogs.FL_States.Awaiting;
+            
+            SessionRecords = New Structure;
+            SessionRecords.Insert("Records", Records);
+            SessionRecords.Insert("Filter", Source.Filter);
+            
+            NewSessionContext = InvocationData.SessionContext.Add();
+            NewSessionContext.MetadataObject = MetadataObject;
+            NewSessionContext.Session = FL_EventsReUse.SessionHash();
+            NewSessionContext.ValueStorage = New ValueStorage(SessionRecords, 
+                New Deflation(9));
+            
+        Else
+            InvocationData.Method = Catalogs.FL_Methods.Create;    
+        EndIf;
+        
+        Source.AdditionalProperties.Insert("InvocationData", 
+            InvocationData);
         
     EndIf;    
           
@@ -239,11 +256,37 @@ EndProcedure // DocumentOnWrite()
 //
 Procedure InformationRegisterOnWrite(Source, Cancel, Replacing) Export
     
+    Var InvocationData;
+    
     If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
     
-    //EnqueueEvent(Source);
+    Properties = Source.AdditionalProperties;
+    If NOT IsInvocationDataFilled(InvocationData, Properties) Then
+        Return;    
+    EndIf;
+        
+    If Replacing Then
+        EnqueueEvent(Source);
+    Else
+        
+        Query = New Query;
+        Query.Text = "
+            |SELECT 
+            |   SessionContext.Ref AS Ref,
+            |   SessionContext.ValueStorage AS ValueStorage
+            |FROM 
+            |   Catalog.FL_Jobs.SessionContext AS SessionContext
+            |WHERE 
+            |    SessionContext.Session = &Session
+            |AND SessionContext.MetadataObject = &MetadataObject
+            |";
+        Query.SetParameter("Session", FL_EventsReUse.SessionHash());
+        Query.SetParameter("MetadataObject", InvocationData.MetadataObject);
+        QueryResult = Query.Execute();
+        
+    EndIf;
     
 EndProcedure // InformationRegisterOnWrite()
 
@@ -276,11 +319,15 @@ EndProcedure // AccumulationRegisterOnWrite()
 // Parameters:
 //  Source - Arbitrary - arbitrary object.
 //
+// Returns:
+//  Array - refs to enqueued background jobs.
+//
 Procedure EnqueueEvent(Source) Export
     
     Var InvocationData, Arguments;
     
-    If NOT IsValidInvocationData(Source, InvocationData) Then
+    Properties = Source.AdditionalProperties;
+    If NOT IsInvocationDataFilled(InvocationData, Properties) Then
         Return;
     EndIf;
         
@@ -289,37 +336,21 @@ Procedure EnqueueEvent(Source) Export
         
         FilterItem = Source.Filter.Find("Recorder");
         If FilterItem <> Undefined Then
-             InvocationData.SourceObject = FilterItem.Value;    
+            InvocationData.SourceObject = FilterItem.Value;    
         EndIf;
         
         FL_CommonUseClientServer.ExtendValueTable(Source.Unload(), 
             Arguments);
             
-    ElsIf FL_CommonUse.IsReferenceTypeObjectByMetadataObjectName(
+    ElsIf FL_CommonUseReUse.IsReferenceTypeObjectCached(
         InvocationData.MetadataObject) Then
         
         InvocationData.Arguments = Source.Ref;
         InvocationData.SourceObject = Source.Ref;
         
     EndIf;
-                    
-    Query = New Query;
-    Query.Text = QueryTextSubscribers(InvocationData.Owner);
-    Query.SetParameter("MetadataObject", InvocationData.MetadataObject);
-    Query.SetParameter("Method", InvocationData.Method);
-    Query.SetParameter("Owner", InvocationData.Owner);
-    QueryResult = Query.Execute();
-    If NOT QueryResult.IsEmpty() Then
-        
-        QueryResultSelection = QueryResult.Select();
-        While QueryResultSelection.Next() Do
-            
-            FillPropertyValues(InvocationData, QueryResultSelection);
-            FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.Trigger", 
-                InvocationData);   
-        EndDo;
-        
-    EndIf;  
+    
+    EnqueueBackgroundJobs(InvocationData);  
     
 EndProcedure // EnqueueEvent()
 
@@ -346,6 +377,57 @@ EndFunction // NewSourceMock()
 
 #Region ServiceProceduresAndFunctions
 
+// Enqueues a new fire-and-forget jobs based on invocation data.
+//
+// Parameters:
+//  Jobs           - Array     - refs to enqueued background jobs.
+//  InvocationData - Structure - see function FL_BackgroundJob.NewInvocationData.
+//
+Procedure EnqueueBackgroundJobs(InvocationData)
+    
+    Query = New Query;
+    Query.Text = QueryTextSubscribers(InvocationData.Owner);
+    Query.SetParameter("MetadataObject", InvocationData.MetadataObject);
+    Query.SetParameter("Method", InvocationData.Method);
+    Query.SetParameter("Owner", InvocationData.Owner);
+    QueryResult = Query.Execute();
+    If NOT QueryResult.IsEmpty() Then
+        
+        QueryResultSelection = QueryResult.Select();
+        While QueryResultSelection.Next() Do
+            
+            FillPropertyValues(InvocationData, QueryResultSelection);
+            FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.Trigger", 
+                InvocationData);   
+        EndDo;
+        
+    EndIf;
+    
+EndProcedure // EnqueueBackgroundJobs()
+
+// Only for internal use.
+//
+Function IsInvocationDataFilled(InvocationData, Properties)
+        
+    If NOT Properties.Property("InvocationData", InvocationData) 
+        OR TypeOf(InvocationData) <> Type("Structure") Then
+        Return False;    
+    EndIf;
+    
+    If NOT InvocationData.Property("MetadataObject")
+        OR IsBlankString(InvocationData.MetadataObject) Then
+        Return False;
+    EndIf;
+    
+    If NOT InvocationData.Property("Method") 
+        OR InvocationData.Method = Undefined Then
+        Return False;
+    EndIf;
+    
+    Return True;
+    
+EndFunction // IsInvocationDataFilled()
+
 // Only for internal use.
 //
 Function IsEventPublisher(MetadataFullName)
@@ -358,29 +440,6 @@ Function IsEventPublisher(MetadataFullName)
     EndIf;
     
 EndFunction // IsEventPublisher()
-
-// Only for internal use.
-//
-Function IsValidInvocationData(Source, InvocationData)
-    
-    If Source.AdditionalProperties.Property("ResponseHandler")
-        AND Source.AdditionalProperties.FL_ResponseHandler Then
-        Return False;    
-    EndIf;
-    
-    If NOT Source.AdditionalProperties.Property("InvocationData", InvocationData) 
-        OR TypeOf(InvocationData) <> Type("Structure") Then
-        Return False;    
-    EndIf;
-    
-    If InvocationData.Method = Undefined 
-        OR IsBlankString(InvocationData.MetadataObject) Then
-        Return False;
-    EndIf;
-    
-    Return True;
-    
-EndFunction // IsValidInvocationData()
 
 // Only for internal use.
 //

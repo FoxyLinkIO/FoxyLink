@@ -134,9 +134,7 @@ EndFunction // Schedule()
 //
 // Returns:
 //  Structure - the invocation data structure with keys:
-//      * APIVersion     - String                  -
-//                              Default value: Undefined.
-//      * Arguments      - Arbitrary               -
+//      * APIVersion     - String                  - API version.
 //                              Default value: Undefined.
 //      * MetadataObject - String                  - the full name of a metadata
 //                                                   object as a term.
@@ -145,29 +143,36 @@ EndFunction // Schedule()
 //                              Default value: Undefined.
 //      * Owner          - CatalogReg.FL_Exchanges - an owner of invocation data.
 //                              Default value: Undefined.
-//      * Parameters     - Structure               - сontains values of data 
-//                                                   receiving parameters.
 //      * Priority       - Number(1,0)             - job priority.
 //                              Default value: 5.
 //      * SourceObject   - AnyRef                  - an event source object.
 //                              Default value: Undefined.
 //      * State          - CatalogRef.FL_States    - new state for a background job.
 //                              Default value: Catalogs.FL_States.Enqueued.
+//      * Parameters     - Structure               - сontains values of data 
+//                                                   receiving parameters.
+//      * SessionContext - ValueTable              - session context.
+//      * Arguments      - Arbitrary               - argumets for initialize a Job.
+//                              Default value: Undefined.
 //
 Function NewInvocationData() Export
     
     NormalPriority = 5;
     
     InvocationData = New Structure;
+    // Attributes section
     InvocationData.Insert("APIVersion", "1.0.0"); 
-    InvocationData.Insert("Arguments");
     InvocationData.Insert("MetadataObject", "");
     InvocationData.Insert("Method");
     InvocationData.Insert("Owner");
-    InvocationData.Insert("Parameters", New Structure);
     InvocationData.Insert("Priority", NormalPriority);
     InvocationData.Insert("SourceObject");
     InvocationData.Insert("State", Catalogs.FL_States.Enqueued);
+    // Tabular section
+    InvocationData.Insert("Parameters", New Structure);
+    InvocationData.Insert("SessionContext", NewSessionContext());
+    // Technical section
+    InvocationData.Insert("Arguments");
     Return InvocationData;
     
 EndFunction // NewInvocationData()
@@ -364,6 +369,7 @@ Function NewBackgroundJob()
     BackgroundJob.Insert("Owner");
     BackgroundJob.Insert("Priority");
     BackgroundJob.Insert("SourceObject");
+    BackgroundJob.Insert("SessionContext");
     BackgroundJob.Insert("Subscribers", NewSubscribers());
     BackgroundJob.Insert("SubscriberResources", NewSubscriberResources());
     BackgroundJob.Insert("Parameters", NewParameters());
@@ -419,6 +425,24 @@ Function NewParameters()
     Return Parameters;
     
 EndFunction // NewParameters()
+
+// Only for internal use.
+//
+Function NewSessionContext()
+    
+    MaxSessionLength = 36;
+    MaxMetadataObjectLength = 80;
+    
+    SessionContext = New ValueTable;
+    SessionContext.Columns.Add("MetadataObject", 
+        FL_CommonUse.StringTypeDescription(MaxMetadataObjectLength));
+    SessionContext.Columns.Add("Session", 
+        FL_CommonUse.StringTypeDescription(MaxSessionLength));
+    SessionContext.Columns.Add("ValueStorage", 
+        New TypeDescription("ValueStorage"));
+    Return SessionContext;
+    
+EndFunction // NewSessionContext() 
 
 // Only for internal use.
 //

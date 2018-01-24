@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -38,6 +38,116 @@ Function ConfigurationSplitters() Export
 
 EndFunction // ConfigurationSplitters()
 
+// Defines if passed a metadata object name belongs to the reference type.
+// 
+// Parameters:
+//  FullName - String - object name for which it is required to define whether
+//                      it belongs to the specified type.
+// 
+// Returns:
+//   Boolean - True, if reference type; otherwise - False.
+//
+Function IsReferenceTypeObjectCached(FullName) Export
+    
+    BaseName = StrSplit(FullName, ".")[0];
+    BaseTypes = FL_CommonUseReUse.BaseReferenceTypeNameSynonyms();
+    Return IsValueInFixedMapCollection(BaseName, BaseTypes);
+    
+EndFunction // IsReferenceTypeObjectCached()
+
+// Defines if passed a metadata object name belongs to the register type.
+// 
+// Parameters:
+//  FullName - String - object name for which it is required to define whether
+//                      it belongs to the specified type.
+// 
+// Returns:
+//   Boolean - True, if register type; otherwise - False.
+//
+Function IsRegisterTypeObjectCached(FullName) Export
+    
+    BaseName = StrSplit(FullName, ".")[0];
+    BaseTypes = FL_CommonUseReUse.BaseRegisterTypeNameSynonyms();
+    Return IsValueInFixedMapCollection(BaseName, BaseTypes);
+    
+EndFunction // IsRegisterTypeObjectCached()
+
+// Defines if passed a metadata object name belongs to the information register type.
+// 
+// Parameters:
+//  FullName - String - object name for which it is required to define whether
+//                      it belongs to the specified type.
+// 
+// Returns:
+//   Boolean - True, if information register type; otherwise - False.
+//
+Function IsInformationRegisterTypeObjectCached(FullName) Export
+    
+    BaseName = StrSplit(FullName, ".")[0];
+    Synonyms = New Map;
+    Synonyms.Insert("INFORMATIONREGISTER", "РЕГИСТРСВЕДЕНИЙ");
+    BaseTypes = New FixedMap(BuildSynonymCombinations(Synonyms));
+    Return IsValueInFixedMapCollection(BaseName, BaseTypes);
+    
+EndFunction // IsInformationRegisterTypeObjectCached()
+
+// Defines if passed a metadata object name belongs to the accumulation register type.
+// 
+// Parameters:
+//  FullName - String - object name for which it is required to define whether
+//                      it belongs to the specified type.
+// 
+// Returns:
+//   Boolean - True, if accumulation register type; otherwise - False.
+//
+Function IsAccumulationRegisterTypeObjectCached(FullName) Export
+    
+    BaseName = StrSplit(FullName, ".")[0];
+    Synonyms = New Map;
+    Synonyms.Insert("ACCUMULATIONREGISTER", "РЕГИСТРНАКОПЛЕНИЯ");
+    BaseTypes = New FixedMap(BuildSynonymCombinations(Synonyms));
+    Return IsValueInFixedMapCollection(BaseName, BaseTypes);
+    
+EndFunction // IsAccumulationRegisterTypeObjectCached()
+
+// Defines if passed a metadata object name belongs to the accounting register type.
+// 
+// Parameters:
+//  FullName - String - object name for which it is required to define whether
+//                      it belongs to the specified type.
+// 
+// Returns:
+//   Boolean - True, if accounting register type; otherwise - False.
+//
+Function IsAccountingRegisterTypeObjectCached(FullName) Export
+    
+    BaseName = StrSplit(FullName, ".")[0];
+    Synonyms = New Map;
+    Synonyms.Insert("ACCOUNTINGREGISTER", "РЕГИСТРБУХГАЛТЕРИИ");
+    BaseTypes = New FixedMap(BuildSynonymCombinations(Synonyms));
+    Return IsValueInFixedMapCollection(BaseName, BaseTypes);
+    
+EndFunction // IsAccountingRegisterTypeObjectCached()
+
+// Defines if passed a metadata object name belongs to the calculation register type.
+// 
+// Parameters:
+//  FullName - String - object name for which it is required to define whether
+//                      it belongs to the specified type.
+// 
+// Returns:
+//   Boolean - True, if calculation register type; otherwise - False.
+//
+Function IsCalculationRegisterTypeObjectCached(FullName) Export
+    
+    BaseName = StrSplit(FullName, ".")[0];
+    Synonyms = New Map;
+    Synonyms.Insert("CALCULATIONREGISTER", "РЕГИСТРРАСЧЕТА");
+    BaseTypes = New FixedMap(BuildSynonymCombinations(Synonyms));
+    Return IsValueInFixedMapCollection(BaseName, BaseTypes);
+    
+EndFunction // IsCalculationRegisterTypeObjectCached()
+
 // Returns a fixed map with base reference type name synonyms.
 //
 // Returns:
@@ -59,6 +169,23 @@ Function BaseReferenceTypeNameSynonyms() Export
     Return New FixedMap(BuildSynonymCombinations(Synonyms));
     
 EndFunction // BaseReferenceTypeNameSynonyms()
+
+// Returns a fixed map with base register type name synonyms.
+//
+// Returns:
+//  FixedMap - with base register type name synonyms.
+//
+Function BaseRegisterTypeNameSynonyms() Export
+    
+    Synonyms = New Map;
+    Synonyms.Insert("INFORMATIONREGISTER", "РЕГИСТРСВЕДЕНИЙ");
+    Synonyms.Insert("ACCUMULATIONREGISTER", "РЕГИСТРНАКОПЛЕНИЯ");
+    Synonyms.Insert("ACCOUNTINGREGISTER", "РЕГИСТРБУХГАЛТЕРИИ");
+    Synonyms.Insert("CALCULATIONREGISTER", "РЕГИСТРРАСЧЕТА");
+    
+    Return New FixedMap(BuildSynonymCombinations(Synonyms));
+    
+EndFunction // BaseRegisterTypeNameSynonyms()
 
 // Returns a fixed map with standard attribute synonym names.
 //
@@ -139,6 +266,14 @@ EndFunction // StandardAttributeSynonyms()
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Function IsValueInFixedMapCollection(Value, Collection) 
+    
+    Return Collection.Get(Value) <> Undefined;  
+    
+EndFunction // IsValueInFixedMapCollection()
 
 // Only for internal use.
 //
