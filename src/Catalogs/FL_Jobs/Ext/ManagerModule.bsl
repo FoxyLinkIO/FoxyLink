@@ -28,28 +28,18 @@
 // the following Wednesday.
 //
 // Parameters:
-//  Job - CatalogRef.FL_Jobs - reference to the job to be triggered.
+//  Job - Array              - array of references to the jobs to be triggered.
+//      - CatalogRef.FL_Jobs - reference to the job to be triggered.
 //
 Procedure Trigger(Job) Export
     
-    JobObject = Job.GetObject();
-    JobObject.State = Catalogs.FL_States.Succeeded;
-        
-    MessageSettings = FL_DataComposition.NewMessageSettings();
-    For Each DCSParameter In JobObject.DCSParameters Do
-        MessageSettings.Body.Parameters.Insert(DCSParameter.Parameter, 
-            DCSParameter.ValueStorage.Get());
-    EndDo;
-
-    ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
-        JobObject.Owner, JobObject.Method);          
-        
-    MemoryStream = New MemoryStream;
-    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
-        ExchangeSettings, MessageSettings);  
-    NotifyChannels(JobObject, MemoryStream);     
-    
-    JobObject.Write();       
+    If TypeOf(Job) = Type("Array") Then
+        For Each Item In Job Do
+            ProcessJob(Item);        
+        EndDo;
+    Else
+        ProcessJob(Job);       
+    EndIf       
             
 EndProcedure // Trigger() 
 
@@ -65,7 +55,7 @@ EndProcedure // Trigger()
 //
 Function Create(BackgroundJob, State) Export
     
-    Var Subscribers, SubscriberResources, Parameters; 
+    Var Parameters, SessionContext, Subscribers, SubscriberResources; 
     
     NewJob = Catalogs.FL_Jobs.CreateItem();
     NewJob.State = State;
@@ -73,6 +63,16 @@ Function Create(BackgroundJob, State) Export
     
     FillPropertyValues(NewJob, BackgroundJob);
 
+    If BackgroundJob.Property("Parameters", Parameters) 
+        AND TypeOf(Parameters) = Type("ValueTable") Then
+        NewJob.DCSParameters.Load(Parameters);
+    EndIf;
+    
+    If BackgroundJob.Property("SessionContext", SessionContext) 
+        AND TypeOf(SessionContext) = Type("ValueTable") Then
+        NewJob.SessionContext.Load(SessionContext);
+    EndIf;
+    
     If BackgroundJob.Property("Subscribers", Subscribers) 
         AND TypeOf(Subscribers) = Type("ValueTable") Then
         NewJob.Subscribers.Load(Subscribers);
@@ -81,11 +81,6 @@ Function Create(BackgroundJob, State) Export
     If BackgroundJob.Property("SubscriberResources", SubscriberResources) 
         AND TypeOf(SubscriberResources) = Type("ValueTable") Then
         NewJob.SubscriberResources.Load(SubscriberResources);
-    EndIf;
-    
-    If BackgroundJob.Property("Parameters", Parameters) 
-        AND TypeOf(Parameters) = Type("ValueTable") Then
-        NewJob.DCSParameters.Load(Parameters);
     EndIf;
     
     Try
@@ -143,6 +138,31 @@ EndFunction // ChangeState()
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Procedure ProcessJob(Job)
+    
+    JobObject = Job.GetObject();
+    JobObject.State = Catalogs.FL_States.Succeeded;
+        
+    MessageSettings = FL_DataComposition.NewMessageSettings();
+    For Each DCSParameter In JobObject.DCSParameters Do
+        MessageSettings.Body.Parameters.Insert(DCSParameter.Parameter, 
+            DCSParameter.ValueStorage.Get());
+    EndDo;
+
+    ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
+        JobObject.Owner, JobObject.Method);          
+        
+    MemoryStream = New MemoryStream;
+    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
+        ExchangeSettings, MessageSettings);  
+    NotifyChannels(JobObject, MemoryStream);     
+    
+    JobObject.Write();   
+    
+EndProcedure // ProcessJob()
 
 // Only for internal use.
 //

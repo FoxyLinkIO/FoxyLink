@@ -16,26 +16,3 @@
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-#If Server Or ThickClientOrdinaryApplication Or ExternalConnection Then
-
-#Region ProgramInterface
-
-// Deletes records by filter.
-//
-// Parameters:
-//  Filter - Strucutre - with filter item.
-//
-Procedure DeleteRecordsByFilter(Filter) Export
-    
-    RecordSet = InformationRegisters.FL_TasksHeartbeat.CreateRecordSet();
-    For Each FilterItem In Filter.Job Do
-        RecordSet.Filter.Job.Set(FilterItem);
-        RecordSet.Write();
-    EndDo;
-    
-EndProcedure // DeleteRecordsByFilter()
-
-#EndRegion // ProgramInterface
-
-#EndIf

@@ -271,7 +271,7 @@ EndFunction // StandardAttributeSynonyms()
 //
 Function IsValueInFixedMapCollection(Value, Collection) 
     
-    Return Collection.Get(Value) <> Undefined;  
+    Return Collection.Get(Upper(Value)) <> Undefined;  
     
 EndFunction // IsValueInFixedMapCollection()
 

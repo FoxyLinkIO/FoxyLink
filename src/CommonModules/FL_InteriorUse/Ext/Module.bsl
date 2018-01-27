@@ -716,14 +716,19 @@ EndProcedure // InitMethods()
 //
 Procedure InitializeConstants()
     
-    WorkerCount = FL_JobServer.GetWorkerCount();
+    RetryAttempts = Constants.FL_RetryAttempts.Get();
+    If RetryAttempts = 0 Then
+        FL_JobServer.SetRetryAttempts(FL_JobServer.DefaultRetryAttempts());    
+    EndIf;
+    
+    WorkerCount = Constants.FL_WorkerCount.Get();
     If WorkerCount = 0 Then
         FL_JobServer.SetWorkerCount(FL_JobServer.DefaultWorkerCount());    
     EndIf;
     
-    RetryAttempts = FL_JobServer.GetRetryAttempts();
-    If RetryAttempts = 0 Then
-        FL_JobServer.SetRetryAttempts(FL_JobServer.DefaultRetryAttempts());    
+    WorkerJobsLimit = Constants.FL_WorkerJobsLimit.Get();
+    If WorkerJobsLimit = 0 Then
+        FL_JobServer.SetWorkerJobsLimit(FL_JobServer.DefaultWorkerJobsLimit());    
     EndIf;
     
 EndProcedure // InitializeConstants() 

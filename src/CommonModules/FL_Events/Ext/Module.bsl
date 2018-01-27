@@ -380,7 +380,6 @@ EndFunction // NewSourceMock()
 // Enqueues a new fire-and-forget jobs based on invocation data.
 //
 // Parameters:
-//  Jobs           - Array     - refs to enqueued background jobs.
 //  InvocationData - Structure - see function FL_BackgroundJob.NewInvocationData.
 //
 Procedure EnqueueBackgroundJobs(InvocationData)

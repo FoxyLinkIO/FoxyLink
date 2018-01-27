@@ -58,6 +58,13 @@ Procedure FL_UseFoxyLinkOnChange(Item)
 EndProcedure // FL_UseFoxyLinkOnChange()
 
 &AtClient
+Procedure FL_RetryAttemptsOnChange(Item)
+    
+    Attachable_OnAttributeChange(Item, False);
+    
+EndProcedure // FL_RetryAttemptsOnChange()
+
+&AtClient
 Procedure FL_WorkerCountOnChange(Item)
     
     Attachable_OnAttributeChange(Item, False);    
@@ -65,11 +72,11 @@ Procedure FL_WorkerCountOnChange(Item)
 EndProcedure // FL_WorkerCountOnChange()
 
 &AtClient
-Procedure FL_RetryAttemptsOnChange(Item)
+Procedure FL_WorkerJobsLimitOnChange(Item)
     
     Attachable_OnAttributeChange(Item, False);
     
-EndProcedure // FL_RetryAttemptsOnChange()
+EndProcedure // FL_WorkerJobsLimitOnChange()
 
 &AtClient
 Procedure SuppliedIntegrationsOnActivateRow(Item)

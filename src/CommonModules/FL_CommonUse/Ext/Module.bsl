@@ -1050,6 +1050,7 @@ Function PrimaryKeysByMetadataObject(MetadataObject) Export
         Types = New Array;
         Types.Add(TypeOf(ObjectManager.EmptyRef()));
         PrimaryKeys.Insert("Ref", Types);
+        PrimaryKeys.Insert("Ссылка", Types);
         
     ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(FullName) Then
         
@@ -1059,6 +1060,7 @@ Function PrimaryKeysByMetadataObject(MetadataObject) Export
             Types = New Array;
             Types.Add(Type("Date"));
             PrimaryKeys.Insert("Period", Types);
+            PrimaryKeys.Insert("Период", Types);
             
         EndIf;
         

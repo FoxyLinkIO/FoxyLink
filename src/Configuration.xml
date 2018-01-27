@@ -49,7 +49,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.3.39</Version>
+			<Version>0.9.3.40</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -269,6 +269,7 @@
 			<Constant>FL_RetryAttempts</Constant>
 			<Constant>FL_UseFoxyLink</Constant>
 			<Constant>FL_WorkerCount</Constant>
+			<Constant>FL_WorkerJobsLimit</Constant>
 			<CommonForm>FL_ResponseHandlerForm</CommonForm>
 			<Catalog>FL_Channels</Catalog>
 			<Catalog>FL_Exchanges</Catalog>

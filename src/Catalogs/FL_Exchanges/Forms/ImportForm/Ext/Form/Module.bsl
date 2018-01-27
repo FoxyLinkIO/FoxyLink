@@ -230,7 +230,7 @@ Procedure SetMethodMatches()
     EndDo;
     
     If NOT Matched Then
-        Items.MethodsPage.Picture = PictureLib.FL_EplanationMark;
+        Items.MethodsPage.Picture = PictureLib.FL_ExplanationMark;
         Items.MethodsPage.Title = NStr(
             "en = 'Methods (there are methods that require attention)'; 
             |ru = 'Методы (есть методы которые требуют внимания)'");
@@ -262,7 +262,7 @@ Procedure SetChannelMatches()
     EndDo;
     
     If NOT Matched Then
-        Items.ChannelsPage.Picture = PictureLib.FL_EplanationMark;
+        Items.ChannelsPage.Picture = PictureLib.FL_ExplanationMark;
         Items.ChannelsPage.Title = NStr(
             "en = 'Channels (there are channels that require attention)'; 
             |ru = 'Каналы (есть каналы которые требуют внимания)'");
@@ -289,7 +289,7 @@ Procedure SetEventMatches()
     EndDo;
         
     If NOT Matched Then
-        Items.EventsPage.Picture = PictureLib.FL_EplanationMark;
+        Items.EventsPage.Picture = PictureLib.FL_ExplanationMark;
         Items.EventsPage.Title = NStr(
             "en = 'Events (there are events that require attention)'; 
             |ru = 'События (есть события которые требуют внимания)'");
