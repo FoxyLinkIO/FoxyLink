@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -360,8 +360,7 @@ Procedure InitializeSubsystem() Export
     InitializeStates();
     InitializeMethods();
     InitializeConstants();
-    //InitializeSelf();
-    
+
 EndProcedure // InitializeSubsystem() 
 
 // Loads imported exchange data into a mock object.
@@ -372,51 +371,53 @@ EndProcedure // InitializeSubsystem()
 // 
 Procedure LoadImportedExchange(MockObject, Exchange) Export
     
-    GuidLength = 36;
+    MockObject.Exchange = Exchange.Ref;
+    FillPropertyValues(MockObject, Exchange, "BasicFormatGuid, Description,
+        |InUse, PredefinedDataName, Version");
     
-    FillPropertyValues(MockObject, Exchange, , "Methods, Channels, Events");
-    
-     // Methods load.
-    FL_CommonUseClientServer.ExtendValueTable(LoadImportedMethods(
-            Exchange.Methods), 
-        MockObject.Methods);
+    // Methods load.
+    If Exchange.Property("Methods") Then
+        FL_CommonUseClientServer.ExtendValueTable(LoadImportedMethods(
+                Exchange.Methods), 
+            MockObject.Methods);
+    EndIf;
     
     // Channels load.
-    FL_CommonUseClientServer.ExtendValueTable(LoadImportedChannels(
-            Exchange.Channels), 
-        MockObject.Channels);
-    FL_CommonUse.RemoveDuplicatesFromValueTable(MockObject.Channels);
+    If Exchange.Property("Channels") Then
+        FL_CommonUseClientServer.ExtendValueTable(LoadImportedChannels(
+                Exchange.Channels), 
+            MockObject.Channels);
+        FL_CommonUse.RemoveDuplicatesFromValueTable(MockObject.Channels);
+    EndIf;
     
     // Events load.
-    FL_CommonUseClientServer.ExtendValueTable(Exchange.Events, 
-        MockObject.Events);
-    FL_CommonUse.RemoveDuplicatesFromValueTable(MockObject.Events);
+    If Exchange.Property("Events") Then
+        FL_CommonUseClientServer.ExtendValueTable(Exchange.Events, 
+            MockObject.Events);
+        FL_CommonUse.RemoveDuplicatesFromValueTable(MockObject.Events);
+    EndIf;
     
+    // Exchange load.
+    Result = FL_CommonUse.ReferenceByPredefinedDataName(
+        Metadata.Catalogs.FL_Exchanges, Exchange.PredefinedDataName);
+    If Result <> Undefined Then
+        MockObject.Ref = Result;
+        Return;
+    EndIf;
     
-    //MockRow = MockObject.Add();
-    //FillPropertyValues(MockRow, Method, , "CRUDMethod, RESTMethod");
-    //MockRow.CRUDMethod = Enums.FL_CRUDMethods[Method.CRUDMethod];
-    //MockRow.RESTMethod = Enums.FL_RESTMethods[Method.RESTMethod];
+    Result = Catalogs.FL_Exchanges.GetRef(New UUID(Exchange.Ref));
+    If FL_CommonUse.RefExists(Result) Then
+        MockObject.Ref = Result;
+        Return;
+    EndIf;
     
-    //Result = Catalogs.FL_Methods.MethodByPredefinedDataName(
-    //    Method.PredefinedDataName);
-    //If Result <> Undefined Then
-    //    MockRow.Ref = Result;
-    //    Return;
-    //EndIf;
-    //
-    //Result = Catalogs.FL_Methods.GetRef(New UUID(Method.Method));
-    //If FL_CommonUse.RefExists(Result) Then
-    //    MockRow.Ref = Result;
-    //    Return;
-    //EndIf;
-    //
-    //Result = Catalogs.FL_Methods.MethodByDescription(
-    //    Method.Description);
-    //If Result <> Undefined Then
-    //    MockRow.Ref = Result;    
-    //EndIf;
-            
+    Result = FL_CommonUse.ReferenceByDescription(
+        Metadata.Catalogs.FL_Exchanges, Exchange.Description);
+    If Result <> Undefined Then
+        MockObject.Ref = Result; 
+        Return;
+    EndIf;
+              
 EndProcedure // LoadImportedExchange()
 
 // Returns metadata object: pluggable subsystem.

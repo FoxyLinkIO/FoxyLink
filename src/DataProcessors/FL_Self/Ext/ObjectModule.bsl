@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -147,7 +147,22 @@ EndFunction // ResourcesRequired()
 //
 Function SuppliedIntegrations() Export
     
-    SuppliedIntegrations = New Array;    
+    SuppliedIntegrations = New Array;
+    
+    BasicPhrases = New Array;
+    BasicPhrases.Add(NStr("en = 'Exchange description service helps to transfer ';
+        |ru = 'Сервис описания обменов помогает переносить обмены из одной '"));
+    BasicPhrases.Add(NStr("en = 'exchanges from one accounting system to another.';
+        |ru = 'учетной системы в другие.'"));
+    
+    PluggableSettings = FL_InteriorUse.NewPluggableSettings();   
+    PluggableSettings.Name = NStr("en = 'Exchange description service'; 
+        |ru = 'Сервис описания обменов'");
+    PluggableSettings.Template = "Self";
+    PluggableSettings.ToolTip = StrConcat(BasicPhrases);
+    PluggableSettings.Version = "1.0.1.5";
+    SuppliedIntegrations.Add(PluggableSettings);
+    
     Return SuppliedIntegrations;
           
 EndFunction // SuppliedIntegration()
@@ -163,7 +178,7 @@ EndFunction // SuppliedIntegration()
 //
 Function Version() Export
     
-    Return "1.0.0.1";
+    Return "1.0.1.5";
     
 EndFunction // Version()
 

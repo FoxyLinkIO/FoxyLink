@@ -34,6 +34,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Channels</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_InformationRegistersBeforeWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_InformationRegistersOnWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Encryption</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

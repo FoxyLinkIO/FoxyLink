@@ -41,6 +41,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         
         FL_InteriorUse.LoadImportedExchange(ThisObject, ImportedExchange);
         
+        SetExchangeMatches();
         SetMethodMatches();
         SetChannelMatches();
         SetEventMatches();
@@ -62,18 +63,28 @@ Procedure FormatStandardClick(Item, StandardProcessing)
     
     AppParameters = FL_InteriorUseClient.NewRunApplicationParameters();
     AppParameters.NotifyDescription = New NotifyDescription(
-        "DoAfterBeginRunningApplication", ThisObject);
+        "DoAfterBeginRunningApplication", FL_InteriorUseClient);
     AppParameters.CommandLine = FormatStandardLink();
     AppParameters.WaitForCompletion = True;
     
     FL_InteriorUseClient.Attachable_FileSystemExtension(New NotifyDescription(
         "Attachable_RunApplication", FL_InteriorUseClient, AppParameters));
-        
+   
 EndProcedure // FormatStandardClick()
 
 #EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
+
+&AtClient
+Procedure CreateExchange(Command)
+    // Insert handler content.
+EndProcedure // CreateExchange()
+
+&AtClient
+Procedure InstallExchangeUpdate(Command)
+    // Insert handler content.
+EndProcedure // InstallExchangeUpdate()
 
 &AtClient
 Procedure DeleteChannel(Command)
@@ -90,6 +101,53 @@ Procedure DeleteChannel(Command)
     EndIf;   
     
 EndProcedure // DeleteChannel()
+
+&AtClient
+Procedure InstallChannel(Command)
+    
+    CurrentData = Items.Channels.CurrentData;
+    If CurrentData <> Undefined Then
+        
+        If CurrentData.Ref.IsEmpty() Then
+            InstallOrUpdateChannel(CurrentData);        
+        Else
+
+            Explanation = NStr("en = 'Channel reference must be empty.';
+                |ru = 'Ссылка на канал должна быть не заполнена.'");    
+            ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
+            
+        EndIf;
+        
+    EndIf;
+        
+EndProcedure // InstallChannel()
+
+&AtClient
+Procedure InstallChannelUpdate(Command)
+    
+    CurrentData = Items.Channels.CurrentData;
+    If CurrentData <> Undefined Then
+        
+        If NOT CurrentData.Ref.IsEmpty() Then
+            InstallOrUpdateChannel(CurrentData);       
+        Else
+
+            Explanation = NStr("en = 'Channel reference must be filled.';
+                |ru = 'Ссылка на канал должна быть заполнена.'");    
+            ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
+            
+        EndIf;
+            
+    EndIf;
+    
+EndProcedure // InstallChannelUpdate()
+
+&AtClient
+Procedure SelectChannel(Command)
+    
+    
+    
+EndProcedure // SelectChannel()
 
 &AtClient
 Procedure DeleteEvent(Command)
@@ -122,6 +180,11 @@ Procedure DeleteMethod(Command)
     EndIf;
     
 EndProcedure // DeleteMethod()
+
+&AtClient
+Procedure SelectMethod(Command)
+    // Insert handler content.
+EndProcedure // SelectMethod() 
 
 #EndRegion // FormCommandHandlers
 
@@ -217,9 +280,9 @@ Procedure SetMethodMatches()
     Matched = True;
     For Each Item In Methods Do
         
-        Item.MethodMatched = Upper(XMLString(Item.Ref)) = Upper(Item.Method);
-        Item.RESTMatched   = Item.Ref.RESTMethod = Item.RESTMethod;
-        Item.CRUDResolved  = Item.Ref.CRUDMethod = Item.CRUDMethod;
+        Item.MethodMatched = Item.Ref.Description = Item.Description;
+        Item.RESTMatched   = Item.Ref.RESTMethod  = Item.RESTMethod;
+        Item.CRUDResolved  = Item.Ref.CRUDMethod  = Item.CRUDMethod;
         
         If NOT Item.MethodMatched
             OR NOT Item.RESTMatched 
@@ -249,11 +312,11 @@ Procedure SetChannelMatches()
     Matched = True;
     For Each Item In Channels Do
         
-        Item.ChannelMatched = Upper(XMLString(Item.Ref)) = Upper(Item.Channel);
+        Item.VersionMatched = Item.Ref.Version = Item.Version;
         Item.ConnectedMatched = Item.Ref.Connected = Item.Connected;
         Item.ChannelGuidMatched = Item.Ref.BasicChannelGuid = Item.BasicChannelGuid;
         
-        If NOT Item.ChannelMatched
+        If NOT Item.VersionMatched
             OR NOT Item.ConnectedMatched 
             OR NOT Item.ChannelGuidMatched Then
             Matched = False;
@@ -303,32 +366,19 @@ EndProcedure // SetEventMatches()
 &AtServer
 Procedure SetExchangeMatches()
     
+    If Ref.IsEmpty() Then
+        Items.FormInstallExchangeUpdate.Visible = False;
+        Items.FormInstallExchange.Visible = True;
+        Items.FormInstallExchange.DefaultButton = True;
+    Else
+        Items.FormInstallExchange.Visible = False;
+        Items.FormInstallExchangeUpdate.Visible = True;
+        Items.FormInstallExchangeUpdate.DefaultButton = True;    
+    EndIf;
+    
 EndProcedure // SetExchangeMatches()
 
 #Region Formats
-
-// Begins running an external application or opens an application file with 
-// the associated name.
-//
-// Parameters:
-//  CodeReturn           - Number, Undefined - the code of return, if a relevant
-//                          input parameter <WaitForCompletion> is not specified. 
-//  AdditionalParameters - Arbitrary         - the value specified when the 
-//                              NotifyDescription object was created.
-//
-&AtClient
-Procedure DoAfterBeginRunningApplication(CodeReturn, AdditionalParameters) Export
-    
-    If CodeReturn <> 0 Then 
-        Explanation = NStr("
-            |en = 'Unexpected error has happened.';
-            |ru = 'Произошла непредвиденная ошибка.'");
-    
-        ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
-        
-    EndIf;   
-    
-EndProcedure // DoAfterBeginRunningApplication()
 
 // Fills basic format info.
 //
@@ -356,5 +406,130 @@ Function FormatStandardLink()
 EndFunction // FormatStandardLink()
 
 #EndRegion // Formats
+
+#Region Channels
+
+// Only for internal use.
+//
+&AtClient
+Procedure InstallOrUpdateChannel(CurrentData)
+    
+    If PreAuthorizationRequired(CurrentData.BasicChannelGuid) Then
+                
+        ChannelParameters = ChannelParameters(
+            CurrentData.BasicChannelGuid, "ConnectionForm");
+        ChannelParameters.Insert("Identifier", CurrentData.GetID());
+        
+        OpenForm(ChannelParameters.FormName, 
+            ChannelParameters, 
+            ThisObject,
+            New UUID, 
+            , 
+            , 
+            New NotifyDescription("DoAfterCloseConnectionForm", ThisObject, 
+                ChannelParameters), 
+            FormWindowOpeningMode.LockOwnerWindow);
+            
+    Else
+
+        InstallOrUpdateChannelAtServer(CurrentData.GetID());
+        
+    EndIf;
+    
+EndProcedure // InstallOrUpdateChannel()
+
+// Saves a connection to this channel into database if it was established.
+//
+// Parameters:
+//  ClosureResult        - Arbitrary - the value transferred when you call 
+//                                      the Close method of the opened form.
+//  AdditionalParameters - Arbitrary - the value specified when the 
+//                                      NotifyDescription object was created. 
+//
+&AtClient
+Procedure DoAfterCloseConnectionForm(ClosureResult, 
+    AdditionalParameters) Export
+    
+    If ClosureResult <> Undefined 
+        AND TypeOf(ClosureResult) = Type("FormDataStructure") Then
+            
+        If ClosureResult.Property("ChannelData")
+            AND TypeOf(ClosureResult.ChannelData) = Type("FormDataCollection") Then
+            
+            FL_CommonUseClientServer.ExtendValueTable(
+                ClosureResult.ChannelData, ChannelData);
+            
+        EndIf;
+        
+        If ClosureResult.Property("EncryptedData")
+            AND TypeOf(ClosureResult.EncryptedData) = Type("FormDataCollection") Then
+            
+            FL_CommonUseClientServer.ExtendValueTable(
+                ClosureResult.EncryptedData, EncryptedData);
+            
+        EndIf;
+        
+        InstallOrUpdateChannelAtServer(AdditionalParameters.Identifier);
+ 
+    EndIf;
+    
+EndProcedure // DoAfterCloseConnectionForm()
+
+// Only for internal use.
+//
+&AtServer
+Procedure InstallOrUpdateChannelAtServer(Identifier)
+    
+    Channel = Channels.FindByID(Identifier);
+    If Channel.Ref.IsEmpty() Then
+        ChannelObject = Catalogs.FL_Channels.CreateItem();
+        ChannelObject.Description = Channel.Description;
+    Else    
+        ChannelObject = Channel.Ref.GetObject();    
+    EndIf;
+    
+    ChannelObject.BasicChannelGuid = Channel.BasicChannelGuid;
+    ChannelObject.Connected = True;
+    ChannelObject.Log = Channel.Log;
+    ChannelObject.Version = Channel.Version;
+    ChannelObject.ChannelData.Clear();
+    ChannelObject.EncryptedData.Clear();
+    
+    FL_CommonUseClientServer.ExtendValueTable(ChannelData, 
+        ChannelObject.ChannelData);
+    FL_CommonUseClientServer.ExtendValueTable(EncryptedData, 
+        ChannelObject.EncryptedData);     
+        
+    ChannelData.Clear();
+    EncryptedData.Clear(); 
+        
+    ChannelObject.Write(); 
+    Channel.Ref = ChannelObject.Ref;
+    
+    SetChannelMatches();
+    
+EndProcedure // InstallOrUpdateChannelAtServer() 
+
+// Only for internal use.
+//
+&AtServerNoContext
+Function PreAuthorizationRequired(Val LibraryGuid)
+    
+    ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
+        LibraryGuid);
+    Return ChannelProcessor.PreAuthorizationRequired(); 
+    
+EndFunction // PreAuthorizationRequired()
+
+// Only for internal use.
+//
+&AtServerNoContext
+Function ChannelParameters(Val LibraryGuid, Val FormName)
+    
+    Return Catalogs.FL_Channels.NewChannelParameters(LibraryGuid, FormName);      
+ 
+EndFunction // ChannelParameters()
+
+#EndRegion // Channels
 
 #EndRegion // ServiceProceduresAndFunctions

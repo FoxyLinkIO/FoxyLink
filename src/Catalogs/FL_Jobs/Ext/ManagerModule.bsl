@@ -39,7 +39,7 @@ Procedure Trigger(Job) Export
         EndDo;
     Else
         ProcessJob(Job);       
-    EndIf       
+    EndIf;       
             
 EndProcedure // Trigger() 
 
@@ -83,13 +83,9 @@ Function Create(BackgroundJob, State) Export
         NewJob.SubscriberResources.Load(SubscriberResources);
     EndIf;
     
-    Try
-        NewJob.Write();
-        Return NewJob.Ref;
-    Except
-        Return Undefined;
-    EndTry;
-    
+    NewJob.Write();
+    Return NewJob.Ref;
+
 EndFunction // Create()
 
 // Attempts to change a state of a background job with a given identifier 

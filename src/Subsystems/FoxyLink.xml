@@ -58,7 +58,6 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_DeleteFile</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype16</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype32</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">ff995675-a49a-4dc8-aed3-233d2e764282</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Logotype64</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonTemplate.FL_LICENSE</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_GenerateAll</xr:Item>
@@ -84,6 +83,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_AddEvent</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Preview</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Schedule</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_InstallUpdate</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>
