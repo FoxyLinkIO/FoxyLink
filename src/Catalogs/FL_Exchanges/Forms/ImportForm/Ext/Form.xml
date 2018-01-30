@@ -1,8 +1,31 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
+	<Title>
+		<v8:item>
+			<v8:lang>en</v8:lang>
+			<v8:content>Exchange import form</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>ru</v8:lang>
+			<v8:content>Форма импорта обмена</v8:content>
+		</v8:item>
+	</Title>
+	<AutoTitle>false</AutoTitle>
 	<Customizable>false</Customizable>
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
+		<ChildItems>
+			<Button name="FormInstallExchange" id="158">
+				<Type>CommandBarButton</Type>
+				<CommandName>Form.Command.InstallExchange</CommandName>
+				<ExtendedTooltip name="FormInstallExchangeExtendedTooltip" id="159"/>
+			</Button>
+			<Button name="FormInstallExchangeUpdate" id="187">
+				<Type>CommandBarButton</Type>
+				<CommandName>Form.Command.InstallExchangeUpdate</CommandName>
+				<ExtendedTooltip name="FormInstallExchangeUpdateExtendedTooltip" id="188"/>
+			</Button>
+		</ChildItems>
 	</AutoCommandBar>
 	<Events>
 		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
@@ -217,18 +240,6 @@
 							</ContextMenu>
 							<AutoCommandBar name="MethodsCommandBar" id="5">
 								<Autofill>false</Autofill>
-								<ChildItems>
-									<Button name="MethodsSelectMethod" id="147">
-										<Type>CommandBarButton</Type>
-										<CommandName>Form.Command.SelectMethod</CommandName>
-										<ExtendedTooltip name="MethodsSelectMethodExtendedTooltip" id="148"/>
-									</Button>
-									<Button name="MethodsDeleteMethod" id="151">
-										<Type>CommandBarButton</Type>
-										<CommandName>Form.Command.DeleteMethod</CommandName>
-										<ExtendedTooltip name="MethodsDeleteMethodExtendedTooltip" id="152"/>
-									</Button>
-								</ChildItems>
 							</AutoCommandBar>
 							<ExtendedTooltip name="MethodsExtendedTooltip" id="6"/>
 							<SearchStringAddition name="MethodsSearchString" id="7">
@@ -336,13 +347,6 @@
 							</ContextMenu>
 							<AutoCommandBar name="EventsCommandBar" id="35">
 								<Autofill>false</Autofill>
-								<ChildItems>
-									<Button name="EventsDeleteEvent" id="143">
-										<Type>CommandBarButton</Type>
-										<CommandName>Form.Command.DeleteEvent</CommandName>
-										<ExtendedTooltip name="EventsDeleteEventExtendedTooltip" id="144"/>
-									</Button>
-								</ChildItems>
 							</AutoCommandBar>
 							<ExtendedTooltip name="EventsExtendedTooltip" id="36"/>
 							<SearchStringAddition name="EventsSearchString" id="37">
@@ -422,10 +426,15 @@
 										<CommandName>Form.Command.SelectChannel</CommandName>
 										<ExtendedTooltip name="ChannelsContextMenuSelectChannelExtendedTooltip" id="138"/>
 									</Button>
-									<Button name="ChannelsContextMenuAuthorizeChannel" id="139">
+									<Button name="ChannelsContextMenuInstallChannel" id="191">
 										<Type>CommandBarButton</Type>
-										<CommandName>Form.Command.ConnectChannel</CommandName>
-										<ExtendedTooltip name="ChannelsContextMenuAuthorizeChannelExtendedTooltip" id="140"/>
+										<CommandName>Form.Command.InstallChannel</CommandName>
+										<ExtendedTooltip name="ChannelsContextMenuInstallChannelExtendedTooltip" id="192"/>
+									</Button>
+									<Button name="ChannelsContextMenuInstallChannelUpdate" id="189">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.InstallChannelUpdate</CommandName>
+										<ExtendedTooltip name="ChannelsContextMenuInstallChannelUpdateExtendedTooltip" id="190"/>
 									</Button>
 									<Button name="ChannelsContextMenuDeleteChannel" id="141">
 										<Type>CommandBarButton</Type>
@@ -436,23 +445,6 @@
 							</ContextMenu>
 							<AutoCommandBar name="ChannelsCommandBar" id="53">
 								<Autofill>false</Autofill>
-								<ChildItems>
-									<Button name="ChannelsSelectChannel" id="131">
-										<Type>CommandBarButton</Type>
-										<CommandName>Form.Command.SelectChannel</CommandName>
-										<ExtendedTooltip name="ChannelsSelectChannelExtendedTooltip" id="132"/>
-									</Button>
-									<Button name="ChannelsAuthorizeChannel" id="135">
-										<Type>CommandBarButton</Type>
-										<CommandName>Form.Command.ConnectChannel</CommandName>
-										<ExtendedTooltip name="ChannelsAuthorizeChannelExtendedTooltip" id="136"/>
-									</Button>
-									<Button name="ChannelsDeleteChannel" id="133">
-										<Type>CommandBarButton</Type>
-										<CommandName>Form.Command.DeleteChannel</CommandName>
-										<ExtendedTooltip name="ChannelsDeleteChannelExtendedTooltip" id="134"/>
-									</Button>
-								</ChildItems>
 							</AutoCommandBar>
 							<ExtendedTooltip name="ChannelsExtendedTooltip" id="54"/>
 							<SearchStringAddition name="ChannelsSearchString" id="55">
@@ -486,24 +478,116 @@
 									<ContextMenu name="ChannelsRefContextMenu" id="65"/>
 									<ExtendedTooltip name="ChannelsRefExtendedTooltip" id="66"/>
 								</InputField>
-								<InputField name="ChannelsDescription" id="67">
-									<DataPath>Channels.Description</DataPath>
-									<EditMode>EnterOnInput</EditMode>
-									<ContextMenu name="ChannelsDescriptionContextMenu" id="68"/>
-									<ExtendedTooltip name="ChannelsDescriptionExtendedTooltip" id="69"/>
-								</InputField>
-								<InputField name="ChannelsPredefinedDataName" id="70">
-									<DataPath>Channels.PredefinedDataName</DataPath>
-									<EditMode>EnterOnInput</EditMode>
-									<ContextMenu name="ChannelsPredefinedDataNameContextMenu" id="71"/>
-									<ExtendedTooltip name="ChannelsPredefinedDataNameExtendedTooltip" id="72"/>
-								</InputField>
-								<InputField name="ChannelsVersion" id="85">
-									<DataPath>Channels.Version</DataPath>
-									<EditMode>EnterOnInput</EditMode>
-									<ContextMenu name="ChannelsVersionContextMenu" id="86"/>
-									<ExtendedTooltip name="ChannelsVersionExtendedTooltip" id="87"/>
-								</InputField>
+								<ColumnGroup name="ChannelsGroup1" id="167">
+									<ExtendedTooltip name="ChannelsGroup1ExtendedTooltip" id="168"/>
+									<ChildItems>
+										<CheckBoxField name="ChannelsConnected" id="169">
+											<DataPath>Channels.Connected</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<CheckBoxType>Auto</CheckBoxType>
+											<ContextMenu name="ChannelsConnectedContextMenu" id="170"/>
+											<ExtendedTooltip name="ChannelsConnectedExtendedTooltip" id="171"/>
+										</CheckBoxField>
+										<CheckBoxField name="ChannelsRefConnected" id="164">
+											<DataPath>Channels.Ref.Connected</DataPath>
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Connected (associated object)</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Подключен (сопоставленный объект)</v8:content>
+												</v8:item>
+											</Title>
+											<EditMode>EnterOnInput</EditMode>
+											<CheckBoxType>Auto</CheckBoxType>
+											<ContextMenu name="ChannelsRefConnectedContextMenu" id="165"/>
+											<ExtendedTooltip name="ChannelsRefConnectedExtendedTooltip" id="166"/>
+										</CheckBoxField>
+									</ChildItems>
+								</ColumnGroup>
+								<ColumnGroup name="ChannelsGroup2" id="172">
+									<ExtendedTooltip name="ChannelsGroup2ExtendedTooltip" id="173"/>
+									<ChildItems>
+										<InputField name="ChannelsDescription" id="67">
+											<DataPath>Channels.Description</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<ContextMenu name="ChannelsDescriptionContextMenu" id="68"/>
+											<ExtendedTooltip name="ChannelsDescriptionExtendedTooltip" id="69"/>
+										</InputField>
+										<InputField name="ChannelsRefDescription" id="174">
+											<DataPath>Channels.Ref.Ref.Description</DataPath>
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Description (associated object)</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Наименование (сопоставленный объект)</v8:content>
+												</v8:item>
+											</Title>
+											<EditMode>EnterOnInput</EditMode>
+											<ContextMenu name="ChannelsRefDescriptionContextMenu" id="175"/>
+											<ExtendedTooltip name="ChannelsRefDescriptionExtendedTooltip" id="176"/>
+										</InputField>
+									</ChildItems>
+								</ColumnGroup>
+								<ColumnGroup name="ChannelsGroup3" id="177">
+									<ExtendedTooltip name="ChannelsGroup3ExtendedTooltip" id="178"/>
+									<ChildItems>
+										<InputField name="ChannelsPredefinedDataName" id="70">
+											<DataPath>Channels.PredefinedDataName</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<ContextMenu name="ChannelsPredefinedDataNameContextMenu" id="71"/>
+											<ExtendedTooltip name="ChannelsPredefinedDataNameExtendedTooltip" id="72"/>
+										</InputField>
+										<InputField name="ChannelsRefPredefinedDataName" id="181">
+											<DataPath>Channels.Ref.PredefinedDataName</DataPath>
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Predefined data name (associated object)</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Имя предопределенных данных (сопоставленный объект)</v8:content>
+												</v8:item>
+											</Title>
+											<EditMode>EnterOnInput</EditMode>
+											<ContextMenu name="ChannelsRefPredefinedDataNameContextMenu" id="182"/>
+											<ExtendedTooltip name="ChannelsRefPredefinedDataNameExtendedTooltip" id="183"/>
+										</InputField>
+									</ChildItems>
+								</ColumnGroup>
+								<ColumnGroup name="ChannelsGroup4" id="179">
+									<ExtendedTooltip name="ChannelsGroup4ExtendedTooltip" id="180"/>
+									<ChildItems>
+										<InputField name="ChannelsVersion" id="85">
+											<DataPath>Channels.Version</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<ContextMenu name="ChannelsVersionContextMenu" id="86"/>
+											<ExtendedTooltip name="ChannelsVersionExtendedTooltip" id="87"/>
+										</InputField>
+										<InputField name="ChannelsRefVersion" id="184">
+											<DataPath>Channels.Ref.Version</DataPath>
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Current version (associated object)</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Текущая версия (сопоставленный объект)</v8:content>
+												</v8:item>
+											</Title>
+											<EditMode>EnterOnInput</EditMode>
+											<ContextMenu name="ChannelsRefVersionContextMenu" id="185"/>
+											<ExtendedTooltip name="ChannelsRefVersionExtendedTooltip" id="186"/>
+										</InputField>
+									</ChildItems>
+								</ColumnGroup>
 							</ChildItems>
 						</Table>
 					</ChildItems>
@@ -772,11 +856,11 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Ref</v8:content>
+							<v8:content>Channel reference</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
-							<v8:content>Ссылка</v8:content>
+							<v8:content>Ссылка на канал</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -904,15 +988,15 @@
 						</v8:StringQualifiers>
 					</Type>
 				</Column>
-				<Column name="ChannelMatched" id="9">
+				<Column name="VersionMatched" id="9">
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Channel matched</v8:content>
+							<v8:content>Version matched</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
-							<v8:content>Канал соответствует</v8:content>
+							<v8:content>Версия совпадает</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -983,25 +1067,6 @@
 			</Title>
 			<Type>
 				<v8:Type>cfg:CatalogRef.FL_Exchanges</v8:Type>
-			</Type>
-		</Attribute>
-		<Attribute name="Exchange" id="8">
-			<Title>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Exchange</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Обмен</v8:content>
-				</v8:item>
-			</Title>
-			<Type>
-				<v8:Type>xs:string</v8:Type>
-				<v8:StringQualifiers>
-					<v8:Length>36</v8:Length>
-					<v8:AllowedLength>Variable</v8:AllowedLength>
-				</v8:StringQualifiers>
 			</Type>
 		</Attribute>
 		<Attribute name="PredefinedDataName" id="9">
@@ -1133,6 +1198,154 @@
 				<v8:Type>xs:boolean</v8:Type>
 			</Type>
 		</Attribute>
+		<Attribute name="ChannelData" id="16">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Channel data</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Данные канала</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>v8:ValueTable</v8:Type>
+			</Type>
+			<Columns>
+				<Column name="FieldName" id="1">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Field name</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Наименование поля</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>50</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="FieldValue" id="2">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Field value</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Значение поля</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+			</Columns>
+		</Attribute>
+		<Attribute name="EncryptedData" id="17">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Encrypted data</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Зашифрованные данные</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>v8:ValueTable</v8:Type>
+			</Type>
+			<Columns>
+				<Column name="EncryptNumber" id="1">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Encrypt number</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Номер шифрования</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>50</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="FieldName" id="2">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Field name</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Наименование поля</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>50</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="FieldValue" id="3">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Field value</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Значение поля</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+			</Columns>
+		</Attribute>
+		<Attribute name="Exchange" id="18">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Exchange</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Обмен</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>36</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
 		<ConditionalAppearance>
 			<dcsset:item>
 				<dcsset:selection>
@@ -1171,7 +1384,65 @@
 				</dcsset:selection>
 				<dcsset:filter>
 					<dcsset:item xsi:type="dcsset:FilterItemComparison">
-						<dcsset:left xsi:type="dcscor:Field">Channels.ChannelMatched</dcsset:left>
+						<dcsset:left xsi:type="dcscor:Field">Channels.ChannelGuidMatched</dcsset:left>
+						<dcsset:comparisonType>Equal</dcsset:comparisonType>
+						<dcsset:right xsi:type="xs:boolean">false</dcsset:right>
+					</dcsset:item>
+				</dcsset:filter>
+				<dcsset:appearance>
+					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
+						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:value xsi:type="v8ui:Color">web:MistyRose</dcscor:value>
+					</dcscor:item>
+					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
+						<dcscor:use>false</dcscor:use>
+						<dcscor:parameter>TextColor</dcscor:parameter>
+						<dcscor:value xsi:type="v8ui:Color">auto</dcscor:value>
+					</dcscor:item>
+					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
+						<dcscor:parameter>MarkIncomplete</dcscor:parameter>
+						<dcscor:value xsi:type="xs:boolean">true</dcscor:value>
+					</dcscor:item>
+				</dcsset:appearance>
+			</dcsset:item>
+			<dcsset:item>
+				<dcsset:selection>
+					<dcsset:item>
+						<dcsset:field>ChannelsConnected</dcsset:field>
+					</dcsset:item>
+				</dcsset:selection>
+				<dcsset:filter>
+					<dcsset:item xsi:type="dcsset:FilterItemComparison">
+						<dcsset:left xsi:type="dcscor:Field">Channels.ConnectedMatched</dcsset:left>
+						<dcsset:comparisonType>Equal</dcsset:comparisonType>
+						<dcsset:right xsi:type="xs:boolean">false</dcsset:right>
+					</dcsset:item>
+				</dcsset:filter>
+				<dcsset:appearance>
+					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
+						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:value xsi:type="v8ui:Color">web:MistyRose</dcscor:value>
+					</dcscor:item>
+					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
+						<dcscor:use>false</dcscor:use>
+						<dcscor:parameter>TextColor</dcscor:parameter>
+						<dcscor:value xsi:type="v8ui:Color">auto</dcscor:value>
+					</dcscor:item>
+					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
+						<dcscor:parameter>MarkIncomplete</dcscor:parameter>
+						<dcscor:value xsi:type="xs:boolean">true</dcscor:value>
+					</dcscor:item>
+				</dcsset:appearance>
+			</dcsset:item>
+			<dcsset:item>
+				<dcsset:selection>
+					<dcsset:item>
+						<dcsset:field>ChannelsVersion</dcsset:field>
+					</dcsset:item>
+				</dcsset:selection>
+				<dcsset:filter>
+					<dcsset:item xsi:type="dcsset:FilterItemComparison">
+						<dcsset:left xsi:type="dcscor:Field">Channels.VersionMatched</dcsset:left>
 						<dcsset:comparisonType>Equal</dcsset:comparisonType>
 						<dcsset:right xsi:type="xs:boolean">false</dcsset:right>
 					</dcsset:item>
@@ -1269,19 +1540,24 @@
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Select</v8:content>
+					<v8:content>Select existing</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Выбрать</v8:content>
+					<v8:content>Выбрать существующий</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Select channel</v8:content>
+					<v8:content>Select available channel</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Выбрать доступный канал</v8:content>
 				</v8:item>
 			</ToolTip>
+			<Action>SelectChannel</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 		<Command name="DeleteChannel" id="2">
@@ -1312,31 +1588,32 @@
 			<Action>DeleteChannel</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
-		<Command name="ConnectChannel" id="3">
+		<Command name="InstallChannelUpdate" id="3">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Connect</v8:content>
+					<v8:content>Install channel update</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Подключить</v8:content>
+					<v8:content>Установить обновление для канала</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Connect channel</v8:content>
+					<v8:content>Install channel update</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Подключить канал</v8:content>
+					<v8:content>Установить обновление для канала</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
-				<xr:Ref>CommonPicture.FL_AddLink</xr:Ref>
+				<xr:Ref>CommonPicture.FL_InstallUpdate</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
+			<Action>InstallChannelUpdate</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 		<Command name="DeleteEvent" id="4">
@@ -1371,23 +1648,24 @@
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Select</v8:content>
+					<v8:content>Select existing</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Выбрать</v8:content>
+					<v8:content>Выбрать существующий</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Select method</v8:content>
+					<v8:content>Select existing method</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Выбрать метод</v8:content>
+					<v8:content>Выбрать существующий метод</v8:content>
 				</v8:item>
 			</ToolTip>
+			<Action>SelectMethod</Action>
 		</Command>
 		<Command name="DeleteMethod" id="6">
 			<Title>
@@ -1415,6 +1693,90 @@
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
 			<Action>DeleteMethod</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="InstallExchange" id="8">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Install exchange</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Установить обмен</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Install exchange</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Установить обмен</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Install</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>InstallOrUpdateExchange</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="InstallExchangeUpdate" id="9">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Install update</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Установить обновление</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Install exchange update</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Установить обновление для обмена</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_InstallUpdate</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>InstallOrUpdateExchange</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="InstallChannel" id="7">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Install channel</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Установить канал</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Install channel</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Установить канал</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Install</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>InstallChannel</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>

@@ -49,7 +49,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.3.38</Version>
+			<Version>0.9.4.1</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -210,6 +210,7 @@
 			<CommonPicture>FL_GenerateAll</CommonPicture>
 			<CommonPicture>FL_Import</CommonPicture>
 			<CommonPicture>FL_Install</CommonPicture>
+			<CommonPicture>FL_InstallUpdate</CommonPicture>
 			<CommonPicture>FL_InvalidMethodSettings</CommonPicture>
 			<CommonPicture>FL_Logotype16</CommonPicture>
 			<CommonPicture>FL_Logotype32</CommonPicture>
@@ -240,6 +241,7 @@
 			<CommonModule>FL_CommonUseClientServer</CommonModule>
 			<CommonModule>FL_CommonUseReUse</CommonModule>
 			<CommonModule>FL_DataComposition</CommonModule>
+			<CommonModule>FL_Encryption</CommonModule>
 			<CommonModule>FL_ErrorsClientServer</CommonModule>
 			<CommonModule>FL_Events</CommonModule>
 			<CommonModule>FL_EventsReUse</CommonModule>
@@ -269,6 +271,7 @@
 			<Constant>FL_RetryAttempts</Constant>
 			<Constant>FL_UseFoxyLink</Constant>
 			<Constant>FL_WorkerCount</Constant>
+			<Constant>FL_WorkerJobsLimit</Constant>
 			<CommonForm>FL_ResponseHandlerForm</CommonForm>
 			<Catalog>FL_Channels</Catalog>
 			<Catalog>FL_Exchanges</Catalog>

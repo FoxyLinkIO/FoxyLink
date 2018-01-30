@@ -31,8 +31,9 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     Parameters.Property("Exchange", Exchange);
     Parameters.Property("MetadataObject", MetadataObject);
     Parameters.Property("Method", Method);
-    
-    PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(MetadataObject);
+     
+    PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
+        Metadata.FindByFullName(MetadataObject));
     
     InitializeForm(PrimaryKeys);
     InitializeDataCompositionSchema(PrimaryKeys);

@@ -37,6 +37,7 @@
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Tasks</xr:Object>
 				<xr:Object>CommonCommand.ExportObject</xr:Object>
 				<xr:Object>Catalog.FL_Jobs.Command.ConfigureJobServerStartUp</xr:Object>
+				<xr:Object>Constant.FL_WorkerJobsLimit</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

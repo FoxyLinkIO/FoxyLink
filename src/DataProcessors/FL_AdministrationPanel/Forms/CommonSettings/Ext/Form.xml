@@ -110,22 +110,43 @@
 							<ExtendedTooltip name="ConfigureJobServerStartUpExtendedTooltip" id="62"/>
 						</Button>
 						<UsualGroup name="GroupJobSettings" id="63">
+							<Group>Vertical</Group>
 							<Representation>None</Representation>
 							<ShowTitle>false</ShowTitle>
 							<ExtendedTooltip name="GroupJobSettingsExtendedTooltip" id="64"/>
 							<ChildItems>
-								<InputField name="FL_WorkerCount" id="15">
-									<DataPath>ConstantsSet.FL_WorkerCount</DataPath>
-									<TitleLocation>Right</TitleLocation>
-									<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
-									<ContextMenu name="FL_WorkerCountContextMenu" id="16"/>
-									<ExtendedTooltip name="FL_WorkerCountExtendedTooltip" id="17">
-										<TextColor>style:FieldSelectionBackColor</TextColor>
-									</ExtendedTooltip>
-									<Events>
-										<Event name="OnChange">FL_WorkerCountOnChange</Event>
-									</Events>
-								</InputField>
+								<UsualGroup name="GroupWorkerSettings" id="68">
+									<Group>Horizontal</Group>
+									<Representation>None</Representation>
+									<ShowTitle>false</ShowTitle>
+									<ExtendedTooltip name="GroupWorkerSettingsExtendedTooltip" id="69"/>
+									<ChildItems>
+										<InputField name="FL_WorkerCount" id="15">
+											<DataPath>ConstantsSet.FL_WorkerCount</DataPath>
+											<TitleLocation>Right</TitleLocation>
+											<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+											<ContextMenu name="FL_WorkerCountContextMenu" id="16"/>
+											<ExtendedTooltip name="FL_WorkerCountExtendedTooltip" id="17">
+												<TextColor>style:FieldSelectionBackColor</TextColor>
+											</ExtendedTooltip>
+											<Events>
+												<Event name="OnChange">FL_WorkerCountOnChange</Event>
+											</Events>
+										</InputField>
+										<InputField name="FL_WorkerJobsLimit" id="65">
+											<DataPath>ConstantsSet.FL_WorkerJobsLimit</DataPath>
+											<TitleLocation>Right</TitleLocation>
+											<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+											<ContextMenu name="FL_WorkerJobsLimitContextMenu" id="66"/>
+											<ExtendedTooltip name="FL_WorkerJobsLimitExtendedTooltip" id="67">
+												<TextColor>style:FieldSelectionBackColor</TextColor>
+											</ExtendedTooltip>
+											<Events>
+												<Event name="OnChange">FL_WorkerJobsLimitOnChange</Event>
+											</Events>
+										</InputField>
+									</ChildItems>
+								</UsualGroup>
 								<InputField name="FL_RetryAttempts" id="18">
 									<DataPath>ConstantsSet.FL_RetryAttempts</DataPath>
 									<TitleLocation>Right</TitleLocation>
@@ -307,6 +328,7 @@
 				<Field>ConstantsSet.FL_RetryAttempts</Field>
 				<Field>ConstantsSet.FL_UseFoxyLink</Field>
 				<Field>ConstantsSet.FL_WorkerCount</Field>
+				<Field>ConstantsSet.FL_WorkerJobsLimit</Field>
 			</UseAlways>
 		</Attribute>
 		<Attribute name="SuppliedIntegrations" id="2">

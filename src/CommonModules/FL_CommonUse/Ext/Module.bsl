@@ -156,7 +156,11 @@ EndFunction // ReferenceByDescription()
 //
 Function ReferenceByPredefinedDataName(MetadataObject, 
     PredefinedDataName) Export
-    
+       
+    If IsBlankString(PredefinedDataName) Then
+        Return Undefined;
+    EndIf;
+
     Query = New Query;
     Query.Text = StrTemplate(QueryTextReferenceByPredefinedDataName(), 
         MetadataObject.FullName());
@@ -182,7 +186,7 @@ EndFunction // ReferenceByPredefinedDataName()
 //               The structure of the resulting table matches the structure of 
 //               the recordset.
 //
-Function RegisterRecordsValues(MetadataObject, Filter) Export
+Function RegisterRecordValues(MetadataObject, Filter) Export
     
     ObjectManager = FL_CommonUse.ObjectManagerByFullName(
         MetadataObject.FullName());
@@ -203,7 +207,7 @@ Function RegisterRecordsValues(MetadataObject, Filter) Export
     RecordSet.Read();
     Return RecordSet.Unload();   
     
-EndFunction // RegisterRecordsValues()
+EndFunction // RegisterRecordValues()
 
 // Creates a structure with properties named as value table row columns and 
 // sets the values of these properties from the values table row.
@@ -976,14 +980,12 @@ EndFunction // TypeNameTasks()
 //                                      whether it belongs to the specified type.
 // 
 // Returns:
-//  Boolean.
+//  Boolean - True, if register type; otherwise - False.
 //
 Function IsRegister(MetadataObject) Export
 
-    Return Metadata.InformationRegisters.Contains(MetadataObject)
-        Or Metadata.AccumulationRegisters.Contains(MetadataObject)
-        Or Metadata.AccountingRegisters.Contains(MetadataObject)
-        Or Metadata.CalculationRegisters.Contains(MetadataObject);
+    FullName = MetadataObject.FullName();
+    Return FL_CommonUseReUse.IsRegisterTypeObjectCached(FullName);
         
 EndFunction // IsRegister()
 
@@ -998,34 +1000,10 @@ EndFunction // IsRegister()
 //
 Function IsReferenceTypeObject(MetadataObject) Export
 
-    Return IsReferenceTypeObjectByMetadataObjectName(
-        MetadataObject.FullName());
+    FullName = MetadataObject.FullName();    
+    Return FL_CommonUseReUse.IsReferenceTypeObjectCached(FullName);
 
 EndFunction // IsReferenceTypeObject()
-
-// Defines if passed a metadata object name belongs to the reference type.
-// 
-// Parameters:
-//  MetadataObjectName - String - object name for which it is required to define 
-//                                whether it belongs to the specified type.
-// 
-// Returns:
-//   Boolean.
-//
-Function IsReferenceTypeObjectByMetadataObjectName(MetadataObjectName) Export
-    
-    Position = Find(MetadataObjectName, ".");
-    If Position > 0 Then 
-        
-        BaseTypes = FL_CommonUseReUse.BaseReferenceTypeNameSynonyms();
-        BaseTypeName = Upper(Left(MetadataObjectName, Position - 1));
-        Return BaseTypes.Get(BaseTypeName) <> Undefined;
-        
-    EndIf;
-    
-    Return False;
-    
-EndFunction // IsReferenceTypeObjectByFullName()
 
 // Checks if the passed attribute name is included in the subset of standard attributes.
 // 
@@ -1058,8 +1036,6 @@ EndFunction // IsStandardAttribute()
 // Parameters:
 //  MetadataObject - MetadataObject - metadata object for which it is necessary 
 //                                      to define primary keys.
-//                 - String         - object name for which it is required 
-//                                      to define primary keys.
 //
 //  Returns:
 //      Structure - with primary keys:
@@ -1068,20 +1044,33 @@ EndFunction // IsStandardAttribute()
 //
 Function PrimaryKeysByMetadataObject(MetadataObject) Export
      
-    If TypeOf(MetadataObject) = Type("MetadataObject") Then
-        FullName = MetadataObject.FullName();    
-    Else
-        FullName = MetadataObject;
-    EndIf;
+    FullName = MetadataObject.FullName();    
     
     PrimaryKeys = New Structure;
-    If IsReferenceTypeObjectByMetadataObjectName(FullName) Then
+    If FL_CommonUseReUse.IsReferenceTypeObjectCached(FullName) Then
 
         ObjectManager = ObjectManagerByFullName(FullName);
         
         Types = New Array;
         Types.Add(TypeOf(ObjectManager.EmptyRef()));
         PrimaryKeys.Insert("Ref", Types);
+        PrimaryKeys.Insert("Ссылка", Types);
+        
+    ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(FullName) Then
+        
+        If MetadataObject.InformationRegisterPeriodicity <> 
+            Metadata.ObjectProperties.InformationRegisterPeriodicity.Nonperiodical Then
+            
+            Types = New Array;
+            Types.Add(Type("Date"));
+            PrimaryKeys.Insert("Period", Types);
+            PrimaryKeys.Insert("Период", Types);
+            
+        EndIf;
+        
+        For Each Dimension In MetadataObject.Dimensions Do
+            PrimaryKeys.Insert(Dimension.Name, Dimension.Type.Types());    
+        EndDo;
                 
     EndIf;
 
@@ -1380,6 +1369,29 @@ Function ValueToJSONString(Value) Export
     Return JSONWriter.Close();
 
 EndFunction // ValueToJSONString()
+
+// Deserializes object from a JSON string.
+//
+// Parameters:
+//  Value - String - the value to be deserialized.
+//
+// Returns:
+//  Arbitrary - deserialized object from the JSON string.
+//
+Function ValueFromJSONString(Value) Export
+
+    JSONReader = New JSONReader();
+    JSONReader.SetString(Value);
+    
+    // Deserializes a value in JSON format. 
+    Object = XDTOSerializer.ReadJSON(JSONReader);
+    
+    // Clear action.
+    JSONReader.Close();
+    
+    Return Object;
+
+EndFunction // ValueFromJSONString()
 
 // Returns conversion result.
 //

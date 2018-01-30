@@ -177,19 +177,14 @@ EndFunction // ScheduledJob()
 //
 Procedure JobServerAction() Export
     
-    RetryJobs = New Array;
-    DeleteJobs = New Array;
+    RetryJobs = NewRetryTable();
+    ProcessingJobs = NewProcessingTable();
     
-    //Var ExpirationManagerTask;
-
     WorkerCount = GetWorkerCount();
-    If NOT ValueIsFilled(WorkerCount) OR WorkerCount = 0 Then
-        WorkerCount = DefaultWorkerCount();    
-    EndIf;
     
-    PopJobServerState(WorkerCount, DeleteJobs, RetryJobs);    
-    UpdateWorkerSlots(DeleteJobs);
-    PushJobServerState(WorkerCount, RetryJobs);
+    PopJobServerState(WorkerCount, ProcessingJobs, RetryJobs);
+    ClearJobServerState();
+    PushJobServerState(WorkerCount, ProcessingJobs, RetryJobs);
     
     //While True Do
     
@@ -244,39 +239,6 @@ EndProcedure // ExpirationManagerAction()
 
 #EndRegion // Actions
 
-// Sets a new worker count value.
-//
-// Parameters:
-//  Count - Number - the new worker count value. 
-//
-Procedure SetWorkerCount(Count) Export
-
-    Constants.FL_WorkerCount.Set(Count);
-
-EndProcedure // SetWorkerCount()
-
-// Returns a worker count value.
-//
-// Returns:
-//  Number - the worker count value. 
-//
-Function GetWorkerCount() Export
-
-    Return Constants.FL_WorkerCount.Get();
-    
-EndFunction // GetWorkerCount()
-
-// Returns default worker count value.
-//
-// Returns:
-//  Number - default worker count value. 
-//
-Function DefaultWorkerCount() Export
-    
-    Return 20;
-    
-EndFunction // DefaultWorkerCount() 
-
 // Sets a new retry attempts value.
 //
 // Parameters:
@@ -295,7 +257,12 @@ EndProcedure // SetRetryAttempts()
 //
 Function GetRetryAttempts() Export
 
-    Return Constants.FL_RetryAttempts.Get();
+    RetryAttempts = Constants.FL_RetryAttempts.Get();
+    If NOT ValueIsFilled(RetryAttempts) Then
+        RetryAttempts = DefaultRetryAttempts();    
+    EndIf;
+    
+    Return RetryAttempts;
     
 EndFunction // GetRetryAttempts()
 
@@ -310,132 +277,264 @@ Function DefaultRetryAttempts() Export
     
 EndFunction // DefaultRetryAttempts() 
 
+// Sets a new worker count value.
+//
+// Parameters:
+//  Count - Number - the new worker count value. 
+//
+Procedure SetWorkerCount(Count) Export
+
+    Constants.FL_WorkerCount.Set(Count);
+
+EndProcedure // SetWorkerCount()
+
+// Returns a worker count value.
+//
+// Returns:
+//  Number - the worker count value. 
+//
+Function GetWorkerCount() Export
+
+    WorkerCount = Constants.FL_WorkerCount.Get();
+    If NOT ValueIsFilled(WorkerCount) OR WorkerCount = 0 Then
+        WorkerCount = DefaultWorkerCount();    
+    EndIf;
+    
+    Return WorkerCount;
+    
+EndFunction // GetWorkerCount()
+
+// Returns default worker count value.
+//
+// Returns:
+//  Number - default worker count value. 
+//
+Function DefaultWorkerCount() Export
+    
+    Return 5;
+    
+EndFunction // DefaultWorkerCount() 
+
+// Sets a new worker jobs limit value.
+//
+// Parameters:
+//  Limit - Number - the new worker jobs limit value. 
+//
+Procedure SetWorkerJobsLimit(Limit) Export
+
+    Constants.FL_WorkerJobsLimit.Set(Limit);
+
+EndProcedure // SetWorkerJobsLimit()
+
+// Returns a worker jobs limit value.
+//
+// Returns:
+//  Number - the worker jobs limit value. 
+//
+Function GetWorkerJobsLimit() Export
+
+    Limit = Constants.FL_WorkerJobsLimit.Get();
+    If NOT ValueIsFilled(Limit) OR Limit = 0 Then
+        Limit = DefaultWorkerJobsLimit();    
+    EndIf;
+    
+    Return Limit;
+    
+EndFunction // GetWorkerJobsLimit()
+
+// Returns default worker jobs limit value.
+//
+// Returns:
+//  Number - default worker jobs limit value. 
+//
+Function DefaultWorkerJobsLimit() Export
+    
+    Return 5;
+    
+EndFunction // DefaultWorkerJobsLimit() 
+
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
 
 // Only for internal use.
 //
-Procedure PopJobServerState(WorkerCount, DeleteJobs, RetryJobs) 
+Procedure PopJobServerState(WorkerCount, ProcessingJobs, RetryJobs) 
     
-    BJSActive    = BackgroundJobState.Active;
-    BJSCanceled  = BackgroundJobState.Canceled;
-    BJSCompleted = BackgroundJobState.Completed;
-    BJSFailed    = BackgroundJobState.Failed;
-   
+    JobTableIndex    = 1;
+    WorkerTableIndex = 2;
+    RetryAttempts = GetRetryAttempts();
+    
     FinalStates = Catalogs.FL_States.FinalStates();
     
-    RetryAttempts = GetRetryAttempts();
-    If NOT ValueIsFilled(RetryAttempts) Then
-        RetryAttempts = DefaultRetryAttempts();    
-    EndIf;
-  
     Query = New Query;
     Query.Text = QueryTextTasksHeartbeat();
-    WorkersTable = Query.Execute().Unload();
-    For Each Worker In WorkersTable Do
-            
-        BackgroundJob = BackgroundJobByUUID(Worker.TaskId);
-        If BackgroundJob = Undefined 
-            OR BackgroundJob.State = BJSCanceled
-            OR BackgroundJob.State = BJSCompleted
-            OR BackgroundJob.State = BJSFailed Then
-            
-            If FinalStates.FindByValue(Worker.Job.State) <> Undefined 
-                OR Worker.RetryAttempts >= RetryAttempts Then
-                
-                DeleteJobs.Add(Worker.Job);
-                
-            Else
-                
-                RetryJobs.Add(Worker.Job);
-                
-            EndIf;
-            
-        ElsIf BackgroundJob.State = BJSActive Then
-            
-            WorkerCount = WorkerCount - 1;    
-            
+    BatchResult = Query.ExecuteBatch();
+    
+    BackgroundJobCache = New Map; 
+    FilterResults = BackgroundJobsByFilter(New Structure("MethodName", 
+        "FL_Tasks.TaskAction"));
+    For Each FilterResult In FilterResults Do
+        BackgroundJobCache.Insert(FilterResult.UUID, FilterResult.State);    
+    EndDo;
+    
+    JobTable = BatchResult[JobTableIndex].Unload();
+    For Each Item In JobTable Do
+
+        CurrentState = FL_CommonUse.ObjectAttributeValue(Item.Job, "State");
+        If FinalStates.FindByValue(CurrentState) <> Undefined Then
+            Continue;
+        ElsIf BackgroundJobCache.Get(Item.TaskId) = BackgroundJobState.Active Then
+            FillPropertyValues(ProcessingJobs.Add(), Item);
+        ElsIf Item.RetryAttempts < RetryAttempts Then
+            NewRetryJob = RetryJobs.Add();
+            NewRetryJob.Job = Item.Job;
+            NewRetryJob.RetryAttempts = Item.RetryAttempts + 1;
         EndIf;
         
     EndDo;
- 
+    
+    WorkerTable = BatchResult[WorkerTableIndex].Unload();
+    ReduceAvailableWorkerCount(WorkerCount, WorkerTable, BackgroundJobCache);
+     
 EndProcedure // PopJobServerState()
 
 // Only for internal use.
 //
-Procedure PushJobServerState(WorkerCount, RetryJobs) 
+Procedure PushJobServerState(WorkerCount, ProcessingJobs, RetryJobs) 
     
-    EnqueuedJobs = New Array;
-    //FL_CommonUseClientServer.ExtendArray(QueueArray, RetryArray, True);
- 
-    WorkerCount = WorkerCount - RetryJobs.Count();
+    Limit = GetWorkerJobsLimit();
+    MaxCapacity = WorkerCount * Limit;
+    
+    HeartbeatTable = NewHeartbeatTable();
+    
+    // Add processing jobs to heartbeat table.
+    FL_CommonUseClientServer.ExtendValueTable(ProcessingJobs, HeartbeatTable);
+    
+    // Retries go without worker count control.
+    RunBackgroundJobs(RetryJobs, HeartbeatTable, Limit);
+    
     If WorkerCount > 0 Then
         
         Query = New Query;
-        Query.Text = QueryTextEnqueuedJobs(WorkerCount);
+        Query.Text = QueryTextEnqueuedJobs(MaxCapacity);
+        Query.SetParameter("ProcessingJobs", ProcessingJobs);
+        Query.SetParameter("RetryJobs", RetryJobs);
         QueryResult = Query.Execute();
-        If NOT QueryResult.IsEmpty() Then
-            EnqueuedJobs = QueryResult.Unload().UnloadColumn("Job");    
-        EndIf;
+        EnqueuedJobs = QueryResult.Unload();    
+        RunBackgroundJobs(EnqueuedJobs, HeartbeatTable, Limit);
         
     EndIf;
     
-    // Move to EnqueuedState
-    For Each Job In RetryJobs Do
-        
-        Task = FL_Tasks.NewTask();
-        Task.MethodName = "Catalogs.FL_Jobs.Trigger";
-        Task.Parameters.Add(Job);
-        Task.Description = "Background job task (FoxyLink)";
-        Task.SafeMode = False;
-        BackgroundJob = FL_Tasks.Run(Task);
-        
-        // TODO: correct state change.
-        //Catalogs.FL_Jobs.ChangeState(Job, Catalogs.FL_States.
-          
-        RecordManager = InformationRegisters.FL_TasksHeartbeat
-            .CreateRecordManager();
-        RecordManager.Job = Job;
-        RecordManager.Read();
-        If NOT RecordManager.Selected() Then
-            RecordManager.Job = Job;        
-        EndIf;
-        RecordManager.TaskId = BackgroundJob.UUID;
-        RecordManager.RetryAttempts = RecordManager.RetryAttempts + 1;
-        RecordManager.Write();
-            
-    EndDo;
+    RecordSet = InformationRegisters.FL_TasksHeartbeat.CreateRecordSet();
+    RecordSet.Load(HeartbeatTable);
+    RecordSet.Write();
     
-    For Each Job In EnqueuedJobs Do
-        
-        Task = FL_Tasks.NewTask();
-        Task.MethodName = "Catalogs.FL_Jobs.Trigger";
-        Task.Parameters.Add(Job);
-        Task.Description = "Background job task (FoxyLink)";
-        Task.SafeMode = False;
-        BackgroundJob = FL_Tasks.Run(Task);
-            
-        RecordManager = InformationRegisters.FL_TasksHeartbeat.CreateRecordManager();
-        RecordManager.Job = Job;
-        RecordManager.TaskId = BackgroundJob.UUID;
-        RecordManager.RetryAttempts = 0;    
-        RecordManager.Write();
-        
-    EndDo;
-        
 EndProcedure // PushJobServerState()
 
 // Only for internal use.
 //
-Procedure UpdateWorkerSlots(DeleteJobs) 
+Procedure ClearJobServerState() 
     
-    If DeleteJobs.Count() > 0 Then
-        InformationRegisters.FL_TasksHeartbeat.DeleteRecordsByFilter(
-            New Structure("Job", DeleteJobs));
-    EndIf;
+    RecordSet = InformationRegisters.FL_TasksHeartbeat.CreateRecordSet(); 
+    RecordSet.Write();
     
-EndProcedure // UpdateWorkerSlots()
+EndProcedure // ClearJobServerState()
+
+// Only for internal use.
+//
+Procedure ReduceAvailableWorkerCount(WorkerCount, WorkerTable, 
+    BackgroundJobCache)
+    
+    BJSActive = BackgroundJobState.Active;
+    For Each Worker In WorkerTable Do
+        If BackgroundJobCache.Get(Worker.TaskId) = BJSActive Then
+            WorkerCount = WorkerCount - 1;    
+        EndIf;
+    EndDo;
+    
+EndProcedure // ReduceAvailableWorkerCount()
+
+// Only for internal use.
+//
+Procedure RunBackgroundJobs(JobTable, HeartbeatTable, Val Limit)
+    
+    BoostTable = NewHeartbeatTable();
+    JobCount = JobTable.Count() - 1;
+    For Index = 0 To JobCount Do
+
+        FillPropertyValues(BoostTable.Add(), JobTable[Index]);
+        
+        If Limit = BoostTable.Count()
+            OR Index = JobCount Then
+            
+            Task = FL_Tasks.NewTask();
+            Task.MethodName = "Catalogs.FL_Jobs.Trigger";
+            Task.Parameters.Add(BoostTable.UnloadColumn("Job"));
+            Task.Description = "Background job task (FoxyLink)";
+            Task.SafeMode = False;
+            BackgroundJob = FL_Tasks.Run(Task);
+            
+            For Each Item In BoostTable Do
+                Item.TaskId = BackgroundJob.UUID;        
+            EndDo;
+            
+            FL_CommonUseClientServer.ExtendValueTable(BoostTable, 
+                HeartbeatTable);
+            
+            // TODO: correct state change.
+            //Catalogs.FL_Jobs.ChangeState(Job, Catalogs.FL_States.
+            
+            BoostTable.Clear();
+            
+        EndIf;
+            
+    EndDo;
+    
+EndProcedure // RunBackgroundJobs()
+
+// Only for internal use.
+//
+Function NewRetryTable()
+    
+    RetryAttemptsCapacity = 5;
+    
+    RetryTable = New ValueTable;
+    RetryTable.Columns.Add("Job", New TypeDescription("CatalogRef.FL_Jobs"));
+    RetryTable.Columns.Add("RetryAttempts", FL_CommonUse.NumberTypeDescription(
+        RetryAttemptsCapacity, , AllowedSign.Nonnegative));
+    Return RetryTable;
+    
+EndFunction // NewRetryTable()
+
+// Only for internal use.
+//
+Function NewProcessingTable()
+    
+    ProcessingTable = New ValueTable;
+    ProcessingTable.Columns.Add("Job", New TypeDescription(
+        "CatalogRef.FL_Jobs"));
+    ProcessingTable.Columns.Add("TaskId", New TypeDescription("UUID"));
+    
+    Return ProcessingTable;
+    
+EndFunction // NewProcessingTable()
+
+// Only for internal use.
+//
+Function NewHeartbeatTable()
+    
+    RetryAttemptsCapacity = 5;
+    
+    HeartbeatTable = New ValueTable;
+    HeartbeatTable.Columns.Add("Job", New TypeDescription(
+        "CatalogRef.FL_Jobs"));
+    HeartbeatTable.Columns.Add("TaskId", New TypeDescription("UUID"));
+    HeartbeatTable.Columns.Add("RetryAttempts", FL_CommonUse.NumberTypeDescription(
+        RetryAttemptsCapacity, , AllowedSign.Nonnegative));
+    Return HeartbeatTable;
+    
+EndFunction // NewHeartbeatTable()
 
 // Only for internal use.
 //
@@ -496,8 +595,30 @@ Function QueryTextTasksHeartbeat()
         |   TasksHeartbeat.Job           AS Job,
         |   TasksHeartbeat.TaskId        AS TaskId,
         |   TasksHeartbeat.RetryAttempts AS RetryAttempts
+        |INTO TasksHeartbeat
         |FROM
         |   InformationRegister.FL_TasksHeartbeat AS TasksHeartbeat
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |SELECT
+        |   TasksHeartbeat.Job           AS Job,
+        |   TasksHeartbeat.TaskId        AS TaskId,
+        |   TasksHeartbeat.RetryAttempts AS RetryAttempts
+        |FROM
+        |   TasksHeartbeat AS TasksHeartbeat  
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |SELECT DISTINCT
+        |   TasksHeartbeat.TaskId AS TaskId
+        |FROM
+        |   TasksHeartbeat AS TasksHeartbeat  
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |DROP TasksHeartbeat
+        |;
         |";  
     Return QueryText;
     
@@ -509,10 +630,33 @@ Function QueryTextEnqueuedJobs(WorkerCount)
     
     QueryText = StrTemplate("
         |SELECT
-        |   TasksHeartbeat.Job AS Job
+        |   ProcessingJobs.Job AS Job
+        |INTO ProcessingJobsCache
+        |FROM
+        |   &ProcessingJobs AS ProcessingJobs
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |SELECT
+        |   RetryJobs.Job AS Job
+        |INTO RetryJobsCache
+        |FROM
+        |   &RetryJobs AS RetryJobs
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |SELECT
+        |   ProcessingJobs.Job AS Job
         |INTO TasksHeartbeatCache
         |FROM
-        |   InformationRegister.FL_TasksHeartbeat AS TasksHeartbeat
+        |   ProcessingJobsCache AS ProcessingJobs
+        |
+        |UNION ALL
+        |
+        |SELECT
+        |   RetryJobs.Job AS Job
+        |FROM
+        |   RetryJobsCache AS RetryJobs
         |
         |INDEX BY
         |   Job 
@@ -529,6 +673,14 @@ Function QueryTextEnqueuedJobs(WorkerCount)
         |
         |ORDER BY
         |   Jobs.Priority ASC   
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |DROP ProcessingJobsCache
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |DROP RetryJobsCache
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////
