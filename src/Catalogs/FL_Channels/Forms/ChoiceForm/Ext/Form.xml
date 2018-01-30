@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
+	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
 	<AutoCommandBar name="FormCommandBar" id="-1"/>
 	<Events>
 		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
@@ -21,14 +22,12 @@
 			<Representation>List</Representation>
 			<CommandBarLocation>None</CommandBarLocation>
 			<DefaultItem>true</DefaultItem>
+			<ChoiceMode>true</ChoiceMode>
 			<UseAlternationRowColor>true</UseAlternationRowColor>
 			<InitialTreeView>ExpandTopLevel</InitialTreeView>
 			<EnableStartDrag>true</EnableStartDrag>
 			<DataPath>List</DataPath>
 			<RowPictureDataPath>List.DefaultPicture</RowPictureDataPath>
-			<SearchStringLocation>None</SearchStringLocation>
-			<ViewStatusLocation>None</ViewStatusLocation>
-			<SearchControlLocation>None</SearchControlLocation>
 			<AutoRefresh>false</AutoRefresh>
 			<AutoRefreshPeriod>60</AutoRefreshPeriod>
 			<Period>
@@ -73,11 +72,11 @@
 				<ExtendedTooltip name="ListSearchControlExtendedTooltip" id="15"/>
 			</SearchControlAddition>
 			<ChildItems>
-				<CheckBoxField name="Connected" id="19">
+				<CheckBoxField name="Connected" id="22">
 					<DataPath>List.Connected</DataPath>
 					<CheckBoxType>Auto</CheckBoxType>
-					<ContextMenu name="ConnectedContextMenu" id="20"/>
-					<ExtendedTooltip name="ConnectedExtendedTooltip" id="21"/>
+					<ContextMenu name="ConnectedContextMenu" id="23"/>
+					<ExtendedTooltip name="ConnectedExtendedTooltip" id="24"/>
 				</CheckBoxField>
 				<LabelField name="Description" id="16">
 					<DataPath>List.Description</DataPath>
@@ -85,17 +84,11 @@
 					<ContextMenu name="DescriptionContextMenu" id="17"/>
 					<ExtendedTooltip name="DescriptionExtendedTooltip" id="18"/>
 				</LabelField>
-				<LabelField name="Version" id="25">
+				<LabelField name="Version" id="19">
 					<DataPath>List.Version</DataPath>
-					<ContextMenu name="VersionContextMenu" id="26"/>
-					<ExtendedTooltip name="VersionExtendedTooltip" id="27"/>
+					<ContextMenu name="VersionContextMenu" id="20"/>
+					<ExtendedTooltip name="VersionExtendedTooltip" id="21"/>
 				</LabelField>
-				<CheckBoxField name="Log" id="22">
-					<DataPath>List.Log</DataPath>
-					<CheckBoxType>Auto</CheckBoxType>
-					<ContextMenu name="LogContextMenu" id="23"/>
-					<ExtendedTooltip name="LogExtendedTooltip" id="24"/>
-				</CheckBoxField>
 			</ChildItems>
 		</Table>
 	</ChildItems>
@@ -106,8 +99,24 @@
 			</Type>
 			<MainAttribute>true</MainAttribute>
 			<Settings xsi:type="DynamicList">
-				<ManualQuery>false</ManualQuery>
+				<ManualQuery>true</ManualQuery>
 				<DynamicDataRead>true</DynamicDataRead>
+				<QueryText>SELECT
+    Channels.Ref,
+    Channels.DeletionMark,
+    Channels.Description,
+    Channels.BasicChannelGuid,
+    Channels.Connected,
+    Channels.Log,
+    Channels.Version,
+    Channels.ChannelData,
+    Channels.EncryptedData,
+    Channels.Predefined,
+    Channels.PredefinedDataName
+FROM
+    Catalog.FL_Channels AS Channels
+WHERE 
+    Channels.BasicChannelGuid = &amp;BasicChannelGuid   </QueryText>
 				<MainTable>Catalog.FL_Channels</MainTable>
 				<ListSettings>
 					<dcsset:filter>
@@ -128,4 +137,16 @@
 			</Settings>
 		</Attribute>
 	</Attributes>
+	<Parameters>
+		<Parameter name="BasicChannelGuid">
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>36</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+			<KeyParameter>true</KeyParameter>
+		</Parameter>
+	</Parameters>
 </Form>

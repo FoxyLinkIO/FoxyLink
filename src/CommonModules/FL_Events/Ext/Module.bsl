@@ -146,7 +146,7 @@ Procedure InformationRegisterBeforeWrite(Source, Cancel, Replacing) Export
         
         If Replacing Then
             
-            Records = FL_CommonUse.RegisterRecordsValues(SourceMetadata, 
+            Records = FL_CommonUse.RegisterRecordValues(SourceMetadata, 
                 Source.Filter);
                 
             InvocationData.Arguments = Records;
@@ -199,7 +199,7 @@ Procedure AccumulationRegisterBeforeWrite(Source, Cancel, Replacing) Export
         InvocationData.Method = Catalogs.FL_Methods.Update;
         
         If Replacing Then
-            InvocationData.Arguments = FL_CommonUse.RegisterRecordsValues(
+            InvocationData.Arguments = FL_CommonUse.RegisterRecordValues(
                 SourceMetadata, Source.Filter);
         EndIf;
         
@@ -447,23 +447,27 @@ Function QueryTextSubscribers(Owner)
     QueryText = StrTemplate("
         |SELECT
         |   Events.APIVersion       AS APIVersion,
-        |   Events.Ref              AS Owner,
+        |   Exchanges.Ref           AS Owner,
         |   Methods.Priority        AS Priority
         |FROM
-        |   Catalog.FL_Exchanges.Events AS Events
+        |   Catalog.FL_Exchanges AS Exchanges
         |
-        |INNER JOIN Catalog.FL_Exchanges.Methods AS Methods
-        |ON  Methods.Ref        = Events.Ref
-        |AND Methods.Method     = Events.Method
-        |AND Methods.APIVersion = Events.APIVersion
+        |INNER JOIN Catalog.FL_Exchanges.Events AS EventTable
+        // [OPPX|OPHP1 +] Attribute + Ref
+        |ON  EventTable.MetadataObject = &MetadataObject
+        |AND EventTable.Ref            = Exchanges.Ref
+        |AND EventTable.Method         = &Method
+        |
+        |INNER JOIN Catalog.FL_Exchanges.Methods AS MethodTable
+        |ON  MethodTable.Ref        = Exchanges.Ref
+        |AND MethodTable.Method     = EventTable.Method
+        |AND MethodTable.APIVersion = EventTable.APIVersion
         |
         |WHERE
-        // [OPPX|OPHP1 +] Attribute + Ref
-        |    Events.MetadataObject = &MetadataObject 
-        |%1
-        |AND Events.Method         = &Method
+        |%1 
+        |   Exchanges.InUse = True
         |
-        |", ?(Owner = Undefined, "", "AND Events.Ref = &Owner "));
+        |", ?(Owner = Undefined, "", "Exchanges.Ref = &Owner AND "));
     Return QueryText;
     
 EndFunction // QueryTextSubscribers()

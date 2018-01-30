@@ -156,7 +156,11 @@ EndFunction // ReferenceByDescription()
 //
 Function ReferenceByPredefinedDataName(MetadataObject, 
     PredefinedDataName) Export
-    
+       
+    If IsBlankString(PredefinedDataName) Then
+        Return Undefined;
+    EndIf;
+
     Query = New Query;
     Query.Text = StrTemplate(QueryTextReferenceByPredefinedDataName(), 
         MetadataObject.FullName());
@@ -182,7 +186,7 @@ EndFunction // ReferenceByPredefinedDataName()
 //               The structure of the resulting table matches the structure of 
 //               the recordset.
 //
-Function RegisterRecordsValues(MetadataObject, Filter) Export
+Function RegisterRecordValues(MetadataObject, Filter) Export
     
     ObjectManager = FL_CommonUse.ObjectManagerByFullName(
         MetadataObject.FullName());
@@ -203,7 +207,7 @@ Function RegisterRecordsValues(MetadataObject, Filter) Export
     RecordSet.Read();
     Return RecordSet.Unload();   
     
-EndFunction // RegisterRecordsValues()
+EndFunction // RegisterRecordValues()
 
 // Creates a structure with properties named as value table row columns and 
 // sets the values of these properties from the values table row.
@@ -1365,6 +1369,29 @@ Function ValueToJSONString(Value) Export
     Return JSONWriter.Close();
 
 EndFunction // ValueToJSONString()
+
+// Deserializes object from a JSON string.
+//
+// Parameters:
+//  Value - String - the value to be deserialized.
+//
+// Returns:
+//  Arbitrary - deserialized object from the JSON string.
+//
+Function ValueFromJSONString(Value) Export
+
+    JSONReader = New JSONReader();
+    JSONReader.SetString(Value);
+    
+    // Deserializes a value in JSON format. 
+    Object = XDTOSerializer.ReadJSON(JSONReader);
+    
+    // Clear action.
+    JSONReader.Close();
+    
+    Return Object;
+
+EndFunction // ValueFromJSONString()
 
 // Returns conversion result.
 //

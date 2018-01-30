@@ -311,7 +311,7 @@
 			<DefaultObjectForm>Catalog.FL_Methods.Form.MethodForm</DefaultObjectForm>
 			<DefaultFolderForm/>
 			<DefaultListForm/>
-			<DefaultChoiceForm/>
+			<DefaultChoiceForm>Catalog.FL_Methods.Form.ChoiceForm</DefaultChoiceForm>
 			<DefaultFolderChoiceForm/>
 			<AuxiliaryObjectForm/>
 			<AuxiliaryFolderForm/>
@@ -421,6 +421,7 @@
 					<DataHistory>Use</DataHistory>
 				</Properties>
 			</Attribute>
+			<Form>ChoiceForm</Form>
 			<Form>MethodForm</Form>
 		</ChildObjects>
 	</Catalog>

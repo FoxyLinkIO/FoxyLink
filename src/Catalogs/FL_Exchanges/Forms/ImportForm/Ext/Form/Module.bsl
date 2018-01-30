@@ -32,14 +32,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
     If NOT IsBlankString(LibraryGuid) AND NOT IsBlankString(Template) Then 
         
-        ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
-            LibraryGuid);
-        BinaryData = ChannelProcessor.GetTemplate(Template);
-        JSONReader = New JSONReader;
-        JSONReader.OpenStream(BinaryData.OpenStreamForRead());
-        ImportedExchange = ReadJSON(JSONReader);
-        
-        FL_InteriorUse.LoadImportedExchange(ThisObject, ImportedExchange);
+        FL_InteriorUse.LoadImportedExchange(ThisObject, ImportedExchange());
         
         SetExchangeMatches();
         SetMethodMatches();
@@ -77,14 +70,12 @@ EndProcedure // FormatStandardClick()
 #Region FormCommandHandlers
 
 &AtClient
-Procedure CreateExchange(Command)
-    // Insert handler content.
-EndProcedure // CreateExchange()
-
-&AtClient
-Procedure InstallExchangeUpdate(Command)
-    // Insert handler content.
-EndProcedure // InstallExchangeUpdate()
+Procedure InstallOrUpdateExchange(Command)
+    
+    InstallOrUpdateExchangeAtServer();
+    Close();
+    
+EndProcedure // InstallOrUpdateExchange()
 
 &AtClient
 Procedure DeleteChannel(Command)
@@ -145,8 +136,21 @@ EndProcedure // InstallChannelUpdate()
 &AtClient
 Procedure SelectChannel(Command)
     
-    
-    
+    CurrentData = Items.Channels.CurrentData;
+    If CurrentData <> Undefined Then
+        
+        OpenForm("Catalog.FL_Channels.Form.ChoiceForm", 
+            New Structure("BasicChannelGuid", CurrentData.BasicChannelGuid),
+            ThisObject,
+            New UUID,
+            ,
+            ,
+            New NotifyDescription("DoAfterCloseChannelChoiceForm", ThisObject, 
+                New Structure("Identifier ", CurrentData.GetID())),
+            FormWindowOpeningMode.LockOwnerWindow);
+            
+    EndIf;
+        
 EndProcedure // SelectChannel()
 
 &AtClient
@@ -183,40 +187,27 @@ EndProcedure // DeleteMethod()
 
 &AtClient
 Procedure SelectMethod(Command)
-    // Insert handler content.
+    
+    CurrentData = Items.Methods.CurrentData;
+    If CurrentData <> Undefined Then
+        
+        OpenForm("Catalog.FL_Methods.Form.ChoiceForm", 
+            ,
+            ThisObject,
+            New UUID,
+            ,
+            ,
+            New NotifyDescription("DoAfterCloseMethodChoiceForm", ThisObject, 
+                New Structure("Identifier ", CurrentData.GetID())),
+            FormWindowOpeningMode.LockOwnerWindow);
+            
+    EndIf;  
+    
 EndProcedure // SelectMethod() 
 
 #EndRegion // FormCommandHandlers
 
 #Region ServiceProceduresAndFunctions
-
-// Deletes the selected channel.
-//
-// Parameters:
-//  QuestionResult       - DialogReturnCode - system enumeration value 
-//                  or a value related to a clicked button. If a dialog 
-//                  is closed on timeout, the value is Timeout. 
-//  AdditionalParameters - Arbitrary        - the value specified when the 
-//                              NotifyDescription object was created.
-//
-&AtClient
-Procedure DoAfterChooseChannelToDelete(QuestionResult, 
-    AdditionalParameters) Export
-    
-    Var Identifier;
-    
-    If QuestionResult = DialogReturnCode.Yes
-        AND TypeOf(AdditionalParameters) = Type("Structure")
-        AND AdditionalParameters.Property("Identifier", Identifier) Then
-            
-        SearchResult = Channels.FindByID(Identifier);
-        If SearchResult <> Undefined Then
-            Channels.Delete(SearchResult);                
-         EndIf;
-            
-    EndIf;
-    
-EndProcedure // DoAfterChooseChannelToDelete()
 
 // Deletes the selected event.
 //
@@ -240,12 +231,98 @@ Procedure DoAfterChooseEventToDelete(QuestionResult,
         SearchResult = Events.FindByID(Identifier);
         If SearchResult <> Undefined Then
             Events.Delete(SearchResult);                
-         EndIf;
+        EndIf;
+        
+        SetEventMatches();
             
     EndIf;
     
 EndProcedure // DoAfterChooseEventToDelete()
 
+&AtServer
+Procedure SetEventMatches()
+    
+    Matched = True;
+    For Each Item In Events Do
+        
+        MetadataObject = Metadata.FindByFullName(Item.MetadataObject);
+        Item.Matched = MetadataObject <> Undefined;
+        
+        If NOT Item.Matched Then
+            Matched = False;
+        EndIf;
+        
+    EndDo;
+        
+    If NOT Matched Then
+        Items.EventsPage.Picture = PictureLib.FL_ExplanationMark;
+        Items.EventsPage.Title = NStr(
+            "en = 'Events (there are events that require attention)'; 
+            |ru = 'События (есть события которые требуют внимания)'");
+    Else
+        Items.EventsPage.Picture = PictureLib.FL_Ok;
+        Items.EventsPage.Title = NStr("en = 'Events'; ru = 'События'");     
+    EndIf;
+    
+EndProcedure // SetEventMatches()
+
+#Region Formats
+
+// Fills basic format info.
+//
+&AtServer
+Procedure LoadBasicFormatInfo()
+
+    FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
+        BasicFormatGuid);
+        
+    Catalogs.FL_Exchanges.FillFormatDescription(ThisObject, FormatProcessor);
+    
+EndProcedure // LoadBasicFormatInfo()
+
+// Returns link to the formal document from the Internet Engineering Task Force 
+// (IETF) that is the result of committee drafting and subsequent review 
+// by interested parties.
+//
+&AtServer
+Function FormatStandardLink() 
+    
+    FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
+        BasicFormatGuid);     
+    Return FormatProcessor.FormatStandardLink();
+    
+EndFunction // FormatStandardLink()
+
+#EndRegion // Formats
+
+#Region Methods
+
+// Sets the selected method as corresponding to the current line in the 
+// method table.
+//
+// Parameters:
+//  ClosureResult        - Arbitrary - the value transferred when you call 
+//                                      the Close method of the opened form.
+//  AdditionalParameters - Arbitrary - the value specified when the 
+//                                      NotifyDescription object was created. 
+//
+&AtClient
+Procedure DoAfterCloseMethodChoiceForm(ClosureResult, 
+    AdditionalParameters) Export
+
+    If ClosureResult <> Undefined 
+        AND TypeOf(ClosureResult) = Type("CatalogRef.FL_Methods") Then
+        
+        CurrentData = Methods.FindByID(AdditionalParameters.Identifier);
+        CurrentData.Ref = ClosureResult;
+        CurrentData.MethodMatched = True;
+        CurrentData.RESTMatched   = True;
+        CurrentData.CRUDResolved  = True;
+        
+    EndIf;
+    
+EndProcedure // DoAfterCloseMethodChoiceForm()
+    
 // Deletes the selected method.
 //
 // Parameters:
@@ -268,12 +345,16 @@ Procedure DoAfterChooseMethodToDelete(QuestionResult,
         SearchResult = Methods.FindByID(Identifier);
         If SearchResult <> Undefined Then
             Methods.Delete(SearchResult);                
-         EndIf;
+        EndIf;
+        
+        SetMethodMatches();
             
     EndIf;
     
 EndProcedure // DoAfterChooseMethodToDelete()
 
+// Only for internal use.
+//
 &AtServer
 Procedure SetMethodMatches()
     
@@ -306,138 +387,35 @@ Procedure SetMethodMatches()
         
 EndProcedure // SetMethodMatches()
 
-&AtServer
-Procedure SetChannelMatches()
-        
-    Matched = True;
-    For Each Item In Channels Do
-        
-        Item.VersionMatched = Item.Ref.Version = Item.Version;
-        Item.ConnectedMatched = Item.Ref.Connected = Item.Connected;
-        Item.ChannelGuidMatched = Item.Ref.BasicChannelGuid = Item.BasicChannelGuid;
-        
-        If NOT Item.VersionMatched
-            OR NOT Item.ConnectedMatched 
-            OR NOT Item.ChannelGuidMatched Then
-            Matched = False;
-        EndIf;
-        
-    EndDo;
-    
-    If NOT Matched Then
-        Items.ChannelsPage.Picture = PictureLib.FL_ExplanationMark;
-        Items.ChannelsPage.Title = NStr(
-            "en = 'Channels (there are channels that require attention)'; 
-            |ru = 'Каналы (есть каналы которые требуют внимания)'");
-    Else
-        Items.ChannelsPage.Picture = PictureLib.FL_Ok;
-        Items.ChannelsPage.Title = NStr("en = 'Channels'; ru = 'Каналы'");     
-    EndIf;
-    
-EndProcedure // SetChannelMatches()
-
-&AtServer
-Procedure SetEventMatches()
-    
-    Matched = True;
-    For Each Item In Events Do
-        
-        MetadataObject = Metadata.FindByFullName(Item.MetadataObject);
-        Item.Matched = MetadataObject <> Undefined;
-        
-        If NOT Item.Matched Then
-            Matched = False;
-        EndIf;
-        
-    EndDo;
-        
-    If NOT Matched Then
-        Items.EventsPage.Picture = PictureLib.FL_ExplanationMark;
-        Items.EventsPage.Title = NStr(
-            "en = 'Events (there are events that require attention)'; 
-            |ru = 'События (есть события которые требуют внимания)'");
-    Else
-        Items.EventsPage.Picture = PictureLib.FL_Ok;
-        Items.EventsPage.Title = NStr("en = 'Events'; ru = 'События'");     
-    EndIf;
-    
-EndProcedure // SetEventMatches()
-
-&AtServer
-Procedure SetExchangeMatches()
-    
-    If Ref.IsEmpty() Then
-        Items.FormInstallExchangeUpdate.Visible = False;
-        Items.FormInstallExchange.Visible = True;
-        Items.FormInstallExchange.DefaultButton = True;
-    Else
-        Items.FormInstallExchange.Visible = False;
-        Items.FormInstallExchangeUpdate.Visible = True;
-        Items.FormInstallExchangeUpdate.DefaultButton = True;    
-    EndIf;
-    
-EndProcedure // SetExchangeMatches()
-
-#Region Formats
-
-// Fills basic format info.
-//
-&AtServer
-Procedure LoadBasicFormatInfo()
-
-    FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
-        BasicFormatGuid);
-        
-    Catalogs.FL_Exchanges.FillFormatDescription(ThisObject, FormatProcessor);
-    
-EndProcedure // LoadBasicFormatInfo()
-
-// Returns link to the formal document from the Internet Engineering Task Force 
-// (IETF) that is the result of committee drafting and subsequent review 
-// by interested parties.
-//
-&AtServer
-Function FormatStandardLink() 
-    
-    FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
-        BasicFormatGuid);     
-    Return FormatProcessor.FormatStandardLink();
-    
-EndFunction // FormatStandardLink()
-
-#EndRegion // Formats
+#EndRegion // Methods
 
 #Region Channels
 
-// Only for internal use.
+// Sets the selected channel as corresponding to the current line in the 
+// channel table.
+//
+// Parameters:
+//  ClosureResult        - Arbitrary - the value transferred when you call 
+//                                      the Close method of the opened form.
+//  AdditionalParameters - Arbitrary - the value specified when the 
+//                                      NotifyDescription object was created. 
 //
 &AtClient
-Procedure InstallOrUpdateChannel(CurrentData)
-    
-    If PreAuthorizationRequired(CurrentData.BasicChannelGuid) Then
-                
-        ChannelParameters = ChannelParameters(
-            CurrentData.BasicChannelGuid, "ConnectionForm");
-        ChannelParameters.Insert("Identifier", CurrentData.GetID());
-        
-        OpenForm(ChannelParameters.FormName, 
-            ChannelParameters, 
-            ThisObject,
-            New UUID, 
-            , 
-            , 
-            New NotifyDescription("DoAfterCloseConnectionForm", ThisObject, 
-                ChannelParameters), 
-            FormWindowOpeningMode.LockOwnerWindow);
-            
-    Else
+Procedure DoAfterCloseChannelChoiceForm(ClosureResult, 
+    AdditionalParameters) Export
 
-        InstallOrUpdateChannelAtServer(CurrentData.GetID());
+    If ClosureResult <> Undefined 
+        AND TypeOf(ClosureResult) = Type("CatalogRef.FL_Channels") Then
+        
+        CurrentData = Channels.FindByID(AdditionalParameters.Identifier);
+        CurrentData.Ref = ClosureResult;
+        
+        SetChannelMatches();
         
     EndIf;
     
-EndProcedure // InstallOrUpdateChannel()
-
+EndProcedure // DoAfterCloseChannelChoiceForm()
+    
 // Saves a connection to this channel into database if it was established.
 //
 // Parameters:
@@ -474,6 +452,97 @@ Procedure DoAfterCloseConnectionForm(ClosureResult,
     EndIf;
     
 EndProcedure // DoAfterCloseConnectionForm()
+
+// Deletes the selected channel.
+//
+// Parameters:
+//  QuestionResult       - DialogReturnCode - system enumeration value 
+//                  or a value related to a clicked button. If a dialog 
+//                  is closed on timeout, the value is Timeout. 
+//  AdditionalParameters - Arbitrary        - the value specified when the 
+//                              NotifyDescription object was created.
+//
+&AtClient
+Procedure DoAfterChooseChannelToDelete(QuestionResult, 
+    AdditionalParameters) Export
+    
+    Var Identifier;
+    
+    If QuestionResult = DialogReturnCode.Yes
+        AND TypeOf(AdditionalParameters) = Type("Structure")
+        AND AdditionalParameters.Property("Identifier", Identifier) Then
+            
+        SearchResult = Channels.FindByID(Identifier);
+        If SearchResult <> Undefined Then
+            Channels.Delete(SearchResult);                
+        EndIf;
+        
+        SetChannelMatches();
+            
+    EndIf;
+    
+EndProcedure // DoAfterChooseChannelToDelete()
+
+// Only for internal use.
+//
+&AtClient
+Procedure InstallOrUpdateChannel(CurrentData)
+    
+    If PreAuthorizationRequired(CurrentData.BasicChannelGuid) Then
+                
+        ChannelParameters = ChannelParameters(
+            CurrentData.BasicChannelGuid, "ConnectionForm");
+        ChannelParameters.Insert("Identifier", CurrentData.GetID());
+        
+        OpenForm(ChannelParameters.FormName, 
+            ChannelParameters, 
+            ThisObject,
+            New UUID, 
+            , 
+            , 
+            New NotifyDescription("DoAfterCloseConnectionForm", ThisObject, 
+                ChannelParameters), 
+            FormWindowOpeningMode.LockOwnerWindow);
+            
+    Else
+
+        InstallOrUpdateChannelAtServer(CurrentData.GetID());
+        
+    EndIf;
+    
+EndProcedure // InstallOrUpdateChannel()
+
+// Only for internal use.
+//
+&AtServer
+Procedure SetChannelMatches()
+        
+    Matched = True;
+    For Each Item In Channels Do
+        
+        Item.VersionMatched = Item.Ref.Version = Item.Version;
+        Item.ConnectedMatched = Item.Ref.Connected = Item.Connected;
+        Item.ChannelGuidMatched = Item.Ref.BasicChannelGuid = Item.BasicChannelGuid;
+        
+        If NOT Item.VersionMatched
+            OR NOT Item.ConnectedMatched 
+            OR NOT Item.ChannelGuidMatched Then
+            Matched = False;
+        EndIf;
+        
+    EndDo;
+    
+    If NOT Matched Then
+        Items.ChannelsPage.Picture = PictureLib.FL_ExplanationMark;
+        Items.ChannelsPage.Title = NStr(
+            "en = 'Channels (there are channels that require attention)'; 
+            |ru = 'Каналы (есть каналы которые требуют внимания)'");
+    Else
+        Items.ChannelsPage.Picture = PictureLib.FL_Ok;
+        Items.ChannelsPage.Title = NStr("en = 'Channels'; ru = 'Каналы'");     
+    EndIf;
+    
+EndProcedure // SetChannelMatches()
 
 // Only for internal use.
 //
@@ -531,5 +600,225 @@ Function ChannelParameters(Val LibraryGuid, Val FormName)
 EndFunction // ChannelParameters()
 
 #EndRegion // Channels
+
+#Region Exchange
+
+&AtServer
+Procedure SetExchangeMatches()
+    
+    If Ref.IsEmpty() Then
+        Items.FormInstallExchangeUpdate.Visible = False;
+        Items.FormInstallExchange.Visible = True;
+        Items.FormInstallExchange.DefaultButton = True;
+    Else
+        Items.FormInstallExchange.Visible = False;
+        Items.FormInstallExchangeUpdate.Visible = True;
+        Items.FormInstallExchangeUpdate.DefaultButton = True;    
+    EndIf;
+    
+EndProcedure // SetExchangeMatches()
+
+// Only for internal use.
+//
+&AtServer
+Procedure InstallOrUpdateExchangeAtServer()
+    
+    If Ref.IsEmpty() Then
+        Object = Catalogs.FL_Exchanges.CreateItem();
+    Else    
+        Object = Ref.GetObject();    
+    EndIf;
+    
+    Object.ChannelResources.Clear();
+    Object.Channels.Clear();
+    Object.Events.Clear();
+    Object.Methods.Clear();
+    
+    Object.Description = Description;
+    Object.BasicFormatGuid = BasicFormatGuid;
+    Object.InUse = InUse;
+    Object.Version = Version;
+    
+    ImportedExchange = ImportedExchange();
+    ImportMethods(Object, ImportedExchange, Methods);
+    ImportEvents(Object, ImportedExchange, Methods, Events);
+    ImportChannels(Object, ImportedExchange, Methods, Channels);
+    ImportChannelResources(Object, ImportedExchange, Methods, Channels);
+    
+    Object.Write(); 
+    Ref = Object.Ref;
+
+EndProcedure // InstallOrUpdateExchangeAtServer()
+
+// Only for internal use.
+//
+&AtServerNoContext
+Procedure ImportMethods(Object, ImportedExchange, MethodTable)
+    
+    If NOT ImportedExchange.Property("Methods") Then
+        Return;    
+    EndIf; 
+    
+    FilterParameters = New Structure("Method");
+    For Each Method In ImportedExchange.Methods Do
+        
+        FilterParameters.Method = Method.Method;
+        FilterResult = MethodTable.FindRows(FilterParameters);
+        If FilterResult.Count() <> 0 Then
+            CorrespondingMethod = FilterResult[0].Ref;    
+        Else 
+            Continue;
+        EndIf;
+        
+        NewMethod = Object.Methods.Add();
+        FillPropertyValues(NewMethod, Method, , "APISchema, 
+            |DataCompositionSchema, DataCompositionSettings, Method");
+        
+        NewMethod.APISchema = FL_CommonUse.ValueFromJSONString(
+            Method.APISchema);
+        NewMethod.DataCompositionSchema = FL_CommonUse.ValueFromJSONString(
+            Method.DataCompositionSchema);
+        NewMethod.DataCompositionSettings = FL_CommonUse.ValueFromJSONString(
+            Method.DataCompositionSettings);
+        NewMethod.Method = CorrespondingMethod;
+        
+    EndDo;
+    
+EndProcedure // ImportMethods()
+
+// Only for internal use.
+//
+&AtServerNoContext
+Procedure ImportEvents(Object, ImportedExchange, MethodTable, EventTable)
+    
+    If NOT ImportedExchange.Property("Events") Then
+        Return;    
+    EndIf; 
+    
+    FilterParameters = New Structure("MetadataObject");
+    For Each Event In ImportedExchange.Events Do
+        
+        FilterParameters.MetadataObject = Event.MetadataObject;
+        FilterResult = EventTable.FindRows(FilterParameters);
+        If FilterResult.Count() = 0 Then
+            Continue;
+        EndIf;
+        
+        EventFilter = New Structure("APIVersion, Method");
+        FillPropertyValues(EventFilter, Event);
+        MethodLines = FindMethodLines(Object.Methods, MethodTable, 
+            EventFilter);
+        For Each MethodLine In MethodLines Do
+            NewEvent = Object.Events.Add();
+            FillPropertyValues(NewEvent, Event, , "Method");
+            FillPropertyValues(NewEvent, MethodLine, "Method");
+        EndDo;
+        
+    EndDo;
+    
+EndProcedure // ImportEvents()
+
+// Only for internal use.
+//
+&AtServerNoContext
+Procedure ImportChannels(Object, ImportedExchange, MethodTable, ChannelTable)
+    
+    If NOT ImportedExchange.Property("Channels") Then
+        Return;    
+    EndIf; 
+    
+    FilterParameters = New Structure("Channel");
+    For Each Channel In ImportedExchange.Channels Do
+        
+        FilterParameters.Channel = Channel.Channel;
+        FilterResult = ChannelTable.FindRows(FilterParameters);
+        If FilterResult.Count() = 0 Then
+            Continue;
+        EndIf;
+        
+        ChannelFilter = New Structure("APIVersion, Method");
+        FillPropertyValues(ChannelFilter, Channel);
+        MethodLines = FindMethodLines(Object.Methods, MethodTable, 
+            ChannelFilter);
+        For Each MethodLine In MethodLines Do
+            NewChannel = Object.Channels.Add();
+            NewChannel.Channel = FilterResult[0].Ref; 
+            FillPropertyValues(NewChannel, Channel, , "Channel, Method");
+            FillPropertyValues(NewChannel, MethodLine, "Method");
+        EndDo;
+        
+    EndDo;
+    
+EndProcedure // ImportChannels()
+
+// Only for internal use.
+//
+&AtServerNoContext
+Procedure ImportChannelResources(Object, ImportedExchange, MethodTable, ChannelTable)
+    
+    If NOT ImportedExchange.Property("Channels") Then
+        Return;    
+    EndIf;
+    
+    If NOT ImportedExchange.Property("ChannelResources") Then
+        Return;    
+    EndIf; 
+    
+    FilterParameters = New Structure("Channel");
+    For Each ChannelResource In ImportedExchange.ChannelResources Do
+        
+        FilterParameters.Channel = ChannelResource.Channel;
+        FilterResult = ChannelTable.FindRows(FilterParameters);
+        If FilterResult.Count() = 0 Then
+            Continue;
+        EndIf;
+        
+        ChannelResourceFilter = New Structure("APIVersion, Method");
+        FillPropertyValues(ChannelResourceFilter, ChannelResource);
+        MethodLines = FindMethodLines(Object.Methods, MethodTable, 
+            ChannelResourceFilter);
+        For Each MethodLine In MethodLines Do
+            NewChannelResource = Object.ChannelResources.Add();
+            NewChannelResource.Channel = FilterResult[0].Ref; 
+            FillPropertyValues(NewChannelResource, ChannelResource, , "Channel, Method");
+            FillPropertyValues(NewChannelResource, MethodLine, "Method");
+        EndDo;
+        
+    EndDo;
+    
+EndProcedure // ImportChannelResources()
+
+// Only for internal use.
+//
+&AtServerNoContext
+Function FindMethodLines(VTMethods, FDCMethods, FilterParameters)
+    
+    FilterResult = FDCMethods.FindRows(New Structure("Method", 
+        FilterParameters.Method));
+    If FilterResult.Count() <> 0 Then
+        FilterParameters.Method = FilterResult[0].Ref;
+    Else 
+        Return Undefined;
+    EndIf;
+    
+    Return VTMethods.FindRows(FilterParameters);    
+    
+EndFunction // FindMethodLines()
+
+// Only for internal use.
+//
+&AtServer
+Function ImportedExchange()
+    
+    ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
+        LibraryGuid);
+    BinaryData = ChannelProcessor.GetTemplate(Template);
+    JSONReader = New JSONReader;
+    JSONReader.OpenStream(BinaryData.OpenStreamForRead());
+    Return ReadJSON(JSONReader);
+    
+EndFunction // ImportedExchange()
+
+#EndRegion // Exchange
 
 #EndRegion // ServiceProceduresAndFunctions

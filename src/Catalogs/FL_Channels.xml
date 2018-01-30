@@ -311,7 +311,7 @@
 			<DefaultObjectForm>Catalog.FL_Channels.Form.ItemForm</DefaultObjectForm>
 			<DefaultFolderForm/>
 			<DefaultListForm>Catalog.FL_Channels.Form.ListForm</DefaultListForm>
-			<DefaultChoiceForm/>
+			<DefaultChoiceForm>Catalog.FL_Channels.Form.ChoiceForm</DefaultChoiceForm>
 			<DefaultFolderChoiceForm/>
 			<AuxiliaryObjectForm/>
 			<AuxiliaryFolderForm/>
@@ -878,6 +878,7 @@
 					</Attribute>
 				</ChildObjects>
 			</TabularSection>
+			<Form>ChoiceForm</Form>
 			<Form>ItemForm</Form>
 			<Form>ListForm</Form>
 		</ChildObjects>
