@@ -281,6 +281,7 @@
 			<Enum>FL_CRUDMethods</Enum>
 			<Enum>FL_RESTMethods</Enum>
 			<DataProcessor>FL_AdministrationPanel</DataProcessor>
+			<DataProcessor>FL_DataProcessorCSV</DataProcessor>
 			<DataProcessor>FL_DataProcessorJSON</DataProcessor>
 			<DataProcessor>FL_RabbitMQ</DataProcessor>
 			<DataProcessor>FL_Self</DataProcessor>

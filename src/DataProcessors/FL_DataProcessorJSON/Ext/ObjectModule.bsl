@@ -136,16 +136,13 @@ Procedure Initialize(Stream, APISchema = Undefined) Export
     
 EndProcedure // Initialize()
 
-// Completes JSON text writing. If writing to a file, the file is closed. 
-// If writing to a string, the resultant string will be returned as the method's return value. 
-// If writing to file, the method will return an empty string.
+// Completes JSON text writing. 
 //
-// Returns:
-//  String - JSON string.
-//
-Function Close() Export
-    Return StreamWriter.Close();   
-EndFunction // Close() 
+Procedure Close() Export
+    
+    StreamWriter.Close();
+    
+EndProcedure // Close() 
 
 #EndRegion // ProgramInterface
 
