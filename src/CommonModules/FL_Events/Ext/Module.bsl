@@ -446,9 +446,9 @@ Function QueryTextSubscribers(Owner)
     
     QueryText = StrTemplate("
         |SELECT
-        |   Events.APIVersion       AS APIVersion,
-        |   Exchanges.Ref           AS Owner,
-        |   Methods.Priority        AS Priority
+        |   EventTable.APIVersion AS APIVersion,
+        |   Exchanges.Ref         AS Owner,
+        |   MethodTable.Priority  AS Priority
         |FROM
         |   Catalog.FL_Exchanges AS Exchanges
         |

@@ -49,7 +49,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.4.1</Version>
+			<Version>0.9.4.2</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -189,6 +189,7 @@
 			<CommonPicture>FL_Add</CommonPicture>
 			<CommonPicture>FL_AddEvent</CommonPicture>
 			<CommonPicture>FL_AddLink</CommonPicture>
+			<CommonPicture>FL_AddPrivateKey</CommonPicture>
 			<CommonPicture>FL_AddRow</CommonPicture>
 			<CommonPicture>FL_CodeFile</CommonPicture>
 			<CommonPicture>FL_Connected</CommonPicture>
@@ -212,6 +213,7 @@
 			<CommonPicture>FL_Install</CommonPicture>
 			<CommonPicture>FL_InstallUpdate</CommonPicture>
 			<CommonPicture>FL_InvalidMethodSettings</CommonPicture>
+			<CommonPicture>FL_Kyivstar</CommonPicture>
 			<CommonPicture>FL_Logotype16</CommonPicture>
 			<CommonPicture>FL_Logotype32</CommonPicture>
 			<CommonPicture>FL_Logotype64</CommonPicture>
