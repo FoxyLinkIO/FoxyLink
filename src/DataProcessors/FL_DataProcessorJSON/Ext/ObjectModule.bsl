@@ -466,10 +466,13 @@ Procedure CertainlyOpenArrObj(CurrentLevel, DownLevel)
     //Pointers = New Array;
     //While CurrentLevel <> Pointer Do
     //    Pointers.Insert(0, Pointer);
-    //    Pointer = DownLevel.Parent;
+    //    Pointer = Pointer.Parent;
     //EndDo;
     //
     //CurrentLevel = DownLevel;
+    //For Each Rows In CurrentLevel.Rows Do
+    //    Rows.Done = False;   
+    //EndDo;
     //
     //For Each Pointer In Pointers Do
     //    
@@ -485,7 +488,7 @@ Procedure CertainlyOpenArrObj(CurrentLevel, DownLevel)
     //    
     //EndDo;
     
-    Pointer = DownLevel; Pointers = New Array; While CurrentLevel <> Pointer Do Pointers.Insert(0, Pointer); Pointer = DownLevel.Parent; EndDo; CurrentLevel = DownLevel; For Each Pointer In Pointers Do If Pointer.Parent.Type = "Object" Then StreamWriter.WritePropertyName(Pointer.Name); EndIf; If Pointer.Type = "Object" Then StreamWriter.WriteStartObject(); Else StreamWriter.WriteStartArray(); EndIf; EndDo;
+    Pointer = DownLevel; Pointers = New Array; While CurrentLevel <> Pointer Do Pointers.Insert(0, Pointer); Pointer = Pointer.Parent; EndDo; CurrentLevel = DownLevel; For Each Rows In CurrentLevel.Rows Do Rows.Done = False; EndDo; For Each Pointer In Pointers Do If Pointer.Parent.Type = "Object" Then StreamWriter.WritePropertyName(Pointer.Name); EndIf; If Pointer.Type = "Object" Then StreamWriter.WriteStartObject(); Else StreamWriter.WriteStartArray(); EndIf; EndDo;
     
 EndProcedure // CertainlyOpenArrObj()
 
