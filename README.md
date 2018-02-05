@@ -94,7 +94,7 @@ EndFunction // OutputInJSON()
 
 ## Copyright and license
 
-Copyright © 2016-2017 Petro Bazeliuk.
+Copyright © 2016-2018 Petro Bazeliuk.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -117,3 +117,15 @@ By submitting a Pull Request, you disavow any rights or claims to any changes su
 If you cannot or do not want to reassign those rights (your employment contract for your employer may not allow this), you should not submit a PR. Open an issue and someone else can do the work.
 
 This is a legal way of saying "If you submit a PR to us, that code becomes ours". 99.9% of the time that's what you intend anyways; we hope it doesn't scare you away from contributing.
+
+## Happy Customers
+
+<p align="center">
+  <a href="https://ktc.ua">
+    <img src="https://github.com/FoxyLinkIO/FoxyLink/blob/develop/img/customers/ktc.svg" alt="" width=196px height=42px/>
+  </a>
+  <a href="https://previa.uk.com/">
+    <img src="https://github.com/FoxyLinkIO/FoxyLink/blob/develop/img/customers/previa.uk.png" alt="" width=100px height=42px/>
+  </a>
+</p>
+
