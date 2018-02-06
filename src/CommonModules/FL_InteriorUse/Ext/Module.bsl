@@ -46,6 +46,46 @@ EndFunction // SetOfConstants()
 
 #Region HTTPInteraction
 
+// Sends data at the specified address to be processed using 
+// the specified HTTP-method.
+//
+// Parameters:
+//  HTTPConnection - HTTPConnection - an object to interact with external 
+//                          systems by HTTP protocol, including file transfer.
+//  HTTPRequest    - HTTPRequest    - describes the HTTP-requests sent using 
+//                                      the HTTPConnection object.
+//  HTTPMethod     - HTTPMethod     - HTTP method name.
+//  Result         - Structure      - see function Catalogs.FL_Channels.NewChannelDeliverResult.
+//
+Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, Result) Export
+        
+    If Result.LogAttribute <> Undefined Then
+        LogObject = StartLogHTTPRequest(HTTPConnection, HTTPRequest, 
+            HTTPMethod);
+    EndIf;
+
+    Try
+        HTTPResponse = HTTPConnection.CallHTTPMethod(HTTPMethod, HTTPRequest);
+        StatusCode = HTTPResponse.StatusCode;
+        ResponseBody = HTTPResponse.GetBodyAsString();
+    Except
+        HTTPResponse = Undefined;
+        StatusCode = CodeStatusInternalServerError();
+        ResponseBody = ErrorDescription();     
+    EndTry;
+    
+    If Result.LogAttribute <> Undefined Then
+        Result.LogAttribute = Result.LogAttribute + 
+            EndLogHTTPRequest(LogObject, StatusCode, ResponseBody);    
+    EndIf;
+
+    Result.OriginalResponse = HTTPResponse;
+    Result.StatusCode = StatusCode;
+    Result.StringResponse = ResponseBody;
+    Result.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(StatusCode);
+    
+EndProcedure // CallHTTPMethod()
+
 // Creates HTTPConnection object. 
 //
 // Parameters:
@@ -111,51 +151,6 @@ Function NewHTTPRequest(ResourceAddress, Headers = Undefined,
     Return HTTPRequest;
     
 EndFunction // NewHTTPRequest()
-
-// Sends data at the specified address to be processed using 
-// the specified HTTP-method.
-//
-// Parameters:
-//  HTTPConnection - HTTPConnection - an object to interact with external 
-//                          systems by HTTP protocol, including file transfer.
-//  HTTPRequest    - HTTPRequest    - describes the HTTP-requests sent using 
-//                                      the HTTPConnection object.
-//  HTTPMethod     - HTTPMethod     - HTTP method name.
-//  StatusCode     - Number         - HTTP server status (response) code.
-//  ResponseBody   - String         - response body as a string.
-//  LogAttribute   - String         - if attribute is set, measuring data will
-//                                      be collected.
-//                          Default value: Undefined.
-//
-// Returns:
-//  HTTPResponse - provides access to contents of a HTTP server response to a request. 
-//
-Function CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, StatusCode, 
-    ResponseBody, LogAttribute = Undefined) Export
-    
-    If LogAttribute <> Undefined Then
-        LogObject = StartLogHTTPRequest(HTTPConnection, HTTPRequest, 
-            HTTPMethod);
-    EndIf;
-
-    Try
-        HTTPResponse = HTTPConnection.CallHTTPMethod(HTTPMethod, HTTPRequest);
-        StatusCode = HTTPResponse.StatusCode;
-        ResponseBody = HTTPResponse.GetBodyAsString();
-    Except
-        HTTPResponse = Undefined;
-        StatusCode = CodeStatusInternalServerError();
-        ResponseBody = ErrorDescription();     
-    EndTry;
-    
-    If LogAttribute <> Undefined Then
-        LogAttribute = LogAttribute + EndLogHTTPRequest(LogObject, StatusCode, 
-            ResponseBody);    
-    EndIf;
-
-    Return HTTPResponse;
-    
-EndFunction // CallHTTPMethod()
 
 #EndRegion // HTTPInteraction
 
