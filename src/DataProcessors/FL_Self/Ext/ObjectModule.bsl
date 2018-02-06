@@ -62,7 +62,7 @@ EndFunction // ChannelShortName()
 //
 Function ChannelFullName() Export
     
-    Return "Self-messaging";    
+    Return "FoxyLink self-messaging";    
     
 EndFunction // ChannelFullName()
 
@@ -101,7 +101,6 @@ Function DeliverMessage(Stream, Properties) Export
         
     EndIf;
     
-    DeliveryResult.LogAttribute = LogAttribute;
     Return DeliveryResult;
     
 EndFunction // DeliverMessage() 

@@ -1,7 +1,7 @@
 License
 ========
 
-Copyright © 2016-2017 Petro Bazeliuk.
+Copyright © 2016-2018 Petro Bazeliuk.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -19,8 +19,8 @@ along with this program. If not, see [http://www.gnu.org/licenses/agpl-3.0](http
 
 ## Commercial License
 
-Some subscriptions allow to use IHL under the proprietary license,
-allowing private forks and modifications of IHL. Please contact me 
+Some subscriptions allow to use FoxyLink under the proprietary license,
+allowing private forks and modifications of FoxyLink. Please contact me 
 pbazeliuk@gmail.com for more details. You can find the End
 User License Agreement text in the `EULA` file distributed with the 
 source code.

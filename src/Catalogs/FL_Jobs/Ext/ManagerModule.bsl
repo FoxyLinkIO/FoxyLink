@@ -222,7 +222,9 @@ Function NewProperties(JobObject, Resources)
     EndDo;
     
     JobProperties = New Structure;
+    JobProperties.Insert("MetadataObject", JobObject.MetadataObject);
     JobProperties.Insert("Method", JobObject.Method);
+    JobProperties.Insert("SourceObject", JobObject.SourceObject);
     //JobProperties.Insert("MediaType", JobObject.MediaType);
     Properties.Insert("JobProperties", JobProperties);
     Return Properties;
