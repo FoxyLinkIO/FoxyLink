@@ -121,7 +121,10 @@ This is a legal way of saying "If you submit a PR to us, that code becomes ours"
 ## Happy Customers
 
 <p align="center">
-  <a href="https://ktc.ua">
+  <a href="https://www.riger.ca/">
+    <img src="https://github.com/FoxyLinkIO/FoxyLink/blob/develop/img/customers/Riger.ca.png" alt="" width=100px height=42px/>
+  </a>
+  <a href="https://ktc.ua/">
     <img src="https://github.com/FoxyLinkIO/FoxyLink/blob/develop/img/customers/ktc.svg" alt="" width=196px height=42px/>
   </a>
   <a href="https://previa.uk.com/">
