@@ -167,8 +167,9 @@ Procedure ExtendStructure(Receiver, Source, WithReplacement = Undefined) Export
             If NOT WithReplacement Then
                 Continue;
             Else
-                Raise StrTemplate(NStr("en = 'Source and receiver structures intersection by key ''%1''.';
-                        |ru = 'Пересечение структур источника и приемника по ключу ''%1''.'"),
+                Raise StrTemplate(NStr("en='Source and receiver structures intersection by key {%1}.';
+                    |ru='Пересечение структур источника и приемника по ключу {%1}.';
+                    |en_CA='Source and receiver structures intersection by key {%1}.'"),
                     KeyAndValue.Key);
             EndIf;
         EndIf;

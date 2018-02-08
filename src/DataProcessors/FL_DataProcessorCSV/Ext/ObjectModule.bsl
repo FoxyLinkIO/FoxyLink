@@ -399,8 +399,9 @@ EndFunction // Version()
 //
 Function BaseDescription() Export
     
-    BaseDescription = NStr("en = 'CSV (%1) format data processor, ver. %2'; 
-        |ru = 'Обработчик формата CSV (%1), вер. %2'");
+    BaseDescription = NStr("en='CSV (%1) format data processor, ver. %2';
+        |ru='Обработчик формата CSV (%1), вер. %2';
+        |en_CA='CSV (%1) format data processor, ver. %2'");
     BaseDescription = StrTemplate(BaseDescription, FormatStandard(), Version());      
     Return BaseDescription;    
     

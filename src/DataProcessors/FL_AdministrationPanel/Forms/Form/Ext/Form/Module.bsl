@@ -28,7 +28,8 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     EndIf;
 
     Raise NStr("en='Data processor is not intended for direct usage.';
-        |ru='Обработка не предназначена для непосредственного использования.'");
+        |ru='Обработка не предназначена для непосредственного использования.';
+        |en_CA='Data processor is not intended for direct usage.'");
 
 EndProcedure // OnCreateAtServer()
 

@@ -230,8 +230,13 @@ EndProcedure // AddAPIMethod()
 &AtClient
 Procedure DeleteAPIMethod(Command)
     
+    ExchangeMethods = New ValueList();
+    For Each Item In Object.Methods Do
+        ExchangeMethods.Add(Item.Method);   
+    EndDo;
+
     ShowChooseFromList(New NotifyDescription("DoAfterChooseMethodToDelete",
-        ThisObject), CurrentMethods(), Items.DeleteAPIMethod);
+        ThisObject), ExchangeMethods, Items.DeleteAPIMethod);
     
 EndProcedure // DeleteAPIMethod()
 
@@ -256,7 +261,6 @@ Procedure EnqueueEvents(Command)
     If CurrentData <> Undefined Then
         
         FormParameters = New Structure;
-        FormParameters.Insert("APIVersion", CurrentData.APIVersion);
         FormParameters.Insert("Exchange", Object.Ref); 
         FormParameters.Insert("MetadataObject", CurrentData.MetadataObject);
         FormParameters.Insert("Method", CurrentData.Method);
@@ -282,8 +286,9 @@ Procedure DeleteEvent(Command)
         
         ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDelete", 
             ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en = 'Permanently delete the selected event?';
-                 |ru = 'Удалить выбранное событие?'"),
+            NStr("en='Permanently delete the selected event?';
+                |ru='Удалить выбранное событие?';
+                |en_CA='Permanently delete the selected event?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);     
         
     EndIf;
@@ -353,8 +358,9 @@ Procedure DeleteChannel(Command)
         
         ShowQueryBox(New NotifyDescription("DoAfterChooseChannelToDelete", 
             ThisObject, New Structure("Identifier", CurrentData.GetID())),
-            NStr("en = 'Permanently delete the selected channel?';
-                 |ru = 'Удалить выбранный канал?'"),
+            NStr("en='Permanently delete the selected channel?';
+                |ru='Удалить выбранный канал?';
+                |en_CA='Permanently delete the selected channel?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);     
         
     EndIf;
@@ -376,9 +382,9 @@ Procedure EditDataCompositionSchema(Command)
     #Else
         
         ShowMessageBox(Undefined,
-            NStr("en = 'To edit the layout scheme, run configuration in thick client mode.';
-                |ru = 'Для того, чтобы редактировать схему компоновки,  
-                |необходимо запустить конфигурацию в режиме толстого клиента.'"));
+            NStr("en='To edit the layout scheme, run configuration in thick client mode.';
+                |ru='Для того, чтобы редактировать схему компоновки, необходимо запустить конфигурацию в режиме толстого клиента.';
+                |en_CA='To edit the layout scheme, run configuration in thick client mode.'"));
         
     #EndIf
     
@@ -426,8 +432,9 @@ Procedure DeleteAPI(Command)
     
     ShowQueryBox(New NotifyDescription("DoAfterChooseAPISchemaToDelete", 
             ThisObject),
-        NStr("en = 'Delete API schema from the current method?';
-             |ru = 'Удалить API схему из текущего метода?'"),
+        NStr("en='Delete API schema from the current method?';
+            |ru='Удалить API схему из текущего метода?';
+            |en_CA='Delete API schema from the current method?'"),
         QuestionDialogMode.YesNo, 
         , 
         DialogReturnCode.No);    
@@ -603,9 +610,8 @@ Procedure DoAfterChooseMethodToAdd(SelectedElement,
     
     If SelectedElement <> Undefined Then
         
-        FilterParameters = New Structure("APIVersion, Method", "1.0.0", 
-            SelectedElement.Value);
-            
+        FilterParameters = NewMethodFilterParameters();
+        FilterParameters.Method = SelectedElement.Value;    
         FilterResult = Object.Methods.FindRows(FilterParameters);
         If FilterResult.Count() = 0 Then
             
@@ -613,7 +619,6 @@ Procedure DoAfterChooseMethodToAdd(SelectedElement,
             
             NewMethod = Object.Methods.Add();
             NewMethod.Method = SelectedElement.Value;
-            NewMethod.APIVersion = "1.0.0";
             NewMethod.Priority = NormalPriority;
     
             UpdateMethodsView();
@@ -636,34 +641,26 @@ EndProcedure // DoAfterChooseMethodToAdd()
 Procedure DoAfterChooseMethodToDelete(SelectedElement, 
     AdditionalParameters) Export
     
-    If SelectedElement <> Undefined Then
+    If SelectedElement <> Undefined 
+        AND TypeOf(SelectedElement.Value) = Type("CatalogRef.FL_Methods") Then
+        
+        FilterParameters = NewMethodFilterParameters();
+        FilterParameters.Method = SelectedElement.Value;
+           
+        FL_CommonUseClientServer.DeleteRowsByFilter(Object.Methods, 
+            FilterParameters, Modified);
+        
+        FL_CommonUseClientServer.DeleteRowsByFilter(Object.Events, 
+            FilterParameters, Modified);
             
-        FilterResult = Object.Methods.FindRows(SelectedElement.Value);
-        If FilterResult.Count() > 0 Then
+        FL_CommonUseClientServer.DeleteRowsByFilter(Object.Channels, 
+            FilterParameters, Modified);
             
-            Modified = True;
-            
-            FL_CommonUseClientServer.DeleteRowsByFilter(Object.Events, 
-                SelectedElement.Value, Modified);
-                
-            FL_CommonUseClientServer.DeleteRowsByFilter(Object.Channels, 
-                SelectedElement.Value, Modified);
-                
-            FL_CommonUseClientServer.DeleteRowsByFilter(Object.ChannelResources, 
-                SelectedElement.Value, Modified);
-
-            Object.Methods.Delete(FilterResult[0]);
-                        
-            // Delete transition cache.
-            FilterResult = TransitionMethodPagesHistory.FindRows(SelectedElement.Value);
-            If FilterResult.Count() > 0 Then                
-                TransitionMethodPagesHistory.Delete(FilterResult[0]);
-            EndIf;
-            
-            UpdateMethodsView();
-            
-        EndIf;
-                
+        FL_CommonUseClientServer.DeleteRowsByFilter(Object.ChannelResources, 
+            FilterParameters, Modified);
+                    
+        UpdateMethodsView();
+                            
     EndIf;
     
 EndProcedure // DoAfterChooseMethodToDelete() 
@@ -815,6 +812,8 @@ Procedure UpdateDataCompositionSchema(DataCompositionSchema)
 
 EndProcedure // UpdateDataCompositionSchema() 
 
+// Loads method settings in form object.
+//
 &AtServer
 Procedure LoadMethodSettings()
     
@@ -836,7 +835,6 @@ Procedure LoadMethodSettings()
             "HiddenGroupSettings", RowMethod);
            
         CurrentData = CurrentMethodData(RowMethod);
-        RowAPIVersion = CurrentData.APIVersion;
         RowPriority = CurrentData.Priority;
         RowCanUseExternalFunctions = CurrentData.CanUseExternalFunctions;
         
@@ -869,7 +867,6 @@ Procedure LoadMethodSettings()
     Else
 
         RowMethod = Undefined;
-        RowAPIVersion = Undefined;
         RowCanUseExternalFunctions = Undefined;
         DataCompositionSchemaEditAddress = "";
         RowComposerSettings = New DataCompositionSettingsComposer;
@@ -926,24 +923,6 @@ Function AvailableMethods()
     
 EndFunction // AvailableMethods()
 
-// Returns list of currently used methods.
-//
-&AtServer
-Function CurrentMethods()
-    
-    ValueList = New ValueList();
-    For Each Item In Object.Methods Do
-        
-        ValueItem = NewMethodFilterParameters();
-        FillPropertyValues(ValueItem, Item);
-        ValueList.Add(ValueItem, StrTemplate("%1, ver. %2", Item.Method,
-            Item.APIVersion));   
-    EndDo;
-    
-    Return ValueList;
-    
-EndFunction // CurrentMethods()
-
 // Returns list of currently used methods with filled API schema.
 //
 &AtServer
@@ -958,12 +937,9 @@ Function CurrentMethodsWithAPISchema()
         EndIf;
         
         If IsTempStorageURL(Item.APISchemaAddress) Then
-            
-            ValueItem = NewMethodFilterParameters();
-            FillPropertyValues(ValueItem, Item);
-            ValueList.Add(ValueItem, StrTemplate("%1, ver. %2", Item.Method, 
-                Item.APIVersion));
-                
+            FilterParameters = NewMethodFilterParameters();
+            FilterParameters.Method = Item.Method;
+            ValueList.Add(FilterParameters, Item.Method);   
         EndIf;
     EndDo;
     
@@ -985,28 +961,21 @@ Function CurrentMethodData(Val RowMethod)
     Method = FL_CommonUse.ReferenceByDescription(Metadata.Catalogs.FL_Methods,
         RowMethod);
     
-    FilterParameters = New Structure("Method", Method);
-    FilterResult = TransitionMethodPagesHistory.FindRows(FilterParameters);
-    If FilterResult.Count() > 0 Then 
-        FilterParameters.Insert("APIVersion", FilterResult[0].APIVersion);
-        TransitionMethodPagesHistory.Delete(FilterResult[0]);
-    EndIf;
-    
+    FilterParameters = NewMethodFilterParameters();
+    FilterParameters.Method = Method;
     FilterResult = Object.Methods.FindRows(FilterParameters);
     If FilterResult.Count() > 0 Then
-        
         CurrentData = FilterResult[0];
-        NewRow = TransitionMethodPagesHistory.Add();
-        FillPropertyValues(NewRow, CurrentData);
-
     Else
         
-        ErrorMessage = NStr("en = 'Critical error, method not found.';
-            |ru = 'Критическая ошибка, метод не найден.'");
+        ErrorMessage = NStr("en='Critical error, method not found.';
+            |ru='Критическая ошибка, метод не найден.';
+            |en_CA='Critical error, method not found.'");
+        
         Raise ErrorMessage;     
         
     EndIf;
-        
+            
     Return CurrentData;    
 
 EndFunction // CurrentMethodData()  
@@ -1017,7 +986,6 @@ EndFunction // CurrentMethodData()
 Function NewMethodFilterParameters()
 
     FilterParameters = New Structure;
-    FilterParameters.Insert("APIVersion");
     FilterParameters.Insert("Method");
     Return FilterParameters;
 
@@ -1085,8 +1053,8 @@ EndProcedure // DoAfterChooseEventToDelete()
 Procedure AddEventAtServer(EventsArray)
 
     CurrentData = CurrentMethodData(RowMethod);   
-    FilterParameters = NewEventFilterParameters();
-    FillPropertyValues(FilterParameters, CurrentData, "APIVersion, Method");
+    FilterParameters = NewMethodFilterParameters();
+    FilterParameters.Method = CurrentData.Method;
     
     FL_CommonUseClientServer.DeleteRowsByFilter(Object.Events, 
         FilterParameters, Modified);
@@ -1108,8 +1076,9 @@ EndProcedure // AddEventAtServer()
 Function MarkedEvents()
     
     CurrentData = CurrentMethodData(RowMethod);
-    FilterParameters = NewEventFilterParameters();
-    FillPropertyValues(FilterParameters, CurrentData, "APIVersion, Method");
+    FilterParameters = NewMethodFilterParameters();
+    FilterParameters.Method = CurrentData.Method;
+    
     FilterResults = Object.Events.FindRows(FilterParameters);
     
     MarkedEvents = New ValueList;
@@ -1120,18 +1089,6 @@ Function MarkedEvents()
     Return MarkedEvents;
     
 EndFunction // MarkedEvents()
-
-// Only for internal use.
-//
-&AtClientAtServerNoContext
-Function NewEventFilterParameters()
-
-    FilterParameters = New Structure;
-    FilterParameters.Insert("APIVersion");
-    FilterParameters.Insert("Method");
-    Return FilterParameters;
-
-EndFunction // NewEventFilterParameters() 
 
 #EndRegion // Events
 
@@ -1292,8 +1249,8 @@ Function AddChannelAtServer(Channel)
     CurrentData = CurrentMethodData(RowMethod);   
     
     FilterParameters = ChannelFilterParameters();
+    FilterParameters.Method = CurrentData.Method;
     FilterParameters.Channel = Channel;
-    FillPropertyValues(FilterParameters, CurrentData, "APIVersion, Method");
     
     FilterResults = Object.Channels.FindRows(FilterParameters);
     If FilterResults.Count() = 0 Then        
@@ -1344,7 +1301,6 @@ EndFunction // RequiredChannelResources()
 Function ChannelFilterParameters()
 
     FilterParameters = New Structure;
-    FilterParameters.Insert("APIVersion");
     FilterParameters.Insert("Channel");
     FilterParameters.Insert("Method");
     Return FilterParameters;

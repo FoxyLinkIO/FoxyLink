@@ -34,6 +34,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Обмены</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Exchanges</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment/>
 			<Hierarchical>true</Hierarchical>
@@ -262,6 +266,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Наименование</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Name</v8:content>
+						</v8:item>
 					</xr:Synonym>
 					<xr:Comment/>
 					<xr:FullTextSearch>DontUse</xr:FullTextSearch>
@@ -332,6 +340,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Обмен</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Exchange</v8:content>
+				</v8:item>
 			</ObjectPresentation>
 			<ExtendedObjectPresentation/>
 			<ListPresentation/>
@@ -344,6 +356,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Список обменов. Для обмена могут быть заданы формат обмена, подключены каналы обмена, подписки и т. п.</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>List of exchanges. For exchange could be set the exchange format, connect channels, subscriptions, etc.</v8:content>
 				</v8:item>
 			</Explanation>
 			<CreateOnInput>DontUse</CreateOnInput>
@@ -362,6 +378,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Базовый идентификатор формата</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Basic format guid</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment>Guid which is used to identify different implementations of specific format.</Comment>
@@ -383,6 +403,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Уникальный идентификатор, который используется для идентификации различных реализаций конкретного формата.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Guid which is used to identify different implementations of specific format.</v8:content>
 						</v8:item>
 					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
@@ -420,6 +444,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Используется</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>In use</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment>Specifies that the exchange is used.</Comment>
 					<Type>
@@ -436,6 +464,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Определяет, что обмен используется.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Specifies that the exchange is used.</v8:content>
 						</v8:item>
 					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
@@ -473,6 +505,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Версия</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Version</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment>Numbers to unique the state of this exchange.</Comment>
 					<Type>
@@ -493,6 +529,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Номер уникального состояния этого обмена. В данной категории номера версии (основной, второстепенной), номера обычно назначаются в порядке возрастания и соответствуют новым изменениям в программном обеспечении.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Numbers to unique the state of this exchange. Within a given version number category (major, minor), these numbers are generally assigned in increasing order and correspond to new developments in the software.</v8:content>
 						</v8:item>
 					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
@@ -540,6 +580,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Ресурсы канала</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Channel resources</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -575,51 +619,6 @@
 					<Use>ForItem</Use>
 				</Properties>
 				<ChildObjects>
-					<Attribute uuid="b550b758-3a96-4623-a2a5-1c381e1ec9c3">
-						<Properties>
-							<Name>APIVersion</Name>
-							<Synonym>
-								<v8:item>
-									<v8:lang>en</v8:lang>
-									<v8:content>API version</v8:content>
-								</v8:item>
-								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Версия API</v8:content>
-								</v8:item>
-							</Synonym>
-							<Comment/>
-							<Type>
-								<v8:Type>xs:string</v8:Type>
-								<v8:StringQualifiers>
-									<v8:Length>10</v8:Length>
-									<v8:AllowedLength>Variable</v8:AllowedLength>
-								</v8:StringQualifiers>
-							</Type>
-							<PasswordMode>false</PasswordMode>
-							<Format/>
-							<EditFormat/>
-							<ToolTip/>
-							<MarkNegatives>false</MarkNegatives>
-							<Mask/>
-							<MultiLine>false</MultiLine>
-							<ExtendedEdit>false</ExtendedEdit>
-							<MinValue xsi:nil="true"/>
-							<MaxValue xsi:nil="true"/>
-							<FillChecking>ShowError</FillChecking>
-							<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
-							<ChoiceParameterLinks/>
-							<ChoiceParameters/>
-							<QuickChoice>DontUse</QuickChoice>
-							<CreateOnInput>DontUse</CreateOnInput>
-							<ChoiceForm/>
-							<LinkByType/>
-							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
-							<Indexing>DontIndex</Indexing>
-							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
-						</Properties>
-					</Attribute>
 					<Attribute uuid="f200f1ee-48bc-4ada-8ad5-e603c128a905">
 						<Properties>
 							<Name>Channel</Name>
@@ -631,6 +630,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Канал</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Channel</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -673,6 +676,10 @@
 									<v8:lang>en</v8:lang>
 									<v8:content>Executable code</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Executable code</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -713,6 +720,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование поля</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field name</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -759,6 +770,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Значение поля</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field value</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -803,6 +818,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Метод</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Method</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -857,6 +876,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Каналы</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Channels</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -892,51 +915,6 @@
 					<Use>ForItem</Use>
 				</Properties>
 				<ChildObjects>
-					<Attribute uuid="8e7e0269-4d9d-41e8-b517-5f9b84a3c4db">
-						<Properties>
-							<Name>APIVersion</Name>
-							<Synonym>
-								<v8:item>
-									<v8:lang>en</v8:lang>
-									<v8:content>API version</v8:content>
-								</v8:item>
-								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Версия API</v8:content>
-								</v8:item>
-							</Synonym>
-							<Comment/>
-							<Type>
-								<v8:Type>xs:string</v8:Type>
-								<v8:StringQualifiers>
-									<v8:Length>10</v8:Length>
-									<v8:AllowedLength>Variable</v8:AllowedLength>
-								</v8:StringQualifiers>
-							</Type>
-							<PasswordMode>false</PasswordMode>
-							<Format/>
-							<EditFormat/>
-							<ToolTip/>
-							<MarkNegatives>false</MarkNegatives>
-							<Mask/>
-							<MultiLine>false</MultiLine>
-							<ExtendedEdit>false</ExtendedEdit>
-							<MinValue xsi:nil="true"/>
-							<MaxValue xsi:nil="true"/>
-							<FillChecking>ShowError</FillChecking>
-							<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
-							<ChoiceParameterLinks/>
-							<ChoiceParameters/>
-							<QuickChoice>DontUse</QuickChoice>
-							<CreateOnInput>DontUse</CreateOnInput>
-							<ChoiceForm/>
-							<LinkByType/>
-							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
-							<Indexing>DontIndex</Indexing>
-							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
-						</Properties>
-					</Attribute>
 					<Attribute uuid="9efc58b3-6100-46d2-8339-19b017973271">
 						<Properties>
 							<Name>Channel</Name>
@@ -948,6 +926,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Канал</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Channel</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -990,6 +972,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Метод</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Method</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1030,6 +1016,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Обработчик ответа</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Response handler</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1084,6 +1074,10 @@
 							<v8:lang>en</v8:lang>
 							<v8:content>Events</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Events</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -1119,51 +1113,6 @@
 					<Use>ForItem</Use>
 				</Properties>
 				<ChildObjects>
-					<Attribute uuid="21005658-d46f-4037-b9d9-20300c88fb05">
-						<Properties>
-							<Name>APIVersion</Name>
-							<Synonym>
-								<v8:item>
-									<v8:lang>en</v8:lang>
-									<v8:content>API version</v8:content>
-								</v8:item>
-								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Версия API</v8:content>
-								</v8:item>
-							</Synonym>
-							<Comment/>
-							<Type>
-								<v8:Type>xs:string</v8:Type>
-								<v8:StringQualifiers>
-									<v8:Length>10</v8:Length>
-									<v8:AllowedLength>Variable</v8:AllowedLength>
-								</v8:StringQualifiers>
-							</Type>
-							<PasswordMode>false</PasswordMode>
-							<Format/>
-							<EditFormat/>
-							<ToolTip/>
-							<MarkNegatives>false</MarkNegatives>
-							<Mask/>
-							<MultiLine>false</MultiLine>
-							<ExtendedEdit>false</ExtendedEdit>
-							<MinValue xsi:nil="true"/>
-							<MaxValue xsi:nil="true"/>
-							<FillChecking>ShowError</FillChecking>
-							<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
-							<ChoiceParameterLinks/>
-							<ChoiceParameters/>
-							<QuickChoice>DontUse</QuickChoice>
-							<CreateOnInput>DontUse</CreateOnInput>
-							<ChoiceForm/>
-							<LinkByType/>
-							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
-							<Indexing>DontIndex</Indexing>
-							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
-						</Properties>
-					</Attribute>
 					<Attribute uuid="b7a1001b-2727-4d0f-a618-20f78c8152ae">
 						<Properties>
 							<Name>EventName</Name>
@@ -1175,6 +1124,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование события</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Event name</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1221,6 +1174,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Объект метаданных</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Metadata object</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment>Provides access to the metadata object name.</Comment>
 							<Type>
@@ -1242,6 +1199,11 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Обеспечивает доступ к имени объекта метаданных. Другой способ получить то же значение - через метаданные свойств глобального контекста.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Provides access to the metadata object name. Another way of getting the same value is through the global context property Metadata. 
+</v8:content>
 								</v8:item>
 							</ToolTip>
 							<MarkNegatives>false</MarkNegatives>
@@ -1275,6 +1237,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Метод</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Method</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1329,6 +1295,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Методы</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Methods</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -1376,6 +1346,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Схема API</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>API schema</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1405,51 +1379,6 @@
 							<DataHistory>Use</DataHistory>
 						</Properties>
 					</Attribute>
-					<Attribute uuid="0af76dad-c712-4e34-82b4-b49253b582c4">
-						<Properties>
-							<Name>APIVersion</Name>
-							<Synonym>
-								<v8:item>
-									<v8:lang>en</v8:lang>
-									<v8:content>API version</v8:content>
-								</v8:item>
-								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Версия API</v8:content>
-								</v8:item>
-							</Synonym>
-							<Comment/>
-							<Type>
-								<v8:Type>xs:string</v8:Type>
-								<v8:StringQualifiers>
-									<v8:Length>10</v8:Length>
-									<v8:AllowedLength>Variable</v8:AllowedLength>
-								</v8:StringQualifiers>
-							</Type>
-							<PasswordMode>false</PasswordMode>
-							<Format/>
-							<EditFormat/>
-							<ToolTip/>
-							<MarkNegatives>false</MarkNegatives>
-							<Mask/>
-							<MultiLine>false</MultiLine>
-							<ExtendedEdit>false</ExtendedEdit>
-							<MinValue xsi:nil="true"/>
-							<MaxValue xsi:nil="true"/>
-							<FillChecking>ShowError</FillChecking>
-							<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
-							<ChoiceParameterLinks/>
-							<ChoiceParameters/>
-							<QuickChoice>DontUse</QuickChoice>
-							<CreateOnInput>DontUse</CreateOnInput>
-							<ChoiceForm/>
-							<LinkByType/>
-							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
-							<Indexing>DontIndex</Indexing>
-							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
-						</Properties>
-					</Attribute>
 					<Attribute uuid="dd520f04-a1fd-49fe-933e-f119b005f77c">
 						<Properties>
 							<Name>CanUseExternalFunctions</Name>
@@ -1461,6 +1390,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Возможность использования внешних функций</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Can use external functions</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1503,6 +1436,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Схема компоновки данных</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Data composition schema</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1543,6 +1480,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Настройки компоновки данных</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Data composition settings</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1585,6 +1526,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Метод</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Method</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1625,6 +1570,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Описание операции</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Operation description</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1671,6 +1620,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Приоритет</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Priority</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment>Default job priority.</Comment>
 							<Type>
@@ -1692,6 +1645,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>FoxyLink может обрабатывать несколько заданий. Все задания помещаются в очередь, откуда они ивзлекаются по мере освобождения ресурсов и выполняются. У каждого задания есть приоритет, обозначаемый положительным целым числом. Чем меньше это число, тем выше приоритет. Если приоритет не указан явно при создании задания, он назначается автоматически.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>FoxyLink can handle several jobs. All jobs are placed in a queue, from which they are fetched as resources are freed and are executed. Each job has a priority, denoted by a positive integer. The lower the number, the higher priority. If priority is not specified explicitly when creating a job, it is automatically assigned.</v8:content>
 								</v8:item>
 							</ToolTip>
 							<MarkNegatives>false</MarkNegatives>

@@ -34,6 +34,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Каналы</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Channels</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment/>
 			<Hierarchical>false</Hierarchical>
@@ -262,6 +266,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Наименование</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Name</v8:content>
+						</v8:item>
 					</xr:Synonym>
 					<xr:Comment/>
 					<xr:FullTextSearch>DontUse</xr:FullTextSearch>
@@ -345,6 +353,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Базовый идентиифкатор канала</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Basic channel guid</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<Type>
@@ -393,6 +405,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Подключен</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Connected</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<Type>
@@ -437,6 +453,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Логировать</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Log</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<Type>
@@ -453,6 +473,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Активирует журнал каналов для сбора подробной информации о взаимодействии с поставщиком услуг.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Activates the channel log to collect the detail information about interaction with a service provider.</v8:content>
 						</v8:item>
 					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
@@ -490,6 +514,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Текущая версия</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Current version</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<Type>
@@ -510,6 +538,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Номер уникального состояния этого канала. В данной категории номера версии (основной, второстепенной), номера обычно назначаются в порядке возрастания и соответствуют новым изменениям в программном обеспечении.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Numbers to unique the state of this channel. Within a given version number category (major, minor), these numbers are generally assigned in increasing order and correspond to new developments in the software.</v8:content>
 						</v8:item>
 					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
@@ -556,6 +588,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Данные канала</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Channel data</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -604,6 +640,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование поля</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field name</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -648,6 +688,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Значение поля</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field value</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -706,6 +750,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Зашифрованные данные</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Encrypted data</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -753,6 +801,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Номер шифрования</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Encrypt number</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -798,6 +850,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование поля</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field name</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -842,6 +898,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Значение поля</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field value</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>

@@ -29,8 +29,9 @@ Procedure BeforeWrite(Cancel)
         Symbol = Mid(Description, Index, 1);
         If Not FL_CommonUseClientServer.IsLatinLetter(Symbol) Then
             FL_CommonUseClientServer.NotifyUser(
-                NStr("en = 'Method name contains illegal characters, Latin letters are allowed only.';
-                    |ru = 'Имя метода содержит запрещенные символы, разрешены только латинские буквы.'"),
+                NStr("en='Method name contains illegal characters, Latin letters are allowed only.';
+                    |ru='Имя метода содержит запрещенные символы, разрешены только латинские буквы.';
+                    |en_CA='Method name contains illegal characters, Latin letters are allowed only.'"),
                 ,
                 "Object.Description",
                 ,

@@ -226,9 +226,9 @@ Function AddItemToItemFormCollection(Items, Parameters,
         
     If TypeOf(Parameters) <> Type("Structure") Then
         
-        ErrorMessage = StrTemplate(NStr(
-            "en = 'Parameter(2) failed to convert. Expected type ''%1'' and received type is ''%2''.';
-            |ru = 'Параметр(2) не удалось преобразовать. Ожидался тип ''%1'', а получили тип ''%2''.'"),
+        ErrorMessage = StrTemplate(NStr("en='Parameter(2) failed to convert. Expected type {%1} and received type is {%2}.';
+            |ru='Параметр(2) не удалось преобразовать. Ожидался тип {%1}, а получили тип {%2}.';
+            |en_CA='Parameter(2) failed to convert. Expected type {%1} and received type is {%2}.'"),
             String(Type("Structure")),
             String(TypeOf(Parameters)));
 
@@ -237,26 +237,31 @@ Function AddItemToItemFormCollection(Items, Parameters,
     EndIf;
 
     ItemName = ParametersPropertyValue(Parameters, "Name", 
-        NStr("en = 'Error: Item name is not set.'; 
-            |ru = 'Ошибка: Имя элемента не задано.'"), True, True);
+        NStr("en='Error: Item name is not set.';
+            |ru='Ошибка: Имя элемента не задано.';
+            |en_CA='Error: Item name is not set.'"), True, True);
                                                     
     ElementType = ParametersPropertyValue(Parameters, "ElementType", 
-        NStr("en = 'Error: The element type is not specified.';
-            |ru = 'Ошибка: Тип элемента не задан.'"), True, True);
+        NStr("en='Error: The element type is not specified.';
+            |ru='Ошибка: Тип элемента не задан.';
+            |en_CA='Error: The element type is not specified.'"), True, True);
                                                     
     ItemType = ParametersPropertyValue(Parameters, "Type", 
-        NStr("en = 'Error: Type of element is not specified.';
-            |ru = 'Ошибка: Вид элемента не задан.'"), False, True);
+        NStr("en='Error: Type of element is not specified.';
+            |ru='Ошибка: Вид элемента не задан.';
+            |en_CA='Error: Type of element is not specified.'"), False, True);
 
     If Parent <> Undefined 
         AND TypeOf(Parent) <> Type("FormGroup") 
         AND TypeOf(Parent) <> Type("FormTable") 
         AND TypeOf(Parent) <> Type("ManagedForm") Then
            
-        ErrorMessage = StrTemplate(NStr("en = 'Error: Parameter(3) failed to convert. 
-                |Expected type ''%1'', ''%2'', ''%3'' and received type is ''%4''.';
-                |ru = 'Ошибка: Тип параметра(3) не удалось преобразовать. 
-                |Ожидался тип ''%1'', ''%2'', ''%3'', а получили тип ''%4''.'"),
+        ErrorMessage = StrTemplate(NStr("en='Error: Parameter(3) failed to convert.
+                |Expected type {%1}, {%2}, {%3} and received type is {%4}.';
+            |ru='Ошибка: Тип параметра(3) не удалось преобразовать. 
+                |Ожидался тип {%1}, {%2}, {%3}, а получили тип {%4}.';
+            |en_CA='Error: Parameter(3) failed to convert. 
+                |Expected type {%1}, {%2}, {%3} and received type is {%4}.'"),
             String(Type("ManagedForm")),
             String(Type("FormGroup")),
             String(Type("FormTable")),
@@ -428,9 +433,9 @@ Function PluggableSubsystem(SubsystemName) Export
     MainSubsystem = Metadata.Subsystems.Find("FoxyLink");
     If MainSubsystem = Undefined Then
         
-        ErrorMessage = NStr(
-            "en = 'Failed to find main subsystem ''FoxyLink''.';
-            |ru = 'Не удалось найти основную подсистему ''FoxyLink''.'");
+        ErrorMessage = NStr("en='Failed to find main subsystem {FoxyLink}.';
+            |ru='Не удалось найти основную подсистему {FoxyLink}.';
+            |en_CA='Failed to find main subsystem {FoxyLink}.'");
         Raise ErrorMessage;
         
     EndIf;
@@ -438,9 +443,9 @@ Function PluggableSubsystem(SubsystemName) Export
     PluginsSubsystem = MainSubsystem.Subsystems.Find("Plugins");
     If PluginsSubsystem = Undefined Then
         
-        ErrorMessage = NStr(
-            "en = 'Failed to find ''FoxyLink -> Plugins'' subsystem.';
-            |ru = 'Не удалось найти подсистему ''FoxyLink -> Plugins''.'");
+        ErrorMessage = NStr("en='Failed to find {FoxyLink -> Plugins} subsystem.';
+            |ru='Не удалось найти подсистему {FoxyLink -> Plugins}.';
+            |en_CA='Failed to find {FoxyLink -> Plugins} subsystem.'");
         Raise ErrorMessage;
         
     EndIf;
@@ -448,9 +453,9 @@ Function PluggableSubsystem(SubsystemName) Export
     PluggableSubsystem = PluginsSubsystem.Subsystems.Find(SubsystemName);
     If PluggableSubsystem = Undefined Then
         
-        ErrorMessage = StrTemplate(NStr(
-                "en = 'Failed to find ''FoxyLink -> Plugins -> %1'' subsystem.';
-                |ru = 'Не удалось найти подсистему ''FoxyLink -> Plugins -> %1''.'"),
+        ErrorMessage = StrTemplate(NStr("en='Failed to find {FoxyLink -> Plugins -> %1} subsystem.';
+            |ru='Не удалось найти подсистему {FoxyLink -> Plugins -> %1}.';
+            |en_CA='Failed to find {FoxyLink -> Plugins -> %1} subsystem.'"),
             SubsystemName);
         Raise ErrorMessage;
         

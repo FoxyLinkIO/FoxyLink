@@ -38,10 +38,18 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Основное</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Main</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Group main</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Group main</v8:content>
 				</v8:item>
 			</ToolTip>
@@ -66,6 +74,11 @@
 								<v8:content>&lt;colorstyle -14&gt;Признак использования регламентного задания. 
 &lt;/&gt;&lt;colorstyle -14&gt;&lt;link v8help://SyntaxHelperContext/objects/catalog63/catalog1467/ScheduledJob/properties/True4212.html&gt;Истина&lt;/&gt;&lt;/&gt;&lt;colorstyle -14&gt;  - используется.&lt;/&gt;</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Scheduled job usage flag. 
+&lt;/&gt;&lt;colorstyle -14&gt;&lt;u&gt;True&lt;/&gt;&lt;/&gt;&lt;colorstyle -14&gt; &lt;/&gt;&lt;colorstyle -14&gt;- used.&lt;/&gt;</v8:content>
+							</v8:item>
 						</Title>
 					</ExtendedTooltip>
 				</CheckBoxField>
@@ -83,6 +96,11 @@
 							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>&lt;colorstyle -14&gt;Наименование регламентного задания.&lt;/&gt;
+</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Scheduled job description.&lt;/&gt;
 </v8:content>
 							</v8:item>
 						</Title>
@@ -103,6 +121,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Действия при ошибках</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Actions on errors</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -112,6 +134,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Действия при ошибках</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Actions on errors</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Group>Horizontal</Group>
@@ -137,6 +163,10 @@
 								<v8:lang>ru</v8:lang>
 								<v8:content>&lt;colorstyle -14&gt;Количество повторов при аварийном завершении задания&lt;/&gt;</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Number of attempts to restart at abortion.&lt;/&gt;</v8:content>
+							</v8:item>
 						</Title>
 					</ExtendedTooltip>
 				</InputField>
@@ -149,6 +179,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>раз</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>times</v8:content>
 						</v8:item>
 					</Title>
 					<ContextMenu name="DecorationEndTimeContextMenu" id="15"/>
@@ -164,6 +198,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>через</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>every</v8:content>
 						</v8:item>
 					</Title>
 					<ToolTipRepresentation>Button</ToolTipRepresentation>
@@ -181,6 +219,11 @@
 								<v8:lang>ru</v8:lang>
 								<v8:content>&lt;colorstyle -14&gt;Интервал в секундах, через который нужно перезапускать задание в случае его  аварийного завершения.&lt;/&gt;</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Interval in seconds for restarting job in case it is aborted.&lt;/&gt;
+</v8:content>
+							</v8:item>
 						</Title>
 					</ExtendedTooltip>
 				</InputField>
@@ -193,6 +236,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>секунд</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>seconds</v8:content>
 						</v8:item>
 					</Title>
 					<ContextMenu name="DecorationSecondsContextMenu" id="21"/>
@@ -210,6 +257,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Дополнительные настройки</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Additional settings</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -219,6 +270,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Дополнительные настройки</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Additional settings</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Group>Vertical</Group>
@@ -249,6 +304,12 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 Предопределенные регламентные задания можно изменять, но нельзя удалять.  Создание и удаление предопределенных регламентных заданий выполняется  автоматически при сохранении основной конфигурации в конфигурацию базы данных.  
 &lt;/&gt;&lt;colorstyle -14&gt;&lt;link v8help://SyntaxHelperContext/objects/catalog63/catalog1467/ScheduledJob/properties/True4212.html&gt;Истина&lt;/&gt;&lt;/&gt;&lt;colorstyle -14&gt;  - предопределенное задание.&lt;/&gt;</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Indicates whether the scheduled job is predefined. 
+Predefined scheduled jobs  are defined in metadata. They can be changed, but cannot be deleted. Predefined  scheduled jobs are created and deleted automatically when base configuration is  saved to database configuration. 
+&lt;/&gt;&lt;colorstyle -14&gt;&lt;link v8help://SyntaxHelperContext/objects/catalog63/catalog1467/ScheduledJob/properties/True4212.html&gt;True&lt;/&gt;&lt;/&gt;&lt;colorstyle -14&gt;  - predefined.&lt;/&gt;</v8:content>
+							</v8:item>
 						</Title>
 					</ExtendedTooltip>
 				</CheckBoxField>
@@ -267,6 +328,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 								<v8:lang>ru</v8:lang>
 								<v8:content>&lt;colorstyle -14&gt;Уникальный идентификатор регламентного задания.&lt;/&gt;</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Unique ID of scheduled job.&lt;/&gt;</v8:content>
+							</v8:item>
 						</Title>
 					</ExtendedTooltip>
 				</InputField>
@@ -284,6 +349,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>&lt;colorstyle -14&gt;Прикладной идентификатор. Для регламентных заданий уникальность ключа не требуется. Ключ используется при запуске фонового задания на основе регламентного задания. В этом случае проверяется уникальность ключа для всех активных фоновых заданий, связанных с регламентными заданиями, имеющими одинаковый объект метаданных. Другими словами, уникальность ключа проверяется в пределах объекта метаданного регламентного задания. Если условие не выполняется задание не запускается. Возможность чтения и записи доступны только для администратора.&lt;/&gt;</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Application ID. For scheduled jobs, the key does not have to be unique. The key is used when jobs are launched based on a scheduled job. In this case, the system checks the key's uniqueness for all active jobs which are connected with  the scheduled job and have the same metadata object. In other words, the  uniqueness of the key is being checked within the scheduled job's metadata  object. If this condition is not met, the job is not launched. Only the administrator has reading and writing access.&lt;/&gt;</v8:content>
 							</v8:item>
 						</Title>
 					</ExtendedTooltip>
@@ -305,6 +374,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 								<v8:content>&lt;colorstyle -14&gt;Имя пользователя, под которым будет выполняться данное регламентное задание. Если имя пользователя не задано, регламентное задание будет выполняться пользователем по умолчанию, имеющим административные права. Чтения и запись для администратора.
 &lt;/&gt;</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Name of user that executes this scheduled job. If no user name is specified, the scheduled job is performed by default user that has administrative rights.&lt;/&gt;</v8:content>
+							</v8:item>
 						</Title>
 					</ExtendedTooltip>
 				</InputField>
@@ -320,6 +393,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>Описание метаданных</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Metadata description</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -329,6 +406,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Описание метаданных</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Metadata description</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Group>Vertical</Group>
@@ -354,6 +435,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 								<v8:content>&lt;colorstyle -14&gt;Имя объекта метаданных.
 &lt;/&gt;</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Metadata object name.&lt;/&gt;</v8:content>
+							</v8:item>
 						</Title>
 					</ExtendedTooltip>
 				</InputField>
@@ -370,6 +455,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 							</v8:item>
 							<v8:item>
 								<v8:lang>en</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Random character string - metadata object name synonym.&lt;/&gt;</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
 								<v8:content>&lt;colorstyle -14&gt;Random character string - metadata object name synonym.&lt;/&gt;</v8:content>
 							</v8:item>
 						</Title>
@@ -390,6 +479,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 								<v8:lang>ru</v8:lang>
 								<v8:content>&lt;colorstyle -14&gt;Имя экспортируемой процедуры общего модуля, которая будет выполнена в результате запуска регламентного задания.&lt;/&gt;</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Name of the common module exported procedure which will be executed as a result  of scheduled job launch.&lt;/&gt;</v8:content>
+							</v8:item>
 						</Title>
 					</ExtendedTooltip>
 				</InputField>
@@ -409,6 +502,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 								<v8:lang>en</v8:lang>
 								<v8:content>&lt;colorstyle -14&gt;Random line of characters. It usually interprets and explains name of metadata object.&lt;/&gt;</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>&lt;colorstyle -14&gt;Random line of characters. It usually interprets and explains name of metadata object.&lt;/&gt;</v8:content>
+							</v8:item>
 						</Title>
 					</ExtendedTooltip>
 				</InputField>
@@ -425,6 +522,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Наименование</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Description</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -446,6 +547,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>Использование </v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Use</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:boolean</v8:Type>
@@ -461,6 +566,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Повторять</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Repeat</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -483,6 +592,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>через</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>every</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:decimal</v8:Type>
@@ -504,6 +617,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>Предопределенное</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Predefined</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:boolean</v8:Type>
@@ -518,6 +635,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Идентификатор</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Identifier</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -537,6 +658,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Ключ</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Key</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -558,6 +683,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>Имя пользователя</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>User name</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
@@ -578,6 +707,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>Имя</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Name</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
@@ -596,6 +729,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Синоним</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Synonym</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -616,6 +753,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>Имя метода</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Method name</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
@@ -634,6 +775,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Комментарий</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Comment</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -654,6 +799,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>Расписание</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Schedule</v8:content>
+				</v8:item>
 			</Title>
 			<Type/>
 			<SavedData>true</SavedData>
@@ -670,10 +819,18 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>Записать и закрыть</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Save and close</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Save and close</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Save and close</v8:content>
 				</v8:item>
 			</ToolTip>
@@ -694,6 +851,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>Записать</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Save</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -703,6 +864,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Записать</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Save</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -722,6 +887,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 					<v8:lang>ru</v8:lang>
 					<v8:content>Настроить расписание</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Configure schedule</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -731,6 +900,10 @@ Predefined scheduled jobs  are defined in metadata. They can be changed, but can
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Настроить расписание</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Configure schedule</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>

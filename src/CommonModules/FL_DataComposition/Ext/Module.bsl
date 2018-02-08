@@ -265,9 +265,9 @@ Procedure InitSettingsComposer(SettingsComposer, DataCompositionSchemaURL,
             New DataCompositionAvailableSettingsSource(DataCompositionSchemaURL));
     Except
         
-        ErrorMessage = StrTemplate(NStr(
-                "en = 'Error: Failed to initialize data composition settings composer. %1.';
-                |ru = 'Ошибка: Не удалось инициализировать компоновщик настроек компоновки данных. %1.'"),
+        ErrorMessage = StrTemplate(NStr("en='Error: Failed to initialize data composition settings composer. %1.';
+            |ru='Ошибка: Не удалось инициализировать компоновщик настроек компоновки данных. %1.';
+            |en_CA='Error: Failed to initialize data composition settings composer. %1.'"),
             ErrorDescription());
             
         Raise ErrorMessage;
@@ -305,9 +305,9 @@ Procedure InitSettingsComposer(SettingsComposer, DataCompositionSchemaURL,
         
     Else
         
-        ErrorMessage = NStr(
-            "en = 'Error: Failed to find data composition settings';
-            |ru = 'Ошибка: Не удалось найти настроки компоновки данных.'");
+        ErrorMessage = NStr("en='Error: Failed to find data composition settings';
+            |ru='Ошибка: Не удалось найти настроки компоновки данных.';
+            |en_CA='Error: Failed to find data composition settings'");
             
         Raise ErrorMessage;
         
@@ -929,10 +929,12 @@ Procedure SetDataCompositionDataParameterValue(DataParameters, ID, Value)
     Else
         
         // Research is needed whether we can add new parameters.        
-        Raise StrTemplate(NStr("en = 'For field [%1] adding new elements into 
-                |''DataCompositionParameterValueCollection'' not implemented.'; 
-                |ru = 'Для поля [%1] добавление новых элементов в 
-                |''КоллекцияЗначенийПараметровКомпоновкиДанных'' не реализовано.'"),
+        Raise StrTemplate(NStr("en='For field {%1} adding new elements into 
+                |{DataCompositionParameterValueCollection} not implemented.';
+            |ru='Для поля {%1} добавление новых элементов в 
+                |{КоллекцияЗначенийПараметровКомпоновкиДанных} не реализовано.';
+            |en_CA='For field {%1} adding new elements into 
+                |{DataCompositionParameterValueCollection} not implemented.'"),
             ID);
         
     EndIf;
@@ -1018,10 +1020,10 @@ Function TemplateColumns(DataCompositionSettings,
                 DCExpression = AreaTemplateDefinition.Parameters.Find(CellKey);
                 If DCExpression = Undefined Then
                     
-                    ErrorMessage = NStr(
-                        "en = '""DataCompositionExpressionAreaParameter"" is not found.'; 
-                        |ru = '""ПараметрОбластиВыражениеКомпоновкиДанных"" не найден.'; 
-                        |uk = '""ПараметрОбластиВыражениеКомпоновкиДанных"" не знайдено.'");
+                    ErrorMessage = NStr("en='{DataCompositionExpressionAreaParameter} is not found.';
+                        |ru='{ПараметрОбластиВыражениеКомпоновкиДанных} не найден.';
+                        |uk='{ПараметрОбластиВыражениеКомпоновкиДанных} не знайдено.';
+                        |en_CA='{DataCompositionExpressionAreaParameter} is not found.'");
                         
                     Raise ErrorMessage;
                     
@@ -1245,10 +1247,10 @@ Function AreaTemplateDefinition(DataCompositionTemplate, BodyElement)
     // Now, it is a fatal error. However, in future it might be handled.
     If BodyElement.Body.Count() = 0 Then
         
-        ErrorMessage = NStr(
-            "en = '""DataCompositionTemplateAreaTemplate"" is not found.'; 
-            |ru = '""МакетОбластиМакетаКомпоновкиДанных"" не найден.'; 
-            |uk = '""МакетОбластиМакетаКомпоновкиДанных"" не знайдено.'");
+        ErrorMessage = NStr("en='{DataCompositionTemplateAreaTemplate} is not found.';
+            |ru='{МакетОбластиМакетаКомпоновкиДанных} не найден.';
+            |uk='{МакетОбластиМакетаКомпоновкиДанных} не знайдено.';
+            |en_CA='{DataCompositionTemplateAreaTemplate} is not found.'");
         
         Raise ErrorMessage;
         
@@ -1258,10 +1260,10 @@ Function AreaTemplateDefinition(DataCompositionTemplate, BodyElement)
     // Now, it is a fatal error. However, in future it might be handled.
     If TypeOf(AreaTemplate) <> Type("DataCompositionTemplateAreaTemplate") Then
         
-        ErrorMessage = NStr(
-            "en = 'The body does not contain ""DataCompositionTemplateAreaTemplate"".'; 
-            |ru = 'Тело не содержит ""МакетОбластиМакетаКомпоновкиДанных"".'; 
-            |uk = 'Тіло не містить ""МакетОбластиМакетаКомпоновкиДанных"".'");
+        ErrorMessage = NStr("en='The body does not contain {DataCompositionTemplateAreaTemplate}.';
+            |ru='Тело не содержит {МакетОбластиМакетаКомпоновкиДанных}.';
+            |uk='Тіло не містить {МакетОбластиМакетаКомпоновкиДанных}.';
+            |en_CA='The body does not contain {DataCompositionTemplateAreaTemplate}.'");
             
         Raise ErrorMessage;
         
@@ -1271,10 +1273,10 @@ Function AreaTemplateDefinition(DataCompositionTemplate, BodyElement)
     // Now, it is a fatal error. However, in future it might be handled.
     If SearchResult = Undefined Then
         
-        ErrorMessage = NStr(
-            "en = '""DataCompositionTemplateAreaTemplateDefinition"" is not found.'; 
-            |ru = '""ОписаниеМакетаОбластиМакетаКомпоновкиДанных"" не найден.'; 
-            |uk = '""ОписаниеМакетаОбластиМакетаКомпоновкиДанных"" не знайдено.'");
+        ErrorMessage = NStr("en='{DataCompositionTemplateAreaTemplateDefinition} is not found.';
+            |ru='{ОписаниеМакетаОбластиМакетаКомпоновкиДанных} не найден.';
+            |uk='{ОписаниеМакетаОбластиМакетаКомпоновкиДанных} не знайдено.';
+            |en_CA='{DataCompositionTemplateAreaTemplateDefinition} is not found.'");
             
         Raise ErrorMessage;
         

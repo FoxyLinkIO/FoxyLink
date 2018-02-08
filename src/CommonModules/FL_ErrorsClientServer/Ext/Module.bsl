@@ -31,10 +31,9 @@
 //
 Function ErrorTypeIsDifferentFromExpected(VarName, VarValue, ExpectedType) Export
     
-    ErrorMessage = NStr("en = 'Error: Failed to process parameter ''%1''. 
-        |Expected type ''%2'' and received type is ''%3''.';
-        |ru = 'Ошибка: Не удалось обработать параметр ''%1''. 
-        |Ожидался тип ''%2'', а получили тип ''%3''.'");
+    ErrorMessage = NStr("en='Error: Failed to process parameter {%1}. Expected type {%2} and received type is {%3}.';
+        |ru='Ошибка: Не удалось обработать параметр {%1}. Ожидался тип {%2}, а получили тип {%3}.';
+        |en_CA='Error: Failed to process parameter {%1}. Expected type {%2} and received type is {%3}.'");
     ErrorMessage = StrTemplate(ErrorMessage, VarName, String(ExpectedType), 
         String(TypeOf(VarValue)));
     Return ErrorMessage;   
@@ -53,9 +52,9 @@ EndFunction // ErrorTypeIsDifferentFromExpected()
 //
 Function ErrorKeyIsMissingInObject(VarName, VarValue, KeyName) Export
     
-    ErrorMessage = NStr(
-        "en = 'Error: Key ''%1'' is missing in %2 ''%3''.';
-        |ru = 'Ошибка: Ключ ''%1'' отсутствует в %2 ''%3''.'");
+    ErrorMessage = NStr("en='Error: Key {%1} is missing in {%2} {%3}.';
+        |ru='Ошибка: Ключ {%1} отсутствует в %2 {%3}.';
+        |en_CA='Error: Key {%1} is missing in %2 {%3}.'");
     ErrorMessage = StrTemplate(ErrorMessage, KeyName, String(TypeOf(VarValue)), 
         VarName);
     Return ErrorMessage;   
@@ -73,9 +72,9 @@ EndFunction // ErrorKeyIsMissingInObject()
 //
 Function ErrorColumnCollectionsAreDifferent(CollectionName1, CollectionName2) Export
     
-    ErrorMessage = NStr(
-        "en = 'Error: The column collection ''%1'' differ from the column collection ''%2''.';
-        |ru = 'Ошибка: Коллекция колонок ''%1'' отличается от коллекции колонок ''%2''.'");
+    ErrorMessage = NStr("en='Error: The column collection {%1} differ from the column collection {%2}.';
+        |ru='Ошибка: Коллекция колонок {%1} отличается от коллекции колонок {%2}.';
+        |en_CA='Error: The column collection {%1} differ from the column collection {%2}.'");
     ErrorMessage = StrTemplate(ErrorMessage, CollectionName1, CollectionName2);
     Return ErrorMessage;   
     

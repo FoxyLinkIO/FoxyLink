@@ -292,8 +292,9 @@ Function NewFormatProcessor(Val LibraryGuid) Export
         LibraryGuid, "Formats");
         
     If DataProcessorName = Undefined Then
-        Raise NStr("en = 'Requested format processor is not installed.'; 
-            |ru = 'Запрашиваемый процессор формата не установлен.'");    
+        Raise NStr("en='Requested format processor is not installed.';
+            |ru='Запрашиваемый процессор формата не установлен.';
+            |en_CA='Requested format processor is not installed.'");    
     EndIf;
         
     Return DataProcessors[DataProcessorName].Create();
@@ -357,18 +358,18 @@ Function ExchangeSettingsByRefs(ExchangeRef, MethodRef) Export
 
     QueryResult = Query.Execute();
     If QueryResult.IsEmpty() Then
-        ErrorMessage = StrReplace(Nstr(
-                "en = 'Error: Exchange settings ''%1'' and/or method ''%2'' not found.'; 
-                |ru = 'Ошибка: Настройки обмена ''%1'' и/или метод ''%2'' не найдены.'"),
+        ErrorMessage = StrReplace(Nstr("en='Error: Exchange settings {%1} and/or method {%2} not found.';
+            |ru='Ошибка: Настройки обмена {%1} и/или метод {%2} не найдены.';
+            |en_CA='Error: Exchange settings {%1} and/or method {%2} not found.'"),
             String(ExchangeRef), String(MethodRef));    
         Return ErrorMessage;
     EndIf;
 
     ValueTable = QueryResult.Unload();
     If ValueTable.Count() > 1 Then
-        ErrorMessage = StrReplace(Nstr(
-                "en = 'Error: Duplicated records of exchange settings ''%1'' and method ''%2'' are found.'; 
-                |ru = 'Ошибка: Обнаружены дублирующиеся настройки обмена ''%1'' и метод ''%2''.'"),
+        ErrorMessage = StrReplace(Nstr("en='Error: Duplicated records of exchange settings {%1} and method {%2} are found.';
+            |ru='Ошибка: Обнаружены дублирующиеся настройки обмена {%1} и метод {%2}.';
+            |en_CA='Error: Duplicated records of exchange settings {%1} and method {%2} are found.'"),
             String(ExchangeRef), String(MethodRef));
         Return ErrorMessage;     
     EndIf;
@@ -399,18 +400,18 @@ Function ExchangeSettingsByNames(Val ExchangeName, Val MethodName) Export
 
     QueryResult = Query.Execute();
     If QueryResult.IsEmpty() Then
-        ErrorMessage = StrReplace(Nstr(
-                "en = 'Error: Exchange settings ''%1'' and/or method ''%2'' not found.'; 
-                |ru = 'Ошибка: Настройки обмена ''%1'' и/или метод ''%2'' не найдены.'"),
+        ErrorMessage = StrReplace(Nstr("en='Error: Exchange settings {%1} and/or method {%2} not found.';
+            |ru='Ошибка: Настройки обмена {%1} и/или метод {%2} не найдены.';
+            |en_CA='Error: Exchange settings {%1} and/or method {%2} not found.'"),
             ExchangeName, MethodName);    
         Return ErrorMessage;
     EndIf;
 
     ValueTable = QueryResult.Unload();
     If ValueTable.Count() > 1 Then
-        ErrorMessage = StrReplace(Nstr(
-                "en = 'Error: Duplicated records of exchange settings ''%1'' and method ''%2'' are found.'; 
-                |ru = 'Ошибка: Обнаружены дублирующиеся настройки обмена ''%1'' и метод ''%2''.'"),
+        ErrorMessage = StrReplace(Nstr("en='Error: Duplicated records of exchange settings {%1} and method {%2} are found.';
+            |ru='Ошибка: Обнаружены дублирующиеся настройки обмена {%1} и метод {%2}.';
+            |en_CA='Error: Duplicated records of exchange settings {%1} and method {%2} are found.'"),
             ExchangeName, MethodName);
         Return ErrorMessage;     
     EndIf;
@@ -430,35 +431,30 @@ EndFunction // ExchangeSettingsByNames()
 
 // Only for internal use.
 //
-Procedure PlaceStorageDataIntoFormObject(Object, Ref, FormUUID)
+Procedure PlaceStorageDataIntoFormObject(FormObject, CurrentObject, FormUUID)
+    
+    FormMethods = FormObject.Methods;
+    ObjectMethods = CurrentObject.Methods;
+    For Each FormRow In FormMethods Do
         
-    FilterParameters = New Structure("Method, APIVersion"); 
-    For Each Item In Object.Methods Do
+        ObjectRow = ObjectMethods.Find(FormRow.Method, "Method");
+        DataCompositionSchema = ObjectRow.DataCompositionSchema.Get();
+        If DataCompositionSchema <> Undefined Then
+            FormRow.DataCompositionSchemaAddress = PutToTempStorage(
+                DataCompositionSchema, FormUUID);
+        EndIf;
         
-        FillPropertyValues(FilterParameters, Item); 
-        FilterResult = Ref.Methods.FindRows(FilterParameters);
-        If FilterResult.Count() = 1 Then
-            
-            ItemRow = FilterResult[0];
-            DataCompositionSchema = ItemRow.DataCompositionSchema.Get();
-            If DataCompositionSchema <> Undefined Then
-                Item.DataCompositionSchemaAddress = PutToTempStorage(
-                    DataCompositionSchema, FormUUID);
-            EndIf;
-            
-            DataCompositionSettings = ItemRow.DataCompositionSettings.Get();
-            If DataCompositionSettings <> Undefined Then
-                Item.DataCompositionSettingsAddress = PutToTempStorage(
-                    DataCompositionSettings, FormUUID);
-            EndIf;
-
-            APISchema = ItemRow.APISchema.Get();
-            If APISchema <> Undefined Then
-                Item.APISchemaAddress = PutToTempStorage(APISchema, FormUUID);
-            EndIf; 
-            
+        DataCompositionSettings = ObjectRow.DataCompositionSettings.Get();
+        If DataCompositionSettings <> Undefined Then
+            FormRow.DataCompositionSettingsAddress = PutToTempStorage(
+                DataCompositionSettings, FormUUID);
         EndIf;
 
+        APISchema = ObjectRow.APISchema.Get();
+        If APISchema <> Undefined Then
+            FormRow.APISchemaAddress = PutToTempStorage(APISchema, FormUUID);
+        EndIf; 
+            
     EndDo;
         
 EndProcedure // PlaceStorageDataIntoFormObject()
@@ -467,43 +463,37 @@ EndProcedure // PlaceStorageDataIntoFormObject()
 //
 Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
     
-    FMethods = FormObject.Methods;
-    CMethods = CurrentObject.Methods;
+    FormMethods = FormObject.Methods;
+    ObjectMethods = CurrentObject.Methods;
     
-    FilterParameters = New Structure("Method, APIVersion");
-    
-    For Each FMethod In FMethods Do
+    For Each FormRow In FormMethods Do
         
-        FillPropertyValues(FilterParameters, FMethod);
-        FilterResults = CMethods.FindRows(FilterParameters);
-        For Each FilterResult In FilterResults Do
-            
-            FillPropertyValues(FilterResult, FMethod, "CanUseExternalFunctions, 
-                |Priority"); 
-            
-            If IsTempStorageURL(FMethod.DataCompositionSchemaAddress) Then
-                FilterResult.DataCompositionSchema = New ValueStorage(
-                    GetFromTempStorage(FMethod.DataCompositionSchemaAddress));
-            Else
-                FilterResult.DataCompositionSchema = New ValueStorage(Undefined);
-            EndIf;
-            
-            If IsTempStorageURL(FMethod.DataCompositionSettingsAddress) Then
-                FilterResult.DataCompositionSettings = New ValueStorage(
-                    GetFromTempStorage(FMethod.DataCompositionSettingsAddress));
-            Else
-                FilterResult.DataCompositionSettings = New ValueStorage(Undefined);
-            EndIf;
-            
-            If IsTempStorageURL(FMethod.APISchemaAddress) Then
-                FilterResult.APISchema = New ValueStorage(
-                    GetFromTempStorage(FMethod.APISchemaAddress));
-            Else
-                FilterResult.APISchema = New ValueStorage(Undefined);
-            EndIf;
-            
-        EndDo;
+        ObjectRow = ObjectMethods.Find(FormRow.Method, "Method");
         
+        FillPropertyValues(ObjectRow, FormRow, "CanUseExternalFunctions, 
+            |Priority"); 
+        
+        If IsTempStorageURL(FormRow.DataCompositionSchemaAddress) Then
+            ObjectRow.DataCompositionSchema = New ValueStorage(
+                GetFromTempStorage(FormRow.DataCompositionSchemaAddress));
+        Else
+            ObjectRow.DataCompositionSchema = New ValueStorage(Undefined);
+        EndIf;
+        
+        If IsTempStorageURL(FormRow.DataCompositionSettingsAddress) Then
+            ObjectRow.DataCompositionSettings = New ValueStorage(
+                GetFromTempStorage(FormRow.DataCompositionSettingsAddress));
+        Else
+            ObjectRow.DataCompositionSettings = New ValueStorage(Undefined);
+        EndIf;
+        
+        If IsTempStorageURL(FormRow.APISchemaAddress) Then
+            ObjectRow.APISchema = New ValueStorage(
+                GetFromTempStorage(FormRow.APISchemaAddress));
+        Else
+            ObjectRow.APISchema = New ValueStorage(Undefined);
+        EndIf;
+                
     EndDo;
     
 EndProcedure // ProcessBeforeWriteAtServer() 
@@ -518,9 +508,9 @@ EndProcedure // ProcessBeforeWriteAtServer()
 //
 Procedure AddMethodOnForm(Items, MethodDescription, Description, Picture)
 
-    BasicDescription = NStr(
-        "en = 'Description is not available.';
-        |ru = 'Описание операции не доступно.'");
+    BasicDescription = NStr("en='Description is not available.';
+        |ru='Описание операции не доступно.';
+        |en_CA='Description is not available.'");
 
     Parameters = New Structure;
     Parameters.Insert("Name", MethodDescription);
@@ -575,7 +565,6 @@ Function QueryTextExchangeSettingsByRefs()
         |   ExchangeSettings.BasicFormatGuid    AS BasicFormatGuid,
         |   ExchangeSettings.InUse              AS InUse,
         |
-        |   ExchangeSettingsMethods.APIVersion              AS APIVersion,
         |   ExchangeSettingsMethods.APISchema               AS APISchema,
         |   ExchangeSettingsMethods.DataCompositionSchema   AS DataCompositionSchema,
         |   ExchangeSettingsMethods.DataCompositionSettings AS DataCompositionSettings,
@@ -617,7 +606,6 @@ Function QueryTextExchangeSettingsByNames()
         |   ExchangeSettings.BasicFormatGuid    AS BasicFormatGuid,
         |   ExchangeSettings.InUse              AS InUse,
         |
-        |   ExchangeSettingsMethods.APIVersion              AS APIVersion,
         |   ExchangeSettingsMethods.APISchema               AS APISchema,
         |   ExchangeSettingsMethods.DataCompositionSchema   AS DataCompositionSchema,
         |   ExchangeSettingsMethods.DataCompositionSettings AS DataCompositionSettings,

@@ -17,7 +17,7 @@
 			<ExtendedTooltip name="OwnerExtendedTooltip" id="6"/>
 		</InputField>
 		<InputField name="APIVersion" id="7">
-			<DataPath>Object.APIVersion</DataPath>
+			<DataPath>1/0:c4f2b26c-8edb-4b55-9c6a-c714f1e7b928</DataPath>
 			<EditMode>EnterOnInput</EditMode>
 			<ContextMenu name="APIVersionContextMenu" id="8"/>
 			<ExtendedTooltip name="APIVersionExtendedTooltip" id="9"/>
@@ -64,6 +64,10 @@
 					<v8:lang>en</v8:lang>
 					<v8:content>Pages</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Pages</v8:content>
+				</v8:item>
 			</Title>
 			<ExtendedTooltip name="PagesExtendedTooltip" id="29"/>
 			<ChildItems>
@@ -71,6 +75,10 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
+							<v8:content>Data composition settings [Filter]</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>Data composition settings [Filter]</v8:content>
 						</v8:item>
 					</Title>
@@ -125,6 +133,10 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
+							<v8:content>Data composition settings [Parameters]</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>Data composition settings [Parameters]</v8:content>
 						</v8:item>
 					</Title>
@@ -191,6 +203,10 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
+							<v8:content>Subscriber resources</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>Subscriber resources</v8:content>
 						</v8:item>
 					</Title>
@@ -263,6 +279,10 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
+							<v8:content>Subscribers</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>Subscribers</v8:content>
 						</v8:item>
 					</Title>
@@ -338,10 +358,18 @@
 							<v8:lang>en</v8:lang>
 							<v8:content>Subscribers log</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Subscribers log</v8:content>
+						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
 							<v8:lang>en</v8:lang>
+							<v8:content>Subscribers log</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>Subscribers log</v8:content>
 						</v8:item>
 					</ToolTip>

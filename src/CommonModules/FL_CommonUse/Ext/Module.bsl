@@ -68,9 +68,11 @@ Function ObjectAttributesValues(Ref, Val Attributes) Export
         
     Else
         
-        Raise StrTemplate(NStr("en = 'Invalid type of Attributes second parameter: ''%1''.';
-                |ru = 'Неверный тип второго параметра Реквизиты: ''%1''.'"),
-            String(AttributesType));
+        ErrorMessage = NStr("en='Invalid type of Attributes second parameter: {%1}.';
+            |ru='Неверный тип второго параметра Реквизиты: {%1}.';
+            |en_CA='Invalid type of Attributes second parameter: {%1}.'");
+        
+        Raise StrTemplate(ErrorMessage, String(AttributesType));
             
     EndIf;
 
@@ -495,91 +497,93 @@ Function ConfigurationMetadataTree(Filter = Undefined) Export
         NumberTypeDescription(PictureIndexSize));
 
     NewMetadataObjectCollectionRow(TypeNameScheduledJobs(),               
-        NStr("en='Scheduled jobs';ru='Регламентные задания'"),                 
+        NStr("en='Scheduled jobs';ru='Регламентные задания';en_CA='Scheduled jobs'"),                 
         PictureLib.ScheduledJob,              
         PictureLib.ScheduledJob,        
         0,
         CollectionsOfMetadataObjects);     
         
     NewMetadataObjectCollectionRow(TypeNameConstants(),               
-        NStr("en='Constants';ru='Константы'"),                 
+        NStr("en='Constants';ru='Константы';en_CA='Constants'"),                 
         PictureLib.Constant,              
         PictureLib.Constant,        
         PictureConstantOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameCatalogs(),             
-        NStr("en='Catalogs';ru='Справочники'"),               
+        NStr("en='Catalogs';ru='Справочники';en_CA='Catalogs'"),               
         PictureLib.Catalog,             
         PictureLib.Catalog,
         PictureCatalogOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameDocuments(),               
-        NStr("en='Documents';ru='Документы'"),                 
+        NStr("en='Documents';ru='Документы';en_CA='Documents'"),                 
         PictureLib.Document,               
         PictureLib.DocumentObject,
         PictureDocumentOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameChartsOfCharacteristicTypes(), 
-        NStr("en='Charts of characteristics types';ru='Планы видов характеристик'"), 
+        NStr("en='Charts of characteristics types';ru='Планы видов характеристик';
+            |en_CA='Charts of characteristics types'"), 
         PictureLib.ChartOfCharacteristicTypes, 
         PictureLib.ChartOfCharacteristicTypesObject,
         PictureChartOfCharacteristicTypeOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameChartsOfAccounts(),             
-        NStr("en='Charts of accounts';ru='Планы счетов'"),              
+        NStr("en='Charts of accounts';ru='Планы счетов';en_CA='Charts of accounts'"),              
         PictureLib.ChartOfAccounts,             
         PictureLib.ChartOfAccountsObject,
         PictureChartOfAccountOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameChartsOfCalculationTypes(),       
-        NStr("en='Charts of calculation types';ru='Планы видов расчета'"), 
+        NStr("en='Charts of calculation types';ru='Планы видов расчета';
+            |en_CA='Charts of calculation types'"), 
         PictureLib.ChartOfCalculationTypes, 
         PictureLib.ChartOfCalculationTypesObject,
         PictureChartOfCalculationTypeOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameInformationRegisters(),        
-        NStr("en='Information registers';ru='Регистры сведений'"),         
+        NStr("en='Information registers';ru='Регистры сведений';en_CA='Information registers'"),         
         PictureLib.InformationRegister,        
         PictureLib.InformationRegister,
         PictureInformationRegisterOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameAccumulationRegisters(),      
-        NStr("en='Accumulation registers';ru='Регистры накопления'"),       
+        NStr("en='Accumulation registers';ru='Регистры накопления';en_CA='Accumulation registers'"),       
         PictureLib.AccumulationRegister,      
         PictureLib.AccumulationRegister,
         PictureAccumulationRegisterOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameAccountingRegisters(),     
-        NStr("en='Accounting registers';ru='Регистры бухгалтерии'"),      
+        NStr("en='Accounting registers';ru='Регистры бухгалтерии';en_CA='Accounting registers'"),      
         PictureLib.AccountingRegister,     
         PictureLib.AccountingRegister, 
         PictureAccountingRegisterOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameCalculationRegisters(),         
-        NStr("en='Calculation registers';ru='Регистры расчета'"),          
+        NStr("en='Calculation registers';ru='Регистры расчета';en_CA='Calculation registers'"),          
         PictureLib.CalculationRegister,         
         PictureLib.CalculationRegister,
         PictureCalculationRegisterOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameBusinessProcess(),          
-        NStr("en='Business processes';ru='Бизнес-процессы'"),           
+        NStr("en='Business processes';ru='Бизнес-процессы';en_CA='Business processes'"),           
         PictureLib.BusinessProcess,          
         PictureLib.BusinessProcessObject,
         PictureBusinessProcessOrder,
         CollectionsOfMetadataObjects);
         
     NewMetadataObjectCollectionRow(TypeNameTasks(),                  
-        NStr("en='Tasks';ru='Задания'"),                    
+        NStr("en='Tasks';ru='Задания';en_CA='Tasks'"),                    
         PictureLib.Task,                 
         PictureLib.TaskObject,
         PictureTaskOrder,
@@ -1054,7 +1058,6 @@ Function PrimaryKeysByMetadataObject(MetadataObject) Export
         Types = New Array;
         Types.Add(TypeOf(ObjectManager.EmptyRef()));
         PrimaryKeys.Insert("Ref", Types);
-        PrimaryKeys.Insert("Ссылка", Types);
         
     ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(FullName) Then
         
@@ -1064,7 +1067,6 @@ Function PrimaryKeysByMetadataObject(MetadataObject) Export
             Types = New Array;
             Types.Add(Type("Date"));
             PrimaryKeys.Insert("Period", Types);
-            PrimaryKeys.Insert("Период", Types);
             
         EndIf;
         
@@ -1298,8 +1300,11 @@ Function ObjectManagerByFullName(FullName) Export
         EndTry;
     EndIf;
     
-    Raise StrTemplate(NStr("en = 'Unknown type of metadata object ''%1''.';
-            |ru = 'Неизвестный тип объекта метаданных ''%1''.'"), FullName);
+    ErrorMessage = NStr("en='Unknown type of metadata object {%1}.';
+        |ru='Неизвестный тип объекта метаданных {%1}.';
+        |en_CA='Unknown type of metadata object {%1}.'");
+    
+    Raise StrTemplate(ErrorMessage, FullName);
     
 EndFunction // ObjectManagerByFullName()
 
@@ -1606,12 +1611,14 @@ Procedure CheckingDataFixed(Data, DataInValueOfFixedTypes = False)
         EndIf;
     EndIf;
 
-    Raise StrTemplate(NStr(
-        "en = 'An error occurred in the ''FixedData'' function of the FL_CommonUse common module.
-            |Data of the ''%1'' type can not be recorded.';
-        |ru = 'Ошибка в функции ''FixedData'' общего модуля FL_CommonUse.
-            |Данные типа ''%1'' не могут быть зафиксированы.'"),
-        String(DataType));
+    ErrorMessage = NStr("en='An error occurred in the {FixedData} function of the FL_CommonUse common module. 
+        |Data of the {%1} type can not be recorded.';
+        |ru='Ошибка в функции {FixedData} общего модуля FL_CommonUse.
+        |Данные типа {%1} не могут быть зафиксированы.';
+        |en_CA='An error occurred in the {FixedData} function of the FL_CommonUse common module.
+        |Data of the {%1} type can not be recorded.'");
+    
+    Raise StrTemplate(ErrorMessage, String(DataType));
 
 EndProcedure // CheckingDataFixed()
 

@@ -22,6 +22,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Самостоятельный канал</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Self channel</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment/>
 			<UseStandardCommands>true</UseStandardCommands>
@@ -44,52 +48,14 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Логирование включено</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Log</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<Type>
 						<v8:Type>xs:boolean</v8:Type>
-					</Type>
-					<PasswordMode>false</PasswordMode>
-					<Format/>
-					<EditFormat/>
-					<ToolTip/>
-					<MarkNegatives>false</MarkNegatives>
-					<Mask/>
-					<MultiLine>false</MultiLine>
-					<ExtendedEdit>false</ExtendedEdit>
-					<MinValue xsi:nil="true"/>
-					<MaxValue xsi:nil="true"/>
-					<FillChecking>DontCheck</FillChecking>
-					<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
-					<ChoiceParameterLinks/>
-					<ChoiceParameters/>
-					<QuickChoice>DontUse</QuickChoice>
-					<CreateOnInput>DontUse</CreateOnInput>
-					<ChoiceForm/>
-					<LinkByType/>
-					<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
-				</Properties>
-			</Attribute>
-			<Attribute uuid="906a20e3-7395-4a1d-9608-3ed8ed9b2632">
-				<Properties>
-					<Name>LogAttribute</Name>
-					<Synonym>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Реквизит лога</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>en</v8:lang>
-							<v8:content>Log attribute</v8:content>
-						</v8:item>
-					</Synonym>
-					<Comment/>
-					<Type>
-						<v8:Type>xs:string</v8:Type>
-						<v8:StringQualifiers>
-							<v8:Length>0</v8:Length>
-							<v8:AllowedLength>Variable</v8:AllowedLength>
-						</v8:StringQualifiers>
 					</Type>
 					<PasswordMode>false</PasswordMode>
 					<Format/>
@@ -133,6 +99,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Данные канала</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Channel data</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -180,6 +150,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование поля</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field name</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -223,6 +197,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Значение поля</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field value</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -280,6 +258,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Ресурсы канала</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Channel resources</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -326,6 +308,10 @@
 									<v8:lang>en</v8:lang>
 									<v8:content>Executable code</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Executable code</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -365,6 +351,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование поля</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field name</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -409,6 +399,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Значение поля</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field value</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -466,6 +460,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Зашифрованные данные</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Encrypted data</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -512,6 +510,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Номер шифрования</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Encrypt number</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -556,6 +558,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование поля</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field name</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -599,6 +605,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Значение поля</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field value</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>

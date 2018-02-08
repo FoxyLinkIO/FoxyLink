@@ -34,6 +34,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Задания</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Jobs</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment/>
 			<Hierarchical>false</Hierarchical>
@@ -212,6 +216,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Настройки обмена</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Exchange settings</v8:content>
+						</v8:item>
 					</xr:Synonym>
 					<xr:Comment/>
 					<xr:FullTextSearch>Use</xr:FullTextSearch>
@@ -299,6 +307,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Код</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Code</v8:content>
+						</v8:item>
 					</xr:Synonym>
 					<xr:Comment/>
 					<xr:FullTextSearch>DontUse</xr:FullTextSearch>
@@ -344,54 +356,6 @@
 			<DataHistory>DontUse</DataHistory>
 		</Properties>
 		<ChildObjects>
-			<Attribute uuid="c4f2b26c-8edb-4b55-9c6a-c714f1e7b928">
-				<Properties>
-					<Name>APIVersion</Name>
-					<Synonym>
-						<v8:item>
-							<v8:lang>en</v8:lang>
-							<v8:content>API version</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Версия API</v8:content>
-						</v8:item>
-					</Synonym>
-					<Comment/>
-					<Type>
-						<v8:Type>xs:string</v8:Type>
-						<v8:StringQualifiers>
-							<v8:Length>10</v8:Length>
-							<v8:AllowedLength>Variable</v8:AllowedLength>
-						</v8:StringQualifiers>
-					</Type>
-					<PasswordMode>false</PasswordMode>
-					<Format/>
-					<EditFormat/>
-					<ToolTip/>
-					<MarkNegatives>false</MarkNegatives>
-					<Mask/>
-					<MultiLine>false</MultiLine>
-					<ExtendedEdit>false</ExtendedEdit>
-					<MinValue xsi:nil="true"/>
-					<MaxValue xsi:nil="true"/>
-					<FillFromFillingValue>false</FillFromFillingValue>
-					<FillValue xsi:type="xs:string"/>
-					<FillChecking>ShowError</FillChecking>
-					<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
-					<ChoiceParameterLinks/>
-					<ChoiceParameters/>
-					<QuickChoice>DontUse</QuickChoice>
-					<CreateOnInput>DontUse</CreateOnInput>
-					<ChoiceForm/>
-					<LinkByType/>
-					<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
-					<Use>ForItem</Use>
-					<Indexing>DontIndex</Indexing>
-					<FullTextSearch>DontUse</FullTextSearch>
-					<DataHistory>Use</DataHistory>
-				</Properties>
-			</Attribute>
 			<Attribute uuid="572bbc19-7677-48bb-abcd-d4b67fe1c547">
 				<Properties>
 					<Name>CreatedAt</Name>
@@ -402,6 +366,10 @@
 						</v8:item>
 						<v8:item>
 							<v8:lang>en</v8:lang>
+							<v8:content>Created at</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>Created at</v8:content>
 						</v8:item>
 					</Synonym>
@@ -451,6 +419,10 @@
 							<v8:lang>en</v8:lang>
 							<v8:content>ExpireAt</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>ExpireAt</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<Type>
@@ -498,6 +470,10 @@
 							<v8:lang>en</v8:lang>
 							<v8:content>Metadata object</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Metadata object</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment>Provides access to the metadata object name.</Comment>
 					<Type>
@@ -519,6 +495,11 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Обеспечивает доступ к имени объекта метаданных. Другой способ получить то же значение - через метаданные свойств глобального контекста.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Provides access to the metadata object name. Another way of getting the same value is through the global context property Metadata. 
+</v8:content>
 						</v8:item>
 					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
@@ -555,6 +536,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Метод</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Method</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -600,6 +585,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Приоритет</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Priority</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment>Job priority.</Comment>
 					<Type>
@@ -621,6 +610,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>FoxyLink может обрабатывать несколько заданий. Все задания помещаются в очередь, откуда они ивзлекаются по мере освобождения ресурсов и выполняются. У каждого задания есть приоритет, обозначаемый положительным целым числом. Чем меньше это число, тем выше приоритет. Если приоритет не указан явно при создании задания, он назначается автоматически.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>FoxyLink can handle several jobs. All jobs are placed in a queue, from which they are fetched as resources are freed and are executed. Each job has a priority, denoted by a positive integer. The lower the number, the higher priority. If priority is not specified explicitly when creating a job, it is automatically assigned.</v8:content>
 						</v8:item>
 					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
@@ -698,6 +691,10 @@
 							<v8:lang>en</v8:lang>
 							<v8:content>State</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>State</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment>Provides the essential members for describing a background job state.</Comment>
 					<Type>
@@ -750,6 +747,10 @@
 						</v8:item>
 						<v8:item>
 							<v8:lang>en</v8:lang>
+							<v8:content>Data composition settings [Filter]</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>Data composition settings [Filter]</v8:content>
 						</v8:item>
 					</Synonym>
@@ -810,6 +811,10 @@
 							<v8:lang>en</v8:lang>
 							<v8:content>Data composition settings [Parameters]</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Data composition settings [Parameters]</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -857,6 +862,10 @@
 									<v8:lang>en</v8:lang>
 									<v8:content>Parameter</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Parameter</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -900,6 +909,10 @@
 								</v8:item>
 								<v8:item>
 									<v8:lang>en</v8:lang>
+									<v8:content>Value presentation</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
 									<v8:content>Value presentation</v8:content>
 								</v8:item>
 							</Synonym>
@@ -947,6 +960,10 @@
 									<v8:lang>en</v8:lang>
 									<v8:content>Value storage</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Value storage</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -963,6 +980,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Предназначен для хранения значения в специальном формате.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>It is used to save the value in a special format.</v8:content>
 								</v8:item>
 							</ToolTip>
 							<MarkNegatives>false</MarkNegatives>
@@ -1008,6 +1029,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Контекст сессии</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Session context</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment>Provides access to the runtime session context.</Comment>
@@ -1056,6 +1081,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Объект метаданных</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Metadata object</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment>Provides access to the metadata object name.</Comment>
 							<Type>
@@ -1077,6 +1106,11 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Обеспечивает доступ к имени объекта метаданных. Другой способ получить то же значение - через метаданные свойств глобального контекста.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Provides access to the metadata object name. Another way of getting the same value is through the global context property Metadata. 
+</v8:content>
 								</v8:item>
 							</ToolTip>
 							<MarkNegatives>false</MarkNegatives>
@@ -1110,6 +1144,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Сессия</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Session</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment>Semi-permanent interactive information interchange.</Comment>
@@ -1156,6 +1194,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Хранилище значения</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Value storage</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1171,6 +1213,10 @@
 								</v8:item>
 								<v8:item>
 									<v8:lang>en</v8:lang>
+									<v8:content>It is used to save the value in a special format.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
 									<v8:content>It is used to save the value in a special format.</v8:content>
 								</v8:item>
 							</ToolTip>
@@ -1217,6 +1263,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Ресурсы подпищиков</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Subscriber resources</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -1265,6 +1315,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Канал</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Channel</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1305,6 +1359,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование поля</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field name</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1350,6 +1408,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Значение поля</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field value</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1408,6 +1470,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Подпищики</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Subscribers</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -1455,6 +1521,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Канал</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Channel</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1496,6 +1566,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Завершен</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Completed</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1536,6 +1610,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Обработчик ответа</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Response handler</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1594,6 +1672,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Лог подпищиков</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Subscribers log</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -1641,6 +1723,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Канал</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Channel</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1682,6 +1768,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Реквизит лога</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Log attribute</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment>Detailed log of the channel operations.</Comment>
 							<Type>
@@ -1702,6 +1792,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Подробный журнал операций с каналом.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Detailed log of the channel operations.</v8:content>
 								</v8:item>
 							</ToolTip>
 							<MarkNegatives>false</MarkNegatives>
@@ -1736,6 +1830,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Оригинальный ответ</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Original response</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment>Original response from channel.</Comment>
 							<Type>
@@ -1752,6 +1850,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Оригинальный ответ от канала.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Original response from channel.</v8:content>
 								</v8:item>
 							</ToolTip>
 							<MarkNegatives>false</MarkNegatives>
@@ -1786,6 +1888,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Код состояния </v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Status code</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment>State (reply) code returned by the HTTP service.</Comment>
 							<Type>
@@ -1808,6 +1914,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Код состояния (ответа) HTTP-сервера.
 </v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>State (reply) code returned by the HTTP service.</v8:content>
 								</v8:item>
 							</ToolTip>
 							<MarkNegatives>false</MarkNegatives>
@@ -1842,6 +1952,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Ответ строкой</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>String response</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment>Response represented as string.</Comment>
 							<Type>
@@ -1862,6 +1976,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Ответ представляется в виде строки.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Response represented as string.</v8:content>
 								</v8:item>
 							</ToolTip>
 							<MarkNegatives>false</MarkNegatives>
@@ -1895,6 +2013,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Успех</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Success</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1943,6 +2065,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Настроить запуск сервера заданий</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Configure job server start-up</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<Group>NavigationPanelOrdinary</Group>
@@ -1958,6 +2084,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Настроить запуск сервера заданий</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Configure job server start-up</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Picture>
