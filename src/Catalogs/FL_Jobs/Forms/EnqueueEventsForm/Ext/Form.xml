@@ -17,6 +17,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Страницы</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Pages</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -26,6 +30,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Страницы</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Pages</v8:content>
 				</v8:item>
 			</ToolTip>
 			<ExtendedTooltip name="PagesExtendedTooltip" id="35"/>
@@ -40,6 +48,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>События</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Events</v8:content>
+						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
@@ -49,6 +61,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>События</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Events</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Picture>
@@ -90,46 +106,17 @@
 								</UsualGroup>
 							</ChildItems>
 						</UsualGroup>
-						<Table name="EventsTable" id="83">
-							<Representation>List</Representation>
-							<ReadOnly>true</ReadOnly>
-							<AutoInsertNewRow>true</AutoInsertNewRow>
-							<EnableStartDrag>true</EnableStartDrag>
-							<EnableDrag>true</EnableDrag>
-							<DataPath>EventsTable</DataPath>
-							<RowFilter xsi:nil="true"/>
-							<ContextMenu name="EventsTableContextMenu" id="84">
+						<SpreadSheetDocumentField name="PreviewSpreadsheetDocument" id="131">
+							<DataPath>PreviewSpreadsheetDocument</DataPath>
+							<TitleLocation>None</TitleLocation>
+							<ContextMenu name="PreviewSpreadsheetDocumentContextMenu" id="132">
 								<Autofill>false</Autofill>
 							</ContextMenu>
-							<AutoCommandBar name="EventsTableCommandBar" id="85">
-								<Autofill>false</Autofill>
-							</AutoCommandBar>
-							<ExtendedTooltip name="EventsTableExtendedTooltip" id="86"/>
-							<SearchStringAddition name="EventsTableSearchString" id="87">
-								<AdditionSource>
-									<Item>EventsTable</Item>
-									<Type>SearchStringRepresentation</Type>
-								</AdditionSource>
-								<ContextMenu name="EventsTableSearchStringContextMenu" id="88"/>
-								<ExtendedTooltip name="EventsTableSearchStringExtendedTooltip" id="89"/>
-							</SearchStringAddition>
-							<ViewStatusAddition name="EventsTableViewStatus" id="90">
-								<AdditionSource>
-									<Item>EventsTable</Item>
-									<Type>ViewStatusRepresentation</Type>
-								</AdditionSource>
-								<ContextMenu name="EventsTableViewStatusContextMenu" id="91"/>
-								<ExtendedTooltip name="EventsTableViewStatusExtendedTooltip" id="92"/>
-							</ViewStatusAddition>
-							<SearchControlAddition name="EventsTableSearchControl" id="93">
-								<AdditionSource>
-									<Item>EventsTable</Item>
-									<Type>SearchControl</Type>
-								</AdditionSource>
-								<ContextMenu name="EventsTableSearchControlContextMenu" id="94"/>
-								<ExtendedTooltip name="EventsTableSearchControlExtendedTooltip" id="95"/>
-							</SearchControlAddition>
-						</Table>
+							<ExtendedTooltip name="PreviewSpreadsheetDocumentExtendedTooltip" id="133"/>
+							<Events>
+								<Event name="DetailProcessing">PreviewSpreadsheetDocumentDetailProcessing</Event>
+							</Events>
+						</SpreadSheetDocumentField>
 					</ChildItems>
 				</Page>
 				<Page name="PageStructure" id="66">
@@ -143,6 +130,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Структура</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Structure</v8:content>
+						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
@@ -152,6 +143,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Структура</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Structure</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Picture>
@@ -201,7 +196,6 @@
 					</ChildItems>
 				</Page>
 				<Page name="PageFields" id="38">
-					<Visible>false</Visible>
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
@@ -210,6 +204,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Поля</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Fields</v8:content>
 						</v8:item>
 					</Title>
 					<ToolTip>
@@ -220,6 +218,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Поля</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Fields</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Picture>
@@ -316,6 +318,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Отбор</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Filter</v8:content>
+						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
@@ -325,6 +331,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Отбор</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Filter</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Picture>
@@ -413,6 +423,118 @@
 						</Table>
 					</ChildItems>
 				</Page>
+				<Page name="PageOrder" id="103">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Order</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Порядок</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Order</v8:content>
+						</v8:item>
+					</Title>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Order</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Порядок</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Order</v8:content>
+						</v8:item>
+					</ToolTip>
+					<Picture>
+						<xr:Ref>CommonPicture.FL_Order</xr:Ref>
+						<xr:LoadTransparent>true</xr:LoadTransparent>
+					</Picture>
+					<Group>Horizontal</Group>
+					<ExtendedTooltip name="PageOrderExtendedTooltip" id="104"/>
+					<ChildItems>
+						<Table name="ComposerSettingsOrderAvailableFields" id="105">
+							<Representation>Tree</Representation>
+							<Autofill>true</Autofill>
+							<Width>30</Width>
+							<HeightInTableRows>15</HeightInTableRows>
+							<ChoiceMode>true</ChoiceMode>
+							<HorizontalLines>false</HorizontalLines>
+							<VerticalLines>false</VerticalLines>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>ComposerSettings.Settings.Order.OrderAvailableFields</DataPath>
+							<ContextMenu name="ComposerSettingsOrderAvailableFieldsContextMenu" id="106"/>
+							<AutoCommandBar name="ComposerSettingsOrderAvailableFieldsCommandBar" id="107"/>
+							<ExtendedTooltip name="ComposerSettingsOrderAvailableFieldsExtendedTooltip" id="108"/>
+							<SearchStringAddition name="ComposerSettingsOrderAvailableFieldsSearchString" id="109">
+								<AdditionSource>
+									<Item>ComposerSettingsOrderAvailableFields</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ComposerSettingsOrderAvailableFieldsSearchStringContextMenu" id="110"/>
+								<ExtendedTooltip name="ComposerSettingsOrderAvailableFieldsSearchStringExtendedTooltip" id="111"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="ComposerSettingsOrderAvailableFieldsViewStatus" id="112">
+								<AdditionSource>
+									<Item>ComposerSettingsOrderAvailableFields</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ComposerSettingsOrderAvailableFieldsViewStatusContextMenu" id="113"/>
+								<ExtendedTooltip name="ComposerSettingsOrderAvailableFieldsViewStatusExtendedTooltip" id="114"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="ComposerSettingsOrderAvailableFieldsSearchControl" id="115">
+								<AdditionSource>
+									<Item>ComposerSettingsOrderAvailableFields</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="ComposerSettingsOrderAvailableFieldsSearchControlContextMenu" id="116"/>
+								<ExtendedTooltip name="ComposerSettingsOrderAvailableFieldsSearchControlExtendedTooltip" id="117"/>
+							</SearchControlAddition>
+						</Table>
+						<Table name="ComposerSettingsOrder" id="118">
+							<Representation>List</Representation>
+							<Autofill>true</Autofill>
+							<Width>60</Width>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>ComposerSettings.Settings.Order</DataPath>
+							<ContextMenu name="ComposerSettingsOrderContextMenu" id="119"/>
+							<AutoCommandBar name="ComposerSettingsOrderCommandBar" id="120"/>
+							<ExtendedTooltip name="ComposerSettingsOrderExtendedTooltip" id="121"/>
+							<SearchStringAddition name="ComposerSettingsOrderSearchString" id="122">
+								<AdditionSource>
+									<Item>ComposerSettingsOrder</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ComposerSettingsOrderSearchStringContextMenu" id="123"/>
+								<ExtendedTooltip name="ComposerSettingsOrderSearchStringExtendedTooltip" id="124"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="ComposerSettingsOrderViewStatus" id="125">
+								<AdditionSource>
+									<Item>ComposerSettingsOrder</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ComposerSettingsOrderViewStatusContextMenu" id="126"/>
+								<ExtendedTooltip name="ComposerSettingsOrderViewStatusExtendedTooltip" id="127"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="ComposerSettingsOrderSearchControl" id="128">
+								<AdditionSource>
+									<Item>ComposerSettingsOrder</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="ComposerSettingsOrderSearchControlContextMenu" id="129"/>
+								<ExtendedTooltip name="ComposerSettingsOrderSearchControlExtendedTooltip" id="130"/>
+							</SearchControlAddition>
+						</Table>
+					</ChildItems>
+				</Page>
 			</ChildItems>
 		</Pages>
 	</ChildItems>
@@ -426,6 +548,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Обмен</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Exchange</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -442,6 +568,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Метод</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Method</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>cfg:CatalogRef.FL_Methods</v8:Type>
@@ -451,6 +581,10 @@
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Metadata object</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Metadata object</v8:content>
 				</v8:item>
 			</Title>
@@ -472,6 +606,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Адрес схемы компоновки данных</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Data composition schema address</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
@@ -491,24 +629,13 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Компоновщик настроек компоновки данных</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Data composition settings composer</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>dcsset:SettingsComposer</v8:Type>
-			</Type>
-		</Attribute>
-		<Attribute name="EventsTable" id="7">
-			<Title>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Events table</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Таблица событий</v8:content>
-				</v8:item>
-			</Title>
-			<Type>
-				<v8:Type>v8:ValueTable</v8:Type>
 			</Type>
 		</Attribute>
 		<Attribute name="TestingExecutionTime" id="8">
@@ -521,6 +648,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Время выполнения (мс)</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Execution time (ms)</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:decimal</v8:Type>
@@ -531,21 +662,44 @@
 				</v8:NumberQualifiers>
 			</Type>
 		</Attribute>
-		<Attribute name="APIVersion" id="9">
+		<Attribute name="PreviewSpreadsheetDocument" id="10">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>APIVersion</v8:content>
+					<v8:content>Preview spreadsheet document</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Версия API</v8:content>
+					<v8:content>Табличный документ предварительного просмотра</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Preview spreadsheet document</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type xmlns:mxl="http://v8.1c.ru/8.2/data/spreadsheet">mxl:SpreadsheetDocument</v8:Type>
+			</Type>
+		</Attribute>
+		<Attribute name="DetailsDataAddress" id="11">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Details data address</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Адрес данных расшифровки</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Details data address</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
 				<v8:StringQualifiers>
-					<v8:Length>10</v8:Length>
+					<v8:Length>0</v8:Length>
 					<v8:AllowedLength>Variable</v8:AllowedLength>
 				</v8:StringQualifiers>
 			</Type>
@@ -562,6 +716,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Предварительный просмотр событий</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Preview events</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -571,6 +729,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Предварительный просмотр событий</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Preview events</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -590,6 +752,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Отправить события в очередь</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Enqueue events</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -599,6 +765,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Создает новые задания «выполнить-и-забыть», основанные на переданном объекте обмена.</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Creates a new fire-and-forget jobs based on the given exchange object.</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -625,15 +795,6 @@
 				<v8:Type>xs:string</v8:Type>
 				<v8:StringQualifiers>
 					<v8:Length>80</v8:Length>
-					<v8:AllowedLength>Variable</v8:AllowedLength>
-				</v8:StringQualifiers>
-			</Type>
-		</Parameter>
-		<Parameter name="APIVersion">
-			<Type>
-				<v8:Type>xs:string</v8:Type>
-				<v8:StringQualifiers>
-					<v8:Length>10</v8:Length>
 					<v8:AllowedLength>Variable</v8:AllowedLength>
 				</v8:StringQualifiers>
 			</Type>

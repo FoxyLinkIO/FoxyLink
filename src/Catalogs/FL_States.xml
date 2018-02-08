@@ -34,6 +34,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Состояния</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>States</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment/>
 			<Hierarchical>false</Hierarchical>
@@ -251,6 +255,10 @@
 							<v8:lang>en</v8:lang>
 							<v8:content>The state name is used to differentiate one state from another during the state change process. So all the implemented states should have a unique state name. Please use one-word names that start with a capital letter, in a past tense in English for your state names.</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>The state name is used to differentiate one state from another during the state change process. So all the implemented states should have a unique state name. Please use one-word names that start with a capital letter, in a past tense in English for your state names.</v8:content>
+						</v8:item>
 					</xr:ToolTip>
 					<xr:ExtendedEdit>false</xr:ExtendedEdit>
 					<xr:Format/>
@@ -269,6 +277,10 @@
 						</v8:item>
 						<v8:item>
 							<v8:lang>en</v8:lang>
+							<v8:content>Name</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>Name</v8:content>
 						</v8:item>
 					</xr:Synonym>
@@ -354,6 +366,10 @@
 							<v8:lang>en</v8:lang>
 							<v8:content>Final state</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Final state</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment>Shows if the current state is a final one.</Comment>
 					<Type>
@@ -369,6 +385,10 @@
 						</v8:item>
 						<v8:item>
 							<v8:lang>en</v8:lang>
+							<v8:content>Final states define a termination stage of a background job processing pipeline. Background jobs in a final state is considered as finished with no further processing required.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>Final states define a termination stage of a background job processing pipeline. Background jobs in a final state is considered as finished with no further processing required.</v8:content>
 						</v8:item>
 					</ToolTip>

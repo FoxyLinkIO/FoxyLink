@@ -114,15 +114,16 @@ Procedure Disconnect(Command)
     If NOT Modified Then
         
         ShowQueryBox(New NotifyDescription("DoAfterChannelDisconnect", ThisObject),
-            NStr("en = 'Invalidate channel connection?';
-                 |ru = 'Отключить соединение с каналом?'"),
+            NStr("en='Invalidate channel connection?';
+                |ru='Отключить соединение с каналом?';
+                |en_CA='Invalidate channel connection?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);
         
     Else
         
-        FL_CommonUseClientServer.NotifyUser(NStr(
-            "en = 'There are unsaved changes, they must be saved.'; 
-            |ru = 'Имеются несохраненные изменения, их необходимо сохранить.'"));        
+        FL_CommonUseClientServer.NotifyUser(NStr("en='There are unsaved changes, they must be saved.';
+            |ru='Имеются несохраненные изменения, их необходимо сохранить.';
+            |en_CA='There are unsaved changes, they must be saved.'"));        
         
     EndIf;
     

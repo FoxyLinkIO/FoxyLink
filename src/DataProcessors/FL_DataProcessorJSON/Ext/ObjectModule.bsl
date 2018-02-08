@@ -364,9 +364,9 @@ Procedure APISchemaOutput(Item, DataCompositionProcessor,
         If NOT IsBlankString(Item.Template) Then
             
             If CurrentLevel = Undefined Then    
-                ErrorMessage = StrTemplate(NStr(
-                        "en = 'Error: Failed to find property with name: %1.';
-                        |ru = 'Ошибка: Не удалось найти свойство с именем: %1.'"),
+                ErrorMessage = StrTemplate(NStr("en='Error: Failed to find property with name: {%1}.';
+                        |ru='Ошибка: Не удалось найти свойство с именем: {%1}.';
+                        |en_CA='Error: Failed to find property with name: {%1}.'"),
                     ReportStructure.Names[Item.Template]);
                 Raise ErrorMessage;
             EndIf;
@@ -610,13 +610,13 @@ Procedure FillTemplateName(Row, Hierarchy, NestedHierarchy = Undefined)
     //    Row.Template = NestedHierarchy.Template;    
     //Else
     //    ErrorMessage = StrTemplate(NStr(
-    //            "en = 'Error: Failed to find grouping in the report structure with name: ''%1''.';
-    //            |ru = 'Ошибка: Не удалось найти группировку в структуре отчета с именем: ''%1''.'"),
+    //            "en = 'Error: Failed to find grouping in the report structure with name: '{%1}'.';
+    //            |ru = 'Ошибка: Не удалось найти группировку в структуре отчета с именем: '{%1}'.'"),
     //        Row.Name);
     //    Raise ErrorMessage;    
     //EndIf;
     
-    NestedHierarchy = Hierarchy.Rows.Find(Row.Name, "Name"); If NestedHierarchy <> Undefined Then Row.Template = NestedHierarchy.Template; Else ErrorMessage = StrTemplate(NStr("en = 'Error: Failed to find grouping in the report structure with name: ''%1''.'; ru = 'Ошибка: Не удалось найти группировку в структуре отчета с именем: ''%1''.'"), Row.Name); Raise ErrorMessage; EndIf; 
+    NestedHierarchy = Hierarchy.Rows.Find(Row.Name, "Name"); If NestedHierarchy <> Undefined Then Row.Template = NestedHierarchy.Template; Else ErrorMessage = StrTemplate(NStr("en='Error: Failed to find grouping in the report structure with name: {%1}.';ru='Ошибка: Не удалось найти группировку в структуре отчета с именем: {%1}.';en_CA='Error: Failed to find grouping in the report structure with name: {%1}.'"), Row.Name); Raise ErrorMessage; EndIf; 
     
 EndProcedure // FillTemplateName()
 
@@ -631,15 +631,15 @@ Procedure FillParameterName(Row, TemplateColumns)
     //ColumnItem = TemplateColumns[Row.Template][Upper(Row.Name)];
     //If ColumnItem = Undefined AND NOT Row.StructuredType Then
     //    ErrorMessage = StrTemplate(NStr(
-    //            "en = 'Error: Failed to find field in report structure with name: ''%1'', grouping: ''%2''.';
-    //            |ru = 'Ошибка: Не удалось найти поле в структуре отчета с именем: ''%1'', группировка: ''%2''.'"),
+    //            "en = 'Error: Failed to find field in report structure with name: '{%1}', grouping: '{%2}'.';
+    //            |ru = 'Ошибка: Не удалось найти поле в структуре отчета с именем: '{%1}', группировка: '{%2}'.'"),
     //        Row.Name, ?(Row.Parent = Undefined, Row.Name, Row.Parent.Name));
     //    Raise ErrorMessage;        
     //EndIf;
     //
     //Row.Parameter = ColumnItem;
     
-    ColumnItem = TemplateColumns[Row.Template][Upper(Row.Name)]; If ColumnItem = Undefined AND NOT Row.StructuredType Then ErrorMessage = StrTemplate(NStr("en = 'Error: Failed to find field in report structure with name: ''%1'', grouping: ''%2''.'; ru = 'Ошибка: Не удалось найти поле в структуре отчета с именем: ''%1'', группировка: ''%2''.'"), Row.Name, ?(Row.Parent = Undefined, Row.Name, Row.Parent.Name)); Raise ErrorMessage; EndIf; Row.Parameter = ColumnItem;
+    ColumnItem = TemplateColumns[Row.Template][Upper(Row.Name)]; If ColumnItem = Undefined AND NOT Row.StructuredType Then ErrorMessage = StrTemplate(NStr("en='Error: Failed to find field in report structure with name: {%1}, grouping: {%2}.';ru='Ошибка: Не удалось найти поле в структуре отчета с именем: {%1}, группировка: {%2}.';en_CA='Error: Failed to find field in report structure with name: {%1}, grouping: {%2}.'"), Row.Name, ?(Row.Parent = Undefined, Row.Name, Row.Parent.Name)); Raise ErrorMessage; EndIf; Row.Parameter = ColumnItem;
     
 EndProcedure // FillParameterName()
 
@@ -650,9 +650,9 @@ Procedure CheckDublicateProperty(Listed, Name, Group)
     If Listed.Get(Name) = Undefined Then
         Listed.Insert(Name, True);    
     Else
-        ErrorMessage = StrTemplate(NStr(
-                "en = 'SyntaxError: Duplicate property with name: ''%1'', grouping: ''%2''.';
-                |ru = 'СинтаксическаяОшибка: Дублируемое свойство с именем: ''%1'', группировка: ''%2''.'"),
+        ErrorMessage = StrTemplate(NStr("en='SyntaxError: Duplicate property with name: {%1}, grouping: {%2}.';
+            |ru='СинтаксическаяОшибка: Дублируемое свойство с именем: {%1}, группировка: {%2}.';
+            |en_CA='SyntaxError: Duplicate property with name: {%1}, grouping: {%2}.'"),
             Name, Group);
         Raise ErrorMessage;     
     EndIf;
@@ -681,8 +681,9 @@ EndFunction // Version()
 //
 Function BaseDescription() Export
     
-    BaseDescription = NStr("en = 'JSON (%1) format data processor, ver. %2'; 
-        |ru = 'Обработчик формата JSON (%1), вер. %2'");
+    BaseDescription = NStr("en='JSON (%1) format data processor, ver. %2';
+        |ru='Обработчик формата JSON (%1), вер. %2';
+        |en_CA='JSON (%1) format data processor, ver. %2'");
     BaseDescription = StrTemplate(BaseDescription, FormatStandard(), Version());      
     Return BaseDescription;    
     

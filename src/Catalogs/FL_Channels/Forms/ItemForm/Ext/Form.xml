@@ -23,6 +23,10 @@
 						<v8:lang>ru</v8:lang>
 						<v8:content>Сохранить и закрыть</v8:content>
 					</v8:item>
+					<v8:item>
+						<v8:lang>en_CA</v8:lang>
+						<v8:content>Save and close</v8:content>
+					</v8:item>
 				</Title>
 				<ExtendedTooltip name="SaveAndCloseExtendedTooltip" id="42"/>
 			</Button>
@@ -43,6 +47,10 @@
 						<v8:lang>ru</v8:lang>
 						<v8:content>Сохранить</v8:content>
 					</v8:item>
+					<v8:item>
+						<v8:lang>en_CA</v8:lang>
+						<v8:content>Save</v8:content>
+					</v8:item>
 				</Title>
 				<ExtendedTooltip name="SaveExtendedTooltip" id="44"/>
 			</Button>
@@ -62,6 +70,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Страницы шапки</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Header pages</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -71,6 +83,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Страницы шапки</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Header pages</v8:content>
 				</v8:item>
 			</ToolTip>
 			<PagesRepresentation>None</PagesRepresentation>
@@ -86,6 +102,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Базовый канал</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Basic channel</v8:content>
+						</v8:item>
 					</Title>
 					<Group>Horizontal</Group>
 					<ExtendedTooltip name="HeaderPageBasicChannelExtendedTooltip" id="20"/>
@@ -100,6 +120,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Информация об канале</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Channel information</v8:content>
+								</v8:item>
 							</Title>
 							<ToolTip>
 								<v8:item>
@@ -109,6 +133,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Информация об канале</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Channel information</v8:content>
 								</v8:item>
 							</ToolTip>
 							<Group>Vertical</Group>
@@ -181,6 +209,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Описание плагина</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Plugin description</v8:content>
+								</v8:item>
 							</Title>
 							<ToolTip>
 								<v8:item>
@@ -190,6 +222,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Описание плагина</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Plugin description</v8:content>
 								</v8:item>
 							</ToolTip>
 							<Group>Vertical</Group>
@@ -230,6 +266,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Выберите канал</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Select channel</v8:content>
+						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
@@ -239,6 +279,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Выберите канал</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Select channel</v8:content>
 						</v8:item>
 					</ToolTip>
 					<ExtendedTooltip name="HeaderPageSelectChannelExtendedTooltip" id="33"/>
@@ -253,6 +297,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Выберите канал</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Select channel</v8:content>
 								</v8:item>
 							</Title>
 							<Width>1</Width>
@@ -288,6 +336,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Наименование</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Name</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
@@ -307,6 +359,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Версия плагина</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Plugin version</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
@@ -325,6 +381,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Стандарт</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Standard</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -347,6 +407,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Соединить</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Connect</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -356,6 +420,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить соединение</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Establish a connection</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -375,6 +443,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Отсоединить</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Disconnect</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -384,6 +456,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Удалить соединение</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Delete connection</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -403,6 +479,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Форма канала</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Channel form</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -412,6 +492,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Форма канала</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Channel form</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>

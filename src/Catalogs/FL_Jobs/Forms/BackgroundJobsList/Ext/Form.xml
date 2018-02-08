@@ -9,6 +9,10 @@
 			<v8:lang>ru</v8:lang>
 			<v8:content>Список сообщений обмена</v8:content>
 		</v8:item>
+		<v8:item>
+			<v8:lang>en_CA</v8:lang>
+			<v8:content>Exchange messages list</v8:content>
+		</v8:item>
 	</Title>
 	<AutoTitle>false</AutoTitle>
 	<Customizable>false</Customizable>
@@ -64,6 +68,11 @@
 											<v8:item>
 												<v8:lang>ru</v8:lang>
 												<v8:content>&lt;colorstyle -14&gt;Выполняет метод с предварительным установлением безопасного режима выполнения кода.&lt;/&gt;</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>en_CA</v8:lang>
+												<v8:content>&lt;colorstyle -14&gt;Executes the method with pre-establishing a safe mode of code execution.
+&lt;/&gt;</v8:content>
 											</v8:item>
 										</Title>
 									</ExtendedTooltip>
@@ -241,6 +250,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Безопасный режим</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Safe mode</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:boolean</v8:Type>
@@ -281,6 +294,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Обработать выделенные</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Trigger selected</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -289,6 +306,10 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Trigger selected messages</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Trigger selected messages</v8:content>
 				</v8:item>
 			</ToolTip>
@@ -309,6 +330,10 @@
 					<v8:lang>en</v8:lang>
 					<v8:content>Trigger messages</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Trigger messages</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -317,6 +342,10 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Trigger messages</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Trigger messages</v8:content>
 				</v8:item>
 			</ToolTip>
@@ -337,6 +366,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Запустить сервер заданий (немедленно)</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Start job server (immediately)</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -346,6 +379,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Запустить сервер заданий (немедленно)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Start job server (immediately)</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -365,6 +402,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Остановить сервер заданий (немедленно)</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Stop job server (immediately)</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -374,6 +415,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Остановить сервер заданий (немедленно)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Stop job server (immediately)</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -393,10 +438,18 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Настройки сервера заданий</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Configure job server</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Configure job server</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Configure job server</v8:content>
 				</v8:item>
 			</ToolTip>

@@ -12,6 +12,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Компоновка данных</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Data composition</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment>Server-based data composition procedures and functions.</Comment>
 			<Global>false</Global>

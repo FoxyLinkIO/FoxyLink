@@ -93,10 +93,9 @@ Procedure APISchemaTypeChoiceProcessing(Item, SelectedValue, StandardProcessing)
                 APISchemaItems.Clear();
                 
                 Explanation = StrTemplate(
-                    NStr("en = 'The new type ''%1'' cannot have nested items. 
-                        |Nested items have just been cleared.';
-                        |ru = 'Новый тип ''%1'' не может иметь вложенные элементы. 
-                        |Вложенные элементы были удалены.'"), 
+                    NStr("en='The new type {%1} cannot have nested items. Nested items have just been cleared.';
+                        |ru='Новый тип {%1} не может иметь вложенные элементы. Вложенные элементы были удалены.';
+                        |en_CA='The new type {%1} cannot have nested items. Nested items have just been cleared.'"), 
                     SelectedValue);
                 
                 ShowUserNotification(Title, , Explanation, 
@@ -121,8 +120,9 @@ Procedure LoadSample(Command)
         
         ShowQueryBox(New NotifyDescription("DoAfterChooseSampleToLoad", 
                 ThisObject),
-            NStr("en = 'The existing API schema description will be erased, continue loading sample?';
-                 |ru = 'Существующее описание схемы API будет стерто, продолжить загрузку образца?'"),
+            NStr("en='The existing API schema description will be erased, continue loading sample?';
+                |ru='Существующее описание схемы API будет стерто, продолжить загрузку образца?';
+                |en_CA='The existing API schema description will be erased, continue loading sample?'"),
             QuestionDialogMode.OKCancel, 
             , 
             DialogReturnCode.Cancel);
@@ -202,8 +202,9 @@ Procedure DeleteRowAPITable(Command)
         ShowQueryBox(New NotifyDescription("DoAfterChooseRowToDelete", 
             ThisObject, 
             New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en = 'Delete the selected row?';
-                 |ru = 'Удалить выбранную строку?'"),
+            NStr("en='Delete the selected row?';
+                |ru='Удалить выбранную строку?';
+                |en_CA='Delete the selected row?'"),
             QuestionDialogMode.YesNo, 
             , 
             DialogReturnCode.No);
@@ -233,8 +234,9 @@ Procedure DoAfterChooseSampleToLoad(QuestionResult, AdditionalParameters) Export
         ShowInputString(New NotifyDescription("DoAfterInputStringSample", 
                 ThisObject),
             ,
-            NStr("en = 'Insert JSON format sample'; 
-                 |ru = 'Вставьте образец формата JSON'"),
+            NStr("en='Insert JSON format sample';
+                |ru='Вставьте образец формата JSON';
+                |en_CA='Insert JSON format sample'"),
             ,
             True);
                 
@@ -315,9 +317,9 @@ Procedure AddRowToAPISchema(Type)
             
         Else
             
-            Explanation = NStr(
-                "en = 'Failed to add another root item. The root item already exists.';
-                |ru = 'Не удалось добавить еще один корневой элемент. Корневой элемент уже существует'");
+            Explanation = NStr("en='Failed to add another root item. The root item already exists.';
+                |ru='Не удалось добавить еще один корневой элемент. Корневой элемент уже существует';
+                |en_CA='Failed to add another root item. The root item already exists.'");
                 
             ShowUserNotification(Title, , Explanation, 
                 PictureLib.FL_Logotype64);  
@@ -328,9 +330,9 @@ Procedure AddRowToAPISchema(Type)
                 
         If IsBlankString(CurrentData.Type) Then 
             
-            Explanation = NStr(
-                "en = 'Failed to add new item. Type is empty.';
-                |ru = 'Не удалось добавить новый элемент. Тип не заполнен.'");
+            Explanation = NStr("en='Failed to add new item. Type is empty.';
+                |ru='Не удалось добавить новый элемент. Тип не заполнен.';
+                |en_CA='Failed to add new item. Type is empty.'");
 
             ShowUserNotification(Title, , Explanation, 
                 PictureLib.FL_Logotype64);
@@ -341,9 +343,9 @@ Procedure AddRowToAPISchema(Type)
         
         If Not IsStructuredType(CurrentData.Type) Then
          
-            Explanation = NStr(
-                "en = 'Failed to add new item. Type can not have nested items.';
-                |ru = 'Не удалось добавить новый элемент. Тип не может иметь вложенных элементов.'");
+            Explanation = NStr("en='Failed to add new item. Type can not have nested items.';
+                |ru='Не удалось добавить новый элемент. Тип не может иметь вложенных элементов.';
+                |en_CA='Failed to add new item. Type can not have nested items.'");
 
             ShowUserNotification(Title, , Explanation, 
                 PictureLib.FL_Logotype64);
@@ -378,9 +380,9 @@ Procedure LoadSampleAtServer(String)
         JSONReader.Close();
     Except
         
-        ErrorMessage = StrTemplate(NStr(
-                "en = 'Error: Failed to read JSON sample. %1.';
-                |ru = 'Ошибка: Не удалось прочитать JSON образец. %1.'"),
+        ErrorMessage = StrTemplate(NStr("en='Error: Failed to read JSON sample. %1.';
+            |ru='Ошибка: Не удалось прочитать JSON образец. %1.';
+            |en_CA='Error: Failed to read JSON sample. %1.'"),
             ErrorDescription());  
         Raise ErrorMessage;
         
@@ -464,10 +466,12 @@ Procedure FillCheckAPISchema(Rows)
         
         If IsBlankString(Row.Name) OR IsBlankString(Row.Type) Then
             
-            Raise NStr("en = 'Content type or field name is empty. 
-                |Cannot save API schema.';
-                |ru = 'Тип или имя поля не заданы. 
-                |Невозможно сохранить схему API.'");    
+            ErrorMessage = NStr("en='Content type or field name is empty. Cannot save API schema.';
+                |ru='Тип или имя поля не заданы. Невозможно сохранить схему API.';
+                |en_CA='Content type or field name is empty. Cannot save API schema.'");
+            
+            Raise ErrorMessage;
+            
         EndIf;
         
         If Row.Rows.Count() > 0 Then

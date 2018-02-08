@@ -48,8 +48,9 @@ Function OAuthSignature(Val HTTPMethod, Val URL, Val OAuthSignatureMethod,
         
     Else
         
-        ErrorMessage = NStr("en = 'Signature method is not supported.';
-            |ru = 'Сигнатурный метод не поддерживаеться.'");
+        ErrorMessage = NStr("en='Signature method is not supported.';
+            |ru='Сигнатурный метод не поддерживаеться.';
+            |en_CA='Signature method is not supported.'");
             
         Raise ErrorMessage;
         
@@ -82,8 +83,9 @@ Function HMAC(Val Message, Val SecretKey, HashFunc) Export
         OR HashFunc = HashFunction.SHA256 Then
         BlockSize = 64;
     Else
-        Raise NStr("en = 'Unsupported HMAC hash function.';
-            |ru = 'Неподдерживаемая хеш-функция HMAC.'");
+        Raise NStr("en='Unsupported HMAC hash function.';
+            |ru='Неподдерживаемая хеш-функция HMAC.';
+            |en_CA='Unsupported HMAC hash function.'");
     EndIf;
     
     If TypeOf(Message) = Type("String") Then
@@ -207,8 +209,9 @@ Function FieldValue(FieldName, EncryptedData) Export
         
     EndIf;
     
-    Raise NStr("en = 'Value not found or encrypted.';
-        |ru = 'Значение не найдено или зашифровано.'");
+    Raise NStr("en='Value not found or encrypted.';
+        |ru='Значение не найдено или зашифровано.';
+        |en_CA='Value not found or encrypted.'");
     
 EndFunction // FieldValue()
     

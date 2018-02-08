@@ -27,20 +27,37 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         Return;
     EndIf;
     
-    Parameters.Property("APIVersion", APIVersion);
     Parameters.Property("Exchange", Exchange);
     Parameters.Property("MetadataObject", MetadataObject);
     Parameters.Property("Method", Method);
-     
+    
     PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
         Metadata.FindByFullName(MetadataObject));
-    
-    InitializeForm(PrimaryKeys);
-    InitializeDataCompositionSchema(PrimaryKeys);
+
+    InitializeDataCompositionSchema(PrimaryKeys); 
     
 EndProcedure // OnCreateAtServer()
 
 #EndRegion // FormEventHandlers
+
+#Region FormItemsEventHandlers
+
+&AtClient
+Procedure PreviewSpreadsheetDocumentDetailProcessing(Item, Details, 
+    StandardProcessing)
+    
+    StandardProcessing = False;
+    
+    DataCompositionDetails = GetFromTempStorage(DetailsDataAddress);
+    FieldDetailsItem = DataCompositionDetails.Items[Details];
+    FieldDetailsValues = FieldDetailsItem.GetFields();
+    If FieldDetailsValues.Count() = 1 Then
+        ShowValue(, FieldDetailsValues[0].Value);    
+    EndIf;
+        
+EndProcedure // PreviewSpreadsheetDocumentDetailProcessing()
+
+#EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
 
@@ -54,8 +71,9 @@ Procedure EnqueueEvents(Command)
     
     ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDispatch", 
             ThisObject),
-        NStr("en = 'Enqueue all objects from the events table?';
-             |ru = 'Отправить в очередь все объекты из таблицы событий?'"),
+        NStr("en='Enqueue all objects from the events table?';
+            |ru='Отправить в очередь все объекты из таблицы событий?';
+            |en_CA='Enqueue all objects from the events table?'"),
         QuestionDialogMode.YesNo, , DialogReturnCode.No);   
     
 EndProcedure // EnqueueEvents()
@@ -87,72 +105,53 @@ EndProcedure // DoAfterChooseEventToDispatch()
 // Only for internal use.
 //
 &AtServer
-Procedure InitializeForm(PrimaryKeys)
-    
-    NewAttribues = New Array;
-    For Each PrimaryKey In PrimaryKeys Do
-        NewAttribues.Add(New FormAttribute(PrimaryKey.Key, 
-            New TypeDescription(PrimaryKey.Value), "EventsTable"));         
-    EndDo;
-    ChangeAttributes(NewAttribues);
-    
-    For Each PrimaryKey In PrimaryKeys Do
-        
-        FormField = FL_InteriorUse.NewFormField(FormFieldType.InputField);
-        FormField.Name = PrimaryKey.Key;
-        FormField.DataPath = StrTemplate("EventsTable.%1", PrimaryKey.Key);
-        FL_InteriorUse.AddItemToItemFormCollection(Items, FormField, 
-            Items.EventsTable);
-            
-    EndDo;
-    
-EndProcedure // InitializeForm()
-
-// Only for internal use.
-//
-&AtServer
 Procedure InitializeDataCompositionSchema(PrimaryKeys)
     
-    DataSources = New Array;
+    MaxResults = 500;
+    
     DataSource = FL_DataComposition.NewDataCompositionSchemaDataSource();
+    DataSources = New Array;
     DataSources.Add(DataSource);
-    
-    FieldText = "";
+           
     DataSet = FL_DataComposition.NewDataCompositionSchemaDataSetQuery();
-    For Each PrimaryKey In PrimaryKeys Do
-        
-        FieldText = FieldText + ?(IsBlankString(FieldText), "", ",") + "
-            |   " + PrimaryKey.Key + " AS " + PrimaryKey.Key;
-        
-        Field = FL_DataComposition.NewDataCompositionSchemaDataSetField();
-        Field.DataPath = PrimaryKey.Key;
-        Field.Field = PrimaryKey.Key;
-        Field.Title = PrimaryKey.Key;
-        Field.ValueType = New TypeDescription(PrimaryKey.Value);
-        DataSet.Fields.Add(Field);
-        
-    EndDo;
-    
+    DataSet.Query = StrTemplate("SELECT * FROM %1", MetadataObject);
     DataSets = New Array;
     DataSets.Add(DataSet);
-    DataSet.Query = StrTemplate("SELECT %1 FROM %2", FieldText, MetadataObject);
-    
+     
     FL_DataComposition.CreateDataCompositionSchema(DataSources, DataSets, 
         DataCompositionSchemaAddress, UUID);
     FL_DataComposition.InitSettingsComposer(ComposerSettings, 
         DataCompositionSchemaAddress);
         
-    DataCompositionGroup = ComposerSettings.Settings.Structure.Add(
+    FoxyLinkGroup = ComposerSettings.Settings.Structure.Add(
         Type("DataCompositionGroup"));
-    DataCompositionGroup.Use = True;
-
-    For Each PrimaryKey In PrimaryKeys Do 
-        SelectedField = DataCompositionGroup.Selection.Items.Add(
-            Type("DataCompositionSelectedField"));
-        SelectedField.Field = New DataCompositionField(PrimaryKey.Key);
-        SelectedField.Use = True;
+    FoxyLinkGroup.Use = True;
+    FoxyLinkGroup.Name = "FoxyLinkGroup";
+    FoxyLinkGroup.Order.Items.Add(
+        Type("DataCompositionAutoOrderItem"));
+    FoxyLinkGroup.Selection.Items.Add(
+        Type("DataCompositionAutoSelectedField"));
+    FoxyLinkGroup.OutputParameters.SetParameterValue("RecordsCount", 
+        MaxResults);
+    
+    SelectionFields = ComposerSettings.Settings.Selection.Items;
+    AvailableFields = ComposerSettings.Settings.Selection
+        .SelectionAvailableFields.Items;
+    For Each PrimaryKey In PrimaryKeys Do
+        
+        AvailableField = AvailableFields.Find(PrimaryKey.Key);
+        If AvailableField <> Undefined Then
+            
+            SelectedField = SelectionFields.Add(
+                Type("DataCompositionSelectedField"));
+            SelectedField.Field = New DataCompositionField(
+                AvailableField.Field);
+            SelectedField.Use = True;
+            
+        EndIf;
+        
     EndDo;
-   
+       
 EndProcedure // InitializeDataCompositionSchema() 
 
 // Only for internal use.
@@ -160,28 +159,30 @@ EndProcedure // InitializeDataCompositionSchema()
 &AtServer
 Procedure PreviewEventsAtServer()
     
+    PreviewSpreadsheetDocument.Clear();
+    
     // Start measuring.
     StartTime = CurrentUniversalDateInMilliseconds();
     
-    DataCompositionSchema = GetFromTempStorage(DataCompositionSchemaAddress);     
-    DataCompositionSettings = ComposerSettings.GetSettings();
-
+    DetailsData = New DataCompositionDetailsData;
     DataCompositionTemplate = FL_DataComposition
         .NewTemplateComposerParameters();
-    DataCompositionTemplate.Schema   = DataCompositionSchema;
-    DataCompositionTemplate.Template = DataCompositionSettings;
+    DataCompositionTemplate.Schema = GetFromTempStorage(
+        DataCompositionSchemaAddress);
+    DataCompositionTemplate.Template = ComposerSettings.GetSettings();
+    DataCompositionTemplate.DetailsData = DetailsData;
 
     OutputParameters = FL_DataComposition.NewOutputParameters();
     OutputParameters.DCTParameters = DataCompositionTemplate;
+    OutputParameters.DetailsData = DetailsData;
     
-    ValueTable = New ValueTable;
-    FL_DataComposition.OutputInValueCollection(ValueTable, 
-        OutputParameters);     
-            
+    FL_DataComposition.OutputInSpreadsheetDocument(PreviewSpreadsheetDocument, 
+        OutputParameters);
+           
     // End measuring.
     TestingExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
-
-    EventsTable.Load(ValueTable);
+    
+    DetailsDataAddress = PutToTempStorage(DetailsData, UUID);
     
 EndProcedure // PreviewEventsAtServer()
 
@@ -190,23 +191,108 @@ EndProcedure // PreviewEventsAtServer()
 &AtServer
 Procedure EnqueueEventsAtServer()
     
-    For Each Event In EventsTable Do
+    FoxyLinkGroup = ComposerSettings.Settings.Structure.Get(0);
+    ParameterValue = FoxyLinkGroup.OutputParameters.Items.Find("RecordsCount");
+    If ParameterValue <> Undefined Then
+        ParameterValue.Use = False;
+    EndIf;
     
-        // Event mock
-        SourceMock = FL_Events.NewSourceMock();
-        SourceMock.Ref = Event.Ref;
-        
-        InvocationData = SourceMock.AdditionalProperties.InvocationData;
-        InvocationData.APIVersion = APIVersion;
-        InvocationData.MetadataObject = MetadataObject;
-        InvocationData.Method = Method;
-        InvocationData.Owner = Exchange;
-        InvocationData.Arguments = Event.Ref;
-        
-        FL_Events.EnqueueEvent(SourceMock);
-        
-    EndDo;
-        
+    DataCompositionTemplate = FL_DataComposition
+        .NewTemplateComposerParameters();
+    DataCompositionTemplate.Schema = GetFromTempStorage(
+        DataCompositionSchemaAddress);
+    DataCompositionTemplate.Template = ComposerSettings.GetSettings();
+
+    OutputParameters = FL_DataComposition.NewOutputParameters();
+    OutputParameters.DCTParameters = DataCompositionTemplate;
+    
+    EventsTable = New ValueTable;
+    FL_DataComposition.OutputInValueCollection(EventsTable, 
+        OutputParameters);
+            
+    If FL_CommonUseReUse.IsReferenceTypeObjectCached(MetadataObject) Then
+        EnqueueReferenceEvents(EventsTable);    
+    ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(MetadataObject) Then
+        EnqueueInformationRegisterEvents(EventsTable);    
+    EndIf;
+            
 EndProcedure // EnqueueEventsAtServer()
+
+// Only for internal use.
+//
+&AtServer
+Procedure EnqueueReferenceEvents(Events)
+    
+    Var AttributeName;
+    
+    Synonyms = FL_CommonUseReUse.StandardAttributeSynonyms();
+    
+    BaseAttributeName = "REF";
+    SynonymAttributeName = Synonyms.Get(BaseAttributeName);
+    
+    If Events.Columns.Find(BaseAttributeName) <> Undefined Then
+        AttributeName = BaseAttributeName;
+    ElsIf Events.Columns.Find(SynonymAttributeName) <> Undefined Then
+        AttributeName = SynonymAttributeName;    
+    EndIf;
+    
+    // Event mock
+    SourceMock = FL_Events.NewSourceMock();
+    
+    InvocationMock = SourceMock.AdditionalProperties.InvocationData;
+    InvocationMock.MetadataObject = MetadataObject;
+    InvocationMock.Method = Method;
+    InvocationMock.Owner = Exchange;
+    
+    If ValueIsFilled(AttributeName) Then
+        
+        // The code in the comment written in one line is below this comment.
+        // To edit the code, remove the comment.
+        // For more information about the code in 1 line see http://infostart.ru/public/71130/.
+
+        //For Each Event In Events Do
+        //
+        //    SourceMock.Ref = Event[AttributeName];
+        //    InvocationMock.Arguments = SourceMock.Ref;
+        //    FL_Events.EnqueueEvent(SourceMock);
+        //        
+        //EndDo;
+        
+        For Each Event In Events Do SourceMock.Ref = Event[AttributeName]; InvocationMock.Arguments = SourceMock.Ref; FL_Events.EnqueueEvent(SourceMock); EndDo;
+                
+    EndIf;
+        
+EndProcedure // EnqueueReferenceEvents()
+
+// Only for internal use.
+//
+&AtServer
+Procedure EnqueueInformationRegisterEvents(Events)
+    
+    // Event mock
+    SourceMock = FL_Events.NewSourceMock();
+    
+    InvocationMock = SourceMock.AdditionalProperties.InvocationData;
+    InvocationMock.MetadataObject = MetadataObject;
+    InvocationMock.Method = Method;
+    InvocationMock.Owner = Exchange;
+    
+    ParametersMock = InvocationMock.Parameters;
+    For Each Column In Events.Columns Do
+        ParametersMock.Insert(Column.Name);        
+    EndDo;
+    
+    // The code in the comment written in one line is below this comment.
+    // To edit the code, remove the comment.
+    // For more information about the code in 1 line see http://infostart.ru/public/71130/.
+        
+    //For Each Event In Events Do
+    //    FillPropertyValues(ParametersMock, Event); 
+    //    FL_Events.EnqueueEvent(SourceMock);
+    //EndDo;
+    
+    For Each Event In Events Do FillPropertyValues(ParametersMock, Event); FL_Events.EnqueueEvent(SourceMock); EndDo;
+    
+EndProcedure // EnqueueInformationRegisterEvents()
 
 #EndRegion // ServiceProceduresAndFunctions

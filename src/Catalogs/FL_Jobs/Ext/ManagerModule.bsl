@@ -231,40 +231,6 @@ Function NewProperties(JobObject, Resources)
     
 EndFunction // NewProperties()
 
-// Only for internal use.
-//
-Function QueryTextMessageData()
-
-    QueryText = "
-        |SELECT
-        |   BackgroundJobs.Owner      AS Owner,
-        |   BackgroundJobs.APIVersion AS APIVersion,
-        |   BackgroundJobs.Method     AS Method,
-        |   BackgroundJobs.Reference  AS Reference,
-        |
-        |   BackgroundJobs.Subscribers.(
-        |       Channel         AS Channel,
-        |       Completed       AS Completed,
-        |       ResponseHandler AS ResponseHandler
-        |       ) AS Subscribers,
-        |
-        |   BackgroundJobs.SubscriberResources.(
-        |       Channel     AS Channel,
-        |       FieldName   AS FieldName,
-        |       FieldValue  AS FieldValue
-        |       ) AS SubscriberResources        
-        |
-        |FROM
-        |   Catalog.FL_Jobs AS BackgroundJobs
-        |   
-        |WHERE
-        |   BackgroundJobs.Ref = &Ref
-        |AND BackgroundJobs.DeletionMark = FALSE
-        |";  
-    Return QueryText;
-
-EndFunction // QueryTextMessageData()
-
 #EndRegion // ServiceProceduresAndFunctions
 
 #EndIf

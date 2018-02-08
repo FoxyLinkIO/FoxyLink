@@ -26,6 +26,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>CRUD методы (FoxyLink)</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>CRUD methods (FoxyLink)</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment/>
 			<UseStandardCommands>false</UseStandardCommands>
@@ -108,6 +112,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>CREATE</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>CREATE</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 				</Properties>
@@ -122,6 +130,10 @@
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
+							<v8:content>DELETE</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>DELETE</v8:content>
 						</v8:item>
 					</Synonym>
@@ -140,6 +152,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>READ</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>READ</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 				</Properties>
@@ -154,6 +170,10 @@
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
+							<v8:content>UPDATE</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>UPDATE</v8:content>
 						</v8:item>
 					</Synonym>

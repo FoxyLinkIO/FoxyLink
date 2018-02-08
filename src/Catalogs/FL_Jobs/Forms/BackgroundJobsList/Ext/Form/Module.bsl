@@ -53,9 +53,9 @@ Procedure TriggerSelectedMessages(Command)
     If CurrentData <> Undefined Then
         TriggerSelectedMessagesAtServer(Items.List.SelectedRows);
     Else
-        FL_CommonUseClientServer.NotifyUser(NStr("
-            |en = 'Select a message to process from the list.'; 
-            |ru = 'Выберите сообщение для обработки из списка.'"));
+        FL_CommonUseClientServer.NotifyUser(NStr("en='Select a message to process from the list.';
+            |ru='Выберите сообщение для обработки из списка.';
+            |en_CA='Select a message to process from the list.'"));
     EndIf;
     
 EndProcedure // TriggerSelectedMessages()
@@ -85,11 +85,13 @@ Procedure StopJobServer(Command)
     
     StopJobServerAtServer();
         
-    ShowUserNotification(NStr("en = 'Job server (FoxyLink)'; 
-            |ru = 'Сервер заданий (FoxyLink)'"),
+    ShowUserNotification(NStr("en='Job server (FoxyLink)';
+            |ru='Сервер заданий (FoxyLink)';
+            |en_CA='Job server (FoxyLink)'"),
         ,
-        NStr("en = 'Job server is stopped, but the stopped status will be set by the server just in a few seconds.'; 
-            |ru = 'Сервер заданий остановлен, но состояние остановки будет установлено сервером через несколько секунд.'"),
+        NStr("en='Job server is stopped, but the stopped status will be set by the server just in a few seconds.';
+            |ru='Сервер заданий остановлен, но состояние остановки будет установлено сервером через несколько секунд.';
+            |en_CA='Job server is stopped, but the stopped status will be set by the server just in a few seconds.'"),
         PictureLib.FL_Logotype64
         );
          

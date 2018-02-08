@@ -22,6 +22,10 @@
 						<v8:lang>ru</v8:lang>
 						<v8:content>Записать и закрыть</v8:content>
 					</v8:item>
+					<v8:item>
+						<v8:lang>en_CA</v8:lang>
+						<v8:content>Save and close</v8:content>
+					</v8:item>
 				</Title>
 				<ExtendedTooltip name="SaveAndCloseExtendedTooltip" id="16"/>
 			</Button>
@@ -42,6 +46,10 @@
 						<v8:lang>ru</v8:lang>
 						<v8:content>Записать</v8:content>
 					</v8:item>
+					<v8:item>
+						<v8:lang>en_CA</v8:lang>
+						<v8:content>Save</v8:content>
+					</v8:item>
 				</Title>
 				<ExtendedTooltip name="SaveExtendedTooltip" id="18"/>
 			</Button>
@@ -54,10 +62,18 @@
 					<v8:lang>en</v8:lang>
 					<v8:content>Group method description</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Group method description</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Group method description</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Group method description</v8:content>
 				</v8:item>
 			</ToolTip>

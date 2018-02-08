@@ -53,8 +53,9 @@ Procedure ShowFormClosingConfirmation(NotifyDescription, Cancel,
     Cancel = True;
 
     If IsBlankString(WarningText) Then
-        QuestionText = NStr("en = 'Data was changed. Save the changes?';
-            |ru = 'Данные были изменены. Сохранить изменения?'");
+        QuestionText = NStr("en='Data was changed. Save the changes?';
+            |ru='Данные были изменены. Сохранить изменения?';
+            |en_CA='Data was changed. Save the changes?'");
     Else
         QuestionText = WarningText;
     EndIf;
@@ -120,8 +121,9 @@ Procedure Attachable_SaveFileAs(FileExtensionAttached,
         FileDialog.Multiselect = False;
         FileDialog.FullFileName = AdditionalParameters.Name;
         FileDialog.DefaultExt = AdditionalParameters.Extension;
-        FileDialog.Filter = StrTemplate(NStr("en = 'All files (*%1)|*%1';
-            |ru = 'Все файлы (*%1)|*%1'"), AdditionalParameters.Extension);
+        FileDialog.Filter = StrTemplate(NStr("en='All files (*%1)|*%1';
+                |ru='Все файлы (*%1)|*%1';en_CA='All files (*%1)|*%1'"), 
+            AdditionalParameters.Extension);
         FileDialog.Show(New NotifyDescription("DoAfterSelectSaveFileAs", 
             FL_InteriorUseClient, AdditionalParameters)); 
         
@@ -207,9 +209,10 @@ Procedure DoAfterSelectSaveFileAs(SelectedFiles, AdditionalParameters) Export
         Ki = 1024;
         SizeKB = Format(AdditionalParameters.Size / Ki, "NFD=2");
         
-        ShowUserNotification(, , StrTemplate(NStr("en = 'Saving file ""%1"" (%2 KB)
-                    |Please, wait...'; ru = 'Сохраняется файл ""%1"" (%2 KB)
-                    |Пожалуйста, подождите...'"),
+        ShowUserNotification(, , StrTemplate(NStr("en='Saving file %1 (%2 KB) 
+                    |Please, wait...'; ru='Сохраняется файл %1 (%2 KB)
+                    |Пожалуйста, подождите...';en_CA='Saving file %1 (%2 KB)
+                    |Please, wait...'"),
                 AdditionalParameters.Name, String(SizeKB)), 
             PictureLib.FL_Logotype64);
             
@@ -253,8 +256,9 @@ Procedure DoAfterBeginGettingFiles(ReceivedFiles,
             NotifyDescription =  New NotifyDescription(
                 "DoActionOpenFolderOnClick", FL_InteriorUseClient, AppParameters);
             
-            ShowUserNotification(NStr("en = 'The file was successfully saved.';
-                    |ru = 'Файл успешно сохранен.'"), 
+            ShowUserNotification(NStr("en='The file was successfully saved.';
+                |ru='Файл успешно сохранен.';
+                |en_CA='The file was successfully saved.'"), 
                 NotifyDescription, 
                 ReceivedFile.Name, 
                 PictureLib.FL_Logotype64);
@@ -294,12 +298,13 @@ Procedure DoAfterBeginRunningApplication(CodeReturn, AdditionalParameters) Expor
     
     If CodeReturn <> 0 Then 
         
-        Explanation = NStr("
-            |en = 'Unexpected error has happened.';
-            |ru = 'Произошла непредвиденная ошибка.'");
+        Explanation = NStr("en='Unexpected error has happened.';
+            |ru='Произошла непредвиденная ошибка.';
+            |en_CA='Unexpected error has happened.'");
     
-        ShowUserNotification(NStr("en = 'Something went wrong.';
-                |ru = 'Что-то пошло не так.'"), 
+        ShowUserNotification(NStr("en='Something went wrong.';
+            |ru='Что-то пошло не так.';
+            |en_CA='Something went wrong.'"), 
             , 
             Explanation, 
             PictureLib.FL_Logotype64);

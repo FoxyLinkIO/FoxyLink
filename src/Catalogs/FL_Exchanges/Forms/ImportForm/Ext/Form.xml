@@ -9,6 +9,10 @@
 			<v8:lang>ru</v8:lang>
 			<v8:content>Форма импорта обмена</v8:content>
 		</v8:item>
+		<v8:item>
+			<v8:lang>en_CA</v8:lang>
+			<v8:content>Exchange import form</v8:content>
+		</v8:item>
 	</Title>
 	<AutoTitle>false</AutoTitle>
 	<Customizable>false</Customizable>
@@ -41,6 +45,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Страницы импорта</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Import pages</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -50,6 +58,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Страницы импорта</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Import pages</v8:content>
 				</v8:item>
 			</ToolTip>
 			<ExtendedTooltip name="ImportPagesExtendedTooltip" id="130"/>
@@ -64,6 +76,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Обмен</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Exchange</v8:content>
+						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
@@ -73,6 +89,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Обмен</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Exchange</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Group>Horizontal</Group>
@@ -89,6 +109,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Базовая информация</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Basic information</v8:content>
+								</v8:item>
 							</Title>
 							<ToolTip>
 								<v8:item>
@@ -98,6 +122,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Базовая информация</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Basic information</v8:content>
 								</v8:item>
 							</ToolTip>
 							<ExtendedTooltip name="HeaderGroupLeftExtendedTooltip" id="120"/>
@@ -150,6 +178,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Описание формата плагина</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Format plugin description</v8:content>
+								</v8:item>
 							</Title>
 							<ToolTip>
 								<v8:item>
@@ -159,6 +191,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Описание формата плагина</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Format plugin description</v8:content>
 								</v8:item>
 							</ToolTip>
 							<Group>Vertical</Group>
@@ -199,6 +235,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Методы</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Methods</v8:content>
+						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
@@ -208,6 +248,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Методы</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Methods</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Group>HorizontalIfPossible</Group>
@@ -311,6 +355,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>События</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Events</v8:content>
+						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
@@ -320,6 +368,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>События</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Events</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Group>HorizontalIfPossible</Group>
@@ -394,6 +446,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Каналы</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Channels</v8:content>
+						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
@@ -403,6 +459,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Каналы</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Channels</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Group>HorizontalIfPossible</Group>
@@ -499,6 +559,10 @@
 													<v8:lang>ru</v8:lang>
 													<v8:content>Подключен (сопоставленный объект)</v8:content>
 												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Connected (associated object)</v8:content>
+												</v8:item>
 											</Title>
 											<EditMode>EnterOnInput</EditMode>
 											<CheckBoxType>Auto</CheckBoxType>
@@ -527,6 +591,10 @@
 													<v8:lang>ru</v8:lang>
 													<v8:content>Наименование (сопоставленный объект)</v8:content>
 												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Description (associated object)</v8:content>
+												</v8:item>
 											</Title>
 											<EditMode>EnterOnInput</EditMode>
 											<ContextMenu name="ChannelsRefDescriptionContextMenu" id="175"/>
@@ -553,6 +621,10 @@
 												<v8:item>
 													<v8:lang>ru</v8:lang>
 													<v8:content>Имя предопределенных данных (сопоставленный объект)</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Predefined data name (associated object)</v8:content>
 												</v8:item>
 											</Title>
 											<EditMode>EnterOnInput</EditMode>
@@ -581,6 +653,10 @@
 													<v8:lang>ru</v8:lang>
 													<v8:content>Текущая версия (сопоставленный объект)</v8:content>
 												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Current version (associated object)</v8:content>
+												</v8:item>
 											</Title>
 											<EditMode>EnterOnInput</EditMode>
 											<ContextMenu name="ChannelsRefVersionContextMenu" id="185"/>
@@ -602,6 +678,10 @@
 					<v8:lang>en</v8:lang>
 					<v8:content>Methods</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Methods</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>v8:ValueTable</v8:Type>
@@ -617,6 +697,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Ссылка</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Ref</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>cfg:CatalogRef.FL_Methods</v8:Type>
@@ -631,6 +715,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Наименование</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Description</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -650,6 +738,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Имя предопределенных данных</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Predefined data name</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -670,6 +762,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>REST метод</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>REST method</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>cfg:EnumRef.FL_RESTMethods</v8:Type>
@@ -685,6 +781,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>CRUD метод</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>CRUD method</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>cfg:EnumRef.FL_CRUDMethods</v8:Type>
@@ -699,6 +799,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Метод</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Method</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -719,6 +823,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Метод соответствует</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Method matched</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>xs:boolean</v8:Type>
@@ -734,6 +842,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>REST соответствует </v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>REST matched</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>xs:boolean</v8:Type>
@@ -748,6 +860,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>CRUD соответствует</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>CRUD resolved</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -765,6 +881,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Идентификатор библиотеки</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Library guid</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -785,6 +905,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Макет</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Template</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
@@ -798,6 +922,10 @@
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Events</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Events</v8:content>
 				</v8:item>
 			</Title>
@@ -814,6 +942,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Объект метаданных</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Metadata object</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -834,6 +966,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Соответствует</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Matched</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>xs:boolean</v8:Type>
@@ -845,6 +981,10 @@
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Channels</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Channels</v8:content>
 				</v8:item>
 			</Title>
@@ -862,6 +1002,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Ссылка на канал</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Channel reference</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>cfg:CatalogRef.FL_Channels</v8:Type>
@@ -876,6 +1020,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Наименование</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Description</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -896,6 +1044,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Имя предопределенных данных</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Predefined data name</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>xs:string</v8:Type>
@@ -915,6 +1067,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Канал</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Channel</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>xs:string</v8:Type>
@@ -928,6 +1084,10 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
+							<v8:content>Basic channel guid</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
 							<v8:content>Basic channel guid</v8:content>
 						</v8:item>
 					</Title>
@@ -949,6 +1109,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Подключен</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Connected</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>xs:boolean</v8:Type>
@@ -964,6 +1128,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Логировать</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Log</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>xs:boolean</v8:Type>
@@ -978,6 +1146,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Текущая версия</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Current version</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -998,6 +1170,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Версия совпадает</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Version matched</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>xs:boolean</v8:Type>
@@ -1013,6 +1189,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Подключение соответствует</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Connected matched</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>xs:boolean</v8:Type>
@@ -1027,6 +1207,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Идентификатор канала соответствует</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Channel guid matched</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -1044,6 +1228,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Текущая версия</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Current version</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -1064,6 +1252,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Ссылка на обмен</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Ref to exchange</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>cfg:CatalogRef.FL_Exchanges</v8:Type>
@@ -1078,6 +1270,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Имя предопределенных данных</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Predefined data name</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -1098,6 +1294,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Наименование</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Description</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
@@ -1116,6 +1316,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Базовый идентификатор формата</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Basic format guid</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -1136,6 +1340,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Наименование</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Name</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
@@ -1154,6 +1362,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Стандарт</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Standard</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -1174,6 +1386,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Версия плагина</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Plugin version</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:string</v8:Type>
@@ -1193,6 +1409,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Используется</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>In use</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>xs:boolean</v8:Type>
@@ -1208,6 +1428,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Данные канала</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Channel data</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>v8:ValueTable</v8:Type>
@@ -1222,6 +1446,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Наименование поля</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Field name</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -1241,6 +1469,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Значение поля</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Field value</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -1263,6 +1495,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Зашифрованные данные</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Encrypted data</v8:content>
+				</v8:item>
 			</Title>
 			<Type>
 				<v8:Type>v8:ValueTable</v8:Type>
@@ -1277,6 +1513,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Номер шифрования</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Encrypt number</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -1297,6 +1537,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Наименование поля</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Field name</v8:content>
+						</v8:item>
 					</Title>
 					<Type>
 						<v8:Type>xs:string</v8:Type>
@@ -1315,6 +1559,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Значение поля</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Field value</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -1336,6 +1584,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Обмен</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Exchange</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -1546,6 +1798,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Выбрать существующий</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Select existing</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -1555,6 +1811,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Выбрать доступный канал</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Select available channel</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Action>SelectChannel</Action>
@@ -1570,6 +1830,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Удалить</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Delete</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -1579,6 +1843,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Удалить канал</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Delete channel</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -1598,6 +1866,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить обновление для канала</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Install channel update</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -1607,6 +1879,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить обновление для канала</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Install channel update</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -1626,6 +1902,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Удалить</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Delete</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -1635,6 +1915,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Удалить событие</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Delete event</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -1654,6 +1938,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Выбрать существующий</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Select existing</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -1663,6 +1951,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Выбрать существующий метод</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Select existing method</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Action>SelectMethod</Action>
@@ -1677,6 +1969,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Удалить</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Delete</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -1686,6 +1982,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Удалить метод</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Delete method</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -1705,6 +2005,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить обмен</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Install exchange</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -1714,6 +2018,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить обмен</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Install exchange</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -1733,6 +2041,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить обновление</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Install update</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -1742,6 +2054,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить обновление для обмена</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Install exchange update</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -1761,6 +2077,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить канал</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Install channel</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -1770,6 +2090,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить канал</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Install channel</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>

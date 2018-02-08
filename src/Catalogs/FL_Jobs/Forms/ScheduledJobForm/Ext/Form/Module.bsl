@@ -39,9 +39,9 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
     ID = String(ScheduledJob.UUID);
     If ScheduledJob.Metadata = Undefined Then
-        MetadataName        = NStr("en='<no metadata>';ru='<нет метаданных>'");
-        MetadataSynonym     = NStr("en='<no metadata>';ru='<нет метаданных>'");
-        MetadataMethodName  = NStr("en='<no metadata>';ru='<нет метаданных>'");
+        MetadataName        = NStr("en='<no metadata>';ru='<нет метаданных>';en_CA='<no metadata>'");
+        MetadataSynonym     = NStr("en='<no metadata>';ru='<нет метаданных>';en_CA='<no metadata>'");
+        MetadataMethodName  = NStr("en='<no metadata>';ru='<нет метаданных>';en_CA='<no metadata>'");
     Else
         MetadataName = ScheduledJob.Metadata.Name;
         MetadataComment = ScheduledJob.Metadata.Comment;
@@ -136,8 +136,7 @@ EndProcedure // DoAfterCloseScheduledJobDialog()
 &AtClient
 Procedure RefreshFormTitle()
 
-    TitleTemplate = NStr("en = '%1 (Scheduled job)';
-        |ru = '%1 (Регламентное задание)'");
+    TitleTemplate = NStr("en='%1 (Scheduled job)';ru='%1 (Регламентное задание)';en_CA='%1 (Scheduled job)'");
     
     If NOT IsBlankString(Description) Then
         Title = StrTemplate(TitleTemplate, Description);

@@ -149,17 +149,20 @@ Function SuppliedIntegrations() Export
     SuppliedIntegrations = New Array;
     
     BasicPhrases = New Array;
-    BasicPhrases.Add(NStr("en = 'Exchange description service helps to transfer ';
-        |ru = 'Сервис описания обменов помогает переносить обмены из одной '"));
-    BasicPhrases.Add(NStr("en = 'exchanges from one accounting system to another.';
-        |ru = 'учетной системы в другие.'"));
+    BasicPhrases.Add(NStr("en='Exchange description service helps to transfer ';
+        |ru='Сервис описания обменов помогает переносить обмены из одной ';
+        |en_CA='Exchange description service helps to transfer '"));
+    BasicPhrases.Add(NStr("en='exchanges from one accounting system to another.';
+        |ru='учетной системы в другие.';
+        |en_CA='exchanges from one accounting system to another.'"));
     
     PluggableSettings = FL_InteriorUse.NewPluggableSettings();   
-    PluggableSettings.Name = NStr("en = 'Exchange description service'; 
-        |ru = 'Сервис описания обменов'");
+    PluggableSettings.Name = NStr("en='Exchange description service';
+        |ru='Сервис описания обменов';
+        |en_CA='Exchange description service'");
     PluggableSettings.Template = "Self";
     PluggableSettings.ToolTip = StrConcat(BasicPhrases);
-    PluggableSettings.Version = "1.0.1.5";
+    PluggableSettings.Version = "1.1.3";
     SuppliedIntegrations.Add(PluggableSettings);
     
     Return SuppliedIntegrations;
@@ -188,8 +191,9 @@ EndFunction // Version()
 //
 Function BaseDescription() Export
     
-    BaseDescription = NStr("en = 'FoxyLink (%1) channel data processor, ver. %2'; 
-        |ru = 'Обработчик канала FoxyLink (%1), вер. %2'");
+    BaseDescription = NStr("en='FoxyLink (%1) channel data processor, ver. %2';
+        |ru='Обработчик канала FoxyLink (%1), вер. %2';
+        |en_CA='FoxyLink (%1) channel data processor, ver. %2'");
     BaseDescription = StrTemplate(BaseDescription, ChannelStandard(), Version());      
     Return BaseDescription;    
     

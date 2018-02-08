@@ -12,6 +12,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Лицензия (FoxyLink)</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>License (FoxyLink)</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment/>
 			<TemplateType>TextDocument</TemplateType>

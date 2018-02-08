@@ -85,8 +85,9 @@ Procedure DeleteChannel(Command)
         
         ShowQueryBox(New NotifyDescription("DoAfterChooseChannelToDelete", 
             ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en = 'Permanently delete the selected channel?';
-                 |ru = 'Удалить выбранный канал?'"),
+            NStr("en='Permanently delete the selected channel?';
+                |ru='Удалить выбранный канал?';
+                |en_CA='Permanently delete the selected channel?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);     
         
     EndIf;   
@@ -103,8 +104,9 @@ Procedure InstallChannel(Command)
             InstallOrUpdateChannel(CurrentData);        
         Else
 
-            Explanation = NStr("en = 'Channel reference must be empty.';
-                |ru = 'Ссылка на канал должна быть не заполнена.'");    
+            Explanation = NStr("en='Channel reference must be empty.';
+                |ru='Ссылка на канал должна быть не заполнена.';
+                |en_CA='Channel reference must be empty.'");    
             ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
             
         EndIf;
@@ -123,8 +125,9 @@ Procedure InstallChannelUpdate(Command)
             InstallOrUpdateChannel(CurrentData);       
         Else
 
-            Explanation = NStr("en = 'Channel reference must be filled.';
-                |ru = 'Ссылка на канал должна быть заполнена.'");    
+            Explanation = NStr("en='Channel reference must be filled.';
+                |ru='Ссылка на канал должна быть заполнена.';
+                |en_CA='Channel reference must be filled.'");    
             ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
             
         EndIf;
@@ -161,8 +164,9 @@ Procedure DeleteEvent(Command)
         
         ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDelete", 
             ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en = 'Permanently delete the selected event?';
-                 |ru = 'Удалить выбранное событие?'"),
+            NStr("en='Permanently delete the selected event?';
+                |ru='Удалить выбранное событие?';
+                |en_CA='Permanently delete the selected event?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);     
         
     EndIf;    
@@ -177,8 +181,9 @@ Procedure DeleteMethod(Command)
         
         ShowQueryBox(New NotifyDescription("DoAfterChooseMethodToDelete", 
             ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en = 'Permanently delete the selected method?';
-                 |ru = 'Удалить выбранный метод?'"),
+            NStr("en='Permanently delete the selected method?';
+                |ru='Удалить выбранный метод?';
+                |en_CA='Permanently delete the selected method?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);     
         
     EndIf;
@@ -256,12 +261,12 @@ Procedure SetEventMatches()
         
     If NOT Matched Then
         Items.EventsPage.Picture = PictureLib.FL_ExplanationMark;
-        Items.EventsPage.Title = NStr(
-            "en = 'Events (there are events that require attention)'; 
-            |ru = 'События (есть события которые требуют внимания)'");
+        Items.EventsPage.Title = NStr("en='Events (there are events that require attention)';
+            |ru='События (есть события которые требуют внимания)';
+            |en_CA='Events (there are events that require attention)'");
     Else
         Items.EventsPage.Picture = PictureLib.FL_Ok;
-        Items.EventsPage.Title = NStr("en = 'Events'; ru = 'События'");     
+        Items.EventsPage.Title = NStr("en='Events';ru='События';en_CA='Events'");     
     EndIf;
     
 EndProcedure // SetEventMatches()
@@ -375,14 +380,12 @@ Procedure SetMethodMatches()
     
     If NOT Matched Then
         Items.MethodsPage.Picture = PictureLib.FL_ExplanationMark;
-        Items.MethodsPage.Title = NStr(
-            "en = 'Methods (there are methods that require attention)'; 
-            |ru = 'Методы (есть методы которые требуют внимания)'");
+        Items.MethodsPage.Title = NStr("en='Methods (there are methods that require attention)';
+            |ru='Методы (есть методы которые требуют внимания)';
+            |en_CA='Methods (there are methods that require attention)'");
     Else
         Items.MethodsPage.Picture = PictureLib.FL_Ok;
-        Items.MethodsPage.Title = NStr(
-            "en = 'Methods'; 
-            |ru = 'Методы'");     
+        Items.MethodsPage.Title = NStr("en='Methods';ru='Методы';en_CA='Methods'");     
     EndIf;
         
 EndProcedure // SetMethodMatches()
@@ -534,12 +537,12 @@ Procedure SetChannelMatches()
     
     If NOT Matched Then
         Items.ChannelsPage.Picture = PictureLib.FL_ExplanationMark;
-        Items.ChannelsPage.Title = NStr(
-            "en = 'Channels (there are channels that require attention)'; 
-            |ru = 'Каналы (есть каналы которые требуют внимания)'");
+        Items.ChannelsPage.Title = NStr("en='Channels (there are channels that require attention)';
+            |ru='Каналы (есть каналы которые требуют внимания)';
+            |en_CA='Channels (there are channels that require attention)'");
     Else
         Items.ChannelsPage.Picture = PictureLib.FL_Ok;
-        Items.ChannelsPage.Title = NStr("en = 'Channels'; ru = 'Каналы'");     
+        Items.ChannelsPage.Title = NStr("en='Channels';ru='Каналы';en_CA='Channels'");     
     EndIf;
     
 EndProcedure // SetChannelMatches()
@@ -704,7 +707,7 @@ Procedure ImportEvents(Object, ImportedExchange, MethodTable, EventTable)
             Continue;
         EndIf;
         
-        EventFilter = New Structure("APIVersion, Method");
+        EventFilter = New Structure("Method");
         FillPropertyValues(EventFilter, Event);
         MethodLines = FindMethodLines(Object.Methods, MethodTable, 
             EventFilter);
@@ -736,7 +739,7 @@ Procedure ImportChannels(Object, ImportedExchange, MethodTable, ChannelTable)
             Continue;
         EndIf;
         
-        ChannelFilter = New Structure("APIVersion, Method");
+        ChannelFilter = New Structure("Method");
         FillPropertyValues(ChannelFilter, Channel);
         MethodLines = FindMethodLines(Object.Methods, MethodTable, 
             ChannelFilter);
@@ -773,7 +776,7 @@ Procedure ImportChannelResources(Object, ImportedExchange, MethodTable, ChannelT
             Continue;
         EndIf;
         
-        ChannelResourceFilter = New Structure("APIVersion, Method");
+        ChannelResourceFilter = New Structure("Method");
         FillPropertyValues(ChannelResourceFilter, ChannelResource);
         MethodLines = FindMethodLines(Object.Methods, MethodTable, 
             ChannelResourceFilter);

@@ -22,6 +22,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Максимальное количество фоновых заданий</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Max worker count</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment>The max size of a workers pool that can be used to execute tasks, post work items, process asynchronous I/O, wait on behalf of other workers, and process timers.</Comment>
 			<Type>
@@ -46,6 +50,10 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>The max size of a workers pool that can be used to execute tasks, post work items, process asynchronous I/O, wait on behalf of other workers, and process timers.</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>The max size of a workers pool that can be used to execute tasks, post work items, process asynchronous I/O, wait on behalf of other workers, and process timers.</v8:content>
 				</v8:item>
 			</ToolTip>

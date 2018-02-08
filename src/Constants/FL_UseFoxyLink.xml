@@ -22,6 +22,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Использовать FoxyLink</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Use FoxyLink</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment/>
 			<Type>
@@ -42,6 +46,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Интуитивно понятная и мощная подсистема для более быстрой и прозрачной интеграции основана на платформе "1С:Предприятие 8". </v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Use smooth, intuitive, and powerful subsystem for faster and easier integration development based on "1C:Enterprise 8" platform.</v8:content>
 				</v8:item>
 			</ToolTip>
 			<MarkNegatives>false</MarkNegatives>

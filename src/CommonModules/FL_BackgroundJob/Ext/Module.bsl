@@ -44,7 +44,6 @@ Function Enqueue(MethodExpression, InvocationData = Undefined) Export
     SubscribersData.Text = QueryTextSubscribersData();
     SubscribersData.SetParameter("Owner", InvocationData.Owner);
     SubscribersData.SetParameter("Method", InvocationData.Method);
-    SubscribersData.SetParameter("APIVersion", InvocationData.APIVersion);
     ResultArray = SubscribersData.ExecuteBatch();
     
     Subscribers = ResultArray[SubIndex].Unload();
@@ -134,8 +133,6 @@ EndFunction // Schedule()
 //
 // Returns:
 //  Structure - the invocation data structure with keys:
-//      * APIVersion     - String                  - API version.
-//                              Default value: Undefined.
 //      * MetadataObject - String                  - the full name of a metadata
 //                                                   object as a term.
 //                              Default value: "".
@@ -160,8 +157,7 @@ Function NewInvocationData() Export
     NormalPriority = 5;
     
     InvocationData = New Structure;
-    // Attributes section
-    InvocationData.Insert("APIVersion", "1.0.0"); 
+    // Attributes section 
     InvocationData.Insert("MetadataObject", "");
     InvocationData.Insert("Method");
     InvocationData.Insert("Owner");
@@ -337,10 +333,12 @@ Procedure FillSubscriberResources(BackgroundJob, Resources)
 
                 ErrorInfo = ErrorInfo();
                 ErrorMessage = StrTemplate(
-                    NStr("en = 'An error occurred when calling procedure 
-                        |ExecuteInSafeMode of common module FL_RunInSafeMode. %1';
-                        |ru = 'Ошибка при вызове процедуры ExecuteInSafeMode 
-                        |общего модуля FL_RunInSafeMode. %1'"),
+                    NStr("en='An error occurred when calling procedure 
+                            |ExecuteInSafeMode of common module FL_RunInSafeMode. %1';
+                        |ru='Ошибка при вызове процедуры ExecuteInSafeMode 
+                            |общего модуля FL_RunInSafeMode. %1';
+                        |en_CA='An error occurred when calling procedure 
+                            |ExecuteInSafeMode of common module FL_RunInSafeMode. %1'"),
                     BriefErrorDescription(ErrorInfo));
                 FL_CommonUseClientServer.NotifyUser(ErrorMessage);     
                       
@@ -363,7 +361,6 @@ EndProcedure // FillSubscribers()
 Function NewBackgroundJob()
     
     BackgroundJob = New Structure;
-    BackgroundJob.Insert("APIVersion");
     BackgroundJob.Insert("MetadataObject", "");
     BackgroundJob.Insert("Method");
     BackgroundJob.Insert("Owner");
@@ -451,7 +448,6 @@ Function QueryTextSubscribersData()
     QueryText = "
         |SELECT
         |   Channels.Ref             AS Owner,
-        |   Channels.APIVersion      AS APIVersion,
         |   Channels.Channel         AS Channel,
         |   Channels.Method          AS Method,
         |   Channels.ResponseHandler AS ResponseHandler
@@ -461,7 +457,6 @@ Function QueryTextSubscribersData()
         |WHERE
         |    Channels.Ref        = &Owner
         |AND Channels.Method     = &Method
-        |AND Channels.APIVersion = &APIVersion
         |
         |INDEX BY
         |   Owner   
@@ -478,7 +473,6 @@ Function QueryTextSubscribersData()
         |INNER JOIN Catalog.FL_Exchanges.Methods AS Methods
         |ON  Methods.Ref        = Channels.Owner
         |AND Methods.Method     = Channels.Method
-        |AND Methods.APIVersion = Channels.APIVersion
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////
@@ -494,7 +488,6 @@ Function QueryTextSubscribersData()
         |ON  Channels.Owner      = ChannelResources.Ref
         |AND Channels.Channel    = ChannelResources.Channel
         |AND Channels.Method     = ChannelResources.Method
-        |AND Channels.APIVersion = ChannelResources.APIVersion
         |;
         |";
     Return QueryText;

@@ -9,6 +9,10 @@
 			<v8:lang>ru</v8:lang>
 			<v8:content>Конструктор схемы API (FoxyLink)</v8:content>
 		</v8:item>
+		<v8:item>
+			<v8:lang>en_CA</v8:lang>
+			<v8:content>API schema constructor (FoxyLink)</v8:content>
+		</v8:item>
 	</Title>
 	<AutoTitle>false</AutoTitle>
 	<Customizable>false</Customizable>
@@ -25,10 +29,18 @@
 					<v8:lang>en</v8:lang>
 					<v8:content>Group value tree</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Group value tree</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Group value tree</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Group value tree</v8:content>
 				</v8:item>
 			</ToolTip>
@@ -89,6 +101,10 @@
 								<Title>
 									<v8:item>
 										<v8:lang>en</v8:lang>
+										<v8:content>APISchema more actions</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>en_CA</v8:lang>
 										<v8:content>APISchema more actions</v8:content>
 									</v8:item>
 								</Title>
@@ -302,6 +318,10 @@
 								<v8:lang>ru</v8:lang>
 								<v8:content>Тип</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Type</v8:content>
+							</v8:item>
 						</Title>
 						<Type>
 							<v8:Type>xs:string</v8:Type>
@@ -320,6 +340,10 @@
 							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>Имя</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Name</v8:content>
 							</v8:item>
 						</Title>
 						<Type>
@@ -340,6 +364,10 @@
 								<v8:lang>ru</v8:lang>
 								<v8:content>Описание</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Description</v8:content>
+							</v8:item>
 						</Title>
 						<Type>
 							<v8:Type>xs:string</v8:Type>
@@ -358,6 +386,10 @@
 							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>Картинка строки</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Row picture</v8:content>
 							</v8:item>
 						</Title>
 						<Type>
@@ -379,6 +411,10 @@
 								<v8:lang>ru</v8:lang>
 								<v8:content>Макс. длина</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Max. length</v8:content>
+							</v8:item>
 						</Title>
 						<Type>
 							<v8:Type>xs:decimal</v8:Type>
@@ -398,6 +434,10 @@
 							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>Мин. длина</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Min. length</v8:content>
 							</v8:item>
 						</Title>
 						<Type>
@@ -419,6 +459,10 @@
 								<v8:lang>ru</v8:lang>
 								<v8:content>Макс. значение</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Max. value</v8:content>
+							</v8:item>
 						</Title>
 						<Type>
 							<v8:Type>xs:decimal</v8:Type>
@@ -438,6 +482,10 @@
 							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>Мин. значение</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Min. value</v8:content>
 							</v8:item>
 						</Title>
 						<Type>
@@ -459,6 +507,10 @@
 								<v8:lang>ru</v8:lang>
 								<v8:content>Необязательный</v8:content>
 							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Optional</v8:content>
+							</v8:item>
 						</Title>
 						<Type>
 							<v8:Type>xs:boolean</v8:Type>
@@ -473,6 +525,10 @@
 							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>Выключено</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Turned off</v8:content>
 							</v8:item>
 						</Title>
 						<Type>
@@ -631,6 +687,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -640,6 +700,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить строку в таблицу API</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add row to API table</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -659,10 +723,18 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Записать и закрыть</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Save and close</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Save and close</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Save and close</v8:content>
 				</v8:item>
 			</ToolTip>
@@ -683,6 +755,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Удалить</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Delete</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -692,6 +768,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Удалить строку в таблице API</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Delete row in API table</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -711,6 +791,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Загрузить образец</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Load sample</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -720,6 +804,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Загрузить образец</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Load sample</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -739,6 +827,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент строка</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add string item</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -748,6 +840,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент строка</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add string item</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Action>AddStringItem</Action>
@@ -763,6 +859,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент число</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add number item</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -772,6 +872,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент число</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add number item</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Action>AddNumberItem</Action>
@@ -787,6 +891,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент булево</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add boolean item</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -796,6 +904,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент булево</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add boolean item</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Action>AddBooleanItem</Action>
@@ -811,6 +923,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент null</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add null item</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -820,6 +936,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент null</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add null item</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Action>AddNullItem</Action>
@@ -835,6 +955,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент объект</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add object item</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -844,6 +968,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент объект</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add object item</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Action>AddObjectItem</Action>
@@ -859,6 +987,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент массив</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add array item</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -868,6 +1000,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Добавить элемент массив</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add array item</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Action>AddArrayItem</Action>

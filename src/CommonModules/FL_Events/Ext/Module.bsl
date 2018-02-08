@@ -36,8 +36,9 @@ Procedure LicenseAcceptedOnWrite(Source, Cancel) Export
     EndIf;
     
     If NOT Source.Value Then
-        Raise NStr("en = 'It is not possible to cancel an accepted license.';
-            |ru = 'Невозможно аннулировать принятую лицензию.'");    
+        Raise NStr("en='It is not possible to cancel an accepted license.';
+            |ru='Невозможно аннулировать принятую лицензию.';
+            |en_CA='It is not possible to cancel an accepted license.'");    
     EndIf;
     
 EndProcedure // LicenseAcceptedOnWrite()
@@ -446,7 +447,6 @@ Function QueryTextSubscribers(Owner)
     
     QueryText = StrTemplate("
         |SELECT
-        |   EventTable.APIVersion AS APIVersion,
         |   Exchanges.Ref         AS Owner,
         |   MethodTable.Priority  AS Priority
         |FROM
@@ -461,7 +461,6 @@ Function QueryTextSubscribers(Owner)
         |INNER JOIN Catalog.FL_Exchanges.Methods AS MethodTable
         |ON  MethodTable.Ref        = Exchanges.Ref
         |AND MethodTable.Method     = EventTable.Method
-        |AND MethodTable.APIVersion = EventTable.APIVersion
         |
         |WHERE
         |%1 
