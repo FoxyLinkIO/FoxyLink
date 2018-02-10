@@ -31,6 +31,90 @@
 		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
 	</Events>
 	<ChildItems>
+		<UsualGroup name="GroupBasic" id="39">
+			<Group>Horizontal</Group>
+			<Representation>None</Representation>
+			<ShowTitle>false</ShowTitle>
+			<ExtendedTooltip name="GroupBasicExtendedTooltip" id="40"/>
+			<ChildItems>
+				<InputField name="Delimiter" id="28">
+					<DataPath>Delimiter</DataPath>
+					<ContextMenu name="DelimiterContextMenu" id="29"/>
+					<ExtendedTooltip name="DelimiterExtendedTooltip" id="30"/>
+				</InputField>
+				<RadioButtonField name="AddCarriageReturnToLastRow" id="36">
+					<DataPath>AddCarriageReturnToLastRow</DataPath>
+					<RadioButtonType>Tumbler</RadioButtonType>
+					<ChoiceList>
+						<xr:Item>
+							<xr:Presentation/>
+							<xr:CheckState>0</xr:CheckState>
+							<xr:Value xsi:type="FormChoiceListDesTimeValue">
+								<Presentation>
+									<v8:item>
+										<v8:lang>en</v8:lang>
+										<v8:content>Undefined</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>en_CA</v8:lang>
+										<v8:content>Undefined</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>ru</v8:lang>
+										<v8:content>Неопределено</v8:content>
+									</v8:item>
+								</Presentation>
+								<Value xsi:type="xs:string"/>
+							</xr:Value>
+						</xr:Item>
+						<xr:Item>
+							<xr:Presentation/>
+							<xr:CheckState>0</xr:CheckState>
+							<xr:Value xsi:type="FormChoiceListDesTimeValue">
+								<Presentation>
+									<v8:item>
+										<v8:lang>en</v8:lang>
+										<v8:content>Yes</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>en_CA</v8:lang>
+										<v8:content>Yes</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>ru</v8:lang>
+										<v8:content>Да</v8:content>
+									</v8:item>
+								</Presentation>
+								<Value xsi:type="xs:string">Yes</Value>
+							</xr:Value>
+						</xr:Item>
+						<xr:Item>
+							<xr:Presentation/>
+							<xr:CheckState>0</xr:CheckState>
+							<xr:Value xsi:type="FormChoiceListDesTimeValue">
+								<Presentation>
+									<v8:item>
+										<v8:lang>en</v8:lang>
+										<v8:content>No</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>en_CA</v8:lang>
+										<v8:content>No</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>ru</v8:lang>
+										<v8:content>Нет</v8:content>
+									</v8:item>
+								</Presentation>
+								<Value xsi:type="xs:string">No</Value>
+							</xr:Value>
+						</xr:Item>
+					</ChoiceList>
+					<ContextMenu name="AddCarriageReturnToLastRowContextMenu" id="37"/>
+					<ExtendedTooltip name="AddCarriageReturnToLastRowExtendedTooltip" id="38"/>
+				</RadioButtonField>
+			</ChildItems>
+		</UsualGroup>
 		<InputField name="HeaderLine" id="25">
 			<DataPath>HeaderLine</DataPath>
 			<AutoMaxWidth>false</AutoMaxWidth>
@@ -38,10 +122,10 @@
 			<ContextMenu name="HeaderLineContextMenu" id="26"/>
 			<ExtendedTooltip name="HeaderLineExtendedTooltip" id="27"/>
 		</InputField>
-		<InputField name="Delimiter" id="28">
-			<DataPath>Delimiter</DataPath>
-			<ContextMenu name="DelimiterContextMenu" id="29"/>
-			<ExtendedTooltip name="DelimiterExtendedTooltip" id="30"/>
+		<InputField name="TextEncoding" id="33">
+			<DataPath>TextEncoding</DataPath>
+			<ContextMenu name="TextEncodingContextMenu" id="34"/>
+			<ExtendedTooltip name="TextEncodingExtendedTooltip" id="35"/>
 		</InputField>
 	</ChildItems>
 	<Attributes>
@@ -137,6 +221,52 @@
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
 					<v8:content>Header line</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="TextEncoding" id="4">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Text encoding</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Text encoding</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Кодировка текста</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="AddCarriageReturnToLastRow" id="5">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Add carriage return to last row</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Add carriage return to last row</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить возврат каретки в последнюю строку</v8:content>
 				</v8:item>
 			</Title>
 			<Type>

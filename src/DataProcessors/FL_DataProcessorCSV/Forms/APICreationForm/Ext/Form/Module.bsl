@@ -63,7 +63,9 @@ EndProcedure // SaveAndClose()
 Function PutValueTableToTempStorage(Val OwnerUUID)
     
     If IsBlankString(HeaderLine) 
-        AND IsBlankString(Delimiter) Then
+        AND IsBlankString(Delimiter)
+        AND IsBlankString(TextEncoding) 
+        AND IsBlankString(AddCarriageReturnToLastRow) Then
         Return "";
     EndIf;
     
@@ -72,13 +74,22 @@ Function PutValueTableToTempStorage(Val OwnerUUID)
     EndIf;
     
     Object.APISchema.Clear();
+    
+    NewRow = Object.APISchema.Add();
+    NewRow.FieldName = "Delimiter";
+    NewRow.FieldValue = Delimiter;
+    
+    NewRow = Object.APISchema.Add();
+    NewRow.FieldName = "AddCarriageReturnToLastRow";
+    NewRow.FieldValue = AddCarriageReturnToLastRow;
+    
     NewRow = Object.APISchema.Add();
     NewRow.FieldName = "HeaderLine";
     NewRow.FieldValue = HeaderLine;
     
     NewRow = Object.APISchema.Add();
-    NewRow.FieldName = "Delimiter";
-    NewRow.FieldValue = Delimiter;
+    NewRow.FieldName = "TextEncoding";
+    NewRow.FieldValue = TextEncoding;
     
     ValueTable = FormAttributeToValue("Object.APISchema", Type("ValueTable")); 
     Return PutToTempStorage(ValueTable, OwnerUUID);

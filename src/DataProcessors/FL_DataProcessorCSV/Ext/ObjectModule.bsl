@@ -117,7 +117,16 @@ Procedure Initialize(Stream, APISchema = Undefined) Export
       
     If APISchema <> Undefined Then
         If TypeOf(ThisObject.APISchema) = TypeOf(APISchema) Then    
+            
             ThisObject.APISchema = APISchema.Copy();
+            
+            Delimiter = ",";
+            FindResult = APISchema.Find("Delimiter", "FieldName");
+            If FindResult <> Undefined 
+                AND NOT IsBlankString(FindResult.FieldValue) Then
+                Delimiter = FindResult.FieldValue;
+            EndIf;
+            
         Else
             // Old version schema support could be implemented at this place.
         EndIf;
@@ -180,6 +189,27 @@ Procedure Output(Item, DataCompositionProcessor, ReportStructure,
             
     Else
 
+        FindResult = APISchema.Find("AddCarriageReturnToLastRow", "FieldName");
+        If FindResult <> Undefined 
+            AND FindResult.FieldValue = "Yes" Then
+            
+            AddCarriageReturnToLastRow = True;
+            
+        EndIf;
+                
+        FindResult = APISchema.Find("TextEncoding", "FieldName");
+        If FindResult <> Undefined 
+            AND NOT IsBlankString(FindResult.FieldValue) Then
+            
+            StreamWriter.TextEncoding = FindResult.FieldValue;
+            
+        EndIf;
+        
+        FindResult = APISchema.Find("HeaderLine", "FieldName");
+        If FindResult <> Undefined Then
+            HeaderLine = FindResult.FieldValue;
+        EndIf;
+        
         // It is used when API format is provided.
         APISchemaOutput(Item, DataCompositionProcessor, 
             ReportStructure, TemplateColumns);
@@ -286,25 +316,15 @@ Procedure APISchemaOutput(Item, DataCompositionProcessor,
     // To edit the code, remove the comment.
     // For more information about the code in 1 line see http://infostart.ru/public/71130/.
      
-    //Var Level, Delimiter; 
+    //Var Level; 
     //
     //CRLF = Chars.CR + Chars.LF;
-    //
-    //FindResult = APISchema.Find("HeaderLine", "FieldName");
-    //If FindResult <> Undefined Then
-    //    If NOT IsBlankString(FindResult.FieldValue) Then
-    //        StreamWriter.WriteChars(FindResult.FieldValue);
-    //        StreamWriter.WriteChars(CRLF);    
-    //    EndIf;
+    //    
+    //If NOT IsBlankString(HeaderLine) Then
+    //    StreamWriter.WriteChars(HeaderLine);
+    //    StreamWriter.WriteChars(CRLF);    
     //EndIf;
-    //
-    //FindResult = APISchema.Find("Delimiter", "FieldName");
-    //If FindResult <> Undefined Then
-    //    Delimiter = FindResult.FieldValue;
-    //Else
-    //    Delimiter = ",";    
-    //EndIf;
-    //
+    //        
     //End = DataCompositionResultItemType.End;
     //Begin = DataCompositionResultItemType.Begin;
     //BeginAndEnd = DataCompositionResultItemType.BeginAndEnd;
@@ -372,8 +392,12 @@ Procedure APISchemaOutput(Item, DataCompositionProcessor,
     //    Item = DataCompositionProcessor.Next();
     //    
     //EndDo;
-    
-    Var Level, Delimiter; CRLF = Chars.CR + Chars.LF; FindResult = APISchema.Find("HeaderLine", "FieldName"); If FindResult <> Undefined Then If NOT IsBlankString(FindResult.FieldValue) Then StreamWriter.WriteChars(FindResult.FieldValue); StreamWriter.WriteChars(CRLF); EndIf; EndIf; FindResult = APISchema.Find("Delimiter", "FieldName"); If FindResult <> Undefined Then Delimiter = FindResult.FieldValue; Else Delimiter = ","; EndIf; End = DataCompositionResultItemType.End; Begin = DataCompositionResultItemType.Begin; BeginAndEnd = DataCompositionResultItemType.BeginAndEnd; While Item <> Undefined Do If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = BeginAndEnd Then Level = ?(Level = Undefined, 0, Level + 1); EndIf; EndIf; EndIf; If Level <> Undefined Then If Item.ItemType = End Then Item = DataCompositionProcessor.Next(); If Item.ItemType = End Then Level = ?(Level - 1 < 0, Undefined, Level - 1); Else StreamWriter.WriteChars(CRLF); EndIf; ElsIf NOT IsBlankString(Item.Template) Then ColumnNames = TemplateColumns[Item.Template]; ColumnIndex = 0; ColumnCount = ColumnNames.Count() - 1; For Each ColumnName In ColumnNames Do StreamWriter.WriteChars(String(Item.ParameterValues[ColumnName.Key].Value)); If ColumnIndex <> ColumnCount Then StreamWriter.WriteChars(Delimiter); EndIf; ColumnIndex = ColumnIndex + 1; EndDo; EndIf; EndIf; Item = DataCompositionProcessor.Next(); EndDo;
+    //
+    //If AddCarriageReturnToLastRow Then
+    //    StreamWriter.WriteChars(CRLF);        
+    //EndIf;
+ 
+    Var Level; CRLF = Chars.CR + Chars.LF; If NOT IsBlankString(HeaderLine) Then StreamWriter.WriteChars(HeaderLine); StreamWriter.WriteChars(CRLF); EndIf; End = DataCompositionResultItemType.End; Begin = DataCompositionResultItemType.Begin; BeginAndEnd = DataCompositionResultItemType.BeginAndEnd; While Item <> Undefined Do If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = BeginAndEnd Then Level = ?(Level = Undefined, 0, Level + 1); EndIf; EndIf; EndIf; If Level <> Undefined Then If Item.ItemType = End Then Item = DataCompositionProcessor.Next(); If Item.ItemType = End Then Level = ?(Level - 1 < 0, Undefined, Level - 1); Else StreamWriter.WriteChars(CRLF); EndIf; ElsIf NOT IsBlankString(Item.Template) Then ColumnNames = TemplateColumns[Item.Template]; ColumnIndex = 0; ColumnCount = ColumnNames.Count() - 1; For Each ColumnName In ColumnNames Do StreamWriter.WriteChars(String(Item.ParameterValues[ColumnName.Key].Value)); If ColumnIndex <> ColumnCount Then StreamWriter.WriteChars(Delimiter); EndIf; ColumnIndex = ColumnIndex + 1; EndDo; EndIf; EndIf; Item = DataCompositionProcessor.Next(); EndDo; If AddCarriageReturnToLastRow Then StreamWriter.WriteChars(CRLF); EndIf;
    
 EndProcedure // APISchemaOutput()
 
@@ -388,7 +412,7 @@ EndProcedure // APISchemaOutput()
 //
 Function Version() Export
     
-    Return "1.0.1.0";
+    Return "1.0.3";
     
 EndFunction // Version()
 
