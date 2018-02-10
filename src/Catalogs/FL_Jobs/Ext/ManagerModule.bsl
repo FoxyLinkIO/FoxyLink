@@ -155,6 +155,7 @@ Procedure ProcessJob(Job)
     Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
         ExchangeSettings, MessageSettings);  
     NotifyChannels(JobObject, MemoryStream);     
+    MemoryStream.Close();
     
     JobObject.Write();   
     

@@ -5,7 +5,7 @@
 "InUse": true,
 "PredefinedDataName": "Self",
 "Ref": "c8b4ae75-de6d-11e7-9bd4-107b4414a43a",
-"Version": "1.1.3",
+"Version": "1.1.4",
 "Channels": [
 {
 "Channel": "685a92aa-de8c-11e7-9bd4-107b4414a43a",
@@ -13,10 +13,10 @@
 "ResponseHandler": "",
 "BasicChannelGuid": "7fdeb371-1ad5-47e7-b1d6-f9acc55d893e",
 "Connected": true,
-"Description": "Self",
+"Description": "Self (Export)",
 "Log": false,
-"PredefinedDataName": "Self",
-"Version": "1.0.0.1"
+"PredefinedDataName": "SelfExport",
+"Version": "1.1.5"
 }
 ],
 "Events": [

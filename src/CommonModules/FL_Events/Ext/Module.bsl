@@ -463,10 +463,8 @@ Function QueryTextSubscribers(Owner)
         |AND MethodTable.Method     = EventTable.Method
         |
         |WHERE
-        |%1 
-        |   Exchanges.InUse = True
-        |
-        |", ?(Owner = Undefined, "", "Exchanges.Ref = &Owner AND "));
+        |   %1 
+        |", ?(Owner = Undefined, "Exchanges.InUse = True", "Exchanges.Ref = &Owner"));
     Return QueryText;
     
 EndFunction // QueryTextSubscribers()

@@ -91,7 +91,11 @@ Function DeliverMessage(Stream, Properties) Export
     
     If TypeOf(Stream) = Type("MemoryStream") Then
         
-        BinaryData = Stream.CloseAndGetBinaryData();
+        Stream.Seek(0, PositionInStream.Begin);
+        
+        DataReader = New DataReader(Stream);
+        BinaryData = DataReader.Read().GetBinaryData();
+        DataReader.Close();
         
         DeliveryResult.OriginalResponse = New ValueStorage(BinaryData, 
             New Deflation(9));
@@ -162,7 +166,7 @@ Function SuppliedIntegrations() Export
         |en_CA='Exchange description service'");
     PluggableSettings.Template = "Self";
     PluggableSettings.ToolTip = StrConcat(BasicPhrases);
-    PluggableSettings.Version = "1.1.3";
+    PluggableSettings.Version = "1.1.4";
     SuppliedIntegrations.Add(PluggableSettings);
     
     Return SuppliedIntegrations;
@@ -180,7 +184,7 @@ EndFunction // SuppliedIntegration()
 //
 Function Version() Export
     
-    Return "1.0.1.5";
+    Return "1.1.5";
     
 EndFunction // Version()
 
