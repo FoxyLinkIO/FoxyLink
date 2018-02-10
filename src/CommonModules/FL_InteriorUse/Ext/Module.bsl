@@ -359,8 +359,9 @@ Procedure InitializeSubsystem() Export
     
     InitializeStates();
     InitializeMethods();
+    InitializeChannels();
     InitializeConstants();
-
+    
 EndProcedure // InitializeSubsystem() 
 
 // Loads imported exchange data into a mock object.
@@ -712,6 +713,58 @@ Procedure InitializeMethods()
     EndIf;
     
 EndProcedure // InitMethods()
+
+// Only for internal use.
+//
+Procedure InitializeChannels()
+    
+    Try
+    
+        SelfExportProcessor = Catalogs.FL_Channels.NewChannelProcessor(
+            "7fdeb371-1ad5-47e7-b1d6-f9acc55d893e");
+        
+        SelfExport = Catalogs.FL_Channels.SelfExport.GetObject();
+        SelfExport.DataExchange.Load = True;
+        SelfExport.BasicChannelGuid = SelfExportProcessor.LibraryGuid();
+        SelfExport.Connected = True;
+        SelfExport.Log = False;
+        SelfExport.Version = SelfExportProcessor.Version();
+        SelfExport.Write();
+        
+    Except
+        
+        WriteLogEvent("FoxyLink.InitializeSubsystem.InitializeChannels", 
+            EventLogLevel.Error,
+            Metadata.Catalogs.FL_Channels,
+            ,
+            ErrorDescription());
+        
+    EndTry; 
+    
+    Try
+    
+        SelfFilesProcessor = Catalogs.FL_Channels.NewChannelProcessor(
+            "595e752d-57f4-4398-a1cb-e6c5a6aaa65c");
+        
+        SelfFiles = Catalogs.FL_Channels.SelfFiles.GetObject();
+        SelfFiles.DataExchange.Load = True;
+        SelfFiles.BasicChannelGuid = SelfFilesProcessor.LibraryGuid();
+        SelfFiles.Connected = True;
+        SelfFiles.Log = False;
+        SelfFiles.Version = SelfFilesProcessor.Version();
+        SelfFiles.Write();
+        
+    Except
+        
+        WriteLogEvent("FoxyLink.InitializeSubsystem.InitializeChannels", 
+            EventLogLevel.Error,
+            Metadata.Catalogs.FL_Channels,
+            ,
+            ErrorDescription());
+        
+    EndTry;
+        
+EndProcedure // InitializeChannels() 
 
 // Only for internal use.
 //

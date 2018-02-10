@@ -1,9 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <PredefinedData xmlns="http://v8.1c.ru/8.3/xcf/predef" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CatalogPredefinedItems" version="2.5">
 	<Item id="fd4db83f-e6ea-497e-8225-9c77a613310d">
-		<Name>Self</Name>
+		<Name>SelfExport</Name>
 		<Code/>
-		<Description>Self</Description>
+		<Description>Self (Export)</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+	<Item id="c79817c9-5269-41cf-ac59-2a95bfc870fe">
+		<Name>SelfFiles</Name>
+		<Code/>
+		<Description>Self (Files)</Description>
 		<IsFolder>false</IsFolder>
 	</Item>
 </PredefinedData>

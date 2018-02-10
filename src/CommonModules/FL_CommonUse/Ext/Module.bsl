@@ -167,7 +167,12 @@ Function ReferenceByPredefinedDataName(MetadataObject,
     Query.Text = StrTemplate(QueryTextReferenceByPredefinedDataName(), 
         MetadataObject.FullName());
     Query.SetParameter("PredefinedDataName", PredefinedDataName);
-    QueryResultSelection = Query.Execute().Select();
+    
+    Try
+        QueryResultSelection = Query.Execute().Select();
+    Except
+        Return Undefined;
+    EndTry; 
     
     Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
     

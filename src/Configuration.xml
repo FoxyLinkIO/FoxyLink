@@ -53,7 +53,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.6.2</Version>
+			<Version>0.9.6.3</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -310,7 +310,8 @@
 			<DataProcessor>FL_AdministrationPanel</DataProcessor>
 			<DataProcessor>FL_DataProcessorCSV</DataProcessor>
 			<DataProcessor>FL_DataProcessorJSON</DataProcessor>
-			<DataProcessor>FL_Self</DataProcessor>
+			<DataProcessor>FL_SelfExport</DataProcessor>
+			<DataProcessor>FL_SelfFiles</DataProcessor>
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
 		</ChildObjects>
 	</Configuration>
