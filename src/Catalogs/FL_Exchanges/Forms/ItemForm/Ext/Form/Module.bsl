@@ -273,7 +273,15 @@ Procedure EnqueueEvents(Command)
             ,
             , 
             FormWindowOpeningMode.LockOwnerWindow);    
-                
+            
+    Else
+        
+        ShowQueryBox(New NotifyDescription("DoAfterEnqueueEvents", ThisObject),
+            NStr("en='Enqueue event that is not connected with metadata directly?';
+                |ru='Отправить в очередь событие, которое напрямую не связано с метаданными?';
+                |en_CA='Enqueue event that is not connected with metadata directly?'"),
+            QuestionDialogMode.YesNo, , DialogReturnCode.No);    
+        
     EndIf;
     
 EndProcedure // EnqueueEvents()
@@ -1047,6 +1055,35 @@ Procedure DoAfterChooseEventToDelete(QuestionResult,
     
 EndProcedure // DoAfterChooseEventToDelete()
 
+// Enqueues event that is not connected with metadata directly.
+//
+// Parameters:
+//  QuestionResult       - DialogReturnCode - system enumeration value 
+//                  or a value related to a clicked button. If a dialog 
+//                  is closed on timeout, the value is Timeout. 
+//  AdditionalParameters - Arbitrary        - the value specified when the 
+//                              NotifyDescription object was created.
+//
+&AtClient
+Procedure DoAfterEnqueueEvents(QuestionResult, AdditionalParameters) Export
+    
+    If QuestionResult = DialogReturnCode.Yes Then    
+        
+        Job = EnqueueEventAtServer();
+        
+        Explanation = NStr("en='Event enqueued successfully.';
+            |ru='Событие успешно добавлено в очередь.';
+            |en_CA='Event enqueued successfully.'");
+        
+        ShowUserNotification("FoxyLink", 
+            GetURL(Job), 
+            Explanation, 
+            PictureLib.FL_Logotype64);
+        
+    EndIf;    
+
+EndProcedure // DoAfterEnqueueEvents()
+
 // Only for internal use.
 //
 &AtServer
@@ -1069,6 +1106,23 @@ Procedure AddEventAtServer(EventsArray)
     EndDo;
     
 EndProcedure // AddEventAtServer() 
+
+// Only for internal use.
+//
+&AtServer
+Function EnqueueEventAtServer()
+    
+    CurrentData = CurrentMethodData(RowMethod);
+    
+    InvocationData = FL_BackgroundJob.NewInvocationData();
+    InvocationData.Method = CurrentData.Method;
+    InvocationData.Owner = Object.Ref;
+    InvocationData.Priority = CurrentData.Priority;
+    
+    Return FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.Trigger", 
+        InvocationData);
+    
+EndFunction // EnqueueEventAtServer()
 
 // Only for internal use.
 //
