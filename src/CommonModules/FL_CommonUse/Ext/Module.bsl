@@ -1333,8 +1333,16 @@ Function NewMockOfMetadataObjectAttributes(MetadataObject) Export
         Mock.Columns.Add(Attribute.Name, Attribute.Type, Attribute.Synonym); 
     EndDo;
 
+    SynonymsRU = FL_CommonUseReUse.StandardAttributeSynonymsRU();
     For Each Attribute In MetadataObject.StandardAttributes Do
-        Mock.Columns.Add(Attribute.Name, Attribute.Type, Attribute.Synonym);
+        
+        AttributeName = SynonymsRU.Get(Upper(Attribute.Name));
+        If AttributeName = Undefined Then
+            AttributeName = Attribute.Name;
+        EndIf;
+        
+        Mock.Columns.Add(AttributeName, Attribute.Type, Attribute.Synonym);
+        
     EndDo;
 
     Return Mock;

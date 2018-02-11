@@ -39,6 +39,8 @@
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_InformationRegistersBeforeWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_InformationRegistersOnWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Encryption</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsBeforeWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsOnWrite</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>
