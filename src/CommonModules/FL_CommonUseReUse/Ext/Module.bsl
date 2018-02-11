@@ -193,6 +193,18 @@ EndFunction // BaseRegisterTypeNameSynonyms()
 //  FixedMap - with standard attribute synonym names.
 //
 Function StandardAttributeSynonyms() Export
+      
+    Return New FixedMap(BuildSynonymCombinations(FL_CommonUseReUse
+        .StandardAttributeSynonymsEN()));
+    
+EndFunction // StandardAttributeSynonyms()  
+
+// Returns a fixed map with standard attribute synonym names in english.
+//
+// Returns:
+//  FixedMap - with standard attribute synonym names in english.
+//
+Function StandardAttributeSynonymsEN() Export
     
     Synonyms = New Map;
     
@@ -258,10 +270,29 @@ Function StandardAttributeSynonyms() Export
     Synonyms.Insert("BUSINESSPROCESS", "БИЗНЕСПРОЦЕСС");
     Synonyms.Insert("ROUTEPOINT", "ТОЧКАМАРШРУТА");
     Synonyms.Insert("EXECUTED", "ВЫПОЛНЕНА");
-        
-    Return New FixedMap(BuildSynonymCombinations(Synonyms));
     
-EndFunction // StandardAttributeSynonyms()  
+    Return New FixedMap(Synonyms);
+    
+EndFunction // StandardAttributeSynonymsEN()
+
+// Returns a fixed map with standard attribute synonym names in russian.
+//
+// Returns:
+//  FixedMap - with standard attribute synonym names in russian.
+//
+Function StandardAttributeSynonymsRU() Export
+    
+    // Caching
+    SynonymsEN = FL_CommonUseReUse.StandardAttributeSynonymsEN();
+    
+    SynonymRU = New Map;
+    For Each Synonym In SynonymsEN Do
+        SynonymRU.Insert(Synonym.Value, Synonym.Key);
+    EndDo;
+    
+    Return New FixedMap(SynonymRU);
+    
+EndFunction // StandardAttributeSynonymsRU() 
 
 #EndRegion // ProgramInterface
 
