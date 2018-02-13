@@ -12,16 +12,46 @@
 		<Description>Delete</Description>
 		<IsFolder>false</IsFolder>
 	</Item>
+	<Item id="0eca949b-0030-45b4-bb94-71f1fdd82e48">
+		<Name>Merge</Name>
+		<Code/>
+		<Description>Merge</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+	<Item id="fd35fe9b-80e8-4da3-8d30-021fe5f09ca7">
+		<Name>Print</Name>
+		<Code/>
+		<Description>Print</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+	<Item id="145cd60f-c74f-4d91-9ccc-7f52ae638a08">
+		<Name>Query</Name>
+		<Code/>
+		<Description>Query</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
 	<Item id="375bf1b5-6e24-44b2-beb2-abf7ad480a42">
 		<Name>Read</Name>
 		<Code/>
 		<Description>Read</Description>
 		<IsFolder>false</IsFolder>
 	</Item>
+	<Item id="c74984a5-7425-41cd-b6a3-d46a055e093b">
+		<Name>Send</Name>
+		<Code/>
+		<Description>Send</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
 	<Item id="031256a1-34bc-4d23-883f-97875a617113">
 		<Name>Update</Name>
 		<Code/>
 		<Description>Update</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
+	<Item id="705af4ad-09ef-4ffd-a7a4-a23b0841ae66">
+		<Name>Void</Name>
+		<Code/>
+		<Description>Void</Description>
 		<IsFolder>false</IsFolder>
 	</Item>
 </PredefinedData>

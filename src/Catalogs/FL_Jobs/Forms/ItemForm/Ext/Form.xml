@@ -1,0 +1,504 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
+	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
+	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
+	<AutoCommandBar name="" id="-1"/>
+	<ChildItems>
+		<InputField name="Code" id="1">
+			<DataPath>Object.Code</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="CodeContextMenu" id="2"/>
+			<ExtendedTooltip name="CodeExtendedTooltip" id="3"/>
+		</InputField>
+		<InputField name="Owner" id="4">
+			<DataPath>Object.Owner</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="OwnerContextMenu" id="5"/>
+			<ExtendedTooltip name="OwnerExtendedTooltip" id="6"/>
+		</InputField>
+		<InputField name="ContentType" id="7">
+			<DataPath>Object.ContentType</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="ContentTypeContextMenu" id="8"/>
+			<ExtendedTooltip name="ContentTypeExtendedTooltip" id="9"/>
+		</InputField>
+		<InputField name="CreatedAt" id="10">
+			<DataPath>Object.CreatedAt</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="CreatedAtContextMenu" id="11"/>
+			<ExtendedTooltip name="CreatedAtExtendedTooltip" id="12"/>
+		</InputField>
+		<InputField name="ExpireAt" id="13">
+			<DataPath>Object.ExpireAt</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="ExpireAtContextMenu" id="14"/>
+			<ExtendedTooltip name="ExpireAtExtendedTooltip" id="15"/>
+		</InputField>
+		<InputField name="FileExtension" id="16">
+			<DataPath>Object.FileExtension</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="FileExtensionContextMenu" id="17"/>
+			<ExtendedTooltip name="FileExtensionExtendedTooltip" id="18"/>
+		</InputField>
+		<InputField name="MetadataObject" id="19">
+			<DataPath>Object.MetadataObject</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="MetadataObjectContextMenu" id="20"/>
+			<ExtendedTooltip name="MetadataObjectExtendedTooltip" id="21"/>
+		</InputField>
+		<InputField name="Method" id="22">
+			<DataPath>Object.Method</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="MethodContextMenu" id="23"/>
+			<ExtendedTooltip name="MethodExtendedTooltip" id="24"/>
+		</InputField>
+		<InputField name="Priority" id="25">
+			<DataPath>Object.Priority</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="PriorityContextMenu" id="26"/>
+			<ExtendedTooltip name="PriorityExtendedTooltip" id="27"/>
+		</InputField>
+		<InputField name="SourceObject" id="28">
+			<DataPath>Object.SourceObject</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="SourceObjectContextMenu" id="29"/>
+			<ExtendedTooltip name="SourceObjectExtendedTooltip" id="30"/>
+		</InputField>
+		<InputField name="State" id="31">
+			<DataPath>Object.State</DataPath>
+			<EditMode>EnterOnInput</EditMode>
+			<ContextMenu name="StateContextMenu" id="32"/>
+			<ExtendedTooltip name="StateExtendedTooltip" id="33"/>
+		</InputField>
+		<Pages name="Pages" id="34">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Pages</v8:content>
+				</v8:item>
+			</Title>
+			<ExtendedTooltip name="PagesExtendedTooltip" id="35"/>
+			<ChildItems>
+				<Page name="GroupDCSFilter" id="36">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Data composition settings [Filter]</v8:content>
+						</v8:item>
+					</Title>
+					<ExtendedTooltip name="GroupDCSFilterExtendedTooltip" id="37"/>
+					<ChildItems>
+						<Table name="DCSFilter" id="38">
+							<Representation>List</Representation>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Object.DCSFilter</DataPath>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="DCSFilterContextMenu" id="39"/>
+							<AutoCommandBar name="DCSFilterCommandBar" id="40"/>
+							<ExtendedTooltip name="DCSFilterExtendedTooltip" id="41"/>
+							<SearchStringAddition name="DCSFilterSearchString" id="42">
+								<AdditionSource>
+									<Item>DCSFilter</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="DCSFilterSearchStringContextMenu" id="43"/>
+								<ExtendedTooltip name="DCSFilterSearchStringExtendedTooltip" id="44"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="DCSFilterViewStatus" id="45">
+								<AdditionSource>
+									<Item>DCSFilter</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="DCSFilterViewStatusContextMenu" id="46"/>
+								<ExtendedTooltip name="DCSFilterViewStatusExtendedTooltip" id="47"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="DCSFilterSearchControl" id="48">
+								<AdditionSource>
+									<Item>DCSFilter</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="DCSFilterSearchControlContextMenu" id="49"/>
+								<ExtendedTooltip name="DCSFilterSearchControlExtendedTooltip" id="50"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<LabelField name="DCSFilterLineNumber" id="51">
+									<DataPath>Object.DCSFilter.LineNumber</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="DCSFilterLineNumberContextMenu" id="52"/>
+									<ExtendedTooltip name="DCSFilterLineNumberExtendedTooltip" id="53"/>
+								</LabelField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+				<Page name="GroupDCSParameters" id="54">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Data composition settings [Parameters]</v8:content>
+						</v8:item>
+					</Title>
+					<ExtendedTooltip name="GroupDCSParametersExtendedTooltip" id="55"/>
+					<ChildItems>
+						<Table name="DCSParameters" id="56">
+							<Representation>List</Representation>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Object.DCSParameters</DataPath>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="DCSParametersContextMenu" id="57"/>
+							<AutoCommandBar name="DCSParametersCommandBar" id="58"/>
+							<ExtendedTooltip name="DCSParametersExtendedTooltip" id="59"/>
+							<SearchStringAddition name="DCSParametersSearchString" id="60">
+								<AdditionSource>
+									<Item>DCSParameters</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="DCSParametersSearchStringContextMenu" id="61"/>
+								<ExtendedTooltip name="DCSParametersSearchStringExtendedTooltip" id="62"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="DCSParametersViewStatus" id="63">
+								<AdditionSource>
+									<Item>DCSParameters</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="DCSParametersViewStatusContextMenu" id="64"/>
+								<ExtendedTooltip name="DCSParametersViewStatusExtendedTooltip" id="65"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="DCSParametersSearchControl" id="66">
+								<AdditionSource>
+									<Item>DCSParameters</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="DCSParametersSearchControlContextMenu" id="67"/>
+								<ExtendedTooltip name="DCSParametersSearchControlExtendedTooltip" id="68"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<LabelField name="DCSParametersLineNumber" id="69">
+									<DataPath>Object.DCSParameters.LineNumber</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="DCSParametersLineNumberContextMenu" id="70"/>
+									<ExtendedTooltip name="DCSParametersLineNumberExtendedTooltip" id="71"/>
+								</LabelField>
+								<InputField name="DCSParametersParameter" id="72">
+									<DataPath>Object.DCSParameters.Parameter</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="DCSParametersParameterContextMenu" id="73"/>
+									<ExtendedTooltip name="DCSParametersParameterExtendedTooltip" id="74"/>
+								</InputField>
+								<InputField name="DCSParametersValuePresentation" id="75">
+									<DataPath>Object.DCSParameters.ValuePresentation</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="DCSParametersValuePresentationContextMenu" id="76"/>
+									<ExtendedTooltip name="DCSParametersValuePresentationExtendedTooltip" id="77"/>
+								</InputField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+				<Page name="GroupSessionContext" id="78">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Session context</v8:content>
+						</v8:item>
+					</Title>
+					<ExtendedTooltip name="GroupSessionContextExtendedTooltip" id="79"/>
+					<ChildItems>
+						<Table name="SessionContext" id="80">
+							<Representation>List</Representation>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Object.SessionContext</DataPath>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="SessionContextContextMenu" id="81"/>
+							<AutoCommandBar name="SessionContextCommandBar" id="82"/>
+							<ExtendedTooltip name="SessionContextExtendedTooltip" id="83"/>
+							<SearchStringAddition name="SessionContextSearchString" id="84">
+								<AdditionSource>
+									<Item>SessionContext</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="SessionContextSearchStringContextMenu" id="85"/>
+								<ExtendedTooltip name="SessionContextSearchStringExtendedTooltip" id="86"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="SessionContextViewStatus" id="87">
+								<AdditionSource>
+									<Item>SessionContext</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="SessionContextViewStatusContextMenu" id="88"/>
+								<ExtendedTooltip name="SessionContextViewStatusExtendedTooltip" id="89"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="SessionContextSearchControl" id="90">
+								<AdditionSource>
+									<Item>SessionContext</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="SessionContextSearchControlContextMenu" id="91"/>
+								<ExtendedTooltip name="SessionContextSearchControlExtendedTooltip" id="92"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<LabelField name="SessionContextLineNumber" id="93">
+									<DataPath>Object.SessionContext.LineNumber</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SessionContextLineNumberContextMenu" id="94"/>
+									<ExtendedTooltip name="SessionContextLineNumberExtendedTooltip" id="95"/>
+								</LabelField>
+								<InputField name="SessionContextMetadataObject" id="96">
+									<DataPath>Object.SessionContext.MetadataObject</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SessionContextMetadataObjectContextMenu" id="97"/>
+									<ExtendedTooltip name="SessionContextMetadataObjectExtendedTooltip" id="98"/>
+								</InputField>
+								<InputField name="SessionContextSession" id="99">
+									<DataPath>Object.SessionContext.Session</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SessionContextSessionContextMenu" id="100"/>
+									<ExtendedTooltip name="SessionContextSessionExtendedTooltip" id="101"/>
+								</InputField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+				<Page name="GroupSubscriberResources" id="102">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Subscriber resources</v8:content>
+						</v8:item>
+					</Title>
+					<ExtendedTooltip name="GroupSubscriberResourcesExtendedTooltip" id="103"/>
+					<ChildItems>
+						<Table name="SubscriberResources" id="104">
+							<Representation>List</Representation>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Object.SubscriberResources</DataPath>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="SubscriberResourcesContextMenu" id="105"/>
+							<AutoCommandBar name="SubscriberResourcesCommandBar" id="106"/>
+							<ExtendedTooltip name="SubscriberResourcesExtendedTooltip" id="107"/>
+							<SearchStringAddition name="SubscriberResourcesSearchString" id="108">
+								<AdditionSource>
+									<Item>SubscriberResources</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscriberResourcesSearchStringContextMenu" id="109"/>
+								<ExtendedTooltip name="SubscriberResourcesSearchStringExtendedTooltip" id="110"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="SubscriberResourcesViewStatus" id="111">
+								<AdditionSource>
+									<Item>SubscriberResources</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscriberResourcesViewStatusContextMenu" id="112"/>
+								<ExtendedTooltip name="SubscriberResourcesViewStatusExtendedTooltip" id="113"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="SubscriberResourcesSearchControl" id="114">
+								<AdditionSource>
+									<Item>SubscriberResources</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscriberResourcesSearchControlContextMenu" id="115"/>
+								<ExtendedTooltip name="SubscriberResourcesSearchControlExtendedTooltip" id="116"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<LabelField name="SubscriberResourcesLineNumber" id="117">
+									<DataPath>Object.SubscriberResources.LineNumber</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscriberResourcesLineNumberContextMenu" id="118"/>
+									<ExtendedTooltip name="SubscriberResourcesLineNumberExtendedTooltip" id="119"/>
+								</LabelField>
+								<InputField name="SubscriberResourcesChannel" id="120">
+									<DataPath>Object.SubscriberResources.Channel</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscriberResourcesChannelContextMenu" id="121"/>
+									<ExtendedTooltip name="SubscriberResourcesChannelExtendedTooltip" id="122"/>
+								</InputField>
+								<InputField name="SubscriberResourcesFieldName" id="123">
+									<DataPath>Object.SubscriberResources.FieldName</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscriberResourcesFieldNameContextMenu" id="124"/>
+									<ExtendedTooltip name="SubscriberResourcesFieldNameExtendedTooltip" id="125"/>
+								</InputField>
+								<InputField name="SubscriberResourcesFieldValue" id="126">
+									<DataPath>Object.SubscriberResources.FieldValue</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscriberResourcesFieldValueContextMenu" id="127"/>
+									<ExtendedTooltip name="SubscriberResourcesFieldValueExtendedTooltip" id="128"/>
+								</InputField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+				<Page name="GroupSubscribers" id="129">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Subscribers</v8:content>
+						</v8:item>
+					</Title>
+					<ExtendedTooltip name="GroupSubscribersExtendedTooltip" id="130"/>
+					<ChildItems>
+						<Table name="Subscribers" id="131">
+							<Representation>List</Representation>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Object.Subscribers</DataPath>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="SubscribersContextMenu" id="132"/>
+							<AutoCommandBar name="SubscribersCommandBar" id="133"/>
+							<ExtendedTooltip name="SubscribersExtendedTooltip" id="134"/>
+							<SearchStringAddition name="SubscribersSearchString" id="135">
+								<AdditionSource>
+									<Item>Subscribers</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscribersSearchStringContextMenu" id="136"/>
+								<ExtendedTooltip name="SubscribersSearchStringExtendedTooltip" id="137"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="SubscribersViewStatus" id="138">
+								<AdditionSource>
+									<Item>Subscribers</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscribersViewStatusContextMenu" id="139"/>
+								<ExtendedTooltip name="SubscribersViewStatusExtendedTooltip" id="140"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="SubscribersSearchControl" id="141">
+								<AdditionSource>
+									<Item>Subscribers</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscribersSearchControlContextMenu" id="142"/>
+								<ExtendedTooltip name="SubscribersSearchControlExtendedTooltip" id="143"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<LabelField name="SubscribersLineNumber" id="144">
+									<DataPath>Object.Subscribers.LineNumber</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLineNumberContextMenu" id="145"/>
+									<ExtendedTooltip name="SubscribersLineNumberExtendedTooltip" id="146"/>
+								</LabelField>
+								<InputField name="SubscribersChannel" id="147">
+									<DataPath>Object.Subscribers.Channel</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersChannelContextMenu" id="148"/>
+									<ExtendedTooltip name="SubscribersChannelExtendedTooltip" id="149"/>
+								</InputField>
+								<CheckBoxField name="SubscribersCompleted" id="150">
+									<DataPath>Object.Subscribers.Completed</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<CheckBoxType>Auto</CheckBoxType>
+									<ContextMenu name="SubscribersCompletedContextMenu" id="151"/>
+									<ExtendedTooltip name="SubscribersCompletedExtendedTooltip" id="152"/>
+								</CheckBoxField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+				<Page name="GroupSubscribersLog" id="153">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Subscribers log</v8:content>
+						</v8:item>
+					</Title>
+					<ExtendedTooltip name="GroupSubscribersLogExtendedTooltip" id="154"/>
+					<ChildItems>
+						<Table name="SubscribersLog" id="155">
+							<Representation>List</Representation>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Object.SubscribersLog</DataPath>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="SubscribersLogContextMenu" id="156"/>
+							<AutoCommandBar name="SubscribersLogCommandBar" id="157"/>
+							<ExtendedTooltip name="SubscribersLogExtendedTooltip" id="158"/>
+							<SearchStringAddition name="SubscribersLogSearchString" id="159">
+								<AdditionSource>
+									<Item>SubscribersLog</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscribersLogSearchStringContextMenu" id="160"/>
+								<ExtendedTooltip name="SubscribersLogSearchStringExtendedTooltip" id="161"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="SubscribersLogViewStatus" id="162">
+								<AdditionSource>
+									<Item>SubscribersLog</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscribersLogViewStatusContextMenu" id="163"/>
+								<ExtendedTooltip name="SubscribersLogViewStatusExtendedTooltip" id="164"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="SubscribersLogSearchControl" id="165">
+								<AdditionSource>
+									<Item>SubscribersLog</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="SubscribersLogSearchControlContextMenu" id="166"/>
+								<ExtendedTooltip name="SubscribersLogSearchControlExtendedTooltip" id="167"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<LabelField name="SubscribersLogLineNumber" id="168">
+									<DataPath>Object.SubscribersLog.LineNumber</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLogLineNumberContextMenu" id="169"/>
+									<ExtendedTooltip name="SubscribersLogLineNumberExtendedTooltip" id="170"/>
+								</LabelField>
+								<InputField name="SubscribersLogChannel" id="171">
+									<DataPath>Object.SubscribersLog.Channel</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLogChannelContextMenu" id="172"/>
+									<ExtendedTooltip name="SubscribersLogChannelExtendedTooltip" id="173"/>
+								</InputField>
+								<InputField name="SubscribersLogLogAttribute" id="174">
+									<DataPath>Object.SubscribersLog.LogAttribute</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLogLogAttributeContextMenu" id="175"/>
+									<ExtendedTooltip name="SubscribersLogLogAttributeExtendedTooltip" id="176"/>
+								</InputField>
+								<InputField name="SubscribersLogStatusCode" id="177">
+									<DataPath>Object.SubscribersLog.StatusCode</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLogStatusCodeContextMenu" id="178"/>
+									<ExtendedTooltip name="SubscribersLogStatusCodeExtendedTooltip" id="179"/>
+								</InputField>
+								<InputField name="SubscribersLogStringResponse" id="180">
+									<DataPath>Object.SubscribersLog.StringResponse</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="SubscribersLogStringResponseContextMenu" id="181"/>
+									<ExtendedTooltip name="SubscribersLogStringResponseExtendedTooltip" id="182"/>
+								</InputField>
+								<CheckBoxField name="SubscribersLogSuccess" id="183">
+									<DataPath>Object.SubscribersLog.Success</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<CheckBoxType>Auto</CheckBoxType>
+									<ContextMenu name="SubscribersLogSuccessContextMenu" id="184"/>
+									<ExtendedTooltip name="SubscribersLogSuccessExtendedTooltip" id="185"/>
+								</CheckBoxField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+			</ChildItems>
+		</Pages>
+	</ChildItems>
+	<Attributes>
+		<Attribute name="Object" id="1">
+			<Type>
+				<v8:Type>cfg:CatalogObject.FL_Jobs</v8:Type>
+			</Type>
+			<MainAttribute>true</MainAttribute>
+			<SavedData>true</SavedData>
+		</Attribute>
+	</Attributes>
+</Form>

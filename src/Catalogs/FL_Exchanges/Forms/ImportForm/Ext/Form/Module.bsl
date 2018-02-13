@@ -278,9 +278,7 @@ EndProcedure // SetEventMatches()
 &AtServer
 Procedure LoadBasicFormatInfo()
 
-    FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
-        BasicFormatGuid);
-        
+    FormatProcessor = FL_InteriorUse.NewFormatProcessor(BasicFormatGuid);    
     Catalogs.FL_Exchanges.FillFormatDescription(ThisObject, FormatProcessor);
     
 EndProcedure // LoadBasicFormatInfo()
@@ -292,8 +290,7 @@ EndProcedure // LoadBasicFormatInfo()
 &AtServer
 Function FormatStandardLink() 
     
-    FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
-        BasicFormatGuid);     
+    FormatProcessor = FL_InteriorUse.NewFormatProcessor(BasicFormatGuid);     
     Return FormatProcessor.FormatStandardLink();
     
 EndFunction // FormatStandardLink()
@@ -587,8 +584,7 @@ EndProcedure // InstallOrUpdateChannelAtServer()
 &AtServerNoContext
 Function PreAuthorizationRequired(Val LibraryGuid)
     
-    ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
-        LibraryGuid);
+    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(LibraryGuid);
     Return ChannelProcessor.PreAuthorizationRequired(); 
     
 EndFunction // PreAuthorizationRequired()
@@ -813,8 +809,7 @@ EndFunction // FindMethodLines()
 &AtServer
 Function ImportedExchange()
     
-    ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
-        LibraryGuid);
+    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(LibraryGuid);
     BinaryData = ChannelProcessor.GetTemplate(Template);
     JSONReader = New JSONReader;
     JSONReader.OpenStream(BinaryData.OpenStreamForRead());

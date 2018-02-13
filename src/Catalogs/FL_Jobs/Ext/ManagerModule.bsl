@@ -28,18 +28,65 @@
 // the following Wednesday.
 //
 // Parameters:
-//  Job - Array              - array of references to the jobs to be triggered.
-//      - CatalogRef.FL_Jobs - reference to the job to be triggered.
+//  Jobs - Array              - array of references to the jobs to be triggered.
+//       - CatalogRef.FL_Jobs - reference to the job to be triggered.
 //
-Procedure Trigger(Job) Export
+Procedure Trigger(Jobs) Export
     
-    If TypeOf(Job) = Type("Array") Then
-        For Each Item In Job Do
-            ProcessJob(Item);        
+    ValidJobs = New Array;
+    ValidateJobType(ValidJobs, Jobs);
+    
+    StreamObjectCache = New Map;
+    For Each Job In ValidJobs Do
+        
+        JobObject = Job.GetObject();
+        JobObject.State = Catalogs.FL_States.Succeeded;
+        
+        MessageSettings = FL_DataComposition.NewMessageSettings();
+        For Each DCSParameter In JobObject.DCSParameters Do
+            MessageSettings.Body.Parameters.Insert(DCSParameter.Parameter, 
+                DCSParameter.ValueStorage.Get());
         EndDo;
-    Else
-        ProcessJob(Job);       
-    EndIf;       
+
+        ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
+            JobObject.Owner, JobObject.Method);
+            
+        // Initialize data processor.
+        StreamObject = StreamObjectCache.Get(
+            ExchangeSettings.BasicFormatGuid);   
+        If StreamObject = Undefined Then
+            StreamObject = FL_InteriorUse.NewFormatProcessor(
+                ExchangeSettings.BasicFormatGuid);
+            StreamObjectCache.Insert(ExchangeSettings.BasicFormatGuid, 
+                StreamObject);
+        EndIf;
+        
+        // Open a new memory stream.
+        Stream = New MemoryStream;
+        
+        // Initialize format processor.
+        StreamObject.Initialize(Stream, ExchangeSettings.APISchema);
+        
+        OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(
+            ExchangeSettings, MessageSettings);
+        FL_DataComposition.Output(StreamObject, OutputParameters);
+        
+        // Close format stream.
+        StreamObject.Close();
+        
+        // Fill MIME-type information.
+        JobObject.ContentType = StreamObject.FormatMediaType();
+        JobObject.FileExtension = StreamObject.FormatFileExtension();
+        
+        // Notify all subscrubers.
+        NotifyChannels(JobObject, Stream);
+        
+        // Close and free memory.
+        Stream.Close();
+        
+        JobObject.Write();
+        
+    EndDo;
             
 EndProcedure // Trigger() 
 
@@ -137,29 +184,27 @@ EndFunction // ChangeState()
 
 // Only for internal use.
 //
-Procedure ProcessJob(Job)
+Procedure ValidateJobType(ValidJobs, Job)
     
-    JobObject = Job.GetObject();
-    JobObject.State = Catalogs.FL_States.Succeeded;
+    If TypeOf(Job) = Type("CatalogRef.FL_Jobs") Then
         
-    MessageSettings = FL_DataComposition.NewMessageSettings();
-    For Each DCSParameter In JobObject.DCSParameters Do
-        MessageSettings.Body.Parameters.Insert(DCSParameter.Parameter, 
-            DCSParameter.ValueStorage.Get());
-    EndDo;
-
-    ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
-        JobObject.Owner, JobObject.Method);          
+        ValidJobs.Add(Job);
         
-    MemoryStream = New MemoryStream;
-    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
-        ExchangeSettings, MessageSettings);  
-    NotifyChannels(JobObject, MemoryStream);     
-    MemoryStream.Close();
+    ElsIf TypeOf(Job) = Type("Array") Then
+        
+        For Each Item In Job Do
+            ValidateJobType(ValidJobs, Item);        
+        EndDo;
+        
+    Else
+        
+        ErrorMessage = FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
+            "Jobs", Job, "Array, CatalogRef.FL_Jobs");
+        Raise ErrorMessage;
+        
+    EndIf;    
     
-    JobObject.Write();   
-    
-EndProcedure // ProcessJob()
+EndProcedure // ValidateJobType()
 
 // Only for internal use.
 //
@@ -186,20 +231,7 @@ Procedure NotifyChannels(JobObject, Stream)
             //TODO: Exceptions!
         //EndTry;
                 
-        //SuccessResponseHandler = True;
-        //ErrorResponseDescription = "";
-        //If Not IsBlankString(Subscriber.ResponseHandler) Then
-        //    
-        //    Try
-        //        Execute(Subscriber.ResponseHandler);
-        //    Except
-        //        SuccessResponseHandler = False;
-        //        ErrorResponseDescription = ErrorDescription();
-        //    EndTry;
-        //    
-        //EndIf;
-        
-        If TriggerResult.Success Then //AND SuccessResponseHandler Then
+        If TriggerResult.Success Then
             Subscriber.Completed = True;
         Else
             JobObject.State = Catalogs.FL_States.Failed;
@@ -223,10 +255,12 @@ Function NewProperties(JobObject, Resources)
     EndDo;
     
     JobProperties = New Structure;
+    JobProperties.Insert("ContentType", JobObject.ContentType);
+    JobProperties.Insert("FileExtension", JobObject.FileExtension);
     JobProperties.Insert("MetadataObject", JobObject.MetadataObject);
     JobProperties.Insert("Method", JobObject.Method);
     JobProperties.Insert("SourceObject", JobObject.SourceObject);
-    //JobProperties.Insert("MediaType", JobObject.MediaType);
+    
     Properties.Insert("JobProperties", JobProperties);
     Return Properties;
     

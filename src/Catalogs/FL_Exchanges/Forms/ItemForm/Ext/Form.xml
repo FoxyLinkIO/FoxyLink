@@ -799,11 +799,6 @@
 															<CommandName>Form.Command.EditChannelResources</CommandName>
 															<ExtendedTooltip name="EditChannelResourcesExtendedTooltip" id="345"/>
 														</Button>
-														<Button name="ChannelResponseHandler" id="354">
-															<Type>UsualButton</Type>
-															<CommandName>Form.Command.ChannelResponseHandler</CommandName>
-															<ExtendedTooltip name="ChannelResponseHandlerExtendedTooltip" id="355"/>
-														</Button>
 													</ChildItems>
 												</UsualGroup>
 												<Table name="Channels" id="255">
@@ -2387,42 +2382,6 @@
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
 			<Action>DeleteEvent</Action>
-			<Representation>TextPicture</Representation>
-		</Command>
-		<Command name="ChannelResponseHandler" id="13">
-			<Title>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Response handler</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Обработчик ответа</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Response handler</v8:content>
-				</v8:item>
-			</Title>
-			<ToolTip>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Response channel handler</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Обработчик ответа канала</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Response channel handler</v8:content>
-				</v8:item>
-			</ToolTip>
-			<Picture>
-				<xr:Ref>CommonPicture.FL_Response</xr:Ref>
-				<xr:LoadTransparent>true</xr:LoadTransparent>
-			</Picture>
-			<Action>ChannelResponseHandler</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 		<Command name="DeleteAPI" id="14">

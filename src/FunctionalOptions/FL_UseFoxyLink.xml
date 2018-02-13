@@ -21,7 +21,6 @@
 			<Location>Constant.FL_UseFoxyLink</Location>
 			<PrivilegedGetMode>true</PrivilegedGetMode>
 			<Content>
-				<xr:Object>CommonForm.FL_ResponseHandlerForm</xr:Object>
 				<xr:Object>Constant.FL_RetryAttempts</xr:Object>
 				<xr:Object>Constant.FL_WorkerCount</xr:Object>
 				<xr:Object>Catalog.FL_States</xr:Object>

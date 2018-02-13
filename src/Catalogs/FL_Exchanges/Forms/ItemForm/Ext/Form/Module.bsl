@@ -87,7 +87,7 @@ EndProcedure // AfterWriteAtServer()
 Procedure BasicFormatGuidOnChange(Item)
     
     If NOT IsBlankString(Object.BasicFormatGuid) Then
-        Object.Version = "1.0.0.0";
+        Object.Version = "1.0.0";
         LoadBasicFormatInfo();   
     EndIf;
     
@@ -340,25 +340,6 @@ Procedure EditChannelResources(Command)
 EndProcedure // EditChannelResources()
 
 &AtClient
-Procedure ChannelResponseHandler(Command)
-    
-    CurrentData = Items.Channels.CurrentData;
-    If CurrentData <> Undefined Then
-        OpenForm("CommonForm.FL_ResponseHandlerForm", 
-            New Structure("ResponseHandler", CurrentData.ResponseHandler), 
-            ThisObject,
-            New UUID, 
-            , 
-            ,
-            New NotifyDescription("DoAfterCloseResponseHandlerForm", ThisObject, 
-                CurrentData.GetID())
-            , 
-            FormWindowOpeningMode.LockOwnerWindow);        
-    EndIf;
-    
-EndProcedure // ChannelResponseHandler()
-
-&AtClient
 Procedure DeleteChannel(Command)
     
     CurrentData = Items.Channels.CurrentData;
@@ -542,9 +523,8 @@ Procedure LoadBasicFormatInfo()
     Items.HeaderGroupLeft.Visible = True;
     Items.HeaderPages.CurrentPage = Items.HeaderPageBasicFormat;
     
-    FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
+    FormatProcessor = FL_InteriorUse.NewFormatProcessor(
         Object.BasicFormatGuid);
-    
     Catalogs.FL_Exchanges.FillFormatDescription(ThisObject, FormatProcessor);    
         
     FPMetadata = FormatProcessor.Metadata();
@@ -553,7 +533,7 @@ Procedure LoadBasicFormatInfo()
     Items.DescribeAPI.Visible = FormatAPISchemaSupport;
     Items.GenerateSpecificDocument.Title = StrTemplate("Generate (%1, ver. %2)", 
         FormatProcessor.FormatShortName(), FormatProcessor.Version());
-    
+                
 EndProcedure // LoadBasicFormatInfo() 
 
 // Returns link to the formal document from the Internet Engineering Task Force 
@@ -563,7 +543,7 @@ EndProcedure // LoadBasicFormatInfo()
 &AtServer
 Function FormatStandardLink() 
     
-    FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
+    FormatProcessor = FL_InteriorUse.NewFormatProcessor(
         Object.BasicFormatGuid);     
     Return FormatProcessor.FormatStandardLink();
     
@@ -572,7 +552,7 @@ EndFunction // FormatStandardLink()
 &AtServer
 Function DescribeAPIParameters()
         
-    FormatProcessor = Catalogs.FL_Exchanges.NewFormatProcessor(
+    FormatProcessor = FL_InteriorUse.NewFormatProcessor(
         Object.BasicFormatGuid);      
     FormatProcessorMetadata = FormatProcessor.Metadata();
 
@@ -716,7 +696,6 @@ Procedure GenerateSpecificDocumentAtServer()
     StartTime = CurrentUniversalDateInMilliseconds();
     
     ExchangeSettings = Catalogs.FL_Exchanges.NewExchangeSettings();
-    ExchangeSettings.BasicFormatGuid = Object.BasicFormatGuid;
     
     // Read API schema from temp storage address.
     CurrentData = CurrentMethodData(RowMethod);
@@ -730,16 +709,26 @@ Procedure GenerateSpecificDocumentAtServer()
     ExchangeSettings.DataCompositionSettings = RowComposerSettings
         .GetSettings();
     ExchangeSettings.CanUseExternalFunctions = RowCanUseExternalFunctions;
+     
+    // Open a new memory stream.
+    Stream = New MemoryStream;
     
-    MemoryStream = New MemoryStream;
-    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream,
-        New FixedStructure(ExchangeSettings));
+    // Initialize format processor.
+    StreamObject = FL_InteriorUse.NewFormatProcessor(Object.BasicFormatGuid);
+    StreamObject.Initialize(Stream, ExchangeSettings.APISchema);
+    
+    OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(
+        ExchangeSettings);
+    FL_DataComposition.Output(StreamObject, OutputParameters);
+    
+    // Close format stream.
+    StreamObject.Close();     
             
     // End measuring.
     TestingExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
     
     ResultTextDocument.AddLine(GetStringFromBinaryData(
-        MemoryStream.CloseAndGetBinaryData()));
+        Stream.CloseAndGetBinaryData()));
     
     Items.HiddenPageTestingResults.CurrentPage = 
         Items.HiddenPageTestingTextDocument;
@@ -1253,30 +1242,6 @@ Procedure DoAfterCloseChannelResourcesForm(ClosureResult,
     
 EndProcedure // DoAfterCloseChannelResourcesForm()
 
-// Fills channel response handler.
-//
-// Parameters:
-//  ClosureResult - String - the value transferred when you call the Close 
-//                           method of the opened form.
-//  ID            - Number - the value specified when the NotifyDescription
-//                           object was created.
-//
-&AtClient
-Procedure DoAfterCloseResponseHandlerForm(ClosureResult, 
-    ID) Export
-    
-    If ClosureResult <> Undefined Then
-        If TypeOf(ClosureResult) = Type("String") Then
-            CurrentData = Object.Channels.FindByID(ID);
-            If CurrentData <> Undefined Then
-                Modified = True;
-                CurrentData.ResponseHandler = ClosureResult;        
-            EndIf;
-        EndIf;
-    EndIf;
-    
-EndProcedure // DoAfterCloseResponseHandlerForm() 
-
 &AtClient
 Procedure OpenChannelResourceForm(ChannelParameters, ChannelRef)
     
@@ -1338,7 +1303,7 @@ EndFunction // ChannelParameters()
 &AtServer
 Function RequiredChannelResources(ChannelRef, Val FormName = "ResourcesForm")
     
-    ChannelProcessor = Catalogs.FL_Channels.NewChannelProcessor(
+    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(
         ChannelRef.BasicChannelGuid);
     If ChannelProcessor.ResourcesRequired() Then
         Return Catalogs.FL_Channels.NewChannelParameters(

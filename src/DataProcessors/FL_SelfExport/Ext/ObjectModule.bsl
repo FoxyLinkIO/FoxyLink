@@ -166,7 +166,7 @@ Function SuppliedIntegrations() Export
         |en_CA='Exchange description service'");
     PluggableSettings.Template = "Self";
     PluggableSettings.ToolTip = StrConcat(BasicPhrases);
-    PluggableSettings.Version = "1.1.4";
+    PluggableSettings.Version = "1.1.7";
     SuppliedIntegrations.Add(PluggableSettings);
     
     Return SuppliedIntegrations;
@@ -184,7 +184,7 @@ EndFunction // SuppliedIntegration()
 //
 Function Version() Export
     
-    Return "1.1.5";
+    Return "1.1.7";
     
 EndFunction // Version()
 
