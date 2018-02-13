@@ -32,7 +32,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsBeforeWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_AccumulationRegistersOnWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_AccumulationRegistersBeforeWrite</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonForm.FL_ResponseHandlerForm</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">c7f07622-5fba-49a5-b63c-822d768e78d5</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_CRUDMethods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_RESTMethods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Channels</xr:Item>

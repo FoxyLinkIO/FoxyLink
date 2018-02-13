@@ -122,58 +122,6 @@ EndProcedure // FillFormatDescription()
 
 #EndRegion // ObjectFormInteraction
 
-// Outputs the resulting message into stream based on the specified exchange settings.
-//
-// Parameters:
-//  Stream           - Stream         - a data stream that can be read successively 
-//                                       or/and where you can record successively. 
-//                   - MemoryStream   - specialized version of Stream object for 
-//                                       operation with the data located in the RAM.
-//                   - FileStream     - specialized version of Stream object for 
-//                                       operation with the data located in a file on disk.
-//  ExchangeSettings - FixedStructure - exchange settings.
-//  MessageSettings  - FixedStructure - message settings.
-//                          Default value: Undefined.
-//
-// Returns:
-//  Arbitrary - the resulting message.
-//
-Procedure OutputMessageIntoStream(Stream, ExchangeSettings, 
-    MessageSettings = Undefined) Export
-    
-    DataCompositionSchema = GetValueFromStorage(ExchangeSettings, 
-        "DataCompositionSchema");
-    DataCompositionSettings = GetValueFromStorage(ExchangeSettings, 
-        "DataCompositionSettings");
-    
-    SettingsComposer = New DataCompositionSettingsComposer;
-    FL_DataComposition.InitSettingsComposer(SettingsComposer,
-        DataCompositionSchema,
-        DataCompositionSettings);
-
-    If MessageSettings <> Undefined Then 
-        FL_DataComposition.SetDataToSettingsComposer(SettingsComposer, 
-            MessageSettings); 
-    EndIf;
-        
-    DataCompositionTemplate = FL_DataComposition
-        .NewTemplateComposerParameters();
-    DataCompositionTemplate.Schema   = DataCompositionSchema;
-    DataCompositionTemplate.Template = SettingsComposer.GetSettings();
-    
-    OutputParameters = FL_DataComposition.NewOutputParameters();
-    OutputParameters.DCTParameters = DataCompositionTemplate;
-    OutputParameters.CanUseExternalFunctions = ExchangeSettings
-        .CanUseExternalFunctions;
-    
-    StreamObject = NewFormatProcessor(ExchangeSettings.BasicFormatGuid);
-    StreamObject.Initialize(Stream, GetValueFromStorage(ExchangeSettings, 
-            "APISchema"));    
-    FL_DataComposition.Output(StreamObject, OutputParameters);    
-    StreamObject.Close();    
-    
-EndProcedure // OutputMessageIntoStream()
-
 // Exports the whole object exchange settings.
 //
 // Parameters:
@@ -277,30 +225,6 @@ Function AvailableFormats() Export
     
 EndFunction // AvailableFormats()
 
-// Returns new format data processor for every server call.
-//
-// Parameters:
-//  LibraryGuid - String - library guid which is used to identify 
-//                         different implementations of specific format.
-//
-// Returns:
-//  DataProcessorObject.<Data processor name> - format data processor.
-//
-Function NewFormatProcessor(Val LibraryGuid) Export
-    
-    DataProcessorName = FL_InteriorUseReUse.IdentifyPluginProcessorName(
-        LibraryGuid, "Formats");
-        
-    If DataProcessorName = Undefined Then
-        Raise NStr("en='Requested format processor is not installed.';
-            |ru='Запрашиваемый процессор формата не установлен.';
-            |en_CA='Requested format processor is not installed.'");    
-    EndIf;
-        
-    Return DataProcessors[DataProcessorName].Create();
-        
-EndFunction // NewFormatProcessor()
-
 // Returns a new exchange settings structure.
 //
 // Returns
@@ -339,6 +263,55 @@ Function NewExchangeSettings() Export
         
 EndFunction // NewExchangeSettings()
 
+// Returns filled structure with output parameters.
+// 
+// Parameters:
+//  ExchangeSettings - Structure - see function Catalog.FL_Exchanges.NewExchangeSettings.
+//  MessageSettings  - Structure - see function FL_DataComposition.NewMessageSettings.
+//                          Default value: Undefined.
+//
+// Returns:
+//  Structure - with keys:
+//      * ExternalDataSets - Structure - structure key corresponds to external data set name. Structure value - 
+//                                          external data set.
+//      * DetailsData - DataCompositionDetailsData - an object to fill with details data. If not specified, details 
+//                                                      will not be filled in.  
+//      * CanUseExternalFunctions - Boolean - indicates the possibility to use the function of common configuration
+//                                              modules in expressions of data composition.
+//                                  Default value: False.
+//      * DCTParameters - Structure - see function FL_DataComposition.NewDataCompositionTemplateParameters.
+//
+// See also:
+//  DataCompositionProcessor.Initialize in the syntax-assistant.
+//
+//
+Function NewOutputParameters(ExchangeSettings, 
+    MessageSettings = Undefined) Export
+    
+    SettingsComposer = New DataCompositionSettingsComposer;
+    FL_DataComposition.InitSettingsComposer(SettingsComposer,
+        ExchangeSettings.DataCompositionSchema,
+        ExchangeSettings.DataCompositionSettings);
+
+    If MessageSettings <> Undefined Then 
+        FL_DataComposition.SetDataToSettingsComposer(SettingsComposer, 
+            MessageSettings); 
+    EndIf;
+        
+    DataCompositionTemplate = FL_DataComposition
+        .NewTemplateComposerParameters();
+    DataCompositionTemplate.Schema   = ExchangeSettings.DataCompositionSchema;
+    DataCompositionTemplate.Template = SettingsComposer.GetSettings();
+    
+    OutputParameters = FL_DataComposition.NewOutputParameters();
+    OutputParameters.DCTParameters = DataCompositionTemplate;
+    OutputParameters.CanUseExternalFunctions = ExchangeSettings
+        .CanUseExternalFunctions;
+        
+    Return OutputParameters;
+  
+EndFunction // NewOutputParameters()
+
 // Returns exchange settings.
 //
 // Parameters:
@@ -355,29 +328,10 @@ Function ExchangeSettingsByRefs(ExchangeRef, MethodRef) Export
     Query.Text = QueryTextExchangeSettingsByRefs();
     Query.SetParameter("ExchangeRef", ExchangeRef);
     Query.SetParameter("MethodRef", MethodRef);
-
     QueryResult = Query.Execute();
-    If QueryResult.IsEmpty() Then
-        ErrorMessage = StrReplace(Nstr("en='Error: Exchange settings {%1} and/or method {%2} not found.';
-            |ru='Ошибка: Настройки обмена {%1} и/или метод {%2} не найдены.';
-            |en_CA='Error: Exchange settings {%1} and/or method {%2} not found.'"),
-            String(ExchangeRef), String(MethodRef));    
-        Return ErrorMessage;
-    EndIf;
-
-    ValueTable = QueryResult.Unload();
-    If ValueTable.Count() > 1 Then
-        ErrorMessage = StrReplace(Nstr("en='Error: Duplicated records of exchange settings {%1} and method {%2} are found.';
-            |ru='Ошибка: Обнаружены дублирующиеся настройки обмена {%1} и метод {%2}.';
-            |en_CA='Error: Duplicated records of exchange settings {%1} and method {%2} are found.'"),
-            String(ExchangeRef), String(MethodRef));
-        Return ErrorMessage;     
-    EndIf;
-
-    FullSettings = FL_CommonUse.ValueTableRowIntoStructure(ValueTable[0]);
-    ExchangeSettings = NewExchangeSettings();
-    FillPropertyValues(ExchangeSettings, FullSettings);
-    Return New FixedStructure(ExchangeSettings);
+    
+    Return New FixedStructure(ExchangeSettingsByQueryResult(QueryResult, 
+        ExchangeRef, MethodRef));
 
 EndFunction // ExchangeSettingsByNameAndMethod()
 
@@ -397,29 +351,10 @@ Function ExchangeSettingsByNames(Val ExchangeName, Val MethodName) Export
     Query.Text = QueryTextExchangeSettingsByNames();
     Query.SetParameter("ExchangeName", ExchangeName);
     Query.SetParameter("MethodName", MethodName);
-
     QueryResult = Query.Execute();
-    If QueryResult.IsEmpty() Then
-        ErrorMessage = StrReplace(Nstr("en='Error: Exchange settings {%1} and/or method {%2} not found.';
-            |ru='Ошибка: Настройки обмена {%1} и/или метод {%2} не найдены.';
-            |en_CA='Error: Exchange settings {%1} and/or method {%2} not found.'"),
-            ExchangeName, MethodName);    
-        Return ErrorMessage;
-    EndIf;
-
-    ValueTable = QueryResult.Unload();
-    If ValueTable.Count() > 1 Then
-        ErrorMessage = StrReplace(Nstr("en='Error: Duplicated records of exchange settings {%1} and method {%2} are found.';
-            |ru='Ошибка: Обнаружены дублирующиеся настройки обмена {%1} и метод {%2}.';
-            |en_CA='Error: Duplicated records of exchange settings {%1} and method {%2} are found.'"),
-            ExchangeName, MethodName);
-        Return ErrorMessage;     
-    EndIf;
-
-    FullSettings = FL_CommonUse.ValueTableRowIntoStructure(ValueTable[0]);
-    ExchangeSettings = NewExchangeSettings();
-    FillPropertyValues(ExchangeSettings, FullSettings); 
-    Return New FixedStructure(ExchangeSettings);
+    
+    Return New FixedStructure(ExchangeSettingsByQueryResult(QueryResult, 
+        ExchangeName, MethodName));
 
 EndFunction // ExchangeSettingsByNames()
 
@@ -539,20 +474,46 @@ EndProcedure // AddMethodOnForm()
 
 // Only for internal use.
 //
-Function GetValueFromStorage(Storage, Key)
+Function ExchangeSettingsByQueryResult(QueryResult, Exchange, Method)
     
-    Var Value;
-    
-    If Storage.Property(Key, Value) 
-        AND TypeOf(Value) = Type("ValueStorage") Then
+    If QueryResult.IsEmpty() Then
         
-        Return Value.Get();   
-
+        ErrorMessage = StrReplace(Nstr("en='Error: Exchange settings {%1} and/or method {%2} not found.';
+                |ru='Ошибка: Настройки обмена {%1} и/или метод {%2} не найдены.';
+                |en_CA='Error: Exchange settings {%1} and/or method {%2} not found.'"),
+            String(Exchange), String(Method)); 
+            
+        Raise ErrorMessage;
+        
     EndIf;
-    
-    Return Value;
 
-EndFunction // GetValueFromStorage()
+    ValueTable = QueryResult.Unload();
+    If ValueTable.Count() > 1 Then
+        
+        ErrorMessage = StrReplace(Nstr("en='Error: Duplicated records of exchange settings {%1} and method {%2} are found.';
+                |ru='Ошибка: Обнаружены дублирующиеся настройки обмена {%1} и метод {%2}.';
+                |en_CA='Error: Duplicated records of exchange settings {%1} and method {%2} are found.'"),
+            String(Exchange), String(Method));
+            
+        Return ErrorMessage;
+        
+    EndIf;
+
+    QuerySettings = ValueTable[0];
+    
+    ExchangeSettings = NewExchangeSettings();
+    ExchangeSettings.APISchema = QuerySettings.APISchema.Get();
+    ExchangeSettings.DataCompositionSchema = QuerySettings
+        .DataCompositionSchema.Get();
+    ExchangeSettings.DataCompositionSettings = QuerySettings
+        .DataCompositionSettings.Get();
+        
+    FillPropertyValues(ExchangeSettings, QuerySettings, , "APISchema, 
+        |DataCompositionSchema, DataCompositionSettings");    
+        
+    Return ExchangeSettings;
+    
+EndFunction // ExchangeSettingsByQueryResult()
 
 // Only for internal use.
 //

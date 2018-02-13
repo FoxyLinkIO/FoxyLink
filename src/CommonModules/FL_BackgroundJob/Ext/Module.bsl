@@ -382,8 +382,6 @@ Function NewSubscribers()
     Subscribers.Columns.Add("Channel", 
         New TypeDescription("CatalogRef.FL_Channels"));
     Subscribers.Columns.Add("Completed", New TypeDescription("Boolean"));
-    Subscribers.Columns.Add("ResponseHandler", 
-        FL_CommonUse.StringTypeDescription());
     Return Subscribers;
     
 EndFunction // NewSubscribers()
@@ -449,8 +447,7 @@ Function QueryTextSubscribersData()
         |SELECT
         |   Channels.Ref             AS Owner,
         |   Channels.Channel         AS Channel,
-        |   Channels.Method          AS Method,
-        |   Channels.ResponseHandler AS ResponseHandler
+        |   Channels.Method          AS Method
         |INTO ChannelsCache
         |FROM
         |   Catalog.FL_Exchanges.Channels AS Channels
@@ -465,7 +462,6 @@ Function QueryTextSubscribersData()
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
         |   Channels.Channel              AS Channel,
-        |   Channels.ResponseHandler      AS ResponseHandler,
         |   Methods.DataCompositionSchema AS DataCompositionSchema
         |FROM
         |   ChannelsCache AS Channels

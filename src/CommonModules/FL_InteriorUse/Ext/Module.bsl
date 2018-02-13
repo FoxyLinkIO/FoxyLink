@@ -486,6 +486,54 @@ Function NewPluggableSettings() Export
     
 EndFunction // NewPluggableSettings()
 
+// Returns new channel data processor for every server call.
+//
+// Parameters:
+//  LibraryGuid - String - library guid which is used to identify 
+//                         different implementations of specific channel.
+//
+// Returns:
+//  DataProcessorObject.<Data processor name> - channel data processor.
+//
+Function NewChannelProcessor(Val LibraryGuid) Export
+    
+    DataProcessorName = FL_InteriorUseReUse.IdentifyPluginProcessorName(
+        LibraryGuid, "Channels");
+        
+    If DataProcessorName = Undefined Then
+        Raise NStr("en='Requested channel processor is not installed.';
+            |ru='Запрашиваемый процессор канала не установлен.';
+            |en_CA='Requested channel processor is not installed.'");    
+    EndIf;    
+        
+    Return DataProcessors[DataProcessorName].Create();
+    
+EndFunction // NewChannelProcessor()
+
+// Returns new format data processor for every server call.
+//
+// Parameters:
+//  LibraryGuid - String - library guid which is used to identify 
+//                         different implementations of specific format.
+//
+// Returns:
+//  DataProcessorObject.<Data processor name> - format data processor.
+//
+Function NewFormatProcessor(Val LibraryGuid) Export
+    
+    DataProcessorName = FL_InteriorUseReUse.IdentifyPluginProcessorName(
+        LibraryGuid, "Formats");
+        
+    If DataProcessorName = Undefined Then
+        Raise NStr("en='Requested format processor is not installed.';
+            |ru='Запрашиваемый процессор формата не установлен.';
+            |en_CA='Requested format processor is not installed.'");    
+    EndIf;
+        
+    Return DataProcessors[DataProcessorName].Create();
+        
+EndFunction // NewFormatProcessor()
+
 #EndRegion // SubsystemInteraction
 
 #Region RightsInteraction
@@ -720,7 +768,7 @@ Procedure InitializeChannels()
     
     Try
     
-        SelfExportProcessor = Catalogs.FL_Channels.NewChannelProcessor(
+        SelfExportProcessor = NewChannelProcessor(
             "7fdeb371-1ad5-47e7-b1d6-f9acc55d893e");
         
         SelfExport = Catalogs.FL_Channels.SelfExport.GetObject();
@@ -743,7 +791,7 @@ Procedure InitializeChannels()
     
     Try
     
-        SelfFilesProcessor = Catalogs.FL_Channels.NewChannelProcessor(
+        SelfFilesProcessor = NewChannelProcessor(
             "595e752d-57f4-4398-a1cb-e6c5a6aaa65c");
         
         SelfFiles = Catalogs.FL_Channels.SelfFiles.GetObject();

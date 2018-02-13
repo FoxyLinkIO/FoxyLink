@@ -74,7 +74,8 @@ Function SuppliedIntegrations() Export
         
         Try
             
-            ChannelProcessor = NewChannelProcessor(Channel.Value);
+            ChannelProcessor = FL_InteriorUse.NewChannelProcessor(
+                Channel.Value);
             Integrations = ChannelProcessor.SuppliedIntegrations();
             For Each Integration In Integrations Do
                 Integration.Insert("LibraryGuid", Channel.Value); 
@@ -125,24 +126,6 @@ Function ExchangeChannels() Export
     
 EndFunction // ExchangeChannels()
 
-// Returns new channel data processor for every server call.
-//
-// Parameters:
-//  LibraryGuid - String - library guid which is used to identify 
-//                         different implementations of specific channel.
-//
-// Returns:
-//  DataProcessorObject.<Data processor name> - channel data processor.
-//
-Function NewChannelProcessor(Val LibraryGuid) Export
-    
-    DataProcessorName = FL_InteriorUseReUse.IdentifyPluginProcessorName(
-        LibraryGuid, "Channels");
-           
-    Return DataProcessors[DataProcessorName].Create();
-    
-EndFunction // NewChannelProcessor()
-
 // Returns new delivery result structure.
 //
 // Returns:
@@ -187,7 +170,7 @@ EndFunction // ChannelDeliveryResult()
 //  
 Function NewChannelParameters(Val LibraryGuid, FormName) Export
     
-    ChannelProcessor = NewChannelProcessor(LibraryGuid);      
+    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(LibraryGuid);      
     ChannelProcessorMetadata = ChannelProcessor.Metadata();
     
     ChannelParameters = NewChannelParametersStructure();
@@ -234,7 +217,8 @@ Function TransferStreamToChannel(Channel, Stream, Properties) Export
         // Error    
     EndIf;
     
-    ChannelProcessor = NewChannelProcessor(ChannelSettings.BasicChannelGuid);
+    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(
+        ChannelSettings.BasicChannelGuid);
     ChannelProcessor.Log = ChannelSettings.Log;
     ChannelProcessor.ChannelData.Load(ChannelSettings.ChannelData.Unload());
     ChannelProcessor.EncryptedData.Load(
