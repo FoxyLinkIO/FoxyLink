@@ -49,7 +49,7 @@ Procedure Trigger(Jobs) Export
         EndDo;
 
         ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
-            JobObject.Owner, JobObject.Method);
+            JobObject.Owner, JobObject.Operation);
             
         // Initialize data processor.
         StreamObject = StreamObjectCache.Get(
@@ -258,7 +258,7 @@ Function NewProperties(JobObject, Resources)
     JobProperties.Insert("ContentType", JobObject.ContentType);
     JobProperties.Insert("FileExtension", JobObject.FileExtension);
     JobProperties.Insert("MetadataObject", JobObject.MetadataObject);
-    JobProperties.Insert("Method", JobObject.Method);
+    JobProperties.Insert("Operation", JobObject.Operation);
     JobProperties.Insert("SourceObject", JobObject.SourceObject);
     
     Properties.Insert("JobProperties", JobProperties);

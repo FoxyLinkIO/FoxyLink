@@ -23,7 +23,7 @@
 
 #Region ObjectFormInteraction
 
-// Loads data composition schema, data composition settings and methods 
+// Loads data composition schema, data composition settings and operations 
 // for editing in catalog form.
 //
 // Parameters:
@@ -43,36 +43,37 @@ Procedure OnCreateAtServer(ManagedForm) Export
     
 EndProcedure // OnCreateAtServer()
 
-// Updates methods view on managed form.
+// Updates operations view on managed form.
 //
 // Parameters:
 //  ManagedForm - ManagedForm - catalog form.  
 //
-Procedure UpdateMethodsView(ManagedForm) Export
+Procedure UpdateOperationsView(ManagedForm) Export
     
     Items = ManagedForm.Items;
-    Methods = ManagedForm.Object.Methods;
+    Operations = ManagedForm.Object.Operations;
     
-    // Add methods from object.
-    For Each Item In Methods Do
+    // Add operations from object.
+    For Each Item In Operations Do
         
-        MethodDescription = Item.Method.Description;
+        OperationDescription = Item.Operation.Description;
         
-        SearchResult = Items.Find(MethodDescription);
+        SearchResult = Items.Find(OperationDescription);
         If SearchResult <> Undefined Then
             SearchResult.Picture = PictureLib.FL_InvalidMethodSettings;
         Else
-            AddMethodOnForm(Items, MethodDescription, Item.OperationDescription,
-                PictureLib.FL_InvalidMethodSettings);
+            AddOperationOnForm(Items, OperationDescription, 
+                Item.OperationDescription, PictureLib.FL_InvalidMethodSettings);
         EndIf;
             
     EndDo;
     
-    For Each Item In Items.MethodPages.ChildItems Do
+    For Each Item In Items.OperationPages.ChildItems Do
         
-        Method = FL_CommonUse.ReferenceByDescription(
-            Metadata.Catalogs.FL_Methods, Item.Name);
-        FilterResult = Methods.FindRows(New Structure("Method", Method));
+        Operation = FL_CommonUse.ReferenceByDescription(
+            Metadata.Catalogs.FL_Operations, Item.Name);
+        FilterResult = Operations.FindRows(New Structure("Operation", 
+            Operation));
         If FilterResult.Count() = 0 Then
             
             // This code is needed to fix problem with platform bug.
@@ -87,10 +88,10 @@ Procedure UpdateMethodsView(ManagedForm) Export
         
     EndDo;
     
-    // Hide or unhide delete method button.
-    Items.DeleteAPIMethod.Visible = Methods.Count() > 0;   
+    // Hide or unhide delete operation button.
+    Items.DeleteOperation.Visible = Operations.Count() > 0;   
     
-EndProcedure // UpdateMethodsView()
+EndProcedure // UpdateOperationsView()
 
 // Helps to save untracked changes in catalog form.
 //
@@ -135,7 +136,7 @@ Function ExportObject(ExchangeRef) Export
     InvocationData = FL_BackgroundJob.NewInvocationData();
     InvocationData.Arguments = ExchangeRef;
     InvocationData.MetadataObject = "Catalog.FL_Exchanges";
-    InvocationData.Method = Catalogs.FL_Methods.Read;
+    InvocationData.Operation = Catalogs.FL_Operations.Read;
     InvocationData.Owner = Catalogs.FL_Exchanges.Self;
     InvocationData.SourceObject = ExchangeRef;
     
@@ -143,8 +144,7 @@ Function ExportObject(ExchangeRef) Export
         
         BeginTransaction();
         
-        Job = FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.Trigger", 
-            InvocationData);
+        Job = FL_BackgroundJob.Enqueue(InvocationData);
         Catalogs.FL_Jobs.Trigger(Job);
     
         CommitTransaction();
@@ -315,46 +315,44 @@ EndFunction // NewOutputParameters()
 // Returns exchange settings.
 //
 // Parameters:
-//  ExchangeRef - CatalogRef.FL_Exchanges - reference of the FL_Exchanges catalog.
-//  MethodRef   - CatalogRef.FL_Methods   - reference of the FL_Methods catalog.
+//  ExchangeRef  - CatalogRef.FL_Exchanges  - reference of the FL_Exchanges catalog.
+//  OperationRef - CatalogRef.FL_Operations - reference of the FL_Operations catalog.
 //
 // Returns:
-//  FixedStructure  - exchange settings. 
-//  String          - error description. 
+//  FixedStructure  - exchange settings.  
 //
-Function ExchangeSettingsByRefs(ExchangeRef, MethodRef) Export
+Function ExchangeSettingsByRefs(ExchangeRef, OperationRef) Export
 
     Query = New Query;
     Query.Text = QueryTextExchangeSettingsByRefs();
     Query.SetParameter("ExchangeRef", ExchangeRef);
-    Query.SetParameter("MethodRef", MethodRef);
+    Query.SetParameter("OperationRef", OperationRef);
     QueryResult = Query.Execute();
     
     Return New FixedStructure(ExchangeSettingsByQueryResult(QueryResult, 
-        ExchangeRef, MethodRef));
+        ExchangeRef, OperationRef));
 
-EndFunction // ExchangeSettingsByNameAndMethod()
+EndFunction // ExchangeSettingsByRefs()
 
 // Returns exchange settings.
 //
 // Parameters:
-//  ExchangeName - String - name of the FL_Exchanges catalog.
-//  MethodName   - String - name of the FL_Methods catalog.
+//  ExchangeName  - String - name of the FL_Exchanges catalog.
+//  OperationName - String - name of the FL_Operations catalog.
 //
 // Returns:
 //  FixedStructure  - exchange settings. 
-//  String          - error description. 
 //
-Function ExchangeSettingsByNames(Val ExchangeName, Val MethodName) Export
+Function ExchangeSettingsByNames(Val ExchangeName, Val OperationName) Export
 
     Query = New Query;
     Query.Text = QueryTextExchangeSettingsByNames();
     Query.SetParameter("ExchangeName", ExchangeName);
-    Query.SetParameter("MethodName", MethodName);
+    Query.SetParameter("OperationName", OperationName);
     QueryResult = Query.Execute();
     
     Return New FixedStructure(ExchangeSettingsByQueryResult(QueryResult, 
-        ExchangeName, MethodName));
+        ExchangeName, OperationName));
 
 EndFunction // ExchangeSettingsByNames()
 
@@ -368,11 +366,11 @@ EndFunction // ExchangeSettingsByNames()
 //
 Procedure PlaceStorageDataIntoFormObject(FormObject, CurrentObject, FormUUID)
     
-    FormMethods = FormObject.Methods;
-    ObjectMethods = CurrentObject.Methods;
-    For Each FormRow In FormMethods Do
+    FormOperations = FormObject.Operations;
+    ObjectOperations = CurrentObject.Operations;
+    For Each FormRow In FormOperations Do
         
-        ObjectRow = ObjectMethods.Find(FormRow.Method, "Method");
+        ObjectRow = ObjectOperations.Find(FormRow.Operation, "Operation");
         DataCompositionSchema = ObjectRow.DataCompositionSchema.Get();
         If DataCompositionSchema <> Undefined Then
             FormRow.DataCompositionSchemaAddress = PutToTempStorage(
@@ -398,12 +396,11 @@ EndProcedure // PlaceStorageDataIntoFormObject()
 //
 Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
     
-    FormMethods = FormObject.Methods;
-    ObjectMethods = CurrentObject.Methods;
-    
-    For Each FormRow In FormMethods Do
+    FormOperations = FormObject.Operations;
+    ObjectOperations = CurrentObject.Operations;
+    For Each FormRow In FormOperations Do
         
-        ObjectRow = ObjectMethods.Find(FormRow.Method, "Method");
+        ObjectRow = ObjectOperations.Find(FormRow.Operation, "Operation");
         
         FillPropertyValues(ObjectRow, FormRow, "CanUseExternalFunctions, 
             |Priority"); 
@@ -433,32 +430,32 @@ Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
     
 EndProcedure // ProcessBeforeWriteAtServer() 
     
-// Add a new group page that corresponds to a method.
+// Add a new group page that corresponds to the operation.
 //
 // Parameters:
-//  Items             - FormAllItems - collection of all managed form items.
-//  MethodDescription - String       - the method name.
-//  Description       - String       - the method description. 
-//  Picture           - Picture      - title picture.
+//  Items                - FormAllItems - collection of all managed form items.
+//  OperationDescription - String       - the operation name.
+//  Description          - String       - the operation description. 
+//  Picture              - Picture      - title picture.
 //
-Procedure AddMethodOnForm(Items, MethodDescription, Description, Picture)
+Procedure AddOperationOnForm(Items, OperationDescription, Description, Picture)
 
-    BasicDescription = NStr("en='Description is not available.';
+    BasicDescription = NStr("en='Operation description is not available.';
         |ru='Описание операции не доступно.';
-        |en_CA='Description is not available.'");
+        |en_CA='Operation description is not available.'");
 
     Parameters = New Structure;
-    Parameters.Insert("Name", MethodDescription);
-    Parameters.Insert("Title", MethodDescription);
+    Parameters.Insert("Name", OperationDescription);
+    Parameters.Insert("Title", OperationDescription);
     Parameters.Insert("Type", FormGroupType.Page);
     Parameters.Insert("ElementType", Type("FormGroup"));
     Parameters.Insert("EnableContentChange", False);
     Parameters.Insert("Picture", Picture);
     NewPage = FL_InteriorUse.AddItemToItemFormCollection(Items, Parameters, 
-        Items.MethodPages);
+        Items.OperationPages);
         
     Parameters = New Structure;
-    Parameters.Insert("Name", "Label" + MethodDescription);
+    Parameters.Insert("Name", "Label" + OperationDescription);
     Parameters.Insert("Title", ?(IsBlankString(Description), BasicDescription, 
         Description));
     Parameters.Insert("Type", FormDecorationType.Label);
@@ -468,20 +465,20 @@ Procedure AddMethodOnForm(Items, MethodDescription, Description, Picture)
     FL_InteriorUse.AddItemToItemFormCollection(Items, Parameters, 
         NewPage);
 
-EndProcedure // AddMethodOnForm()
+EndProcedure // AddOperationOnForm()
 
 #EndRegion // ObjectFormInteraction
 
 // Only for internal use.
 //
-Function ExchangeSettingsByQueryResult(QueryResult, Exchange, Method)
+Function ExchangeSettingsByQueryResult(QueryResult, Exchange, Operation)
     
     If QueryResult.IsEmpty() Then
         
-        ErrorMessage = StrReplace(Nstr("en='Error: Exchange settings {%1} and/or method {%2} not found.';
-                |ru='Ошибка: Настройки обмена {%1} и/или метод {%2} не найдены.';
-                |en_CA='Error: Exchange settings {%1} and/or method {%2} not found.'"),
-            String(Exchange), String(Method)); 
+        ErrorMessage = StrReplace(Nstr("en='Error: Exchange settings {%1} and/or operation {%2} not found.';
+                |ru='Ошибка: Настройки обмена {%1} и/или операция {%2} не найдены.';
+                |en_CA='Error: Exchange settings {%1} and/or operation {%2} not found.'"),
+            String(Exchange), String(Operation)); 
             
         Raise ErrorMessage;
         
@@ -490,10 +487,10 @@ Function ExchangeSettingsByQueryResult(QueryResult, Exchange, Method)
     ValueTable = QueryResult.Unload();
     If ValueTable.Count() > 1 Then
         
-        ErrorMessage = StrReplace(Nstr("en='Error: Duplicated records of exchange settings {%1} and method {%2} are found.';
-                |ru='Ошибка: Обнаружены дублирующиеся настройки обмена {%1} и метод {%2}.';
-                |en_CA='Error: Duplicated records of exchange settings {%1} and method {%2} are found.'"),
-            String(Exchange), String(Method));
+        ErrorMessage = StrReplace(Nstr("en='Error: Duplicated records of exchange settings {%1} and operation {%2} are found.';
+                |ru='Ошибка: Обнаружены дублирующиеся настройки обмена {%1} и операция {%2}.';
+                |en_CA='Error: Duplicated records of exchange settings {%1} and operation {%2} are found.'"),
+            String(Exchange), String(Operation));
             
         Return ErrorMessage;
         
@@ -526,27 +523,27 @@ Function QueryTextExchangeSettingsByRefs()
         |   ExchangeSettings.BasicFormatGuid    AS BasicFormatGuid,
         |   ExchangeSettings.InUse              AS InUse,
         |
-        |   ExchangeSettingsMethods.APISchema               AS APISchema,
-        |   ExchangeSettingsMethods.DataCompositionSchema   AS DataCompositionSchema,
-        |   ExchangeSettingsMethods.DataCompositionSettings AS DataCompositionSettings,
-        |   ExchangeSettingsMethods.CanUseExternalFunctions AS CanUseExternalFunctions,
-        |   ExchangeSettingsMethods.OperationDescription    AS MethodDescription,
+        |   ExchangeSettingsOperations.APISchema               AS APISchema,
+        |   ExchangeSettingsOperations.DataCompositionSchema   AS DataCompositionSchema,
+        |   ExchangeSettingsOperations.DataCompositionSettings AS DataCompositionSettings,
+        |   ExchangeSettingsOperations.CanUseExternalFunctions AS CanUseExternalFunctions,
+        |   ExchangeSettingsOperations.OperationDescription    AS OperationDescription,
         |
-        |   FL_Methods.Ref         AS Method,
-        |   FL_Methods.RESTMethod  AS RESTMethod,
-        |   FL_Methods.CRUDMethod  AS CRUDMethod
+        |   FL_Operations.Ref         AS Operation,
+        |   FL_Operations.RESTMethod  AS RESTMethod,
+        |   FL_Operations.CRUDMethod  AS CRUDMethod
         |
         |   
         |
         |FROM
         |   Catalog.FL_Exchanges AS ExchangeSettings
         |   
-        |INNER JOIN Catalog.FL_Exchanges.Methods AS ExchangeSettingsMethods
-        |ON  ExchangeSettingsMethods.Ref = ExchangeSettings.Ref
+        |INNER JOIN Catalog.FL_Exchanges.Operations AS ExchangeSettingsOperations
+        |ON  ExchangeSettingsOperations.Ref = ExchangeSettings.Ref
         |   
-        |INNER JOIN Catalog.FL_Methods AS FL_Methods
-        |ON  FL_Methods.Ref = &MethodRef
-        |AND FL_Methods.Ref = ExchangeSettingsMethods.Method
+        |INNER JOIN Catalog.FL_Operations AS FL_Operations
+        |ON  FL_Operations.Ref = &OperationRef
+        |AND FL_Operations.Ref = ExchangeSettingsOperations.Operation
         |   
         |WHERE
         |    ExchangeSettings.Ref = &ExchangeRef
@@ -567,25 +564,25 @@ Function QueryTextExchangeSettingsByNames()
         |   ExchangeSettings.BasicFormatGuid    AS BasicFormatGuid,
         |   ExchangeSettings.InUse              AS InUse,
         |
-        |   ExchangeSettingsMethods.APISchema               AS APISchema,
-        |   ExchangeSettingsMethods.DataCompositionSchema   AS DataCompositionSchema,
-        |   ExchangeSettingsMethods.DataCompositionSettings AS DataCompositionSettings,
-        |   ExchangeSettingsMethods.CanUseExternalFunctions AS CanUseExternalFunctions,
-        |   ExchangeSettingsMethods.OperationDescription    AS MethodDescription,
+        |   ExchangeSettingsOperations.APISchema               AS APISchema,
+        |   ExchangeSettingsOperations.DataCompositionSchema   AS DataCompositionSchema,
+        |   ExchangeSettingsOperations.DataCompositionSettings AS DataCompositionSettings,
+        |   ExchangeSettingsOperations.CanUseExternalFunctions AS CanUseExternalFunctions,
+        |   ExchangeSettingsOperations.OperationDescription    AS OperationDescription,
         |
-        |   FL_Methods.Ref         AS Method,
-        |   FL_Methods.RESTMethod  AS RESTMethod,
-        |   FL_Methods.CRUDMethod  AS CRUDMethod
+        |   FL_Operations.Ref         AS Operation,
+        |   FL_Operations.RESTMethod  AS RESTMethod,
+        |   FL_Operations.CRUDMethod  AS CRUDMethod
         |
         |FROM
         |   Catalog.FL_Exchanges AS ExchangeSettings
         |   
-        |INNER JOIN Catalog.FL_Exchanges.Methods AS ExchangeSettingsMethods
-        |ON  ExchangeSettingsMethods.Ref = ExchangeSettings.Ref
+        |INNER JOIN Catalog.FL_Exchanges.Operations AS ExchangeSettingsOperations
+        |ON  ExchangeSettingsOperations.Ref = ExchangeSettings.Ref
         |   
-        |INNER JOIN Catalog.FL_Methods AS FL_Methods
-        |ON  FL_Methods.Description = &MethodName
-        |AND FL_Methods.Ref         = ExchangeSettingsMethods.Method
+        |INNER JOIN Catalog.FL_Operations AS FL_Operations
+        |ON  FL_Operations.Description = &OperationName
+        |AND FL_Operations.Ref         = ExchangeSettingsOperations.Operation
         |   
         |WHERE
         |    ExchangeSettings.Description = &ExchangeName

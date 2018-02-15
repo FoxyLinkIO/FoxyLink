@@ -21,18 +21,18 @@
     
 #Region ProgramInterface
 
-// Returns list of available methods from catalog.
+// Returns list of available operations from catalog.
 //
 // Returns:
-//  ValueList - list of of available methods. 
+//  ValueList - list of of available operations. 
 //
-Function AvailableMethods() Export
+Function AvailableOperations() Export
 
     ValueList = New ValueList;
     
-    Query = New Query;
-    Query.Text = QueryTextMethods();
-    QueryResult = Query.Execute();
+    QueryOperation = New Query;
+    QueryOperation.Text = QueryTextOperations();
+    QueryResult = QueryOperation.Execute();
     
     If NOT QueryResult.IsEmpty() Then
         ValueTable = QueryResult.Unload();
@@ -41,7 +41,7 @@ Function AvailableMethods() Export
     
     Return ValueList;
 
-EndFunction // AvailableMethods()
+EndFunction // AvailableOperations()
 
 #EndRegion // ProgramInterface 
 
@@ -49,19 +49,19 @@ EndFunction // AvailableMethods()
 
 // Only for internal use.
 //
-Function QueryTextMethods()
+Function QueryTextOperations()
 
     QueryText = "
         |SELECT
-        |   Methods.Ref AS Ref   
+        |   Operations.Ref AS Ref   
         |FROM
-        |   Catalog.FL_Methods AS Methods
+        |   Catalog.FL_Operations AS Operations
         |WHERE
-        |   Methods.DeletionMark = False
+        |   Operations.DeletionMark = False
         |";
     Return QueryText;
 
-EndFunction // QueryTextMethods()
+EndFunction // QueryTextOperations()
 
 #EndRegion // ServiceProceduresAndFunctions
 

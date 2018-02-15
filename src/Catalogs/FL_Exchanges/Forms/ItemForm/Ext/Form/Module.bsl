@@ -39,7 +39,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
     Catalogs.FL_Exchanges.OnCreateAtServer(ThisObject);
     
-    UpdateMethodsView();
+    UpdateOperationsView();
     
 EndProcedure // OnCreateAtServer()
 
@@ -63,7 +63,7 @@ EndProcedure // ChoiceProcessing()
 Procedure BeforeWriteAtServer(Cancel, CurrentObject, WriteParameters)
     
     // Saving settings in form object.
-    SaveMethodSettings();
+    SaveOperationSettings();
     
     // Saving settings in write object.
     Catalogs.FL_Exchanges.BeforeWriteAtServer(ThisObject, CurrentObject);
@@ -110,11 +110,11 @@ Procedure FormatStandardClick(Item, StandardProcessing)
 EndProcedure // FormatStandardClick()
 
 &AtClient
-Procedure MethodPagesOnCurrentPageChange(Item, CurrentPage)
+Procedure OperationPagesOnCurrentPageChange(Item, CurrentPage)
     
-    LoadMethodSettings();
+    LoadOperationSettings();
     
-EndProcedure // MethodPagesOnCurrentPageChange()
+EndProcedure // OperationPagesOnCurrentPageChange()
 
 &AtClient
 Procedure ChannelsSelection(Item, SelectedRow, Field, StandardProcessing)
@@ -220,25 +220,25 @@ EndProcedure // RowComposerSettingsOrderOnChange()
 #Region FormCommandHandlers
 
 &AtClient
-Procedure AddAPIMethod(Command)
+Procedure AddOperation(Command)
     
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseMethodToAdd",
-        ThisObject), AvailableMethods(), Items.AddAPIMethod);
+    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationToAdd",
+        ThisObject), AvailableOperations(), Items.AddOperation);
         
-EndProcedure // AddAPIMethod()
+EndProcedure // AddOperation()
     
 &AtClient
-Procedure DeleteAPIMethod(Command)
+Procedure DeleteOperation(Command)
     
-    ExchangeMethods = New ValueList();
-    For Each Item In Object.Methods Do
-        ExchangeMethods.Add(Item.Method);   
+    ExchangeOperations = New ValueList();
+    For Each Item In Object.Operations Do
+        ExchangeOperations.Add(Item.Operation);   
     EndDo;
 
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseMethodToDelete",
-        ThisObject), ExchangeMethods, Items.DeleteAPIMethod);
+    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationToDelete",
+        ThisObject), ExchangeOperations, Items.DeleteOperation);
     
-EndProcedure // DeleteAPIMethod()
+EndProcedure // DeleteOperation()
 
 &AtClient
 Procedure AddEvent(Command)
@@ -263,7 +263,7 @@ Procedure EnqueueEvents(Command)
         FormParameters = New Structure;
         FormParameters.Insert("Exchange", Object.Ref); 
         FormParameters.Insert("MetadataObject", CurrentData.MetadataObject);
-        FormParameters.Insert("Method", CurrentData.Method);
+        FormParameters.Insert("Operation", CurrentData.Operation);
         
         OpenForm("Catalog.FL_Jobs.Form.EnqueueEventsForm", 
             FormParameters, 
@@ -411,8 +411,8 @@ EndProcedure // DescribeAPI()
 &AtClient
 Procedure CopyAPI(Command)
     
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseMethodAPIToCopy",
-        ThisObject), CurrentMethodsWithAPISchema(), Items.CopyAPI);    
+    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationAPIToCopy",
+        ThisObject), CurrentOperationsWithAPISchema(), Items.CopyAPI);    
     
 EndProcedure // CopyAPI()
 
@@ -421,9 +421,9 @@ Procedure DeleteAPI(Command)
     
     ShowQueryBox(New NotifyDescription("DoAfterChooseAPISchemaToDelete", 
             ThisObject),
-        NStr("en='Delete API schema from the current method?';
-            |ru='Удалить API схему из текущего метода?';
-            |en_CA='Delete API schema from the current method?'"),
+        NStr("en='Delete API schema from the current operation?';
+            |ru='Удалить API схему из текущей операции?';
+            |en_CA='Delete API schema from the current operation?'"),
         QuestionDialogMode.YesNo, 
         , 
         DialogReturnCode.No);    
@@ -436,7 +436,7 @@ EndProcedure // DeleteAPI()
 
 #Region Formats
 
-// Rewrites the current method APISchema form the ClosureResult.
+// Rewrites the current operation APISchema form the ClosureResult.
 // Changes are applied only for the form Object.
 //
 // Parameters:
@@ -452,16 +452,16 @@ Procedure DoAfterCloseAPICreationForm(ClosureResult, AdditionalParameters) Expor
         AND TypeOf(ClosureResult) = Type("String") Then
             
         Modified = True;
-        CurrentData = CurrentMethodData(RowMethod);
+        CurrentData = CurrentOperationData(RowOperation);
         CurrentData.APISchemaAddress = ClosureResult;
         
-        UpdateMethodView(CurrentData);
+        UpdateOperationView(CurrentData);
             
     EndIf;
     
 EndProcedure // DoAfterCloseAPICreationForm()
 
-// Copies API schema from the selected method to the current method.
+// Copies API schema from the selected operation to the current operation.
 //
 // Parameters:
 //  SelectedElement      - ValueListItem - the selected list item or Undefined 
@@ -470,12 +470,12 @@ EndProcedure // DoAfterCloseAPICreationForm()
 //                                          NotifyDescription object was created. 
 //
 &AtClient
-Procedure DoAfterChooseMethodAPIToCopy(SelectedElement, 
+Procedure DoAfterChooseOperationAPIToCopy(SelectedElement, 
     AdditionalParameters) Export
     
     If SelectedElement <> Undefined Then
         
-        FilterResult = Object.Methods.FindRows(SelectedElement.Value);
+        FilterResult = Object.Operations.FindRows(SelectedElement.Value);
         If FilterResult.Count() > 0 Then
             
             DescribeAPIData = DescribeAPIParameters();
@@ -494,9 +494,9 @@ Procedure DoAfterChooseMethodAPIToCopy(SelectedElement,
         
     EndIf;
     
-EndProcedure // DoAfterChooseMethodAPIToCopy()
+EndProcedure // DoAfterChooseOperationAPIToCopy()
 
-// Deletes API schema from the current method.
+// Deletes API schema from the current operation.
 //
 // Parameters:
 //  QuestionResult       - DialogReturnCode - system enumeration value 
@@ -559,7 +559,7 @@ Function DescribeAPIParameters()
     APISchemaData = NewAPISchemaData(); 
     APISchemaData.FormName = StrTemplate("%1.Form.APICreationForm", 
         FormatProcessorMetadata.FullName());    
-    APISchemaData.Parameters.APISchemaAddress = CurrentMethodData(RowMethod)
+    APISchemaData.Parameters.APISchemaAddress = CurrentOperationData(RowOperation)
         .APISchemaAddress; 
     
     Return APISchemaData;
@@ -580,9 +580,9 @@ EndFunction // NewAPISchemaData()
 
 #EndRegion // Formats 
 
-#Region Methods
+#Region Operations
 
-// Adds new API method to ThisObject.
+// Adds new operation to ThisObject.
 //
 // Parameters:
 //  SelectedElement      - ValueListItem - the selected list item or Undefined 
@@ -591,33 +591,33 @@ EndFunction // NewAPISchemaData()
 //                                          NotifyDescription object was created.  
 //
 &AtClient
-Procedure DoAfterChooseMethodToAdd(SelectedElement, 
+Procedure DoAfterChooseOperationToAdd(SelectedElement, 
     AdditionalParameters) Export
     
     NormalPriority = 5;
     
     If SelectedElement <> Undefined Then
         
-        FilterParameters = NewMethodFilterParameters();
-        FilterParameters.Method = SelectedElement.Value;    
-        FilterResult = Object.Methods.FindRows(FilterParameters);
+        FilterParameters = NewOperationFilterParameters();
+        FilterParameters.Operation = SelectedElement.Value;    
+        FilterResult = Object.Operations.FindRows(FilterParameters);
         If FilterResult.Count() = 0 Then
             
             Modified = True;
             
-            NewMethod = Object.Methods.Add();
-            NewMethod.Method = SelectedElement.Value;
-            NewMethod.Priority = NormalPriority;
+            NewOperation = Object.Operations.Add();
+            NewOperation.Operation = SelectedElement.Value;
+            NewOperation.Priority = NormalPriority;
     
-            UpdateMethodsView();
+            UpdateOperationsView();
                         
         EndIf;
         
     EndIf;
     
-EndProcedure // DoAfterChooseMethodToAdd() 
+EndProcedure // DoAfterChooseOperationToAdd() 
 
-// Deletes API method from ThisObject.
+// Deletes operation from ThisObject.
 //
 // Parameters:
 //  SelectedElement      - ValueListItem - the selected list item or Undefined 
@@ -626,16 +626,16 @@ EndProcedure // DoAfterChooseMethodToAdd()
 //                                          NotifyDescription object was created.
 //
 &AtClient
-Procedure DoAfterChooseMethodToDelete(SelectedElement, 
+Procedure DoAfterChooseOperationToDelete(SelectedElement, 
     AdditionalParameters) Export
     
     If SelectedElement <> Undefined 
-        AND TypeOf(SelectedElement.Value) = Type("CatalogRef.FL_Methods") Then
+        AND TypeOf(SelectedElement.Value) = Type("CatalogRef.FL_Operations") Then
         
-        FilterParameters = NewMethodFilterParameters();
-        FilterParameters.Method = SelectedElement.Value;
+        FilterParameters = NewOperationFilterParameters();
+        FilterParameters.Operation = SelectedElement.Value;
            
-        FL_CommonUseClientServer.DeleteRowsByFilter(Object.Methods, 
+        FL_CommonUseClientServer.DeleteRowsByFilter(Object.Operations, 
             FilterParameters, Modified);
         
         FL_CommonUseClientServer.DeleteRowsByFilter(Object.Events, 
@@ -647,11 +647,11 @@ Procedure DoAfterChooseMethodToDelete(SelectedElement,
         FL_CommonUseClientServer.DeleteRowsByFilter(Object.ChannelResources, 
             FilterParameters, Modified);
                     
-        UpdateMethodsView();
+        UpdateOperationsView();
                             
     EndIf;
     
-EndProcedure // DoAfterChooseMethodToDelete() 
+EndProcedure // DoAfterChooseOperationToDelete() 
 
 &AtServer
 Procedure GenerateSpreadsheetDocumentAtServer()
@@ -698,7 +698,7 @@ Procedure GenerateSpecificDocumentAtServer()
     ExchangeSettings = Catalogs.FL_Exchanges.NewExchangeSettings();
     
     // Read API schema from temp storage address.
-    CurrentData = CurrentMethodData(RowMethod);
+    CurrentData = CurrentOperationData(RowOperation);
     If IsTempStorageURL(CurrentData.APISchemaAddress) Then
         ExchangeSettings.APISchema = GetFromTempStorage(
             CurrentData.APISchemaAddress);    
@@ -735,30 +735,30 @@ Procedure GenerateSpecificDocumentAtServer()
     
 EndProcedure // GenerateSpecificDocumentAtServer() 
 
-// See function Catalogs.FL_Methods.UpdateMethodsView.
+// See function Catalogs.FL_Exchanges.UpdateOperationsView.
 //
 &AtServer
-Procedure UpdateMethodsView()
+Procedure UpdateOperationsView()
     
-    Catalogs.FL_Exchanges.UpdateMethodsView(ThisObject);   
+    Catalogs.FL_Exchanges.UpdateOperationsView(ThisObject);   
     
-    LoadMethodSettings();
+    LoadOperationSettings();
     
-EndProcedure // UpdateMethodsView()
+EndProcedure // UpdateOperationsView()
 
-// Updates the view of the method on the form.
+// Updates the view of the operation on the form.
 //
 // Parameters:
-//  CurrentData - FormDataCollectionItem - the current method data.
+//  CurrentData - FormDataCollectionItem - the current operation data.
 // 
 &AtServer
-Procedure UpdateMethodView(CurrentData)
+Procedure UpdateOperationView(CurrentData)
 
     If ThisObject.FormatAPISchemaSupport Then
         
         Items.CopyAPI.Visible = False;
         Items.DeleteAPI.Visible = IsTempStorageURL(CurrentData.APISchemaAddress);
-        For Each Row In Object.Methods Do
+        For Each Row In Object.Operations Do
         
             If Row.GetID() = CurrentData.GetID() Then
                 Continue;
@@ -773,12 +773,12 @@ Procedure UpdateMethodView(CurrentData)
         
     EndIf;
     
-    FilterParameters = NewMethodFilterParameters();
+    FilterParameters = NewOperationFilterParameters();
     FillPropertyValues(FilterParameters, CurrentData);
     Items.Events.RowFilter = New FixedStructure(FilterParameters);
     Items.Channels.RowFilter = New FixedStructure(FilterParameters);
 
-EndProcedure // UpdateMethodView() 
+EndProcedure // UpdateOperationView() 
 
 // Applies changes to data composition schema.
 //
@@ -809,33 +809,33 @@ Procedure UpdateDataCompositionSchema(DataCompositionSchema)
 
 EndProcedure // UpdateDataCompositionSchema() 
 
-// Loads method settings in form object.
+// Loads operation settings in form object.
 //
 &AtServer
-Procedure LoadMethodSettings()
+Procedure LoadOperationSettings()
     
     ResultTextDocument.Clear();
     ResultSpreadsheetDocument.Clear();
 
-    SaveMethodSettings();
+    SaveOperationSettings();
         
-    CurrentPage = Items.MethodPages.CurrentPage;
+    CurrentPage = Items.OperationPages.CurrentPage;
     If CurrentPage = Undefined 
-        AND Items.MethodPages.ChildItems.Count() > 0 Then
-        CurrentPage = Items.MethodPages.ChildItems[0];
+        AND Items.OperationPages.ChildItems.Count() > 0 Then
+        CurrentPage = Items.OperationPages.ChildItems[0];
     EndIf;
     
     If CurrentPage <> Undefined Then
        
-        RowMethod = CurrentPage.Name;
+        RowOperation = CurrentPage.Name;
         FL_InteriorUse.MoveItemInItemFormCollection(Items, 
-            "HiddenGroupSettings", RowMethod);
+            "HiddenGroupSettings", RowOperation);
            
-        CurrentData = CurrentMethodData(RowMethod);
+        CurrentData = CurrentOperationData(RowOperation);
         RowPriority = CurrentData.Priority;
         RowCanUseExternalFunctions = CurrentData.CanUseExternalFunctions;
         
-        UpdateMethodView(CurrentData);
+        UpdateOperationView(CurrentData);
         
         // Create schema, if needed.
         If IsBlankString(CurrentData.DataCompositionSchemaAddress) Then
@@ -863,25 +863,25 @@ Procedure LoadMethodSettings()
              
     Else
 
-        RowMethod = Undefined;
+        RowOperation = Undefined;
         RowCanUseExternalFunctions = Undefined;
         DataCompositionSchemaEditAddress = "";
         RowComposerSettings = New DataCompositionSettingsComposer;
             
     EndIf;    
     
-EndProcedure // LoadMethodSettings()
+EndProcedure // LoadOperationSettings()
 
 // Saves all untracked changes in form object.
 //
 &AtServer
-Procedure SaveMethodSettings()
+Procedure SaveOperationSettings()
 
-    If Not IsBlankString(RowMethod) Then
+    If Not IsBlankString(RowOperation) Then
         
-        If Items.MethodPages.ChildItems.Find(RowMethod) <> Undefined Then
+        If Items.OperationPages.ChildItems.Find(RowOperation) <> Undefined Then
         
-            ChangedData = CurrentMethodData(RowMethod);
+            ChangedData = CurrentOperationData(RowOperation);
             ChangedData.Priority = RowPriority;
             ChangedData.CanUseExternalFunctions = RowCanUseExternalFunctions;
             
@@ -909,65 +909,65 @@ Procedure SaveMethodSettings()
     RowComposerSettingsModified = False;
     RowDataCompositionSchemaModified = False;
 
-EndProcedure // SaveMethodSettings() 
+EndProcedure // SaveOperationSettings() 
 
-// See function Catalogs.FL_Methods.AvailableMethods.
+// See function Catalogs.FL_Operations.AvailableOperations.
 //
 &AtServer
-Function AvailableMethods()
+Function AvailableOperations()
     
-    Return Catalogs.FL_Methods.AvailableMethods();
+    Return Catalogs.FL_Operations.AvailableOperations();
     
-EndFunction // AvailableMethods()
+EndFunction // AvailableOperations()
 
-// Returns list of currently used methods with filled API schema.
+// Returns list of currently used operations with filled API schema.
 //
 &AtServer
-Function CurrentMethodsWithAPISchema()
+Function CurrentOperationsWithAPISchema()
     
     ValueList = New ValueList();
-    CurrentData = CurrentMethodData(RowMethod);  
-    For Each Item In Object.Methods Do
+    CurrentData = CurrentOperationData(RowOperation);  
+    For Each Item In Object.Operations Do
         
         If Item.GetID() = CurrentData.GetID() Then
             Continue;
         EndIf;
         
         If IsTempStorageURL(Item.APISchemaAddress) Then
-            FilterParameters = NewMethodFilterParameters();
-            FilterParameters.Method = Item.Method;
-            ValueList.Add(FilterParameters, Item.Method);   
+            FilterParameters = NewOperationFilterParameters();
+            FilterParameters.Operation = Item.Operation;
+            ValueList.Add(FilterParameters, Item.Operation);   
         EndIf;
     EndDo;
     
     Return ValueList;
     
-EndFunction // CurrentMethodsWithAPISchema()
+EndFunction // CurrentOperationsWithAPISchema()
 
-// Finds and returns method data in object.
+// Finds and returns operation data in object.
 //
 // Parameters:
-//  RowMethod - String - the method name.
+//  RowOperation - String - the operation name.
 //
 // Returns:
-//   FormDataCollectionItem - method data.
+//  FormDataCollectionItem - operation data.
 //
 &AtServer
-Function CurrentMethodData(Val RowMethod)
+Function CurrentOperationData(Val RowOperation)
 
-    Method = FL_CommonUse.ReferenceByDescription(Metadata.Catalogs.FL_Methods,
-        RowMethod);
+    Operation = FL_CommonUse.ReferenceByDescription(
+        Metadata.Catalogs.FL_Operations, RowOperation);
     
-    FilterParameters = NewMethodFilterParameters();
-    FilterParameters.Method = Method;
-    FilterResult = Object.Methods.FindRows(FilterParameters);
+    FilterParameters = NewOperationFilterParameters();
+    FilterParameters.Operation = Operation;
+    FilterResult = Object.Operations.FindRows(FilterParameters);
     If FilterResult.Count() > 0 Then
         CurrentData = FilterResult[0];
     Else
         
-        ErrorMessage = NStr("en='Critical error, method not found.';
-            |ru='Критическая ошибка, метод не найден.';
-            |en_CA='Critical error, method not found.'");
+        ErrorMessage = NStr("en='Critical error, operation not found.';
+            |ru='Критическая ошибка, операция не найдена.';
+            |en_CA='Critical error, operation not found.'");
         
         Raise ErrorMessage;     
         
@@ -975,20 +975,20 @@ Function CurrentMethodData(Val RowMethod)
             
     Return CurrentData;    
 
-EndFunction // CurrentMethodData()  
+EndFunction // CurrentOperationData()  
 
 // Only for internal use.
 //
 &AtClientAtServerNoContext
-Function NewMethodFilterParameters()
+Function NewOperationFilterParameters()
 
     FilterParameters = New Structure;
-    FilterParameters.Insert("Method");
+    FilterParameters.Insert("Operation");
     Return FilterParameters;
 
-EndFunction // NewMethodFilterParameters() 
+EndFunction // NewOperationFilterParameters() 
 
-#EndRegion // Methods
+#EndRegion // Operations
 
 #Region Events
 
@@ -1078,9 +1078,9 @@ EndProcedure // DoAfterEnqueueEvents()
 &AtServer
 Procedure AddEventAtServer(EventsArray)
 
-    CurrentData = CurrentMethodData(RowMethod);   
-    FilterParameters = NewMethodFilterParameters();
-    FilterParameters.Method = CurrentData.Method;
+    CurrentData = CurrentOperationData(RowOperation);   
+    FilterParameters = NewOperationFilterParameters();
+    FilterParameters.Operation = CurrentData.Operation;
     
     FL_CommonUseClientServer.DeleteRowsByFilter(Object.Events, 
         FilterParameters, Modified);
@@ -1101,15 +1101,14 @@ EndProcedure // AddEventAtServer()
 &AtServer
 Function EnqueueEventAtServer()
     
-    CurrentData = CurrentMethodData(RowMethod);
+    CurrentData = CurrentOperationData(RowOperation);
     
     InvocationData = FL_BackgroundJob.NewInvocationData();
-    InvocationData.Method = CurrentData.Method;
+    InvocationData.Operation = CurrentData.Operation;
     InvocationData.Owner = Object.Ref;
     InvocationData.Priority = CurrentData.Priority;
     
-    Return FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.Trigger", 
-        InvocationData);
+    Return FL_BackgroundJob.Enqueue(InvocationData);
     
 EndFunction // EnqueueEventAtServer()
 
@@ -1118,9 +1117,9 @@ EndFunction // EnqueueEventAtServer()
 &AtServer
 Function MarkedEvents()
     
-    CurrentData = CurrentMethodData(RowMethod);
-    FilterParameters = NewMethodFilterParameters();
-    FilterParameters.Method = CurrentData.Method;
+    CurrentData = CurrentOperationData(RowOperation);
+    FilterParameters = NewOperationFilterParameters();
+    FilterParameters.Operation = CurrentData.Operation;
     
     FilterResults = Object.Events.FindRows(FilterParameters);
     
@@ -1137,7 +1136,7 @@ EndFunction // MarkedEvents()
 
 #Region Channels
 
-// Adds new channel to API method to ThisObject.
+// Adds new channel to operation to ThisObject.
 //
 // Parameters:
 //  SelectedElement      - ValueListItem - the selected list item or Undefined 
@@ -1265,10 +1264,10 @@ EndProcedure // OpenChannelResourceForm()
 &AtServer
 Function AddChannelAtServer(Channel) 
     
-    CurrentData = CurrentMethodData(RowMethod);   
+    CurrentData = CurrentOperationData(RowOperation);   
     
     FilterParameters = ChannelFilterParameters();
-    FilterParameters.Method = CurrentData.Method;
+    FilterParameters.Operation = CurrentData.Operation;
     FilterParameters.Channel = Channel;
     
     FilterResults = Object.Channels.FindRows(FilterParameters);
@@ -1321,7 +1320,7 @@ Function ChannelFilterParameters()
 
     FilterParameters = New Structure;
     FilterParameters.Insert("Channel");
-    FilterParameters.Insert("Method");
+    FilterParameters.Insert("Operation");
     Return FilterParameters;
 
 EndFunction // ChannelFilterParameters() 

@@ -186,10 +186,10 @@
 					<ContextMenu name="CodeContextMenu" id="17"/>
 					<ExtendedTooltip name="CodeExtendedTooltip" id="18"/>
 				</LabelField>
-				<LabelField name="Method" id="25">
-					<DataPath>List.Method</DataPath>
-					<ContextMenu name="MethodContextMenu" id="26"/>
-					<ExtendedTooltip name="MethodExtendedTooltip" id="27"/>
+				<LabelField name="Operation" id="25">
+					<DataPath>List.Operation</DataPath>
+					<ContextMenu name="OperationContextMenu" id="26"/>
+					<ExtendedTooltip name="OperationExtendedTooltip" id="27"/>
 				</LabelField>
 				<LabelField name="State" id="76">
 					<DataPath>List.State</DataPath>

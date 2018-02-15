@@ -53,7 +53,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.7.1</Version>
+			<Version>0.9.7.2</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -302,7 +302,7 @@
 			<Catalog>FL_Channels</Catalog>
 			<Catalog>FL_Exchanges</Catalog>
 			<Catalog>FL_Jobs</Catalog>
-			<Catalog>FL_Methods</Catalog>
+			<Catalog>FL_Operations</Catalog>
 			<Catalog>FL_States</Catalog>
 			<Enum>FL_CRUDMethods</Enum>
 			<Enum>FL_RESTMethods</Enum>

@@ -558,23 +558,23 @@
 				<v8:Type>cfg:CatalogRef.FL_Exchanges</v8:Type>
 			</Type>
 		</Attribute>
-		<Attribute name="Method" id="2">
+		<Attribute name="Operation" id="2">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Метод</v8:content>
+					<v8:content>Operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Method</v8:content>
+					<v8:content>Operation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Операция</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
-				<v8:Type>cfg:CatalogRef.FL_Methods</v8:Type>
+				<v8:Type>cfg:CatalogRef.FL_Operations</v8:Type>
 			</Type>
 		</Attribute>
 		<Attribute name="MetadataObject" id="3">
@@ -785,9 +785,9 @@
 				<v8:Type>cfg:CatalogRef.FL_Exchanges</v8:Type>
 			</Type>
 		</Parameter>
-		<Parameter name="Method">
+		<Parameter name="Operation">
 			<Type>
-				<v8:Type>cfg:CatalogRef.FL_Methods</v8:Type>
+				<v8:Type>cfg:CatalogRef.FL_Operations</v8:Type>
 			</Type>
 		</Parameter>
 		<Parameter name="MetadataObject">

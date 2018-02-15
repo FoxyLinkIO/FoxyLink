@@ -90,6 +90,8 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_InstallUpdate</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_AddPrivateKey</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Kyivstar</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsBeforeWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsOnWrite</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

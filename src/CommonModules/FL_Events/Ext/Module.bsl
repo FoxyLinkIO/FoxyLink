@@ -63,12 +63,12 @@ Procedure CatalogBeforeWrite(Source, Cancel) Export
         InvocationData.MetadataObject = MetadataObject;
         
         If Source.IsNew() Then
-            InvocationData.Method = Catalogs.FL_Methods.Create;        
+            InvocationData.Operation = Catalogs.FL_Operations.Create;        
         Else
             If Source.DeletionMark Then
-                InvocationData.Method = Catalogs.FL_Methods.Delete;       
+                InvocationData.Operation = Catalogs.FL_Operations.Delete;       
             Else
-                InvocationData.Method = Catalogs.FL_Methods.Update;         
+                InvocationData.Operation = Catalogs.FL_Operations.Update;         
             EndIf;
         EndIf;
 
@@ -106,12 +106,12 @@ Procedure DocumentBeforeWrite(Source, Cancel, WriteMode, PostingMode) Export
         InvocationData.MetadataObject = MetadataObject;
         
         If Source.IsNew() Then
-            InvocationData.Method = Catalogs.FL_Methods.Create;        
+            InvocationData.Operation = Catalogs.FL_Operations.Create;        
         Else
             If Source.DeletionMark Then
-                InvocationData.Method = Catalogs.FL_Methods.Delete;       
+                InvocationData.Operation = Catalogs.FL_Operations.Delete;       
             Else
-                InvocationData.Method = Catalogs.FL_Methods.Update;         
+                InvocationData.Operation = Catalogs.FL_Operations.Update;         
             EndIf;
         EndIf;
     
@@ -151,7 +151,7 @@ Procedure InformationRegisterBeforeWrite(Source, Cancel, Replacing) Export
                 Source.Filter);
                 
             InvocationData.Arguments = Records;
-            InvocationData.Method = Catalogs.FL_Methods.Delete;
+            InvocationData.Operation = Catalogs.FL_Operations.Delete;
             InvocationData.State = Catalogs.FL_States.Awaiting;
             
             SessionRecords = New Structure;
@@ -165,7 +165,7 @@ Procedure InformationRegisterBeforeWrite(Source, Cancel, Replacing) Export
                 New Deflation(9));
             
         Else
-            InvocationData.Method = Catalogs.FL_Methods.Create;    
+            InvocationData.Operation = Catalogs.FL_Operations.Create;    
         EndIf;
         
         Source.AdditionalProperties.Insert("InvocationData", 
@@ -197,7 +197,7 @@ Procedure AccumulationRegisterBeforeWrite(Source, Cancel, Replacing) Export
         
         InvocationData = FL_BackgroundJob.NewInvocationData();
         InvocationData.MetadataObject = MetadataObject;
-        InvocationData.Method = Catalogs.FL_Methods.Update;
+        InvocationData.Operation = Catalogs.FL_Operations.Update;
         
         If Replacing Then
             InvocationData.Arguments = FL_CommonUse.RegisterRecordValues(
@@ -388,7 +388,7 @@ Procedure EnqueueBackgroundJobs(InvocationData)
     Query = New Query;
     Query.Text = QueryTextSubscribers(InvocationData.Owner);
     Query.SetParameter("MetadataObject", InvocationData.MetadataObject);
-    Query.SetParameter("Method", InvocationData.Method);
+    Query.SetParameter("Operation", InvocationData.Operation);
     Query.SetParameter("Owner", InvocationData.Owner);
     QueryResult = Query.Execute();
     If NOT QueryResult.IsEmpty() Then
@@ -397,8 +397,7 @@ Procedure EnqueueBackgroundJobs(InvocationData)
         While QueryResultSelection.Next() Do
             
             FillPropertyValues(InvocationData, QueryResultSelection);
-            FL_BackgroundJob.Enqueue("Catalogs.FL_Jobs.Trigger", 
-                InvocationData);   
+            FL_BackgroundJob.Enqueue(InvocationData);   
         EndDo;
         
     EndIf;
@@ -419,8 +418,8 @@ Function IsInvocationDataFilled(InvocationData, Properties)
         Return False;
     EndIf;
     
-    If NOT InvocationData.Property("Method") 
-        OR InvocationData.Method = Undefined Then
+    If NOT InvocationData.Property("Operation") 
+        OR InvocationData.Operation = Undefined Then
         Return False;
     EndIf;
     
@@ -447,8 +446,8 @@ Function QueryTextSubscribers(Owner)
     
     QueryText = StrTemplate("
         |SELECT
-        |   Exchanges.Ref         AS Owner,
-        |   MethodTable.Priority  AS Priority
+        |   Exchanges.Ref AS Owner,
+        |   OperationTable.Priority AS Priority
         |FROM
         |   Catalog.FL_Exchanges AS Exchanges
         |
@@ -456,11 +455,11 @@ Function QueryTextSubscribers(Owner)
         // [OPPX|OPHP1 +] Attribute + Ref
         |ON  EventTable.MetadataObject = &MetadataObject
         |AND EventTable.Ref            = Exchanges.Ref
-        |AND EventTable.Method         = &Method
+        |AND EventTable.Operation      = &Operation
         |
-        |INNER JOIN Catalog.FL_Exchanges.Methods AS MethodTable
-        |ON  MethodTable.Ref        = Exchanges.Ref
-        |AND MethodTable.Method     = EventTable.Method
+        |INNER JOIN Catalog.FL_Exchanges.Operations AS OperationTable
+        |ON  OperationTable.Ref       = Exchanges.Ref
+        |AND OperationTable.Operation = EventTable.Operation
         |
         |WHERE
         |   %1 

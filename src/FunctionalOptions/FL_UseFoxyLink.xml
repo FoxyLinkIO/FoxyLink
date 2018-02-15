@@ -24,7 +24,7 @@
 				<xr:Object>Constant.FL_RetryAttempts</xr:Object>
 				<xr:Object>Constant.FL_WorkerCount</xr:Object>
 				<xr:Object>Catalog.FL_States</xr:Object>
-				<xr:Object>Catalog.FL_Methods</xr:Object>
+				<xr:Object>Catalog.FL_Operations</xr:Object>
 				<xr:Object>Catalog.FL_Jobs</xr:Object>
 				<xr:Object>Catalog.FL_Exchanges</xr:Object>
 				<xr:Object>Catalog.FL_Channels</xr:Object>
@@ -42,7 +42,6 @@
 				<xr:Object>Catalog.FL_Jobs.Command.ConfigureJobServerStartUp</xr:Object>
 				<xr:Object>Constant.FL_WorkerJobsLimit</xr:Object>
 				<xr:Object>DataProcessor.FL_SelfFiles</xr:Object>
-				<xr:Object>DataProcessor.FL_SelfExport</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

@@ -2,41 +2,41 @@
 <MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
 	<Catalog uuid="614effcc-67bb-42af-a18f-2c35946cac11">
 		<InternalInfo>
-			<xr:GeneratedType name="CatalogObject.FL_Methods" category="Object">
+			<xr:GeneratedType name="CatalogObject.FL_Operations" category="Object">
 				<xr:TypeId>87e4b0e9-4a69-414e-93a4-91f0022241f2</xr:TypeId>
 				<xr:ValueId>a667fd81-e534-4154-894a-2a926a44345c</xr:ValueId>
 			</xr:GeneratedType>
-			<xr:GeneratedType name="CatalogRef.FL_Methods" category="Ref">
+			<xr:GeneratedType name="CatalogRef.FL_Operations" category="Ref">
 				<xr:TypeId>77bc6c2e-c186-45cb-96e1-b1bee2667ae5</xr:TypeId>
 				<xr:ValueId>5605e697-6114-41e4-afc7-05dab24a1ab5</xr:ValueId>
 			</xr:GeneratedType>
-			<xr:GeneratedType name="CatalogSelection.FL_Methods" category="Selection">
+			<xr:GeneratedType name="CatalogSelection.FL_Operations" category="Selection">
 				<xr:TypeId>446641a2-42aa-4817-9dcd-4432fbcb77f9</xr:TypeId>
 				<xr:ValueId>a72ff602-ac60-4404-9016-6821fe464a51</xr:ValueId>
 			</xr:GeneratedType>
-			<xr:GeneratedType name="CatalogList.FL_Methods" category="List">
+			<xr:GeneratedType name="CatalogList.FL_Operations" category="List">
 				<xr:TypeId>5f786e10-d16e-4b2e-b616-279e3d42d103</xr:TypeId>
 				<xr:ValueId>3a6a1ac6-140c-4932-8e39-4027d36948a8</xr:ValueId>
 			</xr:GeneratedType>
-			<xr:GeneratedType name="CatalogManager.FL_Methods" category="Manager">
+			<xr:GeneratedType name="CatalogManager.FL_Operations" category="Manager">
 				<xr:TypeId>484dca9d-f44f-4089-ae14-6bb3a4f78399</xr:TypeId>
 				<xr:ValueId>14b611a1-d346-49cb-bbd7-94234462d5af</xr:ValueId>
 			</xr:GeneratedType>
 		</InternalInfo>
 		<Properties>
-			<Name>FL_Methods</Name>
+			<Name>FL_Operations</Name>
 			<Synonym>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Methods</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Методы</v8:content>
+					<v8:content>Operations</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Methods</v8:content>
+					<v8:content>Operations</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Операции</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
@@ -260,15 +260,15 @@
 					<xr:Synonym>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Method name</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Имя метода</v8:content>
+							<v8:content>Operation name</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Method name</v8:content>
+							<v8:content>Operation name</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Наименование операции</v8:content>
 						</v8:item>
 					</xr:Synonym>
 					<xr:Comment/>
@@ -311,15 +311,15 @@
 			<QuickChoice>false</QuickChoice>
 			<ChoiceMode>BothWays</ChoiceMode>
 			<InputByString>
-				<xr:Field>Catalog.FL_Methods.StandardAttribute.Description</xr:Field>
+				<xr:Field>Catalog.FL_Operations.StandardAttribute.Description</xr:Field>
 			</InputByString>
 			<SearchStringModeOnInputByString>Begin</SearchStringModeOnInputByString>
 			<FullTextSearchOnInputByString>DontUse</FullTextSearchOnInputByString>
 			<ChoiceDataGetModeOnInputByString>Directly</ChoiceDataGetModeOnInputByString>
-			<DefaultObjectForm>Catalog.FL_Methods.Form.MethodForm</DefaultObjectForm>
+			<DefaultObjectForm>Catalog.FL_Operations.Form.ItemForm</DefaultObjectForm>
 			<DefaultFolderForm/>
 			<DefaultListForm/>
-			<DefaultChoiceForm>Catalog.FL_Methods.Form.ChoiceForm</DefaultChoiceForm>
+			<DefaultChoiceForm>Catalog.FL_Operations.Form.ChoiceForm</DefaultChoiceForm>
 			<DefaultFolderChoiceForm/>
 			<AuxiliaryObjectForm/>
 			<AuxiliaryFolderForm/>
@@ -438,7 +438,7 @@
 				</Properties>
 			</Attribute>
 			<Form>ChoiceForm</Form>
-			<Form>MethodForm</Form>
+			<Form>ItemForm</Form>
 		</ChildObjects>
 	</Catalog>
 </MetaDataObject>
