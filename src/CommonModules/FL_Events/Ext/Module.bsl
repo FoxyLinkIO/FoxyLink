@@ -56,28 +56,50 @@ Procedure CatalogBeforeWrite(Source, Cancel) Export
         Return;
     EndIf;
         
-    MetadataObject = Source.Metadata().FullName();
-    If IsEventPublisher(MetadataObject) Then 
-    
-        InvocationData = FL_BackgroundJob.NewInvocationData();
-        InvocationData.MetadataObject = MetadataObject;
-        
-        If Source.IsNew() Then
-            InvocationData.Operation = Catalogs.FL_Operations.Create;        
-        Else
-            If Source.DeletionMark Then
-                InvocationData.Operation = Catalogs.FL_Operations.Delete;       
-            Else
-                InvocationData.Operation = Catalogs.FL_Operations.Update;         
-            EndIf;
-        EndIf;
-
-        Source.AdditionalProperties.Insert("InvocationData", 
-            InvocationData);
-        
-    EndIf;
+    ApplyInvocationData(Source, ?(Source.IsNew(), 
+        Catalogs.FL_Operations.Create, 
+        Catalogs.FL_Operations.Update));
     
 EndProcedure // CatalogBeforeWrite()
+
+// Handler of BeforeDelete catalog event subscription.
+//
+// Parameters:
+//  Source - CatalogObject - catalog object.
+//  Cancel - Boolean       - object deletion cancellation flag. If the True value
+//                      parameter is included in the procedure-processing body, 
+//                      then deletion is not performed.
+//                  Default value: False. 
+//
+Procedure CatalogBeforeDelete(Source, Cancel) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+        
+    ApplyInvocationData(Source, Catalogs.FL_Operations.Delete);
+        
+    // Full serialization or only guid / code / description?
+    //EnqueueEvent(Source);
+    
+EndProcedure // CatalogBeforeDelete()
+
+// Handler of OnWrite catalog event subscription.
+//
+// Parameters:
+//  Source - CatalogObject - catalog object.
+//  Cancel - Boolean       - write cancel flag. If this parameter is set to True in the body 
+//                  of the handler procedure, the write transaction will not be completed.
+//
+Procedure CatalogOnWrite(Source, Cancel) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+        
+    EnqueueEvent(Source);
+    
+EndProcedure // CatalogOnWrite()
 
 // Handler of BeforeWrite document event subscription.
 //
@@ -98,29 +120,51 @@ Procedure DocumentBeforeWrite(Source, Cancel, WriteMode, PostingMode) Export
     If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
-        
-    MetadataObject = Source.Metadata().FullName();
-    If IsEventPublisher(MetadataObject) Then 
     
-        InvocationData = FL_BackgroundJob.NewInvocationData();
-        InvocationData.MetadataObject = MetadataObject;
-        
-        If Source.IsNew() Then
-            InvocationData.Operation = Catalogs.FL_Operations.Create;        
-        Else
-            If Source.DeletionMark Then
-                InvocationData.Operation = Catalogs.FL_Operations.Delete;       
-            Else
-                InvocationData.Operation = Catalogs.FL_Operations.Update;         
-            EndIf;
-        EndIf;
-    
-        Source.AdditionalProperties.Insert("InvocationData", 
-            InvocationData);
-        
-    EndIf;
-    
+    ApplyInvocationData(Source, ?(Source.IsNew(), 
+        Catalogs.FL_Operations.Create, 
+        Catalogs.FL_Operations.Update));
+     
 EndProcedure // DocumentBeforeWrite()
+
+// Handler of BeforeDelete document event subscription.
+//
+// Parameters:
+//  Source - DocumentObject - catalog object.
+//  Cancel - Boolean        - document delete flag. If in the body of the handler
+//                          procedure a value of this parameter is set to True, 
+//                          document deletion will not be executed.
+//                  Default value: False. 
+//
+Procedure DocumentBeforeDelete(Source, Cancel) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+        
+    ApplyInvocationData(Source, Catalogs.FL_Operations.Delete);
+        
+    // Full serialization or only guid / code / description?
+    //EnqueueEvent(Source);
+    
+EndProcedure // CatalogBeforeDelete()
+
+// Handler of OnWrite document event subscription.
+//
+// Parameters:
+//  Source - DocumentObject - document object.
+//  Cancel - Boolean       - write cancel flag. If this parameter is set to True in the body 
+//                  of the handler procedure, the write transaction will not be completed.
+//
+Procedure DocumentOnWrite(Source, Cancel) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+        
+    EnqueueEvent(Source);
+    
+EndProcedure // DocumentOnWrite()
 
 // Handler of BeforeWrite information register event subscription.
 //
@@ -210,40 +254,6 @@ Procedure AccumulationRegisterBeforeWrite(Source, Cancel, Replacing) Export
     EndIf;    
           
 EndProcedure // AccumulationRegisterBeforeWrite()
-
-// Handler of OnWrite catalog event subscription.
-//
-// Parameters:
-//  Source - CatalogObject - catalog object.
-//  Cancel - Boolean       - write cancel flag. If this parameter is set to True in the body 
-//                  of the handler procedure, the write transaction will not be completed.
-//
-Procedure CatalogOnWrite(Source, Cancel) Export
-    
-    If Source.DataExchange.Load OR Cancel Then
-        Return;
-    EndIf;
-        
-    EnqueueEvent(Source);
-    
-EndProcedure // CatalogOnWrite()
-
-// Handler of OnWrite document event subscription.
-//
-// Parameters:
-//  Source - DocumentObject - document object.
-//  Cancel - Boolean       - write cancel flag. If this parameter is set to True in the body 
-//                  of the handler procedure, the write transaction will not be completed.
-//
-Procedure DocumentOnWrite(Source, Cancel) Export
-    
-    If Source.DataExchange.Load OR Cancel Then
-        Return;
-    EndIf;
-        
-    EnqueueEvent(Source);
-    
-EndProcedure // DocumentOnWrite()
 
 // Handler of OnWrite information register event subscription.
 //
@@ -403,6 +413,24 @@ Procedure EnqueueBackgroundJobs(InvocationData)
     EndIf;
     
 EndProcedure // EnqueueBackgroundJobs()
+
+// Only for internal use.
+//
+Procedure ApplyInvocationData(Source, Operation)
+    
+    MetadataObject = Source.Metadata().FullName();
+    If NOT IsEventPublisher(MetadataObject) Then
+        Return;
+    EndIf;
+    
+    InvocationData = FL_BackgroundJob.NewInvocationData();
+    InvocationData.MetadataObject = MetadataObject;
+    InvocationData.Operation = Operation;
+    
+    Source.AdditionalProperties.Insert("InvocationData", 
+        InvocationData);
+    
+EndProcedure // ApplyInvocationData()
 
 // Only for internal use.
 //

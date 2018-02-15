@@ -343,7 +343,7 @@
 									<ExtendedTooltip name="SubscribersCompletedExtendedTooltip" id="122"/>
 								</CheckBoxField>
 								<InputField name="SubscribersResponseHandler" id="123">
-									<DataPath>Object.Subscribers.ResponseHandler</DataPath>
+									<DataPath>1/0:b762f349-9905-4434-accb-82d1b753cc38/0:97a55f5d-652c-4c37-8682-4788a53173d7</DataPath>
 									<EditMode>EnterOnInput</EditMode>
 									<ContextMenu name="SubscribersResponseHandlerContextMenu" id="124"/>
 									<ExtendedTooltip name="SubscribersResponseHandlerExtendedTooltip" id="125"/>

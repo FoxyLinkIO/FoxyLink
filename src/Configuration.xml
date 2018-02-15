@@ -282,8 +282,10 @@
 			<CommonModule>FL_Tasks</CommonModule>
 			<EventSubscription>FL_AccumulationRegistersBeforeWrite</EventSubscription>
 			<EventSubscription>FL_AccumulationRegistersOnWrite</EventSubscription>
+			<EventSubscription>FL_CatalogsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
 			<EventSubscription>FL_CatalogsOnWrite</EventSubscription>
+			<EventSubscription>FL_DocumentsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_DocumentsBeforeWrite</EventSubscription>
 			<EventSubscription>FL_DocumentsOnWrite</EventSubscription>
 			<EventSubscription>FL_InformationRegistersBeforeWrite</EventSubscription>

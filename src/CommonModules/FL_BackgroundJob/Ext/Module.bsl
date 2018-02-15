@@ -160,7 +160,7 @@ Function NewInvocationData() Export
     InvocationData.Insert("Operation");
     InvocationData.Insert("Owner");
     InvocationData.Insert("Priority", NormalPriority);
-    InvocationData.Insert("SourceObject");
+    //InvocationData.Insert("SourceObject");
     InvocationData.Insert("State", Catalogs.FL_States.Enqueued);
     // Tabular section
     InvocationData.Insert("Parameters", New Structure);
