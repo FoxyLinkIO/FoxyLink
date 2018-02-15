@@ -7,7 +7,7 @@
 		<Command name="Catalog.FL_Channels.StandardCommand.OpenList">
 			<CommandGroup>NavigationPanelOrdinary</CommandGroup>
 		</Command>
-		<Command name="Catalog.FL_Methods.StandardCommand.OpenList">
+		<Command name="Catalog.FL_Operations.StandardCommand.OpenList">
 			<CommandGroup>NavigationPanelOrdinary</CommandGroup>
 		</Command>
 	</CommandsOrder>

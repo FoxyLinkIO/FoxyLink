@@ -2,7 +2,7 @@
 <Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
 	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
 	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
-	<AutoCommandBar name="" id="-1"/>
+	<AutoCommandBar name="FormCommandBar" id="-1"/>
 	<ChildItems>
 		<InputField name="Code" id="1">
 			<DataPath>Object.Code</DataPath>
@@ -46,11 +46,11 @@
 			<ContextMenu name="MetadataObjectContextMenu" id="20"/>
 			<ExtendedTooltip name="MetadataObjectExtendedTooltip" id="21"/>
 		</InputField>
-		<InputField name="Method" id="22">
-			<DataPath>Object.Method</DataPath>
+		<InputField name="Operation" id="22">
+			<DataPath>Object.Operation</DataPath>
 			<EditMode>EnterOnInput</EditMode>
-			<ContextMenu name="MethodContextMenu" id="23"/>
-			<ExtendedTooltip name="MethodExtendedTooltip" id="24"/>
+			<ContextMenu name="OperationContextMenu" id="23"/>
+			<ExtendedTooltip name="OperationExtendedTooltip" id="24"/>
 		</InputField>
 		<InputField name="Priority" id="25">
 			<DataPath>Object.Priority</DataPath>

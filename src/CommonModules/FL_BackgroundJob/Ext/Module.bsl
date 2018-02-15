@@ -22,28 +22,22 @@
 // Creates a new fire-and-forget job based on a given method call expression.
 //
 // Parameters:
-//  MethodExpression - String    - method call expression that will be marshalled 
-//                                  to the Server.
-//  InvocationData   - Structure - see function FL_BackgroundJob.NewInvocationData. 
+//  InvocationData - Structure - see function FL_BackgroundJob.NewInvocationData. 
 //                          Default value: Undefined.
 //
 // Returns:
 //  CatalogRef.FL_Jobs - ref to created background job or 
 //                       Undefined, if it was not created.
 //
-Function Enqueue(MethodExpression, InvocationData = Undefined) Export
+Function Enqueue(InvocationData) Export
 
     SubIndex = 1;
     ResIndex = 2;
-    
-    If InvocationData = Undefined Then
-        InvocationData = NewInvocationData();    
-    EndIf;
-    
+        
     SubscribersData = New Query;
     SubscribersData.Text = QueryTextSubscribersData();
     SubscribersData.SetParameter("Owner", InvocationData.Owner);
-    SubscribersData.SetParameter("Method", InvocationData.Method);
+    SubscribersData.SetParameter("Operation", InvocationData.Operation);
     ResultArray = SubscribersData.ExecuteBatch();
     
     Subscribers = ResultArray[SubIndex].Unload();
@@ -133,23 +127,26 @@ EndFunction // Schedule()
 //
 // Returns:
 //  Structure - the invocation data structure with keys:
-//      * MetadataObject - String                  - the full name of a metadata
+//      * MetadataObject - String                   - the full name of a metadata
 //                                                   object as a term.
 //                              Default value: "".
-//      * Method         - String                  - 
+//      * Method         - String                   - name of non-global common 
+//                                                    module method having the 
+//                                                    ModuleName.MethodName form.
+//                              Default value: "Catalogs.FL_Jobs.Trigger".
+//      * Operation      - CatalogReg.FL_Operations - operation.
+//      * Owner          - CatalogReg.FL_Exchanges  - an owner of invocation data.
 //                              Default value: Undefined.
-//      * Owner          - CatalogReg.FL_Exchanges - an owner of invocation data.
-//                              Default value: Undefined.
-//      * Priority       - Number(1,0)             - job priority.
+//      * Priority       - Number(1,0)              - job priority.
 //                              Default value: 5.
-//      * SourceObject   - AnyRef                  - an event source object.
+//      * SourceObject   - AnyRef                   - an event source object.
 //                              Default value: Undefined.
-//      * State          - CatalogRef.FL_States    - new state for a background job.
+//      * State          - CatalogRef.FL_States     - new state for a background job.
 //                              Default value: Catalogs.FL_States.Enqueued.
-//      * Parameters     - Structure               - сontains values of data 
+//      * Parameters     - Structure                - сontains values of data 
 //                                                   receiving parameters.
-//      * SessionContext - ValueTable              - session context.
-//      * Arguments      - Arbitrary               - argumets for initialize a Job.
+//      * SessionContext - ValueTable               - session context.
+//      * Arguments      - Arbitrary                - argumets for initialize a Job.
 //                              Default value: Undefined.
 //
 Function NewInvocationData() Export
@@ -159,7 +156,8 @@ Function NewInvocationData() Export
     InvocationData = New Structure;
     // Attributes section 
     InvocationData.Insert("MetadataObject", "");
-    InvocationData.Insert("Method");
+    InvocationData.Insert("Method", "Catalogs.FL_Jobs.Trigger");
+    InvocationData.Insert("Operation");
     InvocationData.Insert("Owner");
     InvocationData.Insert("Priority", NormalPriority);
     InvocationData.Insert("SourceObject");
@@ -361,8 +359,9 @@ EndProcedure // FillSubscribers()
 Function NewBackgroundJob()
     
     BackgroundJob = New Structure;
-    BackgroundJob.Insert("MetadataObject", "");
+    BackgroundJob.Insert("MetadataObject");
     BackgroundJob.Insert("Method");
+    BackgroundJob.Insert("Operation");
     BackgroundJob.Insert("Owner");
     BackgroundJob.Insert("Priority");
     BackgroundJob.Insert("SourceObject");
@@ -445,15 +444,15 @@ Function QueryTextSubscribersData()
 
     QueryText = "
         |SELECT
-        |   Channels.Ref             AS Owner,
-        |   Channels.Channel         AS Channel,
-        |   Channels.Method          AS Method
+        |   Channels.Ref AS Owner,
+        |   Channels.Channel AS Channel,
+        |   Channels.Operation AS Operation
         |INTO ChannelsCache
         |FROM
         |   Catalog.FL_Exchanges.Channels AS Channels
         |WHERE
-        |    Channels.Ref        = &Owner
-        |AND Channels.Method     = &Method
+        |    Channels.Ref = &Owner
+        |AND Channels.Operation = &Operation
         |
         |INDEX BY
         |   Owner   
@@ -461,14 +460,14 @@ Function QueryTextSubscribersData()
         |
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
-        |   Channels.Channel              AS Channel,
-        |   Methods.DataCompositionSchema AS DataCompositionSchema
+        |   Channels.Channel AS Channel,
+        |   Operations.DataCompositionSchema AS DataCompositionSchema
         |FROM
         |   ChannelsCache AS Channels
         |
-        |INNER JOIN Catalog.FL_Exchanges.Methods AS Methods
-        |ON  Methods.Ref        = Channels.Owner
-        |AND Methods.Method     = Channels.Method
+        |INNER JOIN Catalog.FL_Exchanges.Operations AS Operations
+        |ON  Operations.Ref = Channels.Owner
+        |AND Operations.Operation = Channels.Operation
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////
@@ -481,9 +480,9 @@ Function QueryTextSubscribersData()
         |   Catalog.FL_Exchanges.ChannelResources AS ChannelResources   
         |
         |INNER JOIN ChannelsCache AS Channels
-        |ON  Channels.Owner      = ChannelResources.Ref
-        |AND Channels.Channel    = ChannelResources.Channel
-        |AND Channels.Method     = ChannelResources.Method
+        |ON  Channels.Owner = ChannelResources.Ref
+        |AND Channels.Channel = ChannelResources.Channel
+        |AND Channels.Operation = ChannelResources.Operation
         |;
         |";
     Return QueryText;

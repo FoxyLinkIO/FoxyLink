@@ -35,7 +35,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         FL_InteriorUse.LoadImportedExchange(ThisObject, ImportedExchange());
         
         SetExchangeMatches();
-        SetMethodMatches();
+        SetOperationMatches();
         SetChannelMatches();
         SetEventMatches();
         
@@ -174,41 +174,41 @@ Procedure DeleteEvent(Command)
 EndProcedure // DeleteEvent()
 
 &AtClient
-Procedure DeleteMethod(Command)
+Procedure DeleteOperation(Command)
    
-    CurrentData = Items.Methods.CurrentData;
+    CurrentData = Items.Operations.CurrentData;
     If CurrentData <> Undefined Then
         
-        ShowQueryBox(New NotifyDescription("DoAfterChooseMethodToDelete", 
+        ShowQueryBox(New NotifyDescription("DoAfterChooseOperationToDelete", 
             ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en='Permanently delete the selected method?';
-                |ru='Удалить выбранный метод?';
-                |en_CA='Permanently delete the selected method?'"),
+            NStr("en='Permanently delete the selected operation?';
+                |ru='Удалить выбранную операцию?';
+                |en_CA='Permanently delete the selected operation?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);     
         
     EndIf;
     
-EndProcedure // DeleteMethod()
+EndProcedure // DeleteOperation()
 
 &AtClient
-Procedure SelectMethod(Command)
+Procedure SelectOperation(Command)
     
-    CurrentData = Items.Methods.CurrentData;
+    CurrentData = Items.Operations.CurrentData;
     If CurrentData <> Undefined Then
         
-        OpenForm("Catalog.FL_Methods.Form.ChoiceForm", 
+        OpenForm("Catalog.FL_Operations.Form.ChoiceForm", 
             ,
             ThisObject,
             New UUID,
             ,
             ,
-            New NotifyDescription("DoAfterCloseMethodChoiceForm", ThisObject, 
+            New NotifyDescription("DoAfterCloseOperationChoiceForm", ThisObject, 
                 New Structure("Identifier ", CurrentData.GetID())),
             FormWindowOpeningMode.LockOwnerWindow);
             
     EndIf;  
     
-EndProcedure // SelectMethod() 
+EndProcedure // SelectOperation() 
 
 #EndRegion // FormCommandHandlers
 
@@ -297,10 +297,10 @@ EndFunction // FormatStandardLink()
 
 #EndRegion // Formats
 
-#Region Methods
+#Region Operations
 
-// Sets the selected method as corresponding to the current line in the 
-// method table.
+// Sets the selected operation as corresponding to the current line in the 
+// operation table.
 //
 // Parameters:
 //  ClosureResult        - Arbitrary - the value transferred when you call 
@@ -309,23 +309,23 @@ EndFunction // FormatStandardLink()
 //                                      NotifyDescription object was created. 
 //
 &AtClient
-Procedure DoAfterCloseMethodChoiceForm(ClosureResult, 
+Procedure DoAfterCloseOperationChoiceForm(ClosureResult, 
     AdditionalParameters) Export
 
     If ClosureResult <> Undefined 
-        AND TypeOf(ClosureResult) = Type("CatalogRef.FL_Methods") Then
+        AND TypeOf(ClosureResult) = Type("CatalogRef.FL_Operations") Then
         
-        CurrentData = Methods.FindByID(AdditionalParameters.Identifier);
+        CurrentData = Operations.FindByID(AdditionalParameters.Identifier);
         CurrentData.Ref = ClosureResult;
-        CurrentData.MethodMatched = True;
-        CurrentData.RESTMatched   = True;
-        CurrentData.CRUDResolved  = True;
+        CurrentData.OperationMatched = True;
+        CurrentData.RESTMatched = True;
+        CurrentData.CRUDResolved = True;
         
     EndIf;
     
-EndProcedure // DoAfterCloseMethodChoiceForm()
+EndProcedure // DoAfterCloseOperationChoiceForm()
     
-// Deletes the selected method.
+// Deletes the selected operation.
 //
 // Parameters:
 //  QuestionResult       - DialogReturnCode - system enumeration value 
@@ -335,7 +335,7 @@ EndProcedure // DoAfterCloseMethodChoiceForm()
 //                              NotifyDescription object was created.
 //
 &AtClient
-Procedure DoAfterChooseMethodToDelete(QuestionResult, 
+Procedure DoAfterChooseOperationToDelete(QuestionResult, 
     AdditionalParameters) Export
     
     Var Identifier;
@@ -344,30 +344,30 @@ Procedure DoAfterChooseMethodToDelete(QuestionResult,
         AND TypeOf(AdditionalParameters) = Type("Structure")
         AND AdditionalParameters.Property("Identifier", Identifier) Then
             
-        SearchResult = Methods.FindByID(Identifier);
+        SearchResult = Operations.FindByID(Identifier);
         If SearchResult <> Undefined Then
-            Methods.Delete(SearchResult);                
+            Operations.Delete(SearchResult);                
         EndIf;
         
-        SetMethodMatches();
+        SetOperationMatches();
             
     EndIf;
     
-EndProcedure // DoAfterChooseMethodToDelete()
+EndProcedure // DoAfterChooseOperationToDelete()
 
 // Only for internal use.
 //
 &AtServer
-Procedure SetMethodMatches()
+Procedure SetOperationMatches()
     
     Matched = True;
-    For Each Item In Methods Do
+    For Each Item In Operations Do
         
-        Item.MethodMatched = Item.Ref.Description = Item.Description;
+        Item.OperationMatched = Item.Ref.Description = Item.Description;
         Item.RESTMatched   = Item.Ref.RESTMethod  = Item.RESTMethod;
         Item.CRUDResolved  = Item.Ref.CRUDMethod  = Item.CRUDMethod;
         
-        If NOT Item.MethodMatched
+        If NOT Item.OperationMatched
             OR NOT Item.RESTMatched 
             OR NOT Item.CRUDResolved Then
             Matched = False;
@@ -376,18 +376,18 @@ Procedure SetMethodMatches()
     EndDo;
     
     If NOT Matched Then
-        Items.MethodsPage.Picture = PictureLib.FL_ExplanationMark;
-        Items.MethodsPage.Title = NStr("en='Methods (there are methods that require attention)';
-            |ru='Методы (есть методы которые требуют внимания)';
-            |en_CA='Methods (there are methods that require attention)'");
+        Items.OperationsPage.Picture = PictureLib.FL_ExplanationMark;
+        Items.OperationsPage.Title = NStr("en='Operations (there are operations that require attention)';
+            |ru='Операции (есть операции которые требуют внимания)';
+            |en_CA='Operations (there are operations that require attention)'");
     Else
-        Items.MethodsPage.Picture = PictureLib.FL_Ok;
-        Items.MethodsPage.Title = NStr("en='Methods';ru='Методы';en_CA='Methods'");     
+        Items.OperationsPage.Picture = PictureLib.FL_Ok;
+        Items.OperationsPage.Title = NStr("en='Operations';ru='Операции';en_CA='Operations'");     
     EndIf;
         
-EndProcedure // SetMethodMatches()
+EndProcedure // SetOperationMatches()
 
-#EndRegion // Methods
+#EndRegion // Operations
 
 #Region Channels
 
@@ -631,7 +631,7 @@ Procedure InstallOrUpdateExchangeAtServer()
     Object.ChannelResources.Clear();
     Object.Channels.Clear();
     Object.Events.Clear();
-    Object.Methods.Clear();
+    Object.Operations.Clear();
     
     Object.Description = Description;
     Object.BasicFormatGuid = BasicFormatGuid;
@@ -639,10 +639,10 @@ Procedure InstallOrUpdateExchangeAtServer()
     Object.Version = Version;
     
     ImportedExchange = ImportedExchange();
-    ImportMethods(Object, ImportedExchange, Methods);
-    ImportEvents(Object, ImportedExchange, Methods, Events);
-    ImportChannels(Object, ImportedExchange, Methods, Channels);
-    ImportChannelResources(Object, ImportedExchange, Methods, Channels);
+    ImportOperations(Object, ImportedExchange, Operations);
+    ImportEvents(Object, ImportedExchange, Operations, Events);
+    ImportChannels(Object, ImportedExchange, Operations, Channels);
+    ImportChannelResources(Object, ImportedExchange, Operations, Channels);
     
     Object.Write(); 
     Ref = Object.Ref;
@@ -652,43 +652,43 @@ EndProcedure // InstallOrUpdateExchangeAtServer()
 // Only for internal use.
 //
 &AtServerNoContext
-Procedure ImportMethods(Object, ImportedExchange, MethodTable)
+Procedure ImportOperations(Object, ImportedExchange, OperationTable)
     
-    If NOT ImportedExchange.Property("Methods") Then
+    If NOT ImportedExchange.Property("Operations") Then
         Return;    
     EndIf; 
     
-    FilterParameters = New Structure("Method");
-    For Each Method In ImportedExchange.Methods Do
+    FilterParameters = New Structure("Operation");
+    For Each Operation In ImportedExchange.Operations Do
         
-        FilterParameters.Method = Method.Method;
-        FilterResult = MethodTable.FindRows(FilterParameters);
+        FilterParameters.Operation = Operation.Operation;
+        FilterResult = OperationTable.FindRows(FilterParameters);
         If FilterResult.Count() <> 0 Then
-            CorrespondingMethod = FilterResult[0].Ref;    
+            CorrespondingOperation = FilterResult[0].Ref;    
         Else 
             Continue;
         EndIf;
         
-        NewMethod = Object.Methods.Add();
-        FillPropertyValues(NewMethod, Method, , "APISchema, 
-            |DataCompositionSchema, DataCompositionSettings, Method");
+        NewOperation = Object.Operations.Add();
+        FillPropertyValues(NewOperation, Operation, , "APISchema, 
+            |DataCompositionSchema, DataCompositionSettings, Operation");
         
-        NewMethod.APISchema = FL_CommonUse.ValueFromJSONString(
-            Method.APISchema);
-        NewMethod.DataCompositionSchema = FL_CommonUse.ValueFromJSONString(
-            Method.DataCompositionSchema);
-        NewMethod.DataCompositionSettings = FL_CommonUse.ValueFromJSONString(
-            Method.DataCompositionSettings);
-        NewMethod.Method = CorrespondingMethod;
+        NewOperation.APISchema = FL_CommonUse.ValueFromJSONString(
+            Operation.APISchema);
+        NewOperation.DataCompositionSchema = FL_CommonUse.ValueFromJSONString(
+            Operation.DataCompositionSchema);
+        NewOperation.DataCompositionSettings = FL_CommonUse.ValueFromJSONString(
+            Operation.DataCompositionSettings);
+        NewOperation.Operation = CorrespondingOperation;
         
     EndDo;
     
-EndProcedure // ImportMethods()
+EndProcedure // ImportOperations()
 
 // Only for internal use.
 //
 &AtServerNoContext
-Procedure ImportEvents(Object, ImportedExchange, MethodTable, EventTable)
+Procedure ImportEvents(Object, ImportedExchange, OperationTable, EventTable)
     
     If NOT ImportedExchange.Property("Events") Then
         Return;    
@@ -703,14 +703,14 @@ Procedure ImportEvents(Object, ImportedExchange, MethodTable, EventTable)
             Continue;
         EndIf;
         
-        EventFilter = New Structure("Method");
+        EventFilter = New Structure("Operation");
         FillPropertyValues(EventFilter, Event);
-        MethodLines = FindMethodLines(Object.Methods, MethodTable, 
+        OperationLines = FindOperationLines(Object.Operations, OperationTable, 
             EventFilter);
-        For Each MethodLine In MethodLines Do
+        For Each OperationLine In OperationLines Do
             NewEvent = Object.Events.Add();
-            FillPropertyValues(NewEvent, Event, , "Method");
-            FillPropertyValues(NewEvent, MethodLine, "Method");
+            FillPropertyValues(NewEvent, Event, , "Operation");
+            FillPropertyValues(NewEvent, OperationLine, "Operation");
         EndDo;
         
     EndDo;
@@ -720,7 +720,7 @@ EndProcedure // ImportEvents()
 // Only for internal use.
 //
 &AtServerNoContext
-Procedure ImportChannels(Object, ImportedExchange, MethodTable, ChannelTable)
+Procedure ImportChannels(Object, ImportedExchange, OperationTable, ChannelTable)
     
     If NOT ImportedExchange.Property("Channels") Then
         Return;    
@@ -735,15 +735,15 @@ Procedure ImportChannels(Object, ImportedExchange, MethodTable, ChannelTable)
             Continue;
         EndIf;
         
-        ChannelFilter = New Structure("Method");
+        ChannelFilter = New Structure("Operation");
         FillPropertyValues(ChannelFilter, Channel);
-        MethodLines = FindMethodLines(Object.Methods, MethodTable, 
+        OperationLines = FindOperationLines(Object.Operations, OperationTable, 
             ChannelFilter);
-        For Each MethodLine In MethodLines Do
+        For Each OperationLine In OperationLines Do
             NewChannel = Object.Channels.Add();
             NewChannel.Channel = FilterResult[0].Ref; 
-            FillPropertyValues(NewChannel, Channel, , "Channel, Method");
-            FillPropertyValues(NewChannel, MethodLine, "Method");
+            FillPropertyValues(NewChannel, Channel, , "Channel, Operation");
+            FillPropertyValues(NewChannel, OperationLine, "Operation");
         EndDo;
         
     EndDo;
@@ -753,7 +753,7 @@ EndProcedure // ImportChannels()
 // Only for internal use.
 //
 &AtServerNoContext
-Procedure ImportChannelResources(Object, ImportedExchange, MethodTable, ChannelTable)
+Procedure ImportChannelResources(Object, ImportedExchange, OperationTable, ChannelTable)
     
     If NOT ImportedExchange.Property("Channels") Then
         Return;    
@@ -772,15 +772,15 @@ Procedure ImportChannelResources(Object, ImportedExchange, MethodTable, ChannelT
             Continue;
         EndIf;
         
-        ChannelResourceFilter = New Structure("Method");
+        ChannelResourceFilter = New Structure("Operation");
         FillPropertyValues(ChannelResourceFilter, ChannelResource);
-        MethodLines = FindMethodLines(Object.Methods, MethodTable, 
+        OperationLines = FindOperationLines(Object.Operations, OperationTable, 
             ChannelResourceFilter);
-        For Each MethodLine In MethodLines Do
+        For Each OperationLine In OperationLines Do
             NewChannelResource = Object.ChannelResources.Add();
             NewChannelResource.Channel = FilterResult[0].Ref; 
-            FillPropertyValues(NewChannelResource, ChannelResource, , "Channel, Method");
-            FillPropertyValues(NewChannelResource, MethodLine, "Method");
+            FillPropertyValues(NewChannelResource, ChannelResource, , "Channel, Operation");
+            FillPropertyValues(NewChannelResource, OperationLine, "Operation");
         EndDo;
         
     EndDo;
@@ -790,19 +790,19 @@ EndProcedure // ImportChannelResources()
 // Only for internal use.
 //
 &AtServerNoContext
-Function FindMethodLines(VTMethods, FDCMethods, FilterParameters)
+Function FindOperationLines(VTOperations, FDCOperations, FilterParameters)
     
-    FilterResult = FDCMethods.FindRows(New Structure("Method", 
-        FilterParameters.Method));
+    FilterResult = FDCOperations.FindRows(New Structure("Operation", 
+        FilterParameters.Operation));
     If FilterResult.Count() <> 0 Then
-        FilterParameters.Method = FilterResult[0].Ref;
+        FilterParameters.Operation = FilterResult[0].Ref;
     Else 
         Return Undefined;
     EndIf;
     
-    Return VTMethods.FindRows(FilterParameters);    
+    Return VTOperations.FindRows(FilterParameters);    
     
-EndFunction // FindMethodLines()
+EndFunction // FindOperationLines()
 
 // Only for internal use.
 //

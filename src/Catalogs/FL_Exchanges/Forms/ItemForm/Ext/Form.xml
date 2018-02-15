@@ -186,16 +186,16 @@
 									<ShowTitle>false</ShowTitle>
 									<ExtendedTooltip name="HeaderGroupCommandsLeftExtendedTooltip" id="52"/>
 									<ChildItems>
-										<Button name="AddAPIMethod" id="41">
+										<Button name="AddOperation" id="41">
 											<Type>UsualButton</Type>
-											<CommandName>Form.Command.AddAPIMethod</CommandName>
-											<ExtendedTooltip name="AddAPIMethodExtendedTooltip" id="42"/>
+											<CommandName>Form.Command.AddOperation</CommandName>
+											<ExtendedTooltip name="AddOperationExtendedTooltip" id="42"/>
 										</Button>
-										<Button name="DeleteAPIMethod" id="49">
+										<Button name="DeleteOperation" id="49">
 											<Type>UsualButton</Type>
 											<Visible>false</Visible>
-											<CommandName>Form.Command.DeleteAPIMethod</CommandName>
-											<ExtendedTooltip name="DeleteAPIMethodExtendedTooltip" id="50"/>
+											<CommandName>Form.Command.DeleteOperation</CommandName>
+											<ExtendedTooltip name="DeleteOperationExtendedTooltip" id="50"/>
 										</Button>
 									</ChildItems>
 								</UsualGroup>
@@ -315,12 +315,18 @@
 				</Page>
 			</ChildItems>
 		</Pages>
-		<Pages name="MethodPages" id="37">
+		<Pages name="OperationPages" id="37">
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Operation pages</v8:content>
+				</v8:item>
+			</ToolTip>
 			<HorizontalStretch>true</HorizontalStretch>
 			<VerticalStretch>true</VerticalStretch>
-			<ExtendedTooltip name="MethodPagesExtendedTooltip" id="38"/>
+			<ExtendedTooltip name="OperationPagesExtendedTooltip" id="38"/>
 			<Events>
-				<Event name="OnCurrentPageChange">MethodPagesOnCurrentPageChange</Event>
+				<Event name="OnCurrentPageChange">OperationPagesOnCurrentPageChange</Event>
 			</Events>
 		</Pages>
 		<UsualGroup name="HiddenGroup" id="39">
@@ -1516,7 +1522,7 @@
 			<MainAttribute>true</MainAttribute>
 			<SavedData>true</SavedData>
 			<Columns>
-				<AdditionalColumns table="Object.Methods">
+				<AdditionalColumns table="Object.Operations">
 					<Column name="DataCompositionSchemaAddress" id="1">
 						<Title>
 							<v8:item>
@@ -1658,19 +1664,19 @@
 				</v8:StringQualifiers>
 			</Type>
 		</Attribute>
-		<Attribute name="RowMethod" id="9">
+		<Attribute name="RowOperation" id="9">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Метод</v8:content>
+					<v8:content>Operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Method</v8:content>
+					<v8:content>Operation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Операция</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -1956,76 +1962,76 @@
 		</Attribute>
 	</Attributes>
 	<Commands>
-		<Command name="AddAPIMethod" id="1">
+		<Command name="AddOperation" id="1">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Add method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Добавить метод</v8:content>
+					<v8:content>Add operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Add method</v8:content>
+					<v8:content>Add operation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить операцию</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Add API method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Добавить API метод</v8:content>
+					<v8:content>Add operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Add API method</v8:content>
+					<v8:content>Add operation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить операцию</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
 				<xr:Ref>CommonPicture.FL_Add</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>AddAPIMethod</Action>
+			<Action>AddOperation</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
-		<Command name="DeleteAPIMethod" id="2">
+		<Command name="DeleteOperation" id="2">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Delete method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Удалить метод</v8:content>
+					<v8:content>Delete operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Delete method</v8:content>
+					<v8:content>Delete operation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Удалить операцию</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Delete API method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Удалить API method</v8:content>
+					<v8:content>Delete operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Delete API method</v8:content>
+					<v8:content>Delete operation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Удалить операцию</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
 				<xr:Ref>CommonPicture.FL_Delete</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>DeleteAPIMethod</Action>
+			<Action>DeleteOperation</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 		<Command name="DescribeAPI" id="3">
@@ -2046,15 +2052,15 @@
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Describe API schema for the current method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Описать API схему для текущего метода</v8:content>
+					<v8:content>Describe API schema for the current operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Describe API schema for the current method</v8:content>
+					<v8:content>Describe API schema for the current operation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Описать API схему для текущей операции</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -2082,15 +2088,15 @@
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Copy API schema from an existing method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Скопировать API схему из существующего метода</v8:content>
+					<v8:content>Copy API schema from an existing operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Copy API schema from an existing method</v8:content>
+					<v8:content>Copy API schema from an existing operation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Скопировать API схему из существующей операции</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
@@ -2402,15 +2408,15 @@
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Delete API schema from the current method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Удалить API схему из текущего метода</v8:content>
+					<v8:content>Delete API schema from the current operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Delete API schema from the current method</v8:content>
+					<v8:content>Delete API schema from the current operation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Удалить API схему из текущей операции</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>

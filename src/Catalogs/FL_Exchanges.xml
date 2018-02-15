@@ -809,24 +809,24 @@
 					</Attribute>
 					<Attribute uuid="2f547030-2991-4e92-8ef9-a0d22fa1993d">
 						<Properties>
-							<Name>Method</Name>
+							<Name>Operation</Name>
 							<Synonym>
 								<v8:item>
 									<v8:lang>en</v8:lang>
-									<v8:content>Method</v8:content>
-								</v8:item>
-								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Метод</v8:content>
+									<v8:content>Operation</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>en_CA</v8:lang>
-									<v8:content>Method</v8:content>
+									<v8:content>Operation</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Операция</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
-								<v8:Type>cfg:CatalogRef.FL_Methods</v8:Type>
+								<v8:Type>cfg:CatalogRef.FL_Operations</v8:Type>
 							</Type>
 							<PasswordMode>false</PasswordMode>
 							<Format/>
@@ -849,7 +849,7 @@
 							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 							<Indexing>DontIndex</Indexing>
 							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
+							<DataHistory>DontUse</DataHistory>
 						</Properties>
 					</Attribute>
 				</ChildObjects>
@@ -962,24 +962,24 @@
 					</Attribute>
 					<Attribute uuid="58d6c727-d7c7-4f1b-b55d-a026236fc302">
 						<Properties>
-							<Name>Method</Name>
+							<Name>Operation</Name>
 							<Synonym>
 								<v8:item>
 									<v8:lang>en</v8:lang>
-									<v8:content>Method</v8:content>
-								</v8:item>
-								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Метод</v8:content>
+									<v8:content>Operation</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>en_CA</v8:lang>
-									<v8:content>Method</v8:content>
+									<v8:content>Operation</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Операция</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
-								<v8:Type>cfg:CatalogRef.FL_Methods</v8:Type>
+								<v8:Type>cfg:CatalogRef.FL_Operations</v8:Type>
 							</Type>
 							<PasswordMode>false</PasswordMode>
 							<Format/>
@@ -1002,7 +1002,7 @@
 							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 							<Indexing>DontIndex</Indexing>
 							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
+							<DataHistory>DontUse</DataHistory>
 						</Properties>
 					</Attribute>
 					<Attribute uuid="0bd46b1d-da49-4416-98ce-cb92dd9a279f">
@@ -1228,24 +1228,24 @@
 					</Attribute>
 					<Attribute uuid="65f8d919-8700-40de-8676-e6903ec71e64">
 						<Properties>
-							<Name>Method</Name>
+							<Name>Operation</Name>
 							<Synonym>
 								<v8:item>
 									<v8:lang>en</v8:lang>
-									<v8:content>Method</v8:content>
-								</v8:item>
-								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Метод</v8:content>
+									<v8:content>Operation</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>en_CA</v8:lang>
-									<v8:content>Method</v8:content>
+									<v8:content>Operation</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Операция</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
-								<v8:Type>cfg:CatalogRef.FL_Methods</v8:Type>
+								<v8:Type>cfg:CatalogRef.FL_Operations</v8:Type>
 							</Type>
 							<PasswordMode>false</PasswordMode>
 							<Format/>
@@ -1268,36 +1268,36 @@
 							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 							<Indexing>DontIndex</Indexing>
 							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
+							<DataHistory>DontUse</DataHistory>
 						</Properties>
 					</Attribute>
 				</ChildObjects>
 			</TabularSection>
 			<TabularSection uuid="4e754889-13be-440a-b361-5d14f31dca53">
 				<InternalInfo>
-					<xr:GeneratedType name="CatalogTabularSection.FL_Exchanges.Methods" category="TabularSection">
+					<xr:GeneratedType name="CatalogTabularSection.FL_Exchanges.Operations" category="TabularSection">
 						<xr:TypeId>dbb2f186-77cb-4c7d-84f8-bcf317dcef81</xr:TypeId>
 						<xr:ValueId>caba35e9-e8a3-470d-a06e-92e81db2fad7</xr:ValueId>
 					</xr:GeneratedType>
-					<xr:GeneratedType name="CatalogTabularSectionRow.FL_Exchanges.Methods" category="TabularSectionRow">
+					<xr:GeneratedType name="CatalogTabularSectionRow.FL_Exchanges.Operations" category="TabularSectionRow">
 						<xr:TypeId>5d350668-f8f9-46c6-8633-8195a5718613</xr:TypeId>
 						<xr:ValueId>51496629-237f-4861-95ac-df35426be141</xr:ValueId>
 					</xr:GeneratedType>
 				</InternalInfo>
 				<Properties>
-					<Name>Methods</Name>
+					<Name>Operations</Name>
 					<Synonym>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Methods</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Методы</v8:content>
+							<v8:content>Operations</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Methods</v8:content>
+							<v8:content>Operations</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Операции</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -1516,24 +1516,24 @@
 					</Attribute>
 					<Attribute uuid="54f9fd93-6248-4e5a-8065-f93f6c39b0b3">
 						<Properties>
-							<Name>Method</Name>
+							<Name>Operation</Name>
 							<Synonym>
 								<v8:item>
 									<v8:lang>en</v8:lang>
-									<v8:content>Method</v8:content>
-								</v8:item>
-								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Метод</v8:content>
+									<v8:content>Operation</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>en_CA</v8:lang>
-									<v8:content>Method</v8:content>
+									<v8:content>Operation</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Операция</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
-								<v8:Type>cfg:CatalogRef.FL_Methods</v8:Type>
+								<v8:Type>cfg:CatalogRef.FL_Operations</v8:Type>
 							</Type>
 							<PasswordMode>false</PasswordMode>
 							<Format/>
@@ -1556,7 +1556,7 @@
 							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 							<Indexing>DontIndex</Indexing>
 							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
+							<DataHistory>DontUse</DataHistory>
 						</Properties>
 					</Attribute>
 					<Attribute uuid="f5c25349-7375-4858-a56f-7e5fff30f337">

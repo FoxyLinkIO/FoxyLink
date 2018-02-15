@@ -56,31 +56,39 @@
 		</ChildItems>
 	</AutoCommandBar>
 	<ChildItems>
-		<UsualGroup name="GroupMethodDescription" id="13">
+		<UsualGroup name="GroupOperationDescription" id="13">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Group method description</v8:content>
+					<v8:content>Operation description</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Group method description</v8:content>
+					<v8:content>Operation description</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Описание операции</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Group method description</v8:content>
+					<v8:content>Operation description</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Group method description</v8:content>
+					<v8:content>Operation description</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Описание операции</v8:content>
 				</v8:item>
 			</ToolTip>
 			<HorizontalStretch>false</HorizontalStretch>
 			<Group>Vertical</Group>
 			<ShowTitle>false</ShowTitle>
-			<ExtendedTooltip name="GroupMethodDescriptionExtendedTooltip" id="14"/>
+			<ExtendedTooltip name="GroupOperationDescriptionExtendedTooltip" id="14"/>
 			<ChildItems>
 				<InputField name="Description" id="4">
 					<DataPath>Object.Description</DataPath>
@@ -112,7 +120,7 @@
 	<Attributes>
 		<Attribute name="Object" id="1">
 			<Type>
-				<v8:Type>cfg:CatalogObject.FL_Methods</v8:Type>
+				<v8:Type>cfg:CatalogObject.FL_Operations</v8:Type>
 			</Type>
 			<MainAttribute>true</MainAttribute>
 			<SavedData>true</SavedData>

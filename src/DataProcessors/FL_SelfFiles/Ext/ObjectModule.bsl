@@ -28,7 +28,7 @@
 //
 Function ChannelStandard() Export
     
-    Return "ExportDataToFile";
+    Return "FoxyLink";
     
 EndFunction // ChannelStandard()
 
@@ -51,7 +51,7 @@ EndFunction // ChannelStandardLink()
 // 
 Function ChannelShortName() Export
     
-    Return "ExportDataToFile";    
+    Return "FoxyLink";    
     
 EndFunction // ChannelShortName()
 
@@ -62,7 +62,7 @@ EndFunction // ChannelShortName()
 //
 Function ChannelFullName() Export
     
-    Return "Export data to file";    
+    Return "FoxyLink file-messaging";    
     
 EndFunction // ChannelFullName()
 

@@ -41,7 +41,7 @@
 			<ExtendedTooltip name="MetadataObjectExtendedTooltip" id="18"/>
 		</InputField>
 		<InputField name="Method" id="19">
-			<DataPath>Object.Method</DataPath>
+			<DataPath>Object.Operation</DataPath>
 			<EditMode>EnterOnInput</EditMode>
 			<ContextMenu name="MethodContextMenu" id="20"/>
 			<ExtendedTooltip name="MethodExtendedTooltip" id="21"/>

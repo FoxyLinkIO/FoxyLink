@@ -148,13 +148,36 @@
 									<ExtendedTooltip name="PredefinedDataNameExtendedTooltip" id="107"/>
 								</InputField>
 								<UsualGroup name="HeaderGroupBasic" id="121">
+									<EnableContentChange>true</EnableContentChange>
 									<Group>Horizontal</Group>
 									<Representation>None</Representation>
 									<ShowTitle>false</ShowTitle>
 									<ExtendedTooltip name="HeaderGroupBasicExtendedTooltip" id="122"/>
 									<ChildItems>
+										<InputField name="RefVersion" id="193">
+											<DataPath>Ref.Version</DataPath>
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Version (Installed)</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Version (Installed)</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Версия (Установленная)</v8:content>
+												</v8:item>
+											</Title>
+											<Width>8</Width>
+											<ContextMenu name="RefVersionContextMenu" id="194"/>
+											<ExtendedTooltip name="RefVersionExtendedTooltip" id="195"/>
+										</InputField>
 										<InputField name="Version" id="96">
 											<DataPath>Version</DataPath>
+											<Width>8</Width>
+											<Font ref="style:NormalTextFont" bold="true" italic="false" underline="false" strikeout="false" kind="StyleItem"/>
 											<ContextMenu name="VersionContextMenu" id="97"/>
 											<ExtendedTooltip name="VersionExtendedTooltip" id="98"/>
 										</InputField>
@@ -225,39 +248,39 @@
 						</UsualGroup>
 					</ChildItems>
 				</Page>
-				<Page name="MethodsPage" id="1">
+				<Page name="OperationsPage" id="1">
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Methods</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Методы</v8:content>
+							<v8:content>Operations</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Methods</v8:content>
+							<v8:content>Operations</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Операции</v8:content>
 						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Methods</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Методы</v8:content>
+							<v8:content>Operations</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Methods</v8:content>
+							<v8:content>Operations</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Операции</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Group>HorizontalIfPossible</Group>
-					<ExtendedTooltip name="MethodsPageExtendedTooltip" id="2"/>
+					<ExtendedTooltip name="OperationsPageExtendedTooltip" id="2"/>
 					<ChildItems>
-						<Table name="Methods" id="3">
+						<Table name="Operations" id="3">
 							<Representation>List</Representation>
 							<ReadOnly>true</ReadOnly>
 							<ChangeRowSet>false</ChangeRowSet>
@@ -265,81 +288,81 @@
 							<AutoInsertNewRow>true</AutoInsertNewRow>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
-							<DataPath>Methods</DataPath>
+							<DataPath>Operations</DataPath>
 							<RowFilter xsi:nil="true"/>
-							<ContextMenu name="MethodsContextMenu" id="4">
+							<ContextMenu name="OperationsContextMenu" id="4">
 								<Autofill>false</Autofill>
 								<ChildItems>
-									<Button name="MethodsContextMenuSelectMethod" id="149">
+									<Button name="OperationsContextMenuSelectOperation" id="149">
 										<Type>CommandBarButton</Type>
-										<CommandName>Form.Command.SelectMethod</CommandName>
-										<ExtendedTooltip name="MethodsContextMenuSelectMethodExtendedTooltip" id="150"/>
+										<CommandName>Form.Command.SelectOperation</CommandName>
+										<ExtendedTooltip name="OperationsContextMenuSelectOperationExtendedTooltip" id="150"/>
 									</Button>
-									<Button name="MethodsContextMenuDeleteMethod" id="153">
+									<Button name="OperationsContextMenuDeleteOperation" id="153">
 										<Type>CommandBarButton</Type>
-										<CommandName>Form.Command.DeleteMethod</CommandName>
-										<ExtendedTooltip name="MethodsContextMenuDeleteMethodExtendedTooltip" id="154"/>
+										<CommandName>Form.Command.DeleteOperation</CommandName>
+										<ExtendedTooltip name="OperationsContextMenuDeleteOperationExtendedTooltip" id="154"/>
 									</Button>
 								</ChildItems>
 							</ContextMenu>
-							<AutoCommandBar name="MethodsCommandBar" id="5">
+							<AutoCommandBar name="OperationsCommandBar" id="5">
 								<Autofill>false</Autofill>
 							</AutoCommandBar>
-							<ExtendedTooltip name="MethodsExtendedTooltip" id="6"/>
-							<SearchStringAddition name="MethodsSearchString" id="7">
+							<ExtendedTooltip name="OperationsExtendedTooltip" id="6"/>
+							<SearchStringAddition name="OperationsSearchString" id="7">
 								<AdditionSource>
-									<Item>Methods</Item>
+									<Item>Operations</Item>
 									<Type>SearchStringRepresentation</Type>
 								</AdditionSource>
-								<ContextMenu name="MethodsSearchStringContextMenu" id="8"/>
-								<ExtendedTooltip name="MethodsSearchStringExtendedTooltip" id="9"/>
+								<ContextMenu name="OperationsSearchStringContextMenu" id="8"/>
+								<ExtendedTooltip name="OperationsSearchStringExtendedTooltip" id="9"/>
 							</SearchStringAddition>
-							<ViewStatusAddition name="MethodsViewStatus" id="10">
+							<ViewStatusAddition name="OperationsViewStatus" id="10">
 								<AdditionSource>
-									<Item>Methods</Item>
+									<Item>Operations</Item>
 									<Type>ViewStatusRepresentation</Type>
 								</AdditionSource>
-								<ContextMenu name="MethodsViewStatusContextMenu" id="11"/>
-								<ExtendedTooltip name="MethodsViewStatusExtendedTooltip" id="12"/>
+								<ContextMenu name="OperationsViewStatusContextMenu" id="11"/>
+								<ExtendedTooltip name="OperationsViewStatusExtendedTooltip" id="12"/>
 							</ViewStatusAddition>
-							<SearchControlAddition name="MethodsSearchControl" id="13">
+							<SearchControlAddition name="OperationsSearchControl" id="13">
 								<AdditionSource>
-									<Item>Methods</Item>
+									<Item>Operations</Item>
 									<Type>SearchControl</Type>
 								</AdditionSource>
-								<ContextMenu name="MethodsSearchControlContextMenu" id="14"/>
-								<ExtendedTooltip name="MethodsSearchControlExtendedTooltip" id="15"/>
+								<ContextMenu name="OperationsSearchControlContextMenu" id="14"/>
+								<ExtendedTooltip name="OperationsSearchControlExtendedTooltip" id="15"/>
 							</SearchControlAddition>
 							<ChildItems>
-								<InputField name="MethodsRef" id="16">
-									<DataPath>Methods.Ref</DataPath>
+								<InputField name="OperationsRef" id="16">
+									<DataPath>Operations.Ref</DataPath>
 									<EditMode>EnterOnInput</EditMode>
-									<ContextMenu name="MethodsRefContextMenu" id="17"/>
-									<ExtendedTooltip name="MethodsRefExtendedTooltip" id="18"/>
+									<ContextMenu name="OperationsRefContextMenu" id="17"/>
+									<ExtendedTooltip name="OperationsRefExtendedTooltip" id="18"/>
 								</InputField>
-								<InputField name="MethodsDescription" id="19">
-									<DataPath>Methods.Description</DataPath>
+								<InputField name="OperationsDescription" id="19">
+									<DataPath>Operations.Description</DataPath>
 									<EditMode>EnterOnInput</EditMode>
-									<ContextMenu name="MethodsDescriptionContextMenu" id="20"/>
-									<ExtendedTooltip name="MethodsDescriptionExtendedTooltip" id="21"/>
+									<ContextMenu name="OperationsDescriptionContextMenu" id="20"/>
+									<ExtendedTooltip name="OperationsDescriptionExtendedTooltip" id="21"/>
 								</InputField>
-								<InputField name="MethodsPredefinedDataName" id="22">
-									<DataPath>Methods.PredefinedDataName</DataPath>
+								<InputField name="OperationsPredefinedDataName" id="22">
+									<DataPath>Operations.PredefinedDataName</DataPath>
 									<EditMode>EnterOnInput</EditMode>
-									<ContextMenu name="MethodsPredefinedDataNameContextMenu" id="23"/>
-									<ExtendedTooltip name="MethodsPredefinedDataNameExtendedTooltip" id="24"/>
+									<ContextMenu name="OperationsPredefinedDataNameContextMenu" id="23"/>
+									<ExtendedTooltip name="OperationsPredefinedDataNameExtendedTooltip" id="24"/>
 								</InputField>
-								<InputField name="MethodsRESTMethod" id="25">
-									<DataPath>Methods.RESTMethod</DataPath>
+								<InputField name="OperationsRESTMethod" id="25">
+									<DataPath>Operations.RESTMethod</DataPath>
 									<EditMode>EnterOnInput</EditMode>
-									<ContextMenu name="MethodsRESTMethodContextMenu" id="26"/>
-									<ExtendedTooltip name="MethodsRESTMethodExtendedTooltip" id="27"/>
+									<ContextMenu name="OperationsRESTMethodContextMenu" id="26"/>
+									<ExtendedTooltip name="OperationsRESTMethodExtendedTooltip" id="27"/>
 								</InputField>
-								<InputField name="MethodsCRUDMethod" id="28">
-									<DataPath>Methods.CRUDMethod</DataPath>
+								<InputField name="OperationsCRUDMethod" id="28">
+									<DataPath>Operations.CRUDMethod</DataPath>
 									<EditMode>EnterOnInput</EditMode>
-									<ContextMenu name="MethodsCRUDMethodContextMenu" id="29"/>
-									<ExtendedTooltip name="MethodsCRUDMethodExtendedTooltip" id="30"/>
+									<ContextMenu name="OperationsCRUDMethodContextMenu" id="29"/>
+									<ExtendedTooltip name="OperationsCRUDMethodExtendedTooltip" id="30"/>
 								</InputField>
 							</ChildItems>
 						</Table>
@@ -672,15 +695,19 @@
 		</Pages>
 	</ChildItems>
 	<Attributes>
-		<Attribute name="Methods" id="1">
+		<Attribute name="Operations" id="1">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Methods</v8:content>
+					<v8:content>Operations</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Methods</v8:content>
+					<v8:content>Operations</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Операции</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -703,7 +730,7 @@
 						</v8:item>
 					</Title>
 					<Type>
-						<v8:Type>cfg:CatalogRef.FL_Methods</v8:Type>
+						<v8:Type>cfg:CatalogRef.FL_Operations</v8:Type>
 					</Type>
 				</Column>
 				<Column name="Description" id="2">
@@ -790,19 +817,19 @@
 						<v8:Type>cfg:EnumRef.FL_CRUDMethods</v8:Type>
 					</Type>
 				</Column>
-				<Column name="Method" id="7">
+				<Column name="Operation" id="7">
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Method</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Метод</v8:content>
+							<v8:content>Operation</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Method</v8:content>
+							<v8:content>Operation</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Операция</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -813,19 +840,19 @@
 						</v8:StringQualifiers>
 					</Type>
 				</Column>
-				<Column name="MethodMatched" id="6">
+				<Column name="OperationMatched" id="6">
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Method matched</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Метод соответствует</v8:content>
+							<v8:content>Operation matched</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Method matched</v8:content>
+							<v8:content>Operation matched</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Операция соответствует</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -1223,15 +1250,15 @@
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Current version</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Текущая версия</v8:content>
+					<v8:content>Version update</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Current version</v8:content>
+					<v8:content>Version update</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Версия обновления</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -1602,12 +1629,12 @@
 			<dcsset:item>
 				<dcsset:selection>
 					<dcsset:item>
-						<dcsset:field>MethodsRef</dcsset:field>
+						<dcsset:field>OperationsRef</dcsset:field>
 					</dcsset:item>
 				</dcsset:selection>
 				<dcsset:filter>
 					<dcsset:item xsi:type="dcsset:FilterItemComparison">
-						<dcsset:left xsi:type="dcscor:Field">Methods.MethodMatched</dcsset:left>
+						<dcsset:left xsi:type="dcscor:Field">Operations.OperationMatched</dcsset:left>
 						<dcsset:comparisonType>Equal</dcsset:comparisonType>
 						<dcsset:right xsi:type="xs:boolean">false</dcsset:right>
 					</dcsset:item>
@@ -1718,12 +1745,12 @@
 			<dcsset:item>
 				<dcsset:selection>
 					<dcsset:item>
-						<dcsset:field>MethodsRESTMethod</dcsset:field>
+						<dcsset:field>OperationsRESTMethod</dcsset:field>
 					</dcsset:item>
 				</dcsset:selection>
 				<dcsset:filter>
 					<dcsset:item xsi:type="dcsset:FilterItemComparison">
-						<dcsset:left xsi:type="dcscor:Field">Methods.RESTMatched</dcsset:left>
+						<dcsset:left xsi:type="dcscor:Field">Operations.RESTMatched</dcsset:left>
 						<dcsset:comparisonType>Equal</dcsset:comparisonType>
 						<dcsset:right xsi:type="xs:boolean">false</dcsset:right>
 					</dcsset:item>
@@ -1743,14 +1770,13 @@
 			<dcsset:item>
 				<dcsset:selection>
 					<dcsset:item>
-						<dcsset:field>MethodsCRUDMethod</dcsset:field>
+						<dcsset:field>OperationsCRUDMethod</dcsset:field>
 					</dcsset:item>
 				</dcsset:selection>
 				<dcsset:filter>
 					<dcsset:item xsi:type="dcsset:FilterItemComparison">
-						<dcsset:left xsi:type="dcscor:Field">Methods.CRUDResolved</dcsset:left>
+						<dcsset:left xsi:type="dcscor:Field">Operations.CRUDMethod</dcsset:left>
 						<dcsset:comparisonType>Equal</dcsset:comparisonType>
-						<dcsset:right xsi:type="xs:boolean">false</dcsset:right>
 					</dcsset:item>
 				</dcsset:filter>
 				<dcsset:appearance>
@@ -1928,7 +1954,7 @@
 			<Action>DeleteEvent</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
-		<Command name="SelectMethod" id="5">
+		<Command name="SelectOperation" id="5">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
@@ -1946,20 +1972,20 @@
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Select existing method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Выбрать существующий метод</v8:content>
+					<v8:content>Select existing operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Select existing method</v8:content>
+					<v8:content>Select existing operation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Выбрать существующую операцию</v8:content>
 				</v8:item>
 			</ToolTip>
-			<Action>SelectMethod</Action>
+			<Action>SelectOperation</Action>
 		</Command>
-		<Command name="DeleteMethod" id="6">
+		<Command name="DeleteOperation" id="6">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
@@ -1977,22 +2003,22 @@
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Delete method</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Удалить метод</v8:content>
+					<v8:content>Delete operation</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Delete method</v8:content>
+					<v8:content>Delete opearation</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Удалить операцию</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
 				<xr:Ref>CommonPicture.FL_Delete</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>DeleteMethod</Action>
+			<Action>DeleteOperation</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 		<Command name="InstallExchange" id="8">

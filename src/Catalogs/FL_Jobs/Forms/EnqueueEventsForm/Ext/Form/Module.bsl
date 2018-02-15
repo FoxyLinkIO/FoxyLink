@@ -29,7 +29,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
     Parameters.Property("Exchange", Exchange);
     Parameters.Property("MetadataObject", MetadataObject);
-    Parameters.Property("Method", Method);
+    Parameters.Property("Operation", Operation);
     
     PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
         Metadata.FindByFullName(MetadataObject));
@@ -241,7 +241,7 @@ Procedure EnqueueReferenceEvents(Events)
     
     InvocationMock = SourceMock.AdditionalProperties.InvocationData;
     InvocationMock.MetadataObject = MetadataObject;
-    InvocationMock.Method = Method;
+    InvocationMock.Operation = Operation;
     InvocationMock.Owner = Exchange;
     
     If ValueIsFilled(AttributeName) Then
@@ -274,7 +274,7 @@ Procedure EnqueueInformationRegisterEvents(Events)
     
     InvocationMock = SourceMock.AdditionalProperties.InvocationData;
     InvocationMock.MetadataObject = MetadataObject;
-    InvocationMock.Method = Method;
+    InvocationMock.Operation = Operation;
     InvocationMock.Owner = Exchange;
     
     ParametersMock = InvocationMock.Parameters;

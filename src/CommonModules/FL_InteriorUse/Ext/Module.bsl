@@ -358,7 +358,7 @@ EndFunction // NewFormField()
 Procedure InitializeSubsystem() Export
     
     InitializeStates();
-    InitializeMethods();
+    InitializeOperations();
     InitializeChannels();
     InitializeConstants();
     
@@ -377,10 +377,10 @@ Procedure LoadImportedExchange(MockObject, Exchange) Export
         |InUse, PredefinedDataName, Version");
     
     // Methods load.
-    If Exchange.Property("Methods") Then
-        FL_CommonUseClientServer.ExtendValueTable(LoadImportedMethods(
-                Exchange.Methods), 
-            MockObject.Methods);
+    If Exchange.Property("Operations") Then
+        FL_CommonUseClientServer.ExtendValueTable(LoadImportedOperations(
+                Exchange.Operations), 
+            MockObject.Operations);
     EndIf;
     
     // Channels load.
@@ -718,49 +718,49 @@ EndProcedure // InitializeStates()
 
 // Only for internal use.
 //
-Procedure InitializeMethods()
+Procedure InitializeOperations()
     
-    CreateMethod = Catalogs.FL_Methods.Create.GetObject();
-    If CreateMethod.RESTMethod.IsEmpty() 
-        AND CreateMethod.CRUDMethod.IsEmpty() Then
+    CreateOperation = Catalogs.FL_Operations.Create.GetObject();
+    If CreateOperation.RESTMethod.IsEmpty() 
+        AND CreateOperation.CRUDMethod.IsEmpty() Then
         
-        CreateMethod.RESTMethod = Enums.FL_RESTMethods.POST;
-        CreateMethod.CRUDMethod = Enums.FL_CRUDMethods.CREATE;
-        CreateMethod.Write();
+        CreateOperation.RESTMethod = Enums.FL_RESTMethods.POST;
+        CreateOperation.CRUDMethod = Enums.FL_CRUDMethods.CREATE;
+        CreateOperation.Write();
         
     EndIf;
     
-    ReadMethod = Catalogs.FL_Methods.Read.GetObject();
-    If ReadMethod.RESTMethod.IsEmpty() 
-        AND ReadMethod.CRUDMethod.IsEmpty() Then
+    ReadOperation = Catalogs.FL_Operations.Read.GetObject();
+    If ReadOperation.RESTMethod.IsEmpty() 
+        AND ReadOperation.CRUDMethod.IsEmpty() Then
         
-        ReadMethod.RESTMethod = Enums.FL_RESTMethods.GET;
-        ReadMethod.CRUDMethod = Enums.FL_CRUDMethods.READ;
-        ReadMethod.Write();
-        
-    EndIf;
-    
-    UpdateMethod = Catalogs.FL_Methods.Update.GetObject();
-    If UpdateMethod.RESTMethod.IsEmpty() 
-        AND UpdateMethod.CRUDMethod.IsEmpty() Then
-        
-        UpdateMethod.RESTMethod = Enums.FL_RESTMethods.PUT;
-        UpdateMethod.CRUDMethod = Enums.FL_CRUDMethods.UPDATE;
-        UpdateMethod.Write();
+        ReadOperation.RESTMethod = Enums.FL_RESTMethods.GET;
+        ReadOperation.CRUDMethod = Enums.FL_CRUDMethods.READ;
+        ReadOperation.Write();
         
     EndIf;
     
-    DeleteMethod = Catalogs.FL_Methods.Delete.GetObject();
-    If DeleteMethod.RESTMethod.IsEmpty() 
-        AND DeleteMethod.CRUDMethod.IsEmpty() Then
+    UpdateOperation = Catalogs.FL_Operations.Update.GetObject();
+    If UpdateOperation.RESTMethod.IsEmpty() 
+        AND UpdateOperation.CRUDMethod.IsEmpty() Then
         
-        DeleteMethod.RESTMethod = Enums.FL_RESTMethods.DELETE;
-        DeleteMethod.CRUDMethod = Enums.FL_CRUDMethods.DELETE;
-        DeleteMethod.Write();
+        UpdateOperation.RESTMethod = Enums.FL_RESTMethods.PUT;
+        UpdateOperation.CRUDMethod = Enums.FL_CRUDMethods.UPDATE;
+        UpdateOperation.Write();
         
     EndIf;
     
-EndProcedure // InitMethods()
+    DeleteOperation = Catalogs.FL_Operations.Delete.GetObject();
+    If DeleteOperation.RESTMethod.IsEmpty() 
+        AND DeleteOperation.CRUDMethod.IsEmpty() Then
+        
+        DeleteOperation.RESTMethod = Enums.FL_RESTMethods.DELETE;
+        DeleteOperation.CRUDMethod = Enums.FL_CRUDMethods.DELETE;
+        DeleteOperation.Write();
+        
+    EndIf;
+    
+EndProcedure // InitializeOperations()
 
 // Only for internal use.
 //
@@ -835,45 +835,45 @@ Procedure InitializeConstants()
     
 EndProcedure // InitializeConstants() 
 
-// Returns mock object (ValueTable) with imported methods.
+// Returns mock object (ValueTable) with imported operations.
 //
 // Parameters:
-//  Methods - Array - an array with imported methods.
+//  Operations - Array - an array with imported operations.
 //
 // Returns:
-//  ValueTable - the mock object with imported methods.
+//  ValueTable - the mock object with imported operations.
 // 
-Function LoadImportedMethods(Methods)
+Function LoadImportedOperations(Operations)
     
     GuidLength = 36;
     
     MockObject = FL_CommonUse.NewMockOfMetadataObjectAttributes(
-        Metadata.Catalogs.FL_Methods);
-    MockObject.Columns.Add("Method", FL_CommonUse.StringTypeDescription(
+        Metadata.Catalogs.FL_Operations);
+    MockObject.Columns.Add("Operation", FL_CommonUse.StringTypeDescription(
         GuidLength));
 
-    For Each Method In Methods Do
+    For Each Operation In Operations Do
         
         MockRow = MockObject.Add();
-        FillPropertyValues(MockRow, Method, , "CRUDMethod, RESTMethod");
-        MockRow.CRUDMethod = Enums.FL_CRUDMethods[Method.CRUDMethod];
-        MockRow.RESTMethod = Enums.FL_RESTMethods[Method.RESTMethod];
+        FillPropertyValues(MockRow, Operation, , "CRUDMethod, RESTMethod");
+        MockRow.CRUDMethod = Enums.FL_CRUDMethods[Operation.CRUDMethod];
+        MockRow.RESTMethod = Enums.FL_RESTMethods[Operation.RESTMethod];
         
         Result = FL_CommonUse.ReferenceByPredefinedDataName(
-            Metadata.Catalogs.FL_Methods, Method.PredefinedDataName);
+            Metadata.Catalogs.FL_Operations, Operation.PredefinedDataName);
         If Result <> Undefined Then
             MockRow.Ref = Result;
             Continue;
         EndIf;
         
-        Result = Catalogs.FL_Methods.GetRef(New UUID(Method.Method));
+        Result = Catalogs.FL_Operations.GetRef(New UUID(Operation.Operation));
         If FL_CommonUse.RefExists(Result) Then
             MockRow.Ref = Result;
             Continue;
         EndIf;
         
         Result = FL_CommonUse.ReferenceByDescription(
-            Metadata.Catalogs.FL_Methods, Method.Description);
+            Metadata.Catalogs.FL_Operations, Operation.Description);
         If Result <> Undefined Then
             MockRow.Ref = Result;    
         EndIf;
@@ -882,7 +882,7 @@ Function LoadImportedMethods(Methods)
     
     Return MockObject;
     
-EndFunction // LoadImportedMethods()
+EndFunction // LoadImportedOperations()
 
 // Returns mock object (ValueTable) with imported channels.
 //
