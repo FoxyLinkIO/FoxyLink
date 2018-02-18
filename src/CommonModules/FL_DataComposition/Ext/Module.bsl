@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -321,11 +321,11 @@ EndProcedure // InitSettingsComposer()
 // Sets the message settings into data composition settings composer.
 //
 // Parameters:
-//  SettingsComposer - DataCompositionSettingsComposer - describes relation of 
+//  SettingsComposer  - DataCompositionSettingsComposer - describes relation of 
 //                              data composition settings and data composition schema.
-//  MessageSettings  - FixedStructure                  - body of the message settings.
+//  InvocationContext - ValueTable - see function FL_BackgroundJob.NewInvocationContext.
 //
-Procedure SetDataToSettingsComposer(SettingsComposer, MessageSettings) Export
+Procedure SetDataToSettingsComposer(SettingsComposer, InvocationContext) Export
     
     Var MessageBody, Parameters, Filter;
     
@@ -334,51 +334,15 @@ Procedure SetDataToSettingsComposer(SettingsComposer, MessageSettings) Export
             "SettingsComposer", SettingsComposer, Type("DataCompositionSettingsComposer"));          
     EndIf;
     
-    If TypeOf(MessageSettings) <> Type("Structure") Then      
+    If TypeOf(InvocationContext) <> Type("ValueTable") Then      
         Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "MessageSettings", MessageSettings, Type("Structure"));     
+            "InvocationContext", InvocationContext, Type("ValueTable"));     
     EndIf;
-    
-    If NOT MessageSettings.Property("Body", MessageBody) Then
-        Raise FL_ErrorsClientServer.ErrorKeyIsMissingInObject(
-            "MessageSettings", MessageSettings, "Body");    
-    EndIf;
-    
-    If TypeOf(MessageBody) <> Type("Structure") Then
-        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "MessageSettings.Body", MessageBody, Type("Structure"));     
-    EndIf;
-    
-    If MessageBody.Property("Parameters", Parameters) Then
-         
-        DataParameters = SettingsComposer.Settings.DataParameters;
-        AvailableParameters = DataParameters.AvailableParameters;
-        
-        // Verification is necessary as the type can be Undefined.
-        ParametersInitialized = False;
-        If AvailableParameters <> Undefined Then
-            ParametersInitialized = TypeOf(AvailableParameters) 
-                = Type("DataCompositionAvailableParameters");
-        EndIf;
-                
-        SettingsInitialized = False;
-        If TypeOf(Parameters) = Type("Structure") Then
-            SettingsInitialized = Parameters.Count() > 0; 
-        EndIf;
-        
-        If ParametersInitialized AND SettingsInitialized Then
-            FillDataCompositionParameterValueCollection(DataParameters, 
-                Parameters);
-        EndIf;            
-        
-    EndIf;
-    
-    If MessageBody.Property("Filter", Filter) Then
-        
-        // TODO: Filter support.    
-        
-    EndIf;
-                        
+             
+    DataParameters = SettingsComposer.Settings.DataParameters;
+    FillDataCompositionParameterValueCollection(DataParameters, 
+        InvocationContext);
+                                
 EndProcedure // SetDataToSettingsComposer()
 
 // Creates description of data source of data composition schema.
@@ -819,96 +783,34 @@ EndProcedure // FillReportStructure()
 // Fills data composition parameter value collection from MessageSettings.Body.Parameters.
 //
 // Parameters:
-//  DataParameters  - DataCompositionParameterValues - values of data parameters. 
-//                                          They are implemented as parameter values.
-//  Parameters      - FixedStructure                 - MessageSettings.Body.Parameters.
+//  DataParameters    - DataCompositionParameterValues - values of data parameters. 
+//                                      They are implemented as parameter values.
+//  InvocationContext - ValueTable                      - invocation context.
 //
 Procedure FillDataCompositionParameterValueCollection(DataParameters, 
-    Parameters)
+    InvocationContext)
 
+    // Verification is necessary as the type can be Undefined.
     AvailableParameters = DataParameters.AvailableParameters;
-    For Each Parameter In Parameters Do
+    If TypeOf(AvailableParameters) <> Type("DataCompositionAvailableParameters") Then
+        Return;
+    EndIf;
+    
+    For Each Item In AvailableParameters.Items Do
         
-        DataCompositionParameter = New DataCompositionParameter(Parameter.Key);
-        DataCompositionAvailableParameter = AvailableParameters.FindParameter(
-            DataCompositionParameter);
-        If DataCompositionAvailableParameter = Undefined Then
-            
-            //Nstr("en = 'Warning: Available parameter not found for [Key: %1].'; 
-            //    |ru = 'Предупреждение: Доступный параметр не найден для [Ключ: %1].'")
-                                          
-            Continue;
-            
+        Parameter = InvocationContext.Find(String(Item.Parameter), 
+            "PrimaryKey");
+        If Parameter = Undefined Then
+            Continue;        
         EndIf;
         
-        SupportedTypes = DataCompositionAvailableParameter.Type.Types();
-        ConversionResult = FL_CommonUse.ConvertValueIntoPlatformObject(
-            Parameter.Value, SupportedTypes);
-            
-        If ConversionResult.TypeConverted Then
-            
-            SetDataCompositionDataParameterValue(DataParameters, Parameter.Key,
-                ConversionResult.ConvertedValue);
-                 
-            // Добавить предупреждения
-            //Для Каждого ЗаписьЖурнала Из РезультатПреобразования.ЗаписиЖурналаРегистрации Цикл
-            //	
-            //	СообщениеПредупреждение = UpdateExpressОбщегоНазначения.ПодставитьПараметрыВСтроку(
-            //	
-            //		// Сообщение об ошибке
-            //		НСтр("en = 'Warning: [Key: %1], %2'; 
-            //			|ru = 'Предупреждение: [Ключ: %1], %2'; 
-            //			|uk = 'Попередження: [Ключ: %1], %2'"),		
-            //						
-            //		// Название поля 
-            //		Настройка.Ключ,
-            //		
-            //		// Сообщение журнала регистрации
-            //		ЗаписьЖурнала.Комментарий);
-            //		
-            //	Если ПустаяСтрока(СтруктураОтвета.Тело) Тогда
-            //		СтруктураОтвета.Тело = СообщениеПредупреждение;
-            //	Иначе
-            //		СтруктураОтвета.Тело = СтруктураОтвета.Тело + Символы.ПС + СообщениеПредупреждение;
-            //	КонецЕсли;
-            //	
-            //	ЗаписьЖурнала.Уровень = УровеньЖурналаРегистрации.Предупреждение;
-            //	СтруктураОтвета.ЗаписиЖурналаРегистрации.Добавить(ЗаписьЖурнала);
-            //	
-            //КонецЦикла;
-            
-        Else
-            
-            //Для Каждого ЗаписьЖурнала Из РезультатПреобразования.ЗаписиЖурналаРегистрации Цикл
-            //    
-            //    СообщениеОбОшибке = UpdateExpressОбщегоНазначения.ПодставитьПараметрыВСтроку(
-            //    
-            //        // Сообщение об ошибке
-            //        НСтр("en = 'Error: [Key: %1], %2'; 
-            //            |ru = 'Ошибка: [Ключ: %1], %2'; 
-            //            |uk = 'Помилка: [Ключ: %1], %2'"),		
-            //                        
-            //        // Название поля 
-            //        Настройка.Ключ,
-            //        
-            //        // Сообщение журнала регистрации
-            //        ЗаписьЖурнала.Комментарий);
-            //    
-            //    Если ПустаяСтрока(СтруктураОтвета.Тело) Тогда
-            //        СтруктураОтвета.Тело = СообщениеОбОшибке;
-            //    Иначе
-            //        СтруктураОтвета.Тело = СтруктураОтвета.Тело + Символы.ПС + СообщениеОбОшибке;
-            //    КонецЕсли;
-            //    
-            //    СтруктураОтвета.КодСостояния = 400;
-            //    СтруктураОтвета.ЗаписиЖурналаРегистрации.Добавить(ЗаписьЖурнала);
-            //    
-            //КонецЦикла;
-            
+        If NOT Item.ValueListAllowed Then
+            SetDataCompositionDataParameterValue(DataParameters, 
+                Parameter.PrimaryKey, Parameter.Value);        
         EndIf;
-            
+        
     EndDo;
-
+    
 EndProcedure // FillDataCompositionParameterValueCollection()
 
 // Sets value of data parameter by identifier. 

@@ -42,6 +42,7 @@
 				<xr:Object>Catalog.FL_Jobs.Command.ConfigureJobServerStartUp</xr:Object>
 				<xr:Object>Constant.FL_WorkerJobsLimit</xr:Object>
 				<xr:Object>DataProcessor.FL_SelfFiles</xr:Object>
+				<xr:Object>InformationRegister.FL_JobState</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

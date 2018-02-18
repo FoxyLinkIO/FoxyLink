@@ -53,7 +53,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.7.2</Version>
+			<Version>0.9.8.3</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -282,8 +282,10 @@
 			<CommonModule>FL_Tasks</CommonModule>
 			<EventSubscription>FL_AccumulationRegistersBeforeWrite</EventSubscription>
 			<EventSubscription>FL_AccumulationRegistersOnWrite</EventSubscription>
+			<EventSubscription>FL_CatalogsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
 			<EventSubscription>FL_CatalogsOnWrite</EventSubscription>
+			<EventSubscription>FL_DocumentsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_DocumentsBeforeWrite</EventSubscription>
 			<EventSubscription>FL_DocumentsOnWrite</EventSubscription>
 			<EventSubscription>FL_InformationRegistersBeforeWrite</EventSubscription>
@@ -311,6 +313,7 @@
 			<DataProcessor>FL_DataProcessorJSON</DataProcessor>
 			<DataProcessor>FL_SelfExport</DataProcessor>
 			<DataProcessor>FL_SelfFiles</DataProcessor>
+			<InformationRegister>FL_JobState</InformationRegister>
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
 		</ChildObjects>
 	</Configuration>

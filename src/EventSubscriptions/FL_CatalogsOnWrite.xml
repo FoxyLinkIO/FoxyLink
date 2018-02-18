@@ -17,7 +17,7 @@
 					<v8:content>Catalogs on write</v8:content>
 				</v8:item>
 			</Synonym>
-			<Comment/>
+			<Comment>Occurs when the object writing is executed. A handler procedure is called after the object is written in the database but before the writing transaction is completed.</Comment>
 			<Source>
 				<v8:TypeSet>cfg:CatalogObject</v8:TypeSet>
 			</Source>

@@ -466,7 +466,12 @@ Procedure RunBackgroundJobs(JobTable, HeartbeatTable, Val Limit)
         
         If Limit = BoostTable.Count()
             OR Index = JobCount Then
-            
+                   
+            For Each Item In BoostTable Do
+                Catalogs.FL_Jobs.ChangeState(Item.Job, 
+                    Catalogs.FL_States.Processing);
+            EndDo;
+
             Task = FL_Tasks.NewTask();
             Task.MethodName = "Catalogs.FL_Jobs.Trigger";
             Task.Parameters.Add(BoostTable.UnloadColumn("Job"));
@@ -480,10 +485,7 @@ Procedure RunBackgroundJobs(JobTable, HeartbeatTable, Val Limit)
             
             FL_CommonUseClientServer.ExtendValueTable(BoostTable, 
                 HeartbeatTable);
-            
-            // TODO: correct state change.
-            //Catalogs.FL_Jobs.ChangeState(Job, Catalogs.FL_States.
-            
+                        
             BoostTable.Clear();
             
         EndIf;

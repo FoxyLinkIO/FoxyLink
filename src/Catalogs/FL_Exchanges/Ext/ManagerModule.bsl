@@ -134,11 +134,10 @@ EndProcedure // FillFormatDescription()
 Function ExportObject(ExchangeRef) Export
     
     InvocationData = FL_BackgroundJob.NewInvocationData();
-    InvocationData.Arguments = ExchangeRef;
     InvocationData.MetadataObject = "Catalog.FL_Exchanges";
     InvocationData.Operation = Catalogs.FL_Operations.Read;
     InvocationData.Owner = Catalogs.FL_Exchanges.Self;
-    InvocationData.SourceObject = ExchangeRef;
+    FL_BackgroundJob.FillInvocationContext(ExchangeRef, InvocationData);
     
     Try 
         
@@ -159,7 +158,8 @@ Function ExportObject(ExchangeRef) Export
     If Job.State = Catalogs.FL_States.Succeeded 
         AND Job.SubscribersLog.Count() > 0 Then
         
-        FileData = Job.SubscribersLog[0].OriginalResponse.Get();
+        LargestIndex = Job.SubscribersLog.Count() - 1;
+        FileData = Job.SubscribersLog[LargestIndex].OriginalResponse.Get();
         FileDescription = FL_CommonUse.ObjectAttributeValue(ExchangeRef, 
             "Description");
     
@@ -266,8 +266,8 @@ EndFunction // NewExchangeSettings()
 // Returns filled structure with output parameters.
 // 
 // Parameters:
-//  ExchangeSettings - Structure - see function Catalog.FL_Exchanges.NewExchangeSettings.
-//  MessageSettings  - Structure - see function FL_DataComposition.NewMessageSettings.
+//  ExchangeSettings  - Structure  - see function Catalog.FL_Exchanges.NewExchangeSettings.
+//  InvocationContext - ValueTable - see function FL_BackgroundJob.NewInvocationContext.
 //                          Default value: Undefined.
 //
 // Returns:
@@ -286,21 +286,20 @@ EndFunction // NewExchangeSettings()
 //
 //
 Function NewOutputParameters(ExchangeSettings, 
-    MessageSettings = Undefined) Export
+    InvocationContext = Undefined) Export
     
     SettingsComposer = New DataCompositionSettingsComposer;
     FL_DataComposition.InitSettingsComposer(SettingsComposer,
         ExchangeSettings.DataCompositionSchema,
         ExchangeSettings.DataCompositionSettings);
-
-    If MessageSettings <> Undefined Then 
-        FL_DataComposition.SetDataToSettingsComposer(SettingsComposer, 
-            MessageSettings); 
-    EndIf;
         
-    DataCompositionTemplate = FL_DataComposition
-        .NewTemplateComposerParameters();
-    DataCompositionTemplate.Schema   = ExchangeSettings.DataCompositionSchema;
+    If InvocationContext <> Undefined Then
+        FL_DataComposition.SetDataToSettingsComposer(SettingsComposer, 
+            InvocationContext);
+    EndIf;
+   
+    DataCompositionTemplate = FL_DataComposition.NewTemplateComposerParameters();
+    DataCompositionTemplate.Schema = ExchangeSettings.DataCompositionSchema;
     DataCompositionTemplate.Template = SettingsComposer.GetSettings();
     
     OutputParameters = FL_DataComposition.NewOutputParameters();

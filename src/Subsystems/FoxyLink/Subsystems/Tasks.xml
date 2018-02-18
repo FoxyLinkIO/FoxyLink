@@ -37,6 +37,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_States</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_RecurringServer</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_WorkerJobsLimit</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_JobState</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

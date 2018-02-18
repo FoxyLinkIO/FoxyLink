@@ -39,52 +39,24 @@ Procedure Trigger(Jobs) Export
     StreamObjectCache = New Map;
     For Each Job In ValidJobs Do
         
+        // Start measuring.
+        StartTime = CurrentUniversalDateInMilliseconds();
+        
         JobObject = Job.GetObject();
-        JobObject.State = Catalogs.FL_States.Succeeded;
+        JobProperties = NewJobProperties();
+        FillJobProperties(JobObject, JobProperties);
         
-        MessageSettings = FL_DataComposition.NewMessageSettings();
-        For Each DCSParameter In JobObject.DCSParameters Do
-            MessageSettings.Body.Parameters.Insert(DCSParameter.Parameter, 
-                DCSParameter.ValueStorage.Get());
-        EndDo;
-
-        ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
-            JobObject.Owner, JobObject.Operation);
-            
-        // Initialize data processor.
-        StreamObject = StreamObjectCache.Get(
-            ExchangeSettings.BasicFormatGuid);   
-        If StreamObject = Undefined Then
-            StreamObject = FL_InteriorUse.NewFormatProcessor(
-                ExchangeSettings.BasicFormatGuid);
-            StreamObjectCache.Insert(ExchangeSettings.BasicFormatGuid, 
-                StreamObject);
-        EndIf;
-        
-        // Open a new memory stream.
-        Stream = New MemoryStream;
-        
-        // Initialize format processor.
-        StreamObject.Initialize(Stream, ExchangeSettings.APISchema);
-        
-        OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(
-            ExchangeSettings, MessageSettings);
-        FL_DataComposition.Output(StreamObject, OutputParameters);
-        
-        // Close format stream.
-        StreamObject.Close();
-        
-        // Fill MIME-type information.
-        JobObject.ContentType = StreamObject.FormatMediaType();
-        JobObject.FileExtension = StreamObject.FormatFileExtension();
+        // Fills stream by the exchange result data.
+        StreamOutExchangeData(JobProperties, StreamObjectCache);
         
         // Notify all subscrubers.
-        NotifyChannels(JobObject, Stream);
+        NotifyChannels(JobObject, JobProperties);
         
-        // Close and free memory.
-        Stream.Close();
+        ChangeState(JobObject, JobProperties.CurrentState);    
         
-        JobObject.Write();
+        // End measuring.
+        EndTime = CurrentUniversalDateInMilliseconds();
+        RecordJobPerformanceMetrics(JobObject, StartTime, EndTime);
         
     EndDo;
             
@@ -93,45 +65,50 @@ EndProcedure // Trigger()
 // Creates a new background job in a specified state.
 //
 // Parameters:
-//  BackgroundJob - FixedStructure       - job that should be processed in background.
-//  State         - CatalogRef.FL_States - initial state for a background job.
+//  InvocationData - FixedStructure       - job that should be processed in background.
+//  State          - CatalogRef.FL_States - initial state for a background job.
 //
 // Returns:
 //  CatalogRef.FL_Jobs - ref to created background job or 
 //                       Undefined, if it was not created.
 //
-Function Create(BackgroundJob, State) Export
+Function Create(InvocationData, State) Export
     
-    Var Parameters, SessionContext, Subscribers, SubscriberResources; 
+    Var InvocationContext, SessionContext;
+        
+    JobObject = Catalogs.FL_Jobs.CreateItem();
+    FillPropertyValues(JobObject, InvocationData);
     
-    NewJob = Catalogs.FL_Jobs.CreateItem();
-    NewJob.State = State;
-    NewJob.CreatedAt = CurrentUniversalDate();
-    
-    FillPropertyValues(NewJob, BackgroundJob);
-
-    If BackgroundJob.Property("Parameters", Parameters) 
-        AND TypeOf(Parameters) = Type("ValueTable") Then
-        NewJob.DCSParameters.Load(Parameters);
+    If InvocationData.Property("InvocationContext", InvocationContext) 
+        AND TypeOf(InvocationContext) = Type("ValueTable") Then
+        JobObject.InvocationContext.Load(InvocationContext);
     EndIf;
     
-    If BackgroundJob.Property("SessionContext", SessionContext) 
+    If InvocationData.Property("SessionContext", SessionContext) 
         AND TypeOf(SessionContext) = Type("ValueTable") Then
-        NewJob.SessionContext.Load(SessionContext);
+        JobObject.SessionContext.Load(SessionContext);
     EndIf;
     
-    If BackgroundJob.Property("Subscribers", Subscribers) 
-        AND TypeOf(Subscribers) = Type("ValueTable") Then
-        NewJob.Subscribers.Load(Subscribers);
-    EndIf;
+    SubIndex = 1;
+    ResIndex = 2;
+        
+    SubscribersData = New Query;
+    SubscribersData.Text = QueryTextSubscribersData();
+    SubscribersData.SetParameter("Owner", JobObject.Owner);
+    SubscribersData.SetParameter("Operation", JobObject.Operation);
+    BatchResult = SubscribersData.ExecuteBatch();
     
-    If BackgroundJob.Property("SubscriberResources", SubscriberResources) 
-        AND TypeOf(SubscriberResources) = Type("ValueTable") Then
-        NewJob.SubscriberResources.Load(SubscriberResources);
-    EndIf;
+    FillSubscribers(JobObject, BatchResult[SubIndex].Unload());
+    FillSubscriberResources(JobObject, InvocationData.Source, 
+        BatchResult[ResIndex].Unload());
+        
+    ChangeState(JobObject, State);
     
-    NewJob.Write();
-    Return NewJob.Ref;
+    // End measuring.
+    EndTime = CurrentUniversalDateInMilliseconds();
+    RecordJobPerformanceMetrics(JobObject, JobObject.CreatedAt, EndTime);
+    
+    Return JobObject.Ref;
 
 EndFunction // Create()
 
@@ -139,8 +116,9 @@ EndFunction // Create()
 // to a specified one.
 //
 // Parameters:
-//  Job           - CatalogRef.FL_Jobs   - job, whose state should be changed.
-//  State         - CatalogRef.FL_States - new state for a background job.
+//  Job           - CatalogRef.FL_Jobs    - job, whose state should be changed.
+//                - CatalogObject.FL_Jobs - job, whose state should be changed.
+//  State         - CatalogRef.FL_States  - new state for a background job.
 //  ExpectedState - String, CatalogRef.FL_States - value is not Undefined, 
 //                      state change will be performed only if the current 
 //                      state name of a job equal to the given value.
@@ -151,29 +129,26 @@ EndFunction // Create()
 //
 Function ChangeState(Job, State, ExpectedState = Undefined) Export
     
-    DataLock = New DataLock;
-    LockItem = DataLock.Add("Catalog.FL_Jobs");
-    LockItem.Mode = DataLockMode.Exclusive;
-    LockItem.SetValue("Ref", Job);
+    If ExpectedState <> Undefined 
+        AND Upper(String(ExpectedState)) <> Upper(String(Job.State)) Then
+        Return False;             
+    EndIf;
     
-    Try
-        BeginTransaction();
-        
-        DataLock.Lock();
+    If TypeOf(Job) = Type("CatalogRef.FL_Jobs") Then
         
         JobObject = Job.GetObject();
-        JobObject.State = State; 
+        JobObject.State = State;
         JobObject.Write();
         
-        CommitTransaction();
+        RecordJobPerformanceMetrics(JobObject);
         
-    Except
+    Else
         
-        RollbackTransaction();
-        Return False;
+        Job.State = State; 
+        Job.Write();
         
-    EndTry;
-    
+    EndIf;
+        
     Return True;
     
 EndFunction // ChangeState()
@@ -208,33 +183,67 @@ EndProcedure // ValidateJobType()
 
 // Only for internal use.
 //
-Procedure NotifyChannels(JobObject, Stream)
+Procedure StreamOutExchangeData(JobProperties, Cache)
     
-    If JobObject.Subscribers.Count() = 0 Then
-        Return;    
-    EndIf;
+    ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
+        JobProperties.Owner, JobProperties.Operation);    
+            
+    StreamObject = StreamObjectCached(Cache, ExchangeSettings.BasicFormatGuid); 
     
+    // Open new memory stream and initialize format processor.
+    Stream = New MemoryStream;
+    StreamObject.Initialize(Stream, ExchangeSettings.APISchema);
+    
+    OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(
+        ExchangeSettings, JobProperties.InvocationContext);
+                
+    FL_DataComposition.Output(StreamObject, OutputParameters);
+    
+    // Fill MIME-type information.
+    JobProperties.ContentType = StreamObject.FormatMediaType();
+    JobProperties.FileExtension = StreamObject.FormatFileExtension();
+    JobProperties.ReadonlyStream = Stream.GetReadOnlyStream(); 
+    
+    // Close format stream and memory stream.
+    StreamObject.Close();
+    Stream.Close();
+    
+EndProcedure // StreamOutExchangeData()
+
+// Only for internal use.
+//
+Procedure NotifyChannels(JobObject, JobProperties)
+        
     FilterParameters = New Structure("Channel");
     Resources = JobObject.SubscriberResources.Unload();
+    
     For Each Subscriber In JobObject.Subscribers Do 
         
         If Subscriber.Completed Then
             Continue;    
         EndIf;
         
-        //Try
+        Try
+        
+            JobProperties.ReadonlyStream.Seek(0, PositionInStream.Begin);
             FilterParameters.Channel = Subscriber.Channel;   
             TriggerResult = Catalogs.FL_Channels.TransferStreamToChannel(
-                Subscriber.Channel, Stream, NewProperties(JobObject, 
-                    Resources.FindRows(FilterParameters)));
-        //Except
-            //TODO: Exceptions!
-        //EndTry;
+                Subscriber.Channel, 
+                JobProperties.ReadonlyStream, 
+                NewProperties(JobProperties, Resources.FindRows(
+                        FilterParameters)));
+                
+        Except
+            
+            TriggerResult = Catalogs.FL_Channels.NewChannelDeliverResult();
+            TriggerResult.LogAttribute = ErrorDescription();
+            
+        EndTry;
                 
         If TriggerResult.Success Then
             Subscriber.Completed = True;
         Else
-            JobObject.State = Catalogs.FL_States.Failed;
+            JobProperties.CurrentState = Catalogs.FL_States.Failed;
         EndIf;
         
         NewLogRow = JobObject.SubscribersLog.Add();
@@ -247,24 +256,204 @@ EndProcedure // NotifyChannels()
 
 // Only for internal use.
 //
-Function NewProperties(JobObject, Resources)
+Procedure FillJobProperties(JobObject, JobProperties)
+    
+    InvocationContext = JobObject.InvocationContext.Unload();
+    InvocationContext.Columns.Add("Value");
+    For Each Context In InvocationContext Do
+        
+        Try
+            Context.Value = XMLValue(Type(Context.XMLType), Context.XMLValue);
+        Except
+            Context.Value = Undefined;     
+        EndTry;
+        
+    EndDo;
+    
+    JobProperties.InvocationContext = InvocationContext;
+    JobProperties.Job = JobObject.Ref;
+    JobProperties.MetadataObject = JobObject.MetadataObject;
+    JobProperties.Operation = JobObject.Operation;
+    JobProperties.Owner = JobObject.Owner;
+    
+EndProcedure // FillJobProperties()
+
+// Only for internal use.
+//
+Procedure FillSubscribers(JobObject, Subscribers)
+    
+    For Each Subscriber In Subscribers Do
+        FillPropertyValues(JobObject.Subscribers.Add(), Subscriber);
+    EndDo;    
+    
+EndProcedure // FillSubscribers()
+
+// Only for internal use.
+//
+Procedure FillSubscriberResources(JobObject, Source, Resources)
+    
+    For Each Resource In Resources Do
+        
+        If Resource.ExecutableCode Then
+                
+            ExecutableParams = New Structure;
+            ExecutableParams.Insert("Source", Source);
+            ExecutableParams.Insert("Result", Undefined);
+            
+            Algorithm = StrTemplate("
+                    |Source = Parameters.Source;
+                    |Result = Parameters.Result;
+                    |
+                    |%1
+                    |
+                    |Parameters.Result = Result;", 
+                Resource.FieldValue);
+                
+            Try
+                FL_RunInSafeMode.ExecuteInSafeMode(Algorithm, 
+                    ExecutableParams);
+                    
+                NewResource = JobObject.SubscriberResources.Add();    
+                FillPropertyValues(NewResource, Resource, , "FieldValue");
+                NewResource.FieldValue = ExecutableParams.Result;
+                
+            Except
+
+                ErrorInfo = ErrorInfo();
+                ErrorMessage = StrTemplate(
+                    NStr("en='An error occurred when calling procedure 
+                            |ExecuteInSafeMode of common module FL_RunInSafeMode. %1';
+                        |ru='Ошибка при вызове процедуры ExecuteInSafeMode 
+                            |общего модуля FL_RunInSafeMode. %1';
+                        |en_CA='An error occurred when calling procedure 
+                            |ExecuteInSafeMode of common module FL_RunInSafeMode. %1'"),
+                    BriefErrorDescription(ErrorInfo));
+                FL_CommonUseClientServer.NotifyUser(ErrorMessage);     
+                      
+                FillPropertyValues(JobObject.SubscriberResources.Add(), 
+                    Resource);   
+                    
+            EndTry;
+            
+        Else
+            FillPropertyValues(JobObject.SubscriberResources.Add(), 
+                Resource);    
+        EndIf;
+            
+    EndDo;    
+    
+EndProcedure // FillSubscribers()
+
+// Only for internal use.
+//
+Procedure RecordJobPerformanceMetrics(JobObject, StartTime = 0, EndTime = 0) 
+    
+    RecordManager = InformationRegisters.FL_JobState.CreateRecordManager();
+    RecordManager.Job = JobObject.Ref;
+    RecordManager.State = JobObject.State;
+    RecordManager.CreatedAt = CurrentUniversalDateInMilliseconds();
+    RecordManager.PerformanceDuration = EndTime - StartTime; 
+    RecordManager.Write();
+    
+EndProcedure // RecordJobPerformanceMetrics()
+
+// Only for internal use.
+//
+Function StreamObjectCached(Cache, Guid)
+    
+    StreamObject = Cache.Get(Guid);   
+    If StreamObject = Undefined Then
+        StreamObject = FL_InteriorUse.NewFormatProcessor(Guid);
+        Cache.Insert(Guid, StreamObject);
+    EndIf;
+    
+    Return StreamObject;
+    
+EndFunction // StreamObjectCached()
+
+// Only for internal use.
+//
+Function NewProperties(JobProperties, Resources)
     
     Properties = New Structure;
+    Properties.Insert("JobProperties", JobProperties);
     For Each Resource In Resources Do
         Properties.Insert(Resource.FieldName, Resource.FieldValue);        
     EndDo;
     
-    JobProperties = New Structure;
-    JobProperties.Insert("ContentType", JobObject.ContentType);
-    JobProperties.Insert("FileExtension", JobObject.FileExtension);
-    JobProperties.Insert("MetadataObject", JobObject.MetadataObject);
-    JobProperties.Insert("Operation", JobObject.Operation);
-    JobProperties.Insert("SourceObject", JobObject.SourceObject);
-    
-    Properties.Insert("JobProperties", JobProperties);
     Return Properties;
     
 EndFunction // NewProperties()
+
+// Only for internal use.
+//
+Function NewJobProperties()
+    
+    JobProperties = New Structure;
+    JobProperties.Insert("ContentType");
+    JobProperties.Insert("CurrentState", Catalogs.FL_States.Succeeded);
+    JobProperties.Insert("FileExtension");
+    JobProperties.Insert("Job");
+    JobProperties.Insert("InvocationContext");
+    JobProperties.Insert("MetadataObject");
+    JobProperties.Insert("Operation");
+    JobProperties.Insert("Owner");
+    JobProperties.Insert("ReadonlyStream");
+    
+    Return JobProperties;
+    
+EndFunction // NewJobProperties()
+
+// Only for internal use.
+//
+Function QueryTextSubscribersData()
+
+    QueryText = "
+        |SELECT
+        |   Channels.Ref AS Owner,
+        |   Channels.Channel AS Channel,
+        |   Channels.Operation AS Operation
+        |INTO ChannelsCache
+        |FROM
+        |   Catalog.FL_Exchanges.Channels AS Channels
+        |WHERE
+        |    Channels.Ref = &Owner
+        |AND Channels.Operation = &Operation
+        |
+        |INDEX BY
+        |   Owner   
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |SELECT
+        |   Channels.Channel AS Channel,
+        |   Operations.DataCompositionSchema AS DataCompositionSchema
+        |FROM
+        |   ChannelsCache AS Channels
+        |
+        |INNER JOIN Catalog.FL_Exchanges.Operations AS Operations
+        |ON  Operations.Ref = Channels.Owner
+        |AND Operations.Operation = Channels.Operation
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |SELECT 
+        |   ChannelResources.Channel        AS Channel,
+        |   ChannelResources.ExecutableCode AS ExecutableCode,
+        |   ChannelResources.FieldName      AS FieldName,
+        |   ChannelResources.FieldValue     AS FieldValue
+        |FROM
+        |   Catalog.FL_Exchanges.ChannelResources AS ChannelResources   
+        |
+        |INNER JOIN ChannelsCache AS Channels
+        |ON  Channels.Owner = ChannelResources.Ref
+        |AND Channels.Channel = ChannelResources.Channel
+        |AND Channels.Operation = ChannelResources.Operation
+        |;
+        |";
+    Return QueryText;
+    
+EndFunction // QueryTextSubscribersData()
 
 #EndRegion // ServiceProceduresAndFunctions
 
