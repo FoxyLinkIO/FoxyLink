@@ -182,40 +182,40 @@ Procedure InformationRegisterBeforeWrite(Source, Cancel, Replacing) Export
         Return;
     EndIf;
     
-    SourceMetadata = Source.Metadata();
-    MetadataObject = SourceMetadata.FullName();
-    If IsEventPublisher(MetadataObject) Then
-        
-        InvocationData = FL_BackgroundJob.NewInvocationData();
-        InvocationData.MetadataObject = MetadataObject;
-        
-        If Replacing Then
-            
-            Records = FL_CommonUse.RegisterRecordValues(SourceMetadata, 
-                Source.Filter);
-                
-            InvocationData.Arguments = Records;
-            InvocationData.Operation = Catalogs.FL_Operations.Delete;
-            InvocationData.State = Catalogs.FL_States.Awaiting;
-            
-            SessionRecords = New Structure;
-            SessionRecords.Insert("Records", Records);
-            SessionRecords.Insert("Filter", Source.Filter);
-            
-            NewSessionContext = InvocationData.SessionContext.Add();
-            NewSessionContext.MetadataObject = MetadataObject;
-            NewSessionContext.Session = FL_EventsReUse.SessionHash();
-            NewSessionContext.ValueStorage = New ValueStorage(SessionRecords, 
-                New Deflation(9));
-            
-        Else
-            InvocationData.Operation = Catalogs.FL_Operations.Create;    
-        EndIf;
-        
-        Source.AdditionalProperties.Insert("InvocationData", 
-            InvocationData);
-        
-    EndIf;    
+    //SourceMetadata = Source.Metadata();
+    //MetadataObject = SourceMetadata.FullName();
+    //If IsEventPublisher(MetadataObject) Then
+    //    
+    //    InvocationData = FL_BackgroundJob.NewInvocationData();
+    //    InvocationData.MetadataObject = MetadataObject;
+    //    
+    //    If Replacing Then
+    //        
+    //        Records = FL_CommonUse.RegisterRecordValues(SourceMetadata, 
+    //            Source.Filter);
+    //            
+    //        InvocationData.Arguments = Records;
+    //        InvocationData.Operation = Catalogs.FL_Operations.Delete;
+    //        InvocationData.State = Catalogs.FL_States.Awaiting;
+    //        
+    //        SessionRecords = New Structure;
+    //        SessionRecords.Insert("Records", Records);
+    //        SessionRecords.Insert("Filter", Source.Filter);
+    //        
+    //        NewSessionContext = InvocationData.SessionContext.Add();
+    //        NewSessionContext.MetadataObject = MetadataObject;
+    //        NewSessionContext.Session = FL_EventsReUse.SessionHash();
+    //        NewSessionContext.ValueStorage = New ValueStorage(SessionRecords, 
+    //            New Deflation(9));
+    //        
+    //    Else
+    //        InvocationData.Operation = Catalogs.FL_Operations.Create;    
+    //    EndIf;
+    //    
+    //    Source.AdditionalProperties.Insert("InvocationData", 
+    //        InvocationData);
+    //    
+    //EndIf;    
           
 EndProcedure // InformationRegisterBeforeWrite()
 
@@ -235,23 +235,23 @@ Procedure AccumulationRegisterBeforeWrite(Source, Cancel, Replacing) Export
         Return;
     EndIf;
        
-    SourceMetadata = Source.Metadata();
-    MetadataObject = SourceMetadata.FullName();
-    If IsEventPublisher(MetadataObject) Then
-        
-        InvocationData = FL_BackgroundJob.NewInvocationData();
-        InvocationData.MetadataObject = MetadataObject;
-        InvocationData.Operation = Catalogs.FL_Operations.Update;
-        
-        If Replacing Then
-            InvocationData.Arguments = FL_CommonUse.RegisterRecordValues(
-                SourceMetadata, Source.Filter);
-        EndIf;
-        
-        Source.AdditionalProperties.Insert("InvocationData", 
-            InvocationData);
-        
-    EndIf;    
+    //SourceMetadata = Source.Metadata();
+    //MetadataObject = SourceMetadata.FullName();
+    //If IsEventPublisher(MetadataObject) Then
+    //    
+    //    InvocationData = FL_BackgroundJob.NewInvocationData();
+    //    InvocationData.MetadataObject = MetadataObject;
+    //    InvocationData.Operation = Catalogs.FL_Operations.Update;
+    //    
+    //    If Replacing Then
+    //        InvocationData.Arguments = FL_CommonUse.RegisterRecordValues(
+    //            SourceMetadata, Source.Filter);
+    //    EndIf;
+    //    
+    //    Source.AdditionalProperties.Insert("InvocationData", 
+    //        InvocationData);
+    //    
+    //EndIf;    
           
 EndProcedure // AccumulationRegisterBeforeWrite()
 
@@ -341,27 +341,44 @@ Procedure EnqueueEvent(Source) Export
     If NOT IsInvocationDataFilled(InvocationData, Properties) Then
         Return;
     EndIf;
-        
-    InvocationData.Property("Arguments", Arguments); 
-    If TypeOf(Arguments) = Type("ValueTable") Then
-        
-        FilterItem = Source.Filter.Find("Recorder");
-        If FilterItem <> Undefined Then
-            InvocationData.SourceObject = FilterItem.Value;    
-        EndIf;
-        
-        FL_CommonUseClientServer.ExtendValueTable(Source.Unload(), 
-            Arguments);
-            
-    ElsIf FL_CommonUseReUse.IsReferenceTypeObjectCached(
-        InvocationData.MetadataObject) Then
-        
-        InvocationData.Arguments = Source.Ref;
-        InvocationData.SourceObject = Source.Ref;
-        
-    EndIf;
     
-    EnqueueBackgroundJobs(InvocationData);  
+    // Start measuring.
+    InvocationData.CreatedAt = CurrentUniversalDateInMilliseconds();
+    FL_BackgroundJob.FillInvocationContext(Source, InvocationData); 
+    
+    Publishers = FL_EventsReUse.EventPublishers(InvocationData.MetadataObject, 
+        InvocationData.Operation);
+    For Each Publisher In Publishers Do
+        
+        InvocationData.Owner = Publisher;
+        InvocationData.Priority = FL_EventsReUse.EventPriority(Publisher, 
+            InvocationData.Operation);        
+        InvocationData.Source = Source;
+        
+        FL_BackgroundJob.Enqueue(InvocationData);
+        
+    EndDo; 
+    
+    //InvocationData.Property("Arguments", Arguments); 
+    //If TypeOf(Arguments) = Type("ValueTable") Then
+    //    
+    //    FilterItem = Source.Filter.Find("Recorder");
+    //    If FilterItem <> Undefined Then
+    //        InvocationData.SourceObject = FilterItem.Value;    
+    //    EndIf;
+    //    
+    //    FL_CommonUseClientServer.ExtendValueTable(Source.Unload(), 
+    //        Arguments);
+    //        
+    //ElsIf FL_CommonUseReUse.IsReferenceTypeObjectCached(
+    //    InvocationData.MetadataObject) Then
+    //    
+    //    InvocationData.Arguments = Source.Ref;
+    //    InvocationData.SourceObject = Source.Ref;
+    //    
+    //EndIf;
+    
+    //EnqueueBackgroundJobs(InvocationData);  
     
 EndProcedure // EnqueueEvent()
 
@@ -388,38 +405,13 @@ EndFunction // NewSourceMock()
 
 #Region ServiceProceduresAndFunctions
 
-// Enqueues a new fire-and-forget jobs based on invocation data.
-//
-// Parameters:
-//  InvocationData - Structure - see function FL_BackgroundJob.NewInvocationData.
-//
-Procedure EnqueueBackgroundJobs(InvocationData)
-    
-    Query = New Query;
-    Query.Text = QueryTextSubscribers(InvocationData.Owner);
-    Query.SetParameter("MetadataObject", InvocationData.MetadataObject);
-    Query.SetParameter("Operation", InvocationData.Operation);
-    Query.SetParameter("Owner", InvocationData.Owner);
-    QueryResult = Query.Execute();
-    If NOT QueryResult.IsEmpty() Then
-        
-        QueryResultSelection = QueryResult.Select();
-        While QueryResultSelection.Next() Do
-            
-            FillPropertyValues(InvocationData, QueryResultSelection);
-            FL_BackgroundJob.Enqueue(InvocationData);   
-        EndDo;
-        
-    EndIf;
-    
-EndProcedure // EnqueueBackgroundJobs()
-
 // Only for internal use.
 //
 Procedure ApplyInvocationData(Source, Operation)
     
     MetadataObject = Source.Metadata().FullName();
-    If NOT IsEventPublisher(MetadataObject) Then
+    Publishers = FL_EventsReUse.EventPublishers(MetadataObject, Operation);
+    If Publishers.Count() = 0 Then
         Return;
     EndIf;
     
@@ -454,46 +446,5 @@ Function IsInvocationDataFilled(InvocationData, Properties)
     Return True;
     
 EndFunction // IsInvocationDataFilled()
-
-// Only for internal use.
-//
-Function IsEventPublisher(MetadataFullName)
-    
-    EventPublishers = FL_EventsReUse.EventPublishers();
-    If EventPublishers.Find(MetadataFullName) <> Undefined Then 
-        Return True;    
-    Else
-        Return False;
-    EndIf;
-    
-EndFunction // IsEventPublisher()
-
-// Only for internal use.
-//
-Function QueryTextSubscribers(Owner)
-    
-    QueryText = StrTemplate("
-        |SELECT
-        |   Exchanges.Ref AS Owner,
-        |   OperationTable.Priority AS Priority
-        |FROM
-        |   Catalog.FL_Exchanges AS Exchanges
-        |
-        |INNER JOIN Catalog.FL_Exchanges.Events AS EventTable
-        // [OPPX|OPHP1 +] Attribute + Ref
-        |ON  EventTable.MetadataObject = &MetadataObject
-        |AND EventTable.Ref            = Exchanges.Ref
-        |AND EventTable.Operation      = &Operation
-        |
-        |INNER JOIN Catalog.FL_Exchanges.Operations AS OperationTable
-        |ON  OperationTable.Ref       = Exchanges.Ref
-        |AND OperationTable.Operation = EventTable.Operation
-        |
-        |WHERE
-        |   %1 
-        |", ?(Owner = Undefined, "Exchanges.InUse = True", "Exchanges.Ref = &Owner"));
-    Return QueryText;
-    
-EndFunction // QueryTextSubscribers()
 
 #EndRegion // ServiceProceduresAndFunctions

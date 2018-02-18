@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -48,18 +48,48 @@ EndFunction // SessionHash()
 
 // Returns event publishers.
 //
+// Parameters:
+//  MetadataObject - String                   - the full name of a metadata object as a term.   
+//  Operation      - CatalogRef.FL_Operations - reference to the FL_Operations catalog.
+//
 // Returns:
 //  FixedArray - with event publishers:
-//      * String - an event publisher.
+//      * CatalogRef.FL_Exchanges - an event publisher.
 //
-Function EventPublishers() Export
+Function EventPublishers(MetadataObject, Operation) Export
     
     Query = New Query;
     Query.Text = QueryTextEventPublishers();
+    Query.SetParameter("MetadataObject", MetadataObject);
+    Query.SetParameter("Operation", Operation);
     ValueTable = Query.Execute().Unload();
-    Return New FixedArray(ValueTable.UnloadColumn("MetadataObject"));
+    Return New FixedArray(ValueTable.UnloadColumn("Exchange"));
     
 EndFunction // EventPublishers()
+
+// Returns event priority.
+//
+// Parameters:
+//  Exchange  - CatalogRef.FL_Exchanges  - event publisher.   
+//  Operation - CatalogRef.FL_Operations - event operation.
+//
+// Returns:
+//  Number - event priority.
+//
+Function EventPriority(Exchange, Operation) Export
+    
+    NormalPriority = 5;
+    
+    Query = New Query;
+    Query.Text = QueryTextEventPriority();
+    Query.SetParameter("Exchange", Exchange);
+    Query.SetParameter("Operation", Operation);
+    QueryResultSelection = Query.Execute().Select();
+    Return ?(QueryResultSelection.Next(), 
+        QueryResultSelection.Priority, 
+        NormalPriority);
+    
+EndFunction // EventPriority()
 
 #EndRegion // ProgramInterface
 
@@ -71,18 +101,39 @@ Function QueryTextEventPublishers()
 
     QueryText = "
         |SELECT 
-        |    ExchangeEvents.MetadataObject AS MetadataObject
+        |   EventTable.Ref AS Exchange
         |FROM
-        |   Catalog.FL_Exchanges AS Exchanges
+        |   Catalog.FL_Exchanges AS Exchanges 
         |
-        |INNER JOIN Catalog.FL_Exchanges.Events AS ExchangeEvents
-        |ON ExchangeEvents.Ref = Exchanges.Ref 
+        |INNER JOIN Catalog.FL_Exchanges.Events AS EventTable
+        // [OPPX|OPHP1 +] Attribute + Ref
+        |ON  EventTable.MetadataObject = &MetadataObject
+        |AND EventTable.Ref            = Exchanges.Ref
+        |AND EventTable.Operation      = &Operation
         |
         |WHERE
-        |    Exchanges.InUse = True
+        |   Exchanges.InUse = True
         |";
     Return QueryText;
     
 EndFunction // QueryTextEventPublishers()
+
+// Only for internal use.
+//
+Function QueryTextEventPriority()
+
+    QueryText = "
+        |SELECT 
+        |   Operations.Priority AS Priority
+        |FROM
+        |   Catalog.FL_Exchanges.Operations AS Operations 
+        |
+        |WHERE
+        |   Operations.Ref = &Exchange
+        |AND Operations.Operation = &Operation
+        |";
+    Return QueryText;
+    
+EndFunction // QueryTextEventPriority()
 
 #EndRegion // ServiceProceduresAndFunctions

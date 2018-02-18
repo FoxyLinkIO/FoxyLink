@@ -102,8 +102,6 @@ Function DeliverMessage(Stream, Properties) Export
             "FileName", FileName, Type("String"));
     EndIf; 
     
-    Stream.Seek(0, PositionInStream.Begin);
-    
     FileStream = New FileStream(FileName, FileOpenMode.Create, 
         FileAccess.Write);
     DataWriter = New DataWriter(FileStream);

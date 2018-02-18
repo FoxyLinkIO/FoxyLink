@@ -89,21 +89,18 @@ Function DeliverMessage(Stream, Properties) Export
     SuccessCode = 200;
     DeliveryResult = Catalogs.FL_Channels.NewChannelDeliverResult();
     
-    If TypeOf(Stream) = Type("MemoryStream") Then
-        
-        Stream.Seek(0, PositionInStream.Begin);
-        
-        DataReader = New DataReader(Stream);
-        BinaryData = DataReader.Read().GetBinaryData();
-        DataReader.Close();
-        
-        DeliveryResult.OriginalResponse = New ValueStorage(BinaryData, 
-            New Deflation(9));
-        DeliveryResult.StringResponse = GetStringFromBinaryData(BinaryData);
-        DeliveryResult.StatusCode = SuccessCode;
-        DeliveryResult.Success = True;
-        
+    DataReader = New DataReader(Stream);
+    BinaryData = DataReader.Read().GetBinaryData();
+    DataReader.Close();
+    
+    If Log Then
+        DeliveryResult.LogAttribute = "200 Success";
     EndIf;
+    DeliveryResult.Success = True;
+    DeliveryResult.StatusCode = SuccessCode;
+    DeliveryResult.OriginalResponse = New ValueStorage(BinaryData, 
+        New Deflation(9));
+    DeliveryResult.StringResponse = GetStringFromBinaryData(BinaryData);
     
     Return DeliveryResult;
     
@@ -184,7 +181,7 @@ EndFunction // SuppliedIntegration()
 //
 Function Version() Export
     
-    Return "1.1.7";
+    Return "1.1.8";
     
 EndFunction // Version()
 

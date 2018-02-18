@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ClientApplicationInterface xmlns="http://v8.1c.ru/8.2/managed-application/core" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="InterfaceLayouter">
-	<top>
-		<panel id="eda20500-efca-42b5-8393-05b02425754c">
-			<uuid>b553047f-c9aa-4157-978d-448ecad24248</uuid>
-		</panel>
-	</top>
 	<left>
 		<group id="c09b9d25-620e-4c1a-9217-ef5dc8ce12c6">
 			<group>
 				<panel id="68035eda-0745-4fa0-87b6-3a037f281761">
 					<uuid>8e10648b-f52d-4ec2-b4dd-87de33778d95</uuid>
+				</panel>
+			</group>
+			<group>
+				<panel id="eda20500-efca-42b5-8393-05b02425754c">
+					<uuid>b553047f-c9aa-4157-978d-448ecad24248</uuid>
 				</panel>
 			</group>
 		</group>

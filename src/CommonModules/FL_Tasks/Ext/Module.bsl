@@ -36,7 +36,6 @@ Function Run(Task) Export
     Parameters.Add(Task.MethodName);
     Parameters.Add(Task.Parameters);
     Parameters.Add(Task.SafeMode);
-    Parameters.Add(CurrentUniversalDateInMilliseconds());
     
     BackgroundJob = BackgroundJobs.Execute(
         "FL_Tasks.TaskAction", 
@@ -103,11 +102,8 @@ EndFunction // NewTask()
 //              values, it is allowed not to set them in the array.
 //  SafeMode   - Boolean - executes the method with pre-establishing 
 //              a safe mode of code execution.
-//  StartTime  - Number  - the time in milliseconds that helps calculate latency.
 //
-Procedure TaskAction(MethodName, Parameters, SafeMode, StartTime) Export
-    
-    Latency = CurrentUniversalDateInMilliseconds() - StartTime;
+Procedure TaskAction(MethodName, Parameters, SafeMode) Export
     
     If TypeOf(Parameters) = Type("Array") Then
         ParametersCount = Parameters.UBound();
@@ -123,8 +119,6 @@ Procedure TaskAction(MethodName, Parameters, SafeMode, StartTime) Export
     
     Algorithm = StrTemplate("%1(%2)", MethodName, MethodParameters);
     
-    StartPerformance = CurrentUniversalDateInMilliseconds();
-    
     Try
         If SafeMode Then
             FL_RunInSafeMode.ExecuteInSafeMode(Algorithm, Parameters);    
@@ -134,8 +128,6 @@ Procedure TaskAction(MethodName, Parameters, SafeMode, StartTime) Export
     Except
         Raise;
     EndTry;
-    
-    PerformanceDuration = CurrentUniversalDateInMilliseconds() - StartPerformance; 
     
 EndProcedure // TaskAction() 
 

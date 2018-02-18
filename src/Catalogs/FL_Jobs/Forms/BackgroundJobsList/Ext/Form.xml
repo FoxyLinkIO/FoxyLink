@@ -175,16 +175,17 @@
 				<ExtendedTooltip name="ListSearchControlExtendedTooltip" id="15"/>
 			</SearchControlAddition>
 			<ChildItems>
+				<LabelField name="Code" id="16">
+					<DataPath>List.Code</DataPath>
+					<DefaultItem>true</DefaultItem>
+					<Width>5</Width>
+					<ContextMenu name="CodeContextMenu" id="17"/>
+					<ExtendedTooltip name="CodeExtendedTooltip" id="18"/>
+				</LabelField>
 				<LabelField name="Owner" id="22">
 					<DataPath>List.Owner</DataPath>
 					<ContextMenu name="OwnerContextMenu" id="23"/>
 					<ExtendedTooltip name="OwnerExtendedTooltip" id="24"/>
-				</LabelField>
-				<LabelField name="Code" id="16">
-					<DataPath>List.Code</DataPath>
-					<DefaultItem>true</DefaultItem>
-					<ContextMenu name="CodeContextMenu" id="17"/>
-					<ExtendedTooltip name="CodeExtendedTooltip" id="18"/>
 				</LabelField>
 				<LabelField name="Operation" id="25">
 					<DataPath>List.Operation</DataPath>
@@ -195,16 +196,6 @@
 					<DataPath>List.State</DataPath>
 					<ContextMenu name="StateContextMenu" id="77"/>
 					<ExtendedTooltip name="StateExtendedTooltip" id="78"/>
-				</LabelField>
-				<LabelField name="Reference" id="28">
-					<DataPath>~List.Reference</DataPath>
-					<ContextMenu name="ReferenceContextMenu" id="29"/>
-					<ExtendedTooltip name="ReferenceExtendedTooltip" id="30"/>
-				</LabelField>
-				<LabelField name="CreatedAt" id="73">
-					<DataPath>List.CreatedAt</DataPath>
-					<ContextMenu name="CreatedAtContextMenu" id="74"/>
-					<ExtendedTooltip name="CreatedAtExtendedTooltip" id="75"/>
 				</LabelField>
 			</ChildItems>
 		</Table>
