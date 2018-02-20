@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
+	<Table uuid="2f388140-3087-40db-b8c3-124246715d7b">
+		<InternalInfo>
+			<xr:GeneratedType name="ExternalDataSourceTableManager.DataBank.dbo_DimSalesChannel" category="Manager">
+				<xr:TypeId>761a394a-939c-4652-86a5-f5e249e61f61</xr:TypeId>
+				<xr:ValueId>d2e6d2ef-3454-4411-a4fd-4b1ecbfae1ae</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="ExternalDataSourceTableObject.DataBank.dbo_DimSalesChannel" category="Object">
+				<xr:TypeId>7e6ebf50-7433-45d2-81f2-82d00645a3e8</xr:TypeId>
+				<xr:ValueId>55b179b2-a021-47bb-8b52-95344eb5fd65</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="ExternalDataSourceTableRef.DataBank.dbo_DimSalesChannel" category="Ref">
+				<xr:TypeId>b76e0d95-39ae-46b8-aca2-a885b3731172</xr:TypeId>
+				<xr:ValueId>5b4c36cc-e3a5-48cc-9186-d7dee456876b</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="ExternalDataSourceTableList.DataBank.dbo_DimSalesChannel" category="List">
+				<xr:TypeId>e20b9616-046f-477b-8788-325e665fe5a4</xr:TypeId>
+				<xr:ValueId>9bf56ef7-b4b8-4425-8d91-fd7cfd9cbfd2</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="ExternalDataSourceTableRecordSet.DataBank.dbo_DimSalesChannel" category="RecordSet">
+				<xr:TypeId>8389e1b5-4a79-4482-a3c7-3fd4440f89a4</xr:TypeId>
+				<xr:ValueId>36b49a2f-8d3f-4b81-9802-f8031de4013d</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="ExternalDataSourceTableRecordKey.DataBank.dbo_DimSalesChannel" category="RecordKey">
+				<xr:TypeId>719142de-8ede-4405-a7bc-8b5cda419bd9</xr:TypeId>
+				<xr:ValueId>f05ea6d3-2727-4dd9-84f8-c8c85894bb44</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="ExternalDataSourceTableRecordManager.DataBank.dbo_DimSalesChannel" category="RecordManager">
+				<xr:TypeId>b087d6cb-3fdf-430e-96a8-185f31c63b80</xr:TypeId>
+				<xr:ValueId>0ae218c2-f298-45e6-a12d-52884cf24012</xr:ValueId>
+			</xr:GeneratedType>
+		</InternalInfo>
+		<Properties>
+			<Name>dbo_DimSalesChannel</Name>
+			<Synonym/>
+			<Comment/>
+			<TableType>Table</TableType>
+			<NameInDataSource>dbo.DimSalesChannel</NameInDataSource>
+			<ExpressionInDataSource/>
+			<TableDataType>ObjectData</TableDataType>
+			<KeyFields>
+				<xr:Field>ExternalDataSource.DataBank.Table.dbo_DimSalesChannel.Field.Guid</xr:Field>
+			</KeyFields>
+			<PresentationField/>
+			<ParentField/>
+			<UnfilledParentValue xsi:nil="true"/>
+			<Characteristics/>
+			<UseStandardCommands>true</UseStandardCommands>
+			<QuickChoice>false</QuickChoice>
+			<InputByString/>
+			<CreateOnInput>Auto</CreateOnInput>
+			<SearchStringModeOnInputByString>Begin</SearchStringModeOnInputByString>
+			<ChoiceDataGetModeOnInputByString>Directly</ChoiceDataGetModeOnInputByString>
+			<ChoiceHistoryOnInput>Auto</ChoiceHistoryOnInput>
+			<DefaultObjectForm/>
+			<DefaultRecordForm/>
+			<DefaultListForm/>
+			<DefaultChoiceForm/>
+			<ObjectPresentation/>
+			<ExtendedObjectPresentation/>
+			<RecordPresentation/>
+			<ExtendedRecordPresentation/>
+			<ListPresentation/>
+			<ExtendedListPresentation/>
+			<Explanation/>
+			<IncludeHelpInContents>false</IncludeHelpInContents>
+			<ReadOnly>false</ReadOnly>
+			<TransactionsIsolationLevel>Auto</TransactionsIsolationLevel>
+			<DataVersionField/>
+			<EditType>InDialog</EditType>
+			<BasedOn/>
+			<DataLockFields/>
+			<DataLockControlMode>Automatic</DataLockControlMode>
+		</Properties>
+		<ChildObjects>
+			<Field uuid="428d7888-cdfa-45a4-bee7-10bfd6272dd2">
+				<Properties>
+					<Name>Guid</Name>
+					<Synonym/>
+					<Comment/>
+					<Type>
+						<v8:Type>v8:UUID</v8:Type>
+					</Type>
+					<PasswordMode>false</PasswordMode>
+					<Format/>
+					<EditFormat/>
+					<ToolTip/>
+					<MarkNegatives>false</MarkNegatives>
+					<Mask/>
+					<MultiLine>false</MultiLine>
+					<ExtendedEdit>false</ExtendedEdit>
+					<MinValue xsi:nil="true"/>
+					<MaxValue xsi:nil="true"/>
+					<FillFromFillingValue>false</FillFromFillingValue>
+					<FillValue xsi:nil="true"/>
+					<FillChecking>DontCheck</FillChecking>
+					<ChoiceParameterLinks/>
+					<ChoiceParameters/>
+					<QuickChoice>Auto</QuickChoice>
+					<CreateOnInput>Auto</CreateOnInput>
+					<ChoiceHistoryOnInput>Auto</ChoiceHistoryOnInput>
+					<ChoiceForm/>
+					<NameInDataSource>Guid</NameInDataSource>
+					<ReadOnly>false</ReadOnly>
+					<AllowNull>false</AllowNull>
+				</Properties>
+			</Field>
+			<Field uuid="4e1d30ea-fce0-4c0f-95ea-e24d02013748">
+				<Properties>
+					<Name>Name</Name>
+					<Synonym/>
+					<Comment/>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>50</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+					<PasswordMode>false</PasswordMode>
+					<Format/>
+					<EditFormat/>
+					<ToolTip/>
+					<MarkNegatives>false</MarkNegatives>
+					<Mask/>
+					<MultiLine>false</MultiLine>
+					<ExtendedEdit>false</ExtendedEdit>
+					<MinValue xsi:nil="true"/>
+					<MaxValue xsi:nil="true"/>
+					<FillFromFillingValue>false</FillFromFillingValue>
+					<FillValue xsi:type="xs:string"/>
+					<FillChecking>DontCheck</FillChecking>
+					<ChoiceParameterLinks/>
+					<ChoiceParameters/>
+					<QuickChoice>Auto</QuickChoice>
+					<CreateOnInput>Auto</CreateOnInput>
+					<ChoiceHistoryOnInput>Auto</ChoiceHistoryOnInput>
+					<ChoiceForm/>
+					<NameInDataSource>Name</NameInDataSource>
+					<ReadOnly>false</ReadOnly>
+					<AllowNull>false</AllowNull>
+				</Properties>
+			</Field>
+			<Field uuid="fb7d5df3-3353-46d9-9eb3-c25a546206c3">
+				<Properties>
+					<Name>UpdateDate</Name>
+					<Synonym/>
+					<Comment/>
+					<Type>
+						<v8:Type>xs:dateTime</v8:Type>
+						<v8:DateQualifiers>
+							<v8:DateFractions>DateTime</v8:DateFractions>
+						</v8:DateQualifiers>
+					</Type>
+					<PasswordMode>false</PasswordMode>
+					<Format/>
+					<EditFormat/>
+					<ToolTip/>
+					<MarkNegatives>false</MarkNegatives>
+					<Mask/>
+					<MultiLine>false</MultiLine>
+					<ExtendedEdit>false</ExtendedEdit>
+					<MinValue xsi:nil="true"/>
+					<MaxValue xsi:nil="true"/>
+					<FillFromFillingValue>false</FillFromFillingValue>
+					<FillValue xsi:type="xs:dateTime">0001-01-01T00:00:00</FillValue>
+					<FillChecking>DontCheck</FillChecking>
+					<ChoiceParameterLinks/>
+					<ChoiceParameters/>
+					<QuickChoice>Auto</QuickChoice>
+					<CreateOnInput>Auto</CreateOnInput>
+					<ChoiceHistoryOnInput>Auto</ChoiceHistoryOnInput>
+					<ChoiceForm/>
+					<NameInDataSource>UpdateDate</NameInDataSource>
+					<ReadOnly>false</ReadOnly>
+					<AllowNull>false</AllowNull>
+				</Properties>
+			</Field>
+			<Field uuid="94869477-2423-4ec7-bf23-884d23220710">
+				<Properties>
+					<Name>DataVersion</Name>
+					<Synonym/>
+					<Comment/>
+					<Type>
+						<v8:Type>xs:base64Binary</v8:Type>
+						<v8:BinaryDataQualifiers>
+							<v8:Length>8</v8:Length>
+							<v8:AllowedLength>Fixed</v8:AllowedLength>
+						</v8:BinaryDataQualifiers>
+					</Type>
+					<PasswordMode>false</PasswordMode>
+					<Format/>
+					<EditFormat/>
+					<ToolTip/>
+					<MarkNegatives>false</MarkNegatives>
+					<Mask/>
+					<MultiLine>false</MultiLine>
+					<ExtendedEdit>false</ExtendedEdit>
+					<MinValue xsi:nil="true"/>
+					<MaxValue xsi:nil="true"/>
+					<FillFromFillingValue>false</FillFromFillingValue>
+					<FillValue xsi:nil="true"/>
+					<FillChecking>DontCheck</FillChecking>
+					<ChoiceParameterLinks/>
+					<ChoiceParameters/>
+					<QuickChoice>Auto</QuickChoice>
+					<CreateOnInput>Auto</CreateOnInput>
+					<ChoiceHistoryOnInput>Auto</ChoiceHistoryOnInput>
+					<ChoiceForm/>
+					<NameInDataSource>DataVersion</NameInDataSource>
+					<ReadOnly>true</ReadOnly>
+					<AllowNull>false</AllowNull>
+				</Properties>
+			</Field>
+		</ChildObjects>
+	</Table>
+</MetaDataObject>

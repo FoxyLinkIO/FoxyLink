@@ -105,6 +105,26 @@ EndFunction // Schedule()
 
 #Region ServiceIterface
 
+// Adds data to invocation context.
+//
+// Parameters:
+//  InvocationContext - Structure - see function FL_BackgroundJob.NewInvocationContext. 
+//  PrimaryKey        - String    - the name of primary key.
+//  Value             - Arbitrary - the value of primary key.
+//  Filter            - Boolean   - defines if primary key is used.
+//                          Default value: False.
+//
+Procedure AddToInvocationContext(InvocationContext, PrimaryKey, Value, 
+    Filter = False) Export
+      
+    NewContextItem = InvocationContext.Add();
+    NewContextItem.Filter = Filter;
+    NewContextItem.PrimaryKey = Upper(PrimaryKey);
+    NewContextItem.XMLType = XMLType(TypeOf(Value)).TypeName;
+    NewContextItem.XMLValue = XMLString(Value);
+    
+EndProcedure // AddToInvocationContext()
+
 // Fills invocation context data.
 //
 // Parameters:
@@ -116,14 +136,7 @@ Procedure FillInvocationContext(Source, InvocationData) Export
     MetadataObject = InvocationData.MetadataObject;
     InvocationContext = InvocationData.InvocationContext;
     If FL_CommonUseReUse.IsReferenceTypeObjectCached(MetadataObject) Then
-        
-        Reference = Source.Ref;
-        NewContextItem = InvocationContext.Add();
-        NewContextItem.Filter = True;
-        NewContextItem.PrimaryKey = "Ref";
-        NewContextItem.XMLType = XMLType(TypeOf(Reference)).TypeName;
-        NewContextItem.XMLValue = XMLString(Reference);
-        
+        AddToInvocationContext(InvocationContext, "Ref", Source.Ref, True);
     EndIf;
     
 EndProcedure // FillInvocationContext() 

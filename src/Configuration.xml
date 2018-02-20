@@ -53,7 +53,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.8.3</Version>
+			<Version>0.9.8.7</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -315,6 +315,7 @@
 			<DataProcessor>FL_SelfFiles</DataProcessor>
 			<InformationRegister>FL_JobState</InformationRegister>
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
+			<ExternalDataSource>DataBank</ExternalDataSource>
 		</ChildObjects>
 	</Configuration>
 </MetaDataObject>

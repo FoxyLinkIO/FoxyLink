@@ -798,8 +798,8 @@ Procedure FillDataCompositionParameterValueCollection(DataParameters,
     
     For Each Item In AvailableParameters.Items Do
         
-        Parameter = InvocationContext.Find(String(Item.Parameter), 
-            "PrimaryKey");
+        ParameterName = Upper(String(Item.Parameter));
+        Parameter = InvocationContext.Find(ParameterName, "PrimaryKey");
         If Parameter = Undefined Then
             Continue;        
         EndIf;
