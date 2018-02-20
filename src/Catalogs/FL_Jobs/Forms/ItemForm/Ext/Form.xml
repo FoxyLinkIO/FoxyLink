@@ -90,7 +90,6 @@
 							<AutoInsertNewRow>true</AutoInsertNewRow>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
-							<DataPath>Object.DCSFilter</DataPath>
 							<RowFilter xsi:nil="true"/>
 							<ContextMenu name="DCSFilterContextMenu" id="39"/>
 							<AutoCommandBar name="DCSFilterCommandBar" id="40"/>
@@ -121,7 +120,6 @@
 							</SearchControlAddition>
 							<ChildItems>
 								<LabelField name="DCSFilterLineNumber" id="51">
-									<DataPath>Object.DCSFilter.LineNumber</DataPath>
 									<EditMode>EnterOnInput</EditMode>
 									<ContextMenu name="DCSFilterLineNumberContextMenu" id="52"/>
 									<ExtendedTooltip name="DCSFilterLineNumberExtendedTooltip" id="53"/>
@@ -144,7 +142,7 @@
 							<AutoInsertNewRow>true</AutoInsertNewRow>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
-							<DataPath>Object.DCSParameters</DataPath>
+							<DataPath>1/0:5b99b7ce-f4ba-4dc1-b836-8325a80becc1</DataPath>
 							<RowFilter xsi:nil="true"/>
 							<ContextMenu name="DCSParametersContextMenu" id="57"/>
 							<AutoCommandBar name="DCSParametersCommandBar" id="58"/>
@@ -175,19 +173,19 @@
 							</SearchControlAddition>
 							<ChildItems>
 								<LabelField name="DCSParametersLineNumber" id="69">
-									<DataPath>Object.DCSParameters.LineNumber</DataPath>
+									<DataPath>1/0:5b99b7ce-f4ba-4dc1-b836-8325a80becc1/-2</DataPath>
 									<EditMode>EnterOnInput</EditMode>
 									<ContextMenu name="DCSParametersLineNumberContextMenu" id="70"/>
 									<ExtendedTooltip name="DCSParametersLineNumberExtendedTooltip" id="71"/>
 								</LabelField>
 								<InputField name="DCSParametersParameter" id="72">
-									<DataPath>Object.DCSParameters.Parameter</DataPath>
+									<DataPath>1/0:5b99b7ce-f4ba-4dc1-b836-8325a80becc1/0:aae55e6f-120a-470b-8e36-980b4c72d87b</DataPath>
 									<EditMode>EnterOnInput</EditMode>
 									<ContextMenu name="DCSParametersParameterContextMenu" id="73"/>
 									<ExtendedTooltip name="DCSParametersParameterExtendedTooltip" id="74"/>
 								</InputField>
 								<InputField name="DCSParametersValuePresentation" id="75">
-									<DataPath>Object.DCSParameters.ValuePresentation</DataPath>
+									<DataPath>1/0:5b99b7ce-f4ba-4dc1-b836-8325a80becc1/0:d3130ecc-3b0f-4f70-a9e0-ff1a93497207</DataPath>
 									<EditMode>EnterOnInput</EditMode>
 									<ContextMenu name="DCSParametersValuePresentationContextMenu" id="76"/>
 									<ExtendedTooltip name="DCSParametersValuePresentationExtendedTooltip" id="77"/>
