@@ -234,25 +234,9 @@ Procedure AccumulationRegisterBeforeWrite(Source, Cancel, Replacing) Export
     If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
-       
-    //SourceMetadata = Source.Metadata();
-    //MetadataObject = SourceMetadata.FullName();
-    //If IsEventPublisher(MetadataObject) Then
-    //    
-    //    InvocationData = FL_BackgroundJob.NewInvocationData();
-    //    InvocationData.MetadataObject = MetadataObject;
-    //    InvocationData.Operation = Catalogs.FL_Operations.Update;
-    //    
-    //    If Replacing Then
-    //        InvocationData.Arguments = FL_CommonUse.RegisterRecordValues(
-    //            SourceMetadata, Source.Filter);
-    //    EndIf;
-    //    
-    //    Source.AdditionalProperties.Insert("InvocationData", 
-    //        InvocationData);
-    //    
-    //EndIf;    
-          
+
+    ApplyInvocationData(Source, Catalogs.FL_Operations.Update, Replacing);
+            
 EndProcedure // AccumulationRegisterBeforeWrite()
 
 // Handler of OnWrite information register event subscription.
@@ -335,7 +319,7 @@ EndProcedure // AccumulationRegisterOnWrite()
 //
 Procedure EnqueueEvent(Source) Export
     
-    Var InvocationData, Arguments;
+    Var InvocationData;
     
     Properties = Source.AdditionalProperties;
     If NOT IsInvocationDataFilled(InvocationData, Properties) Then
@@ -358,28 +342,7 @@ Procedure EnqueueEvent(Source) Export
         FL_BackgroundJob.Enqueue(InvocationData);
         
     EndDo; 
-    
-    //InvocationData.Property("Arguments", Arguments); 
-    //If TypeOf(Arguments) = Type("ValueTable") Then
-    //    
-    //    FilterItem = Source.Filter.Find("Recorder");
-    //    If FilterItem <> Undefined Then
-    //        InvocationData.SourceObject = FilterItem.Value;    
-    //    EndIf;
-    //    
-    //    FL_CommonUseClientServer.ExtendValueTable(Source.Unload(), 
-    //        Arguments);
-    //        
-    //ElsIf FL_CommonUseReUse.IsReferenceTypeObjectCached(
-    //    InvocationData.MetadataObject) Then
-    //    
-    //    InvocationData.Arguments = Source.Ref;
-    //    InvocationData.SourceObject = Source.Ref;
-    //    
-    //EndIf;
-    
-    //EnqueueBackgroundJobs(InvocationData);  
-    
+      
 EndProcedure // EnqueueEvent()
 
 // Returns a new source mock.
@@ -407,18 +370,42 @@ EndFunction // NewSourceMock()
 
 // Only for internal use.
 //
-Procedure ApplyInvocationData(Source, Operation)
-    
-    MetadataObject = Source.Metadata().FullName();
+Procedure ApplyInvocationData(Source, Operation, Replacing = False)
+
+    SourceMetadata = Source.Metadata();
+    MetadataObject = SourceMetadata.FullName();
     Publishers = FL_EventsReUse.EventPublishers(MetadataObject, Operation);
     If Publishers.Count() = 0 Then
         Return;
     EndIf;
-    
+
     InvocationData = FL_BackgroundJob.NewInvocationData();
     InvocationData.MetadataObject = MetadataObject;
     InvocationData.Operation = Operation;
-    
+
+    If Replacing Then
+        
+        If FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(MetadataObject) Then
+            
+            PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
+                SourceMetadata);
+            AttributesValues = FL_CommonUse.RegisterAttributesValues(
+                SourceMetadata, Source.Filter, PrimaryKeys);
+                     
+            FL_BackgroundJob.FillAccumulationRegisterInvocationContext(
+                InvocationData.InvocationContext, 
+                Source.Filter, 
+                PrimaryKeys, 
+                AttributesValues);
+                
+            // Do not change this line. It is easy to break passing by reference.
+            FL_CommonUse.RemoveDuplicatesFromValueTable(
+                InvocationData.InvocationContext);
+            
+        EndIf;
+                
+    EndIf;
+
     Source.AdditionalProperties.Insert("InvocationData", 
         InvocationData);
     

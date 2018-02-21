@@ -796,19 +796,42 @@ Procedure FillDataCompositionParameterValueCollection(DataParameters,
         Return;
     EndIf;
     
+    FilterParameters = New Structure("PrimaryKey");
     For Each Item In AvailableParameters.Items Do
         
-        ParameterName = Upper(String(Item.Parameter));
-        Parameter = InvocationContext.Find(ParameterName, "PrimaryKey");
-        If Parameter = Undefined Then
-            Continue;        
+        PrimaryKey = String(Item.Parameter);
+        FilterParameters.PrimaryKey = Upper(PrimaryKey);  
+        Parameters = InvocationContext.FindRows(FilterParameters);
+        If Parameters.Count() = 1 Then
+            
+            SetDataCompositionDataParameterValue(DataParameters, PrimaryKey, 
+                Parameters[0].Value);
+                
+        ElsIf Parameters.Count() > 1 Then 
+            
+            If NOT Item.ValueListAllowed Then
+                
+                ErrorMessage = NStr("en='The invocation context has several primary key values.
+                    |Parameter property {ValueListAllowed} is set to value {False}.';
+                    |ru='Контекст вызова имеет несколько значений первичных ключей.
+                    |Свойству параметра {ДоступенСписокЗначений} установлено значение {Ложь}.';
+                    |en_CA='The invocation context has several primary key values.
+                    |Parameter property {ValueListAllowed} is set to value {False}.'");
+                        
+                Raise ErrorMessage;
+                
+            EndIf;
+            
+            ValueList = New ValueList;
+            For Each Parameter In Parameters Do
+                ValueList.Add(Parameter.Value);        
+            EndDo;
+            
+            SetDataCompositionDataParameterValue(DataParameters, PrimaryKey, 
+                ValueList);
+            
         EndIf;
-        
-        If NOT Item.ValueListAllowed Then
-            SetDataCompositionDataParameterValue(DataParameters, 
-                Parameter.PrimaryKey, Parameter.Value);        
-        EndIf;
-        
+                
     EndDo;
     
 EndProcedure // FillDataCompositionParameterValueCollection()

@@ -178,7 +178,7 @@ Function ReferenceByPredefinedDataName(MetadataObject,
     
 EndFunction // ReferenceByPredefinedDataName()
 
-// Creates a value table and copies all records of the set to it. 
+// Returns a value table and copies all records of the set to it. 
 // The structure of the resulting table matches the structure of the recordset.
 //
 // Parameters:
@@ -186,35 +186,93 @@ EndFunction // ReferenceByPredefinedDataName()
 //                                      to receive records values. 
 //  Filter         - Filter         - it contains the object Filter, for which 
 //                                      current filtration of records is  
-//                                      performed when the set is read or written. 
+//                                      performed when the set is read or written.
+//  Attributes     - String         - comma separated attribute names in the format of
+//                                      structure property requirements.
+//                 - Structure, FixedStructure - field alias name is transferred
+//                                      as a key for the returned structure with 
+//                                      the result and actual field name in the 
+//                                      table is transferred (optionally) as the value.
+//                                      If the value is not specified, then the 
+//                                      field name is taken from the key.
 //
 // Returns:
-//  ValueTable - creates a value table and copies all records of the set to it. 
+//  ValueTable - returns a value table and copies all records of the set to it. 
 //               The structure of the resulting table matches the structure of 
 //               the recordset.
 //
-Function RegisterRecordValues(MetadataObject, Filter) Export
+Function RegisterAttributesValues(MetadataObject, Filter, Val Attributes) Export
     
-    ObjectManager = FL_CommonUse.ObjectManagerByFullName(
-        MetadataObject.FullName());
-        
-    RecordSet = ObjectManager.CreateRecordSet();
-    For Each FilterValue In Filter Do
-            
-        If NOT FilterValue.Use Then
-            Continue;
+    FieldText = "";
+    FieldTemplate = "%1SpecifiedTableAlias.%2 AS %2";
+    FilterText = "";
+    FilterTemplate = "%1SpecifiedTableAlias.%2 = &%2";
+    
+    If TypeOf(Attributes) = Type("String") Then
+        If IsBlankString(Attributes) Then
+            AttributesStructure = New Structure;    
+        Else
+            AttributesStructure = New Structure(Attributes);
         EndIf;
+    Else
+        AttributesStructure = Attributes;
+    EndIf;
+    
+    For Each KeyAndValue In AttributesStructure Do
         
-        FilterRow = RecordSet.Filter.Find(FilterValue.Name);
-        FilterRow.Value = FilterValue.Value;
-        FilterRow.Use = True;
+        FieldText = FieldText + StrTemplate(FieldTemplate, 
+            ?(IsBlankString(FieldText), "", ","), KeyAndValue.Key);
         
     EndDo;
     
-    RecordSet.Read();
-    Return RecordSet.Unload();   
+    If IsBlankString(FieldText) Then
+        FieldText = "*";             
+    EndIf;
+
+    Query = New Query;
+    For Each FilterValue In Filter Do
+        If FilterValue.Use Then
+            
+            Query.SetParameter(FilterValue.Name, FilterValue.Value);
+            FilterText = FilterText + StrTemplate(FilterTemplate, 
+                ?(IsBlankString(FilterText), "", " AND "), FilterValue.Name); 
+            
+        EndIf;
+    EndDo;    
     
-EndFunction // RegisterRecordValues()
+    Query.Text = StrTemplate(
+        "SELECT
+        |   %1
+        |FROM
+        |   %2 AS SpecifiedTableAlias
+        |WHERE 
+        |   %3
+        |", FieldText, MetadataObject.FullName(), FilterText);
+    Return Query.Execute().Unload();
+    
+EndFunction // RegisterAttributesValues()
+
+// Returns a value table and copies records values to column which matched 
+// attribute name. 
+//
+// Parameters:
+//  MetadataObject - MetadataObject - metadata object of which it is required 
+//                                      to receive records values. 
+//  Filter         - Filter         - it contains the object Filter, for which 
+//                                      current filtration of records is  
+//                                      performed when the set is read or written.
+//  AttributeName  - String         - attribute name.
+//
+// Returns:
+//  ValueTable - returns a value table and copies all records values to column 
+//               which matched attribute name.
+//
+Function RegisterAttributeValue(MetadataObject, Filter, 
+    AttributeName) Export
+    
+    Return RegisterAttributesValues(MetadataObject, Filter, AttributeName);
+    
+EndFunction // RegisterAttributeValue()
 
 // Creates a structure with properties named as value table row columns and 
 // sets the values of these properties from the values table row.
@@ -1052,9 +1110,9 @@ EndFunction // IsStandardAttribute()
 //          * Value - String - type name of primary key.
 //
 Function PrimaryKeysByMetadataObject(MetadataObject) Export
-     
-    FullName = MetadataObject.FullName();    
-    
+
+    FullName = MetadataObject.FullName();
+
     PrimaryKeys = New Structure;
     If FL_CommonUseReUse.IsReferenceTypeObjectCached(FullName) Then
 
@@ -1066,18 +1124,11 @@ Function PrimaryKeysByMetadataObject(MetadataObject) Export
         
     ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(FullName) Then
         
-        If MetadataObject.InformationRegisterPeriodicity <> 
-            Metadata.ObjectProperties.InformationRegisterPeriodicity.Nonperiodical Then
-            
-            Types = New Array;
-            Types.Add(Type("Date"));
-            PrimaryKeys.Insert("Period", Types);
-            
-        EndIf;
+        FillInformationRegisterPrimaryKeys(MetadataObject, PrimaryKeys);
         
-        For Each Dimension In MetadataObject.Dimensions Do
-            PrimaryKeys.Insert(Dimension.Name, Dimension.Type.Types());    
-        EndDo;
+    ElsIf FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(FullName) Then
+        
+        FillAccumulationRegisterPrimaryKeys(MetadataObject, PrimaryKeys);
                 
     EndIf;
 
@@ -1634,6 +1685,43 @@ Procedure CheckingDataFixed(Data, DataInValueOfFixedTypes = False)
     Raise StrTemplate(ErrorMessage, String(DataType));
 
 EndProcedure // CheckingDataFixed()
+
+#Region ObjectTypes
+
+// Only for internal use.
+//
+Procedure FillInformationRegisterPrimaryKeys(MetadataObject, PrimaryKeys)
+
+    If MetadataObject.InformationRegisterPeriodicity <> 
+        Metadata.ObjectProperties.InformationRegisterPeriodicity.Nonperiodical Then
+        
+        Types = New Array;
+        Types.Add(Type("Date"));
+        PrimaryKeys.Insert("Period", Types);
+        
+    EndIf;
+
+    For Each Dimension In MetadataObject.Dimensions Do
+        PrimaryKeys.Insert(Dimension.Name, Dimension.Type.Types());    
+    EndDo;
+
+EndProcedure // FillInformationRegisterPrimaryKeys()
+
+// Only for internal use.
+//
+Procedure FillAccumulationRegisterPrimaryKeys(MetadataObject, PrimaryKeys)
+        
+    StandardAttributes = MetadataObject.StandardAttributes;
+    RecorderAttribute = StandardAttributes["Recorder"];
+    PrimaryKeys.Insert("Recorder", RecorderAttribute.Type.Types());
+
+    For Each Dimension In MetadataObject.Dimensions Do
+        PrimaryKeys.Insert(Dimension.Name, Dimension.Type.Types());    
+    EndDo;
+
+EndProcedure // FillAccumulationRegisterPrimaryKeys()
+
+#EndRegion // ObjectTypes
 
 #Region ValueConversion
 
