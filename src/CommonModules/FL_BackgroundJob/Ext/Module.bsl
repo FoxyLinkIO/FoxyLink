@@ -108,16 +108,16 @@ EndFunction // Schedule()
 // Adds data to invocation context.
 //
 // Parameters:
-//  InvocationContext - Structure - see function FL_BackgroundJob.NewInvocationContext. 
-//  PrimaryKey        - String    - the name of primary key.
-//  Value             - Arbitrary - the value of primary key.
-//  Filter            - Boolean   - defines if primary key is used.
-//                          Default value: False.
+//  Context    - ValueTable - see function FL_BackgroundJob.NewInvocationContext. 
+//  PrimaryKey - String     - the name of primary key.
+//  Value      - Arbitrary  - the value of primary key.
+//  Filter     - Boolean    - defines if primary key is used.
+//                  Default value: False.
 //
-Procedure AddToInvocationContext(InvocationContext, PrimaryKey, Value, 
+Procedure AddToInvocationContext(Context, PrimaryKey, Value, 
     Filter = False) Export
       
-    NewContextItem = InvocationContext.Add();
+    NewContextItem = Context.Add();
     NewContextItem.Filter = Filter;
     NewContextItem.PrimaryKey = Upper(PrimaryKey);
     NewContextItem.XMLType = XMLType(TypeOf(Value)).TypeName;
@@ -134,12 +134,58 @@ EndProcedure // AddToInvocationContext()
 Procedure FillInvocationContext(Source, InvocationData) Export
     
     MetadataObject = InvocationData.MetadataObject;
-    InvocationContext = InvocationData.InvocationContext;
     If FL_CommonUseReUse.IsReferenceTypeObjectCached(MetadataObject) Then
-        AddToInvocationContext(InvocationContext, "Ref", Source.Ref, True);
+        
+        AddToInvocationContext(InvocationData.InvocationContext, "Ref", 
+            Source.Ref, True);
+        
+    ElsIf FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(MetadataObject) Then
+        
+        PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
+            Source.Metadata());   
+        FillAccumulationRegisterInvocationContext(
+            InvocationData.InvocationContext, 
+            Source.Filter, 
+            PrimaryKeys, 
+            Source.Unload());    
+           
     EndIf;
     
+    // Do not change this line. It is easy to break passing by reference.
+    FL_CommonUse.RemoveDuplicatesFromValueTable(
+        InvocationData.InvocationContext);
+    
 EndProcedure // FillInvocationContext() 
+
+// Fills accumulation register invocation context.
+//
+// Parameters:
+//  Context          - ValueTable - see function FL_BackgroundJob.NewInvocationContext.
+//  Filter           - Filter     - it contains the object Filter, for which 
+//                                  current filtration of records is performed.
+//  PrimaryKeys      - Structure  - see function FL_CommonUse.PrimaryKeysByMetadataObject.
+//  AttributesValues - ValueTable - value table with primary keys values.
+//
+Procedure FillAccumulationRegisterInvocationContext(Context, Filter, 
+    PrimaryKeys, AttributesValues) Export
+    
+    For Each PrimaryKey In PrimaryKeys Do
+            
+        FilterValue = Filter.Find(PrimaryKey.Key);
+        If FilterValue <> Undefined Then
+            AddToInvocationContext(Context, PrimaryKey.Key, 
+                FilterValue.Value, FilterValue.Use);
+            Continue;
+        EndIf;
+        
+        ColumnValues = AttributesValues.UnloadColumn(PrimaryKey.Key);
+        For Each ColumnValue In ColumnValues Do
+            AddToInvocationContext(Context, PrimaryKey.Key, ColumnValue);   
+        EndDo;
+        
+    EndDo;    
+    
+EndProcedure // FillAccumulationRegisterInvocationContext()
 
 // Returns a new invocation data for a service method.
 //
