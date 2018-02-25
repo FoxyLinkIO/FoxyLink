@@ -258,7 +258,7 @@
 									<ExtendedTooltip name="InvocationContextPrimaryKeyExtendedTooltip" id="101"/>
 								</InputField>
 								<InputField name="InvocationContextXMLType" id="102">
-									<DataPath>Object.InvocationContext.XMLType</DataPath>
+									<DataPath>Object.InvocationContext.TypeName</DataPath>
 									<EditMode>EnterOnInput</EditMode>
 									<ContextMenu name="InvocationContextXMLTypeContextMenu" id="103"/>
 									<ExtendedTooltip name="InvocationContextXMLTypeExtendedTooltip" id="104"/>

@@ -120,8 +120,8 @@ Procedure AddToInvocationContext(Context, PrimaryKey, Value,
     NewContextItem = Context.Add();
     NewContextItem.Filter = Filter;
     NewContextItem.PrimaryKey = Upper(PrimaryKey);
-    NewContextItem.XMLType = XMLType(TypeOf(Value)).TypeName;
     NewContextItem.XMLValue = XMLString(Value);
+    FillPropertyValues(NewContextItem, XMLTypeOf(Value));
     
 EndProcedure // AddToInvocationContext()
 
@@ -138,17 +138,15 @@ Procedure FillInvocationContext(Source, InvocationData) Export
         
         AddToInvocationContext(InvocationData.InvocationContext, "Ref", 
             Source.Ref, True);
-        
-    ElsIf FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(MetadataObject) Then
-        
+            
+    ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(MetadataObject)
+        OR FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(MetadataObject) Then
+
         PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
-            Source.Metadata());   
-        FillAccumulationRegisterInvocationContext(
-            InvocationData.InvocationContext, 
-            Source.Filter, 
-            PrimaryKeys, 
-            Source.Unload());    
-           
+            MetadataObject(Source, MetadataObject));
+        FillRegisterInvocationContext(InvocationData.InvocationContext, 
+            Source.Filter, PrimaryKeys, AttributeValues(Source));
+              
     EndIf;
     
     // Do not change this line. It is easy to break passing by reference.
@@ -166,7 +164,7 @@ EndProcedure // FillInvocationContext()
 //  PrimaryKeys      - Structure  - see function FL_CommonUse.PrimaryKeysByMetadataObject.
 //  AttributesValues - ValueTable - value table with primary keys values.
 //
-Procedure FillAccumulationRegisterInvocationContext(Context, Filter, 
+Procedure FillRegisterInvocationContext(Context, Filter, 
     PrimaryKeys, AttributesValues) Export
     
     For Each PrimaryKey In PrimaryKeys Do
@@ -185,7 +183,7 @@ Procedure FillAccumulationRegisterInvocationContext(Context, Filter,
         
     EndDo;    
     
-EndProcedure // FillAccumulationRegisterInvocationContext()
+EndProcedure // FillRegisterInvocationContext()
 
 // Returns a new invocation data for a service method.
 //
@@ -243,21 +241,47 @@ EndFunction // NewInvocationData()
 
 // Only for internal use.
 //
+Function AttributeValues(SourceMock)
+    
+    If TypeOf(SourceMock) = Type("Structure") Then
+        Return SourceMock.AttributeValues;    
+    EndIf;
+    
+    Return SourceMock.Unload();       
+    
+EndFunction // AttributeValues()
+
+// Only for internal use.
+//
+Function MetadataObject(SourceMock, MetadataObjectMock)
+    
+    If TypeOf(SourceMock) = Type("Structure") Then
+        Return Metadata.FindByFullName(MetadataObjectMock);       
+    EndIf;
+    
+    Return SourceMock.Metadata();
+    
+EndFunction // MetadataObject() 
+
+// Only for internal use.
+//
 Function NewInvocationContext()
     
-    PrimaryKeyLength = 30;
-    XMLTypeLength = 50;
-    XMLValueLenght = 100;
+    KeyLength = 30;
+    TypeLength = 50;
+    ValueLenght = 100;
     
-    InvocationContext = New ValueTable;
-    InvocationContext.Columns.Add("Filter", New TypeDescription("Boolean"));
-    InvocationContext.Columns.Add("PrimaryKey", FL_CommonUse
-        .StringTypeDescription(PrimaryKeyLength));
-    InvocationContext.Columns.Add("XMLType", FL_CommonUse
-        .StringTypeDescription(XMLTypeLength));
-    InvocationContext.Columns.Add("XMLValue", FL_CommonUse
-        .StringTypeDescription(XMLValueLenght));
-    Return InvocationContext;
+    Context = New ValueTable;
+    Context.Columns.Add("Filter", New TypeDescription("Boolean"));
+    Context.Columns.Add("NamespaceURI", FL_CommonUse.StringTypeDescription(
+        TypeLength));
+    Context.Columns.Add("PrimaryKey", FL_CommonUse.StringTypeDescription(
+        KeyLength));
+    Context.Columns.Add("TypeName", FL_CommonUse.StringTypeDescription(
+        TypeLength));
+    Context.Columns.Add("XMLValue", FL_CommonUse.StringTypeDescription(
+        ValueLenght));
+    Return Context;
     
 EndFunction // NewInvocationContext()
 

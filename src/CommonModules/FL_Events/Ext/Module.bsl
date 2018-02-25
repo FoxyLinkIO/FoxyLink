@@ -251,37 +251,35 @@ EndProcedure // AccumulationRegisterBeforeWrite()
 //
 Procedure InformationRegisterOnWrite(Source, Cancel, Replacing) Export
     
-    Var InvocationData;
-    
     If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
     
-    Properties = Source.AdditionalProperties;
-    If NOT IsInvocationDataFilled(InvocationData, Properties) Then
-        Return;    
-    EndIf;
-        
-    If Replacing Then
-        EnqueueEvent(Source);
-    Else
-        
-        Query = New Query;
-        Query.Text = "
-            |SELECT 
-            |   SessionContext.Ref AS Ref,
-            |   SessionContext.ValueStorage AS ValueStorage
-            |FROM 
-            |   Catalog.FL_Jobs.SessionContext AS SessionContext
-            |WHERE 
-            |    SessionContext.Session = &Session
-            |AND SessionContext.MetadataObject = &MetadataObject
-            |";
-        Query.SetParameter("Session", FL_EventsReUse.SessionHash());
-        Query.SetParameter("MetadataObject", InvocationData.MetadataObject);
-        QueryResult = Query.Execute();
-        
-    EndIf;
+    //Properties = Source.AdditionalProperties;
+    //If NOT IsInvocationDataFilled(InvocationData, Properties) Then
+    //    Return;    
+    //EndIf;
+    //    
+    //If Replacing Then
+    //    EnqueueEvent(Source);
+    //Else
+    //    
+    //    Query = New Query;
+    //    Query.Text = "
+    //        |SELECT 
+    //        |   SessionContext.Ref AS Ref,
+    //        |   SessionContext.ValueStorage AS ValueStorage
+    //        |FROM 
+    //        |   Catalog.FL_Jobs.SessionContext AS SessionContext
+    //        |WHERE 
+    //        |    SessionContext.Session = &Session
+    //        |AND SessionContext.MetadataObject = &MetadataObject
+    //        |";
+    //    Query.SetParameter("Session", FL_EventsReUse.SessionHash());
+    //    Query.SetParameter("MetadataObject", InvocationData.MetadataObject);
+    //    QueryResult = Query.Execute();
+    //    
+    //EndIf;
     
 EndProcedure // InformationRegisterOnWrite()
 
@@ -329,11 +327,21 @@ Procedure EnqueueEvent(Source) Export
     // Start measuring.
     InvocationData.CreatedAt = CurrentUniversalDateInMilliseconds();
     FL_BackgroundJob.FillInvocationContext(Source, InvocationData); 
-    
-    Publishers = FL_EventsReUse.EventPublishers(InvocationData.MetadataObject, 
-        InvocationData.Operation);
-    For Each Publisher In Publishers Do
+
+    If InvocationData.Owner = Undefined Then
         
+        Publishers = FL_EventsReUse.EventPublishers(InvocationData.MetadataObject, 
+            InvocationData.Operation);
+            
+    Else
+        
+        Publishers = New Array;
+        Publishers.Add(InvocationData.Owner);
+        
+    EndIf;
+
+    For Each Publisher In Publishers Do
+            
         InvocationData.Owner = Publisher;
         InvocationData.Priority = FL_EventsReUse.EventPriority(Publisher, 
             InvocationData.Operation);        
@@ -341,7 +349,7 @@ Procedure EnqueueEvent(Source) Export
         
         FL_BackgroundJob.Enqueue(InvocationData);
         
-    EndDo; 
+    EndDo;
       
 EndProcedure // EnqueueEvent()
 
@@ -349,14 +357,19 @@ EndProcedure // EnqueueEvent()
 //
 // Returns:
 //  Structure - mock of source event object.
-//      * Ref                  - AnyRef    - ref to object.
-//      * AdditionalProperties - Structure - additional properties.
+//      * Ref                  - AnyRef     - ref to object.
+//      * Filter               - Filter     - it contains the object Filter, for
+//                                  which current filtration of records is performed.
+//      * AttributeValues      - ValueTable - value table with primary keys values.
+//      * AdditionalProperties - Structure  - additional properties.
 //          * InvocationData - Structure - see function FL_BackgroundJob.NewInvocationData.
 //
 Function NewSourceMock() Export
     
     SourceMock = New Structure;
     SourceMock.Insert("Ref");
+    SourceMock.Insert("Filter");
+    SourceMock.Insert("AttributeValues");
     SourceMock.Insert("AdditionalProperties", New Structure);
     SourceMock.AdditionalProperties.Insert("InvocationData", 
         FL_BackgroundJob.NewInvocationData());     
@@ -392,11 +405,8 @@ Procedure ApplyInvocationData(Source, Operation, Replacing = False)
             AttributesValues = FL_CommonUse.RegisterAttributesValues(
                 SourceMetadata, Source.Filter, PrimaryKeys);
                      
-            FL_BackgroundJob.FillAccumulationRegisterInvocationContext(
-                InvocationData.InvocationContext, 
-                Source.Filter, 
-                PrimaryKeys, 
-                AttributesValues);
+            FL_BackgroundJob.FillRegisterInvocationContext(InvocationData.InvocationContext, 
+                Source.Filter, PrimaryKeys, AttributesValues);
                 
             // Do not change this line. It is easy to break passing by reference.
             FL_CommonUse.RemoveDuplicatesFromValueTable(

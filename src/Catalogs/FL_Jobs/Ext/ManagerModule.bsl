@@ -263,7 +263,8 @@ Procedure FillJobProperties(JobObject, JobProperties)
     For Each Context In InvocationContext Do
         
         Try
-            Context.Value = XMLValue(Type(Context.XMLType), Context.XMLValue);
+            Type = FromXMLType(Context.TypeName, Context.NamespaceURI);
+            Context.Value = XMLValue(Type, Context.XMLValue);
         Except
             Context.Value = Undefined;     
         EndTry;
