@@ -53,7 +53,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.8.8</Version>
+			<Version>0.9.8.13</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -210,6 +210,7 @@
 			<Language>English</Language>
 			<Language>EnglishCA</Language>
 			<Language>Russian</Language>
+			<Language>Ukrainian</Language>
 			<Subsystem>FoxyLink</Subsystem>
 			<CommonPicture>FL_Add</CommonPicture>
 			<CommonPicture>FL_AddEvent</CommonPicture>
@@ -295,7 +296,6 @@
 			<ScheduledJob>FL_RecurringServer</ScheduledJob>
 			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
 			<FunctionalOption>FL_UseFoxyLink</FunctionalOption>
-			<CommonCommand>ExportObject</CommonCommand>
 			<Constant>FL_LicenseAccepted</Constant>
 			<Constant>FL_RetryAttempts</Constant>
 			<Constant>FL_UseFoxyLink</Constant>

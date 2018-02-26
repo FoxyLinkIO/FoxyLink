@@ -27,19 +27,23 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         Return;
     EndIf;
     
+    Parameters.Property("BinaryDataAddress", BinaryDataAddress);
     Parameters.Property("LibraryGuid", LibraryGuid);
     Parameters.Property("Template", Template);
-    
-    If NOT IsBlankString(LibraryGuid) AND NOT IsBlankString(Template) Then 
+    If NOT IsBlankString(LibraryGuid) AND NOT IsBlankString(Template) Then
         
-        FL_InteriorUse.LoadImportedExchange(ThisObject, ImportedExchange());
-        
-        SetExchangeMatches();
-        SetOperationMatches();
-        SetChannelMatches();
-        SetEventMatches();
+        ChannelProcessor = FL_InteriorUse.NewChannelProcessor(LibraryGuid);
+        BinaryData = ChannelProcessor.GetTemplate(Template);
+        BinaryDataAddress = PutToTempStorage(BinaryData, UUID);
         
     EndIf;
+    
+    FL_InteriorUse.LoadImportedExchange(ThisObject, ImportedExchange());
+    
+    SetExchangeMatches();
+    SetOperationMatches();
+    SetChannelMatches();
+    SetEventMatches();
     
     LoadBasicFormatInfo();
     
@@ -809,8 +813,7 @@ EndFunction // FindOperationLines()
 &AtServer
 Function ImportedExchange()
     
-    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(LibraryGuid);
-    BinaryData = ChannelProcessor.GetTemplate(Template);
+    BinaryData = GetFromTempStorage(BinaryDataAddress);
     JSONReader = New JSONReader;
     JSONReader.OpenStream(BinaryData.OpenStreamForRead());
     Return ReadJSON(JSONReader);
