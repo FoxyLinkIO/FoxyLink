@@ -75,7 +75,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUseReUse</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_InteriorUseClient</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Import</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonCommand.ExportObject</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">599aae66-1b40-4de9-ba2b-d9f264778dc2</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Install</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Ok</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_ExplanationMark</xr:Item>

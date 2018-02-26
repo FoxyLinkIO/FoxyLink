@@ -23,7 +23,6 @@
 //
 // Parameters:
 //  InvocationData - Structure - see function FL_BackgroundJob.NewInvocationData. 
-//                          Default value: Undefined.
 //
 // Returns:
 //  CatalogRef.FL_Jobs - ref to created background job or 
@@ -35,15 +34,13 @@ Function Enqueue(InvocationData) Export
     
 EndFunction // Enqueue()
 
-// Changes state of a job with the specified Job to the DeletedState. 
+// Changes state of a job with the specified Job to the Deleted state. 
 // If FromState value is not undefined, state change will be performed 
 // only if the current state name of the job equal to the given value.
 //
 // Parameters:
-//  Job       - CatalogRef.FL_Jobs   - .
-//            - UUID                 - .
+//  Job       - CatalogRef.FL_Jobs   - reference to the background job.
 //  FromState - CatalogRef.FL_States - current state assertion.
-//            - String               - .
 //                  Default value: Undefined.
 //
 // Returns:
@@ -51,19 +48,18 @@ EndFunction // Enqueue()
 //
 Function Delete(Job, FromState = Undefined) Export
 
-    Return False;
+    Return Catalogs.FL_Jobs.ChangeState(Job, Catalogs.FL_States.Deleted, 
+        FromState);
     
 EndFunction // Delete()
 
-// Changes state of a job with the specified parameter Job to the EnqueuedState.
+// Changes state of a job with the specified parameter Job to the Enqueued state.
 // If FromState value is not undefined, state change will be performed 
 // only if the current state name of the job equal to the given value.
 //
 // Parameters:
-//  Job       - CatalogRef.FL_Jobs   - .
-//            - UUID                 - .
+//  Job       - CatalogRef.FL_Jobs   - reference to the background job.
 //  FromState - CatalogRef.FL_States - current state assertion.
-//            - String               - .
 //                  Default value: Undefined.
 //
 // Returns:
@@ -71,31 +67,42 @@ EndFunction // Delete()
 //
 Function Requeue(Job, FromState = Undefined) Export
 
-    Return False;
+    Return Catalogs.FL_Jobs.ChangeState(Job, Catalogs.FL_States.Enqueued, 
+        FromState);
     
 EndFunction // Requeue()
 
 // Creates a new background job that will wait for a successful completion 
-// of another background job to be triggered in the EnqueuedState.
+// of another background job to be triggered in the Enqueued state.
+//
+// Parameters:
+//  Job            - CatalogRef.FL_Jobs - reference to the background job.
+//  InvocationData - Structure          - see function FL_BackgroundJob.NewInvocationData. 
+//                          Default value: Undefined.
 //
 // Returns:
 //  CatalogRef.FL_Jobs - ref to created background job or 
 //                       Undefined, if it was not created.
 //
-Function ContinueWith() Export
+Function ContinueWith(Job, InvocationData) Export
 
-    Return False;
+    InvocationData.Continuations = Job;
+    InvocationData.State = Catalogs.FL_States.Awaiting;
+    Return Enqueue(InvocationData);
     
 EndFunction // ContinueWith()
 
 // Creates a new background job based on a specified instance method
 // call expression and schedules it to be enqueued after a given delay.
 //
+// Parameters:
+//  InvocationData - Structure - see function FL_BackgroundJob.NewInvocationData.
+//
 // Returns:
 //  CatalogRef.FL_Jobs - ref to created background job or 
 //                       Undefined, if it was not created.
 //
-Function Schedule() Export
+Function Schedule(InvocationData) Export
 
     Return False;
     
@@ -158,14 +165,14 @@ EndProcedure // FillInvocationContext()
 // Fills accumulation register invocation context.
 //
 // Parameters:
-//  Context          - ValueTable - see function FL_BackgroundJob.NewInvocationContext.
-//  Filter           - Filter     - it contains the object Filter, for which 
+//  Context         - ValueTable - see function FL_BackgroundJob.NewInvocationContext.
+//  Filter          - Filter     - it contains the object Filter, for which 
 //                                  current filtration of records is performed.
-//  PrimaryKeys      - Structure  - see function FL_CommonUse.PrimaryKeysByMetadataObject.
-//  AttributesValues - ValueTable - value table with primary keys values.
+//  PrimaryKeys     - Structure  - see function FL_CommonUse.PrimaryKeysByMetadataObject.
+//  AttributeValues - ValueTable - value table with primary keys values.
 //
 Procedure FillRegisterInvocationContext(Context, Filter, 
-    PrimaryKeys, AttributesValues) Export
+    PrimaryKeys, AttributeValues) Export
     
     For Each PrimaryKey In PrimaryKeys Do
             
@@ -176,7 +183,7 @@ Procedure FillRegisterInvocationContext(Context, Filter,
             Continue;
         EndIf;
         
-        ColumnValues = AttributesValues.UnloadColumn(PrimaryKey.Key);
+        ColumnValues = AttributeValues.UnloadColumn(PrimaryKey.Key);
         For Each ColumnValue In ColumnValues Do
             AddToInvocationContext(Context, PrimaryKey.Key, ColumnValue);   
         EndDo;
@@ -189,6 +196,9 @@ EndProcedure // FillRegisterInvocationContext()
 //
 // Returns:
 //  Structure - the invocation data structure with keys:
+//      * Continuations     - CatalogRef.FL_Jobs       - job to be launched after successful 
+//                                                       completion current background job.
+//                                  Default value: Undefined.
 //      * CreatedAt         - Number                   - invocation data creation time.
 //      * MetadataObject    - String                   - the full name of a metadata
 //                                                   object as a term.
@@ -196,7 +206,7 @@ EndProcedure // FillRegisterInvocationContext()
 //      * MethodName        - String                   - name of non-global common 
 //                                                    module method having the 
 //                                                    ModuleName.MethodName form.
-//                              Default value: "Catalogs.FL_Jobs.Trigger".
+//                                  Default value: "Catalogs.FL_Jobs.Trigger".
 //      * Operation         - CatalogReg.FL_Operations - operation.
 //      * Owner             - CatalogReg.FL_Exchanges  - an owner of invocation data.
 //                                  Default value: Undefined.
@@ -216,6 +226,7 @@ Function NewInvocationData() Export
     InvocationData = New Structure;
     
     // Attributes section
+    InvocationData.Insert("Continuations");
     InvocationData.Insert("CreatedAt", CurrentUniversalDateInMilliseconds());
     InvocationData.Insert("MetadataObject", "");
     InvocationData.Insert("MethodName", "Catalogs.FL_Jobs.Trigger");

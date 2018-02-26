@@ -189,6 +189,7 @@ EndFunction // ReferenceByPredefinedDataName()
 //                                      performed when the set is read or written.
 //  Attributes     - String         - comma separated attribute names in the format of
 //                                      structure property requirements.
+//                          Default value: "".
 //                 - Structure, FixedStructure - field alias name is transferred
 //                                      as a key for the returned structure with 
 //                                      the result and actual field name in the 
@@ -201,7 +202,8 @@ EndFunction // ReferenceByPredefinedDataName()
 //               The structure of the resulting table matches the structure of 
 //               the recordset.
 //
-Function RegisterAttributesValues(MetadataObject, Filter, Val Attributes) Export
+Function RegisterAttributeValues(MetadataObject, Filter, 
+    Val Attributes = "") Export
     
     FieldText = "";
     FieldTemplate = "%1SpecifiedTableAlias.%2 AS %2";
@@ -209,14 +211,18 @@ Function RegisterAttributesValues(MetadataObject, Filter, Val Attributes) Export
     FilterTemplate = "%1SpecifiedTableAlias.%2 = &%2";
     
     If TypeOf(Attributes) = Type("String") Then
-        If IsBlankString(Attributes) Then
-            AttributesStructure = New Structure;    
-        Else
+        
+        AttributesStructure = New Structure;
+        If NOT IsBlankString(Attributes) Then
             AttributesStructure = New Structure(Attributes);
         EndIf;
+        
     Else
+        
         AttributesStructure = Attributes;
+        
     EndIf;
+
     
     For Each KeyAndValue In AttributesStructure Do
         
@@ -240,17 +246,20 @@ Function RegisterAttributesValues(MetadataObject, Filter, Val Attributes) Export
         EndIf;
     EndDo;    
     
+    If NOT IsBlankString(FilterText) Then
+        FilterText = " WHERE " + FilterText;
+    EndIf;
+    
     Query.Text = StrTemplate(
         "SELECT
         |   %1
         |FROM
         |   %2 AS SpecifiedTableAlias
-        |WHERE 
         |   %3
         |", FieldText, MetadataObject.FullName(), FilterText);
     Return Query.Execute().Unload();
     
-EndFunction // RegisterAttributesValues()
+EndFunction // RegisterAttributeValues()
 
 // Returns a value table and copies records values to column which matched 
 // attribute name. 
@@ -270,7 +279,7 @@ EndFunction // RegisterAttributesValues()
 Function RegisterAttributeValue(MetadataObject, Filter, 
     AttributeName) Export
     
-    Return RegisterAttributesValues(MetadataObject, Filter, AttributeName);
+    Return RegisterAttributeValues(MetadataObject, Filter, AttributeName);
     
 EndFunction // RegisterAttributeValue()
 

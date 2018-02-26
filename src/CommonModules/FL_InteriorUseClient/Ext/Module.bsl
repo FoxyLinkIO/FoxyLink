@@ -55,6 +55,7 @@ Procedure ShowFormClosingConfirmation(NotifyDescription, Cancel,
     If IsBlankString(WarningText) Then
         QuestionText = NStr("en='Data was changed. Save the changes?';
             |ru='Данные были изменены. Сохранить изменения?';
+            |uk='Данні були змінені. Зберегти зміни?';
             |en_CA='Data was changed. Save the changes?'");
     Else
         QuestionText = WarningText;
@@ -104,6 +105,32 @@ Procedure Attachable_FileSystemExtension(NotifyDescription) Export
         NotifyDescription));
     
 EndProcedure // Attachable_FileSystemExtension()
+
+// Works with a special dialog that loads a file to the storage address in
+// AdditionalParameters.
+//
+// Parameters:
+//  FileExtensionAttached - Boolean   - the result value passed by the second parameter when the 
+//                                       method was called with help ExecuteNotifyProcessing. 
+//  AdditionalParameters  - Structure - see function FL_InteriorUseClientServer.NewFileProperties.
+//
+Procedure Attachable_LoadFile(FileExtensionAttached, 
+    AdditionalParameters) Export
+    
+    If FileExtensionAttached Then
+        
+        FileDialog = New FileDialog(FileDialogMode.Open);
+        FileDialog.Multiselect = False;
+        FileDialog.DefaultExt = AdditionalParameters.Extension;
+        FileDialog.Filter = StrTemplate(NStr("en='All files (*%1)|*%1';
+                |ru='Все файлы (*%1)|*%1';en_CA='All files (*%1)|*%1'"), 
+            AdditionalParameters.Extension);
+        FileDialog.Show(New NotifyDescription("DoAfterSelectFileToLoad", 
+            FL_InteriorUseClient, AdditionalParameters)); 
+        
+    EndIf;
+    
+EndProcedure // Attachable_LoadFile()
 
 // Works with a special dialog that saves a file to a selected directory.
 //
@@ -201,6 +228,45 @@ EndProcedure // DoAfterInstallFileSystemExtension()
 //                                     Undefined, if no selection is made. 
 //  AdditionalParameters - Arbitrary - see function FL_InteriorUseClientServer.NewFileProperties.
 //
+Procedure DoAfterSelectFileToLoad(SelectedFiles, AdditionalParameters) Export
+    
+    If SelectedFiles <> Undefined
+        AND TypeOf(SelectedFiles) = Type("Array") Then
+                                               
+        Title = NStr("en='Loading file(s)';
+            |ru='Загрузка файла(ов)';
+            |uk='Завантаження файлу(ів)';
+            |en_CA='File load'");
+        
+        Explanation = NStr("
+            |en='Please, wait...';
+            |ru='Пожалуйста, подождите...';
+            |ua='Будь-ласка, почекайте...';
+            |en_CA='Please, wait...'");
+        
+        ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
+            
+        TransferableFiles = New Array;
+        For Each SelectedFile In SelectedFiles Do
+            TransferableFile = New TransferableFileDescription(SelectedFile,
+                AdditionalParameters.StorageAddress);
+            TransferableFiles.Add(TransferableFile);
+        EndDo;
+        
+        BeginPuttingFiles(New NotifyDescription("DoAfterBeginGettingFiles", 
+            FL_InteriorUseClient, AdditionalParameters), TransferableFiles, , False);
+
+    EndIf;
+    
+EndProcedure // DoAfterSelectFileToLoad() 
+
+// Begins saving the file to the selected directory.
+//
+// Parameters:
+//  SelectedFiles        - Array     - an array of selected file names or 
+//                                     Undefined, if no selection is made. 
+//  AdditionalParameters - Arbitrary - see function FL_InteriorUseClientServer.NewFileProperties.
+//
 Procedure DoAfterSelectSaveFileAs(SelectedFiles, AdditionalParameters) Export
     
     If SelectedFiles <> Undefined
@@ -218,11 +284,9 @@ Procedure DoAfterSelectSaveFileAs(SelectedFiles, AdditionalParameters) Export
             
         TransferableFiles = New Array;
         For Each SelectedFile In SelectedFiles Do
-            
             TransferableFile = New TransferableFileDescription(SelectedFile, 
                 AdditionalParameters.StorageAddress);
             TransferableFiles.Add(TransferableFile);
-            
         EndDo;
         
         BeginGettingFiles(New NotifyDescription("DoAfterBeginGettingFiles", 
@@ -253,17 +317,25 @@ Procedure DoAfterBeginGettingFiles(ReceivedFiles,
                 "DoAfterBeginRunningApplication", FL_InteriorUseClient);
             AppParameters.CommandLine = ReceivedFile.Name;
             AppParameters.WaitForCompletion = True;
-            NotifyDescription =  New NotifyDescription(
+            NotifyDescription = New NotifyDescription(
                 "DoActionOpenFolderOnClick", FL_InteriorUseClient, AppParameters);
             
             ShowUserNotification(NStr("en='The file was successfully saved.';
-                |ru='Файл успешно сохранен.';
-                |en_CA='The file was successfully saved.'"), 
+                    |ru='Файл успешно сохранен.';
+                    |uk='Файл успішно збережено.';
+                    |en_CA='The file was successfully saved.'"), 
                 NotifyDescription, 
                 ReceivedFile.Name, 
                 PictureLib.FL_Logotype64);
                 
         EndDo;
+
+        If TypeOf(AdditionalParameters) = Type("Structure") 
+            AND AdditionalParameters.Property("NotifyDescription") Then
+            
+            ExecuteNotifyProcessing(AdditionalParameters.NotifyDescription, True);    
+            
+        EndIf;
         
     EndIf;
     

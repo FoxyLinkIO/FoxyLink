@@ -402,11 +402,11 @@ Procedure ApplyInvocationData(Source, Operation, Replacing = False)
             
             PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
                 SourceMetadata);
-            AttributesValues = FL_CommonUse.RegisterAttributesValues(
+            AttributeValues = FL_CommonUse.RegisterAttributeValues(
                 SourceMetadata, Source.Filter, PrimaryKeys);
                      
             FL_BackgroundJob.FillRegisterInvocationContext(InvocationData.InvocationContext, 
-                Source.Filter, PrimaryKeys, AttributesValues);
+                Source.Filter, PrimaryKeys, AttributeValues);
                 
             // Do not change this line. It is easy to break passing by reference.
             FL_CommonUse.RemoveDuplicatesFromValueTable(
