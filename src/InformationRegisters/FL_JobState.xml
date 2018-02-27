@@ -46,6 +46,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Состояние заданий</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Стан завдань</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment/>
 			<UseStandardCommands>true</UseStandardCommands>
@@ -243,6 +247,10 @@
 						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Задание</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Завдання</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>

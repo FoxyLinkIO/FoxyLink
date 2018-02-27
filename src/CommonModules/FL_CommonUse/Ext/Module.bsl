@@ -222,7 +222,6 @@ Function RegisterAttributeValues(MetadataObject, Filter,
         AttributesStructure = Attributes;
         
     EndIf;
-
     
     For Each KeyAndValue In AttributesStructure Do
         

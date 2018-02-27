@@ -101,7 +101,7 @@ Procedure InstallIntegration(Command)
         OpenForm("Catalog.FL_Exchanges.Form.ImportForm",
             New Structure("LibraryGuid, Template", CurrentData.LibraryGuid, 
                 CurrentData.Template),
-            ThisForm,
+            ThisObject,
             ,
             ,
             ,

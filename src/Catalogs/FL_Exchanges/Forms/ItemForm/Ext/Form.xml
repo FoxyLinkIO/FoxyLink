@@ -1713,12 +1713,16 @@
 					<v8:content>Result text document</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Result text document</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Текстовый документ результата</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Result text document</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Текстовий документ результату</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
