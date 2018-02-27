@@ -182,6 +182,11 @@ Procedure InformationRegisterBeforeWrite(Source, Cancel, Replacing) Export
         Return;
     EndIf;
     
+    SourceMetadata = Source.Metadata();
+    If NOT FL_EventsReUse.IsEventPublisher(SourceMetadata.FullName()) Then
+        Return;    
+    EndIf;
+    
     //SourceMetadata = Source.Metadata();
     //MetadataObject = SourceMetadata.FullName();
     //If IsEventPublisher(MetadataObject) Then

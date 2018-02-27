@@ -49,6 +49,23 @@ EndFunction // SessionHash()
 // Returns event publishers.
 //
 // Parameters:
+//  MetadataObject - String - the full name of a metadata object as a term.   
+//
+// Returns:
+//  Boolean - True, if it is event publisher, otherwise False.
+//
+Function IsEventPublisher(MetadataObject) Export
+    
+    Query = New Query;
+    Query.Text = QueryTextIsEventPublisher();
+    Query.SetParameter("MetadataObject", MetadataObject);
+    Return NOT Query.Execute().IsEmpty();
+    
+EndFunction // IsEventPublisher()
+
+// Returns event publishers.
+//
+// Parameters:
 //  MetadataObject - String                   - the full name of a metadata object as a term.   
 //  Operation      - CatalogRef.FL_Operations - reference to the FL_Operations catalog.
 //
@@ -94,6 +111,28 @@ EndFunction // EventPriority()
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Function QueryTextIsEventPublisher()
+
+    QueryText = "
+        |SELECT 
+        |   EventTable.Ref AS Exchange
+        |FROM
+        |   Catalog.FL_Exchanges AS Exchanges 
+        |
+        |INNER JOIN Catalog.FL_Exchanges.Events AS EventTable
+        // [OPPX|OPHP1 +] Attribute + Ref
+        |ON  EventTable.MetadataObject = &MetadataObject
+        |AND EventTable.Ref            = Exchanges.Ref
+        |
+        |WHERE
+        |   Exchanges.InUse = True
+        |";
+    Return QueryText;
+    
+EndFunction // QueryTextIsEventPublisher()
 
 // Only for internal use.
 //
