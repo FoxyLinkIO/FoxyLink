@@ -804,8 +804,12 @@ Procedure FillDataCompositionParameterValueCollection(DataParameters,
         Parameters = InvocationContext.FindRows(FilterParameters);
         If Parameters.Count() = 1 Then
             
-            SetDataCompositionDataParameterValue(DataParameters, PrimaryKey, 
-                Parameters[0].Value);
+            InvocationParameter = Parameters[0];
+            If InvocationParameter.Filter 
+                OR Item.Use = DataCompositionParameterUse.Always Then 
+                SetDataCompositionDataParameterValue(DataParameters, PrimaryKey, 
+                    InvocationParameter.Value);
+            EndIf;
                 
         ElsIf Parameters.Count() > 1 Then 
             

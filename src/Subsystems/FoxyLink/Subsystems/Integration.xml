@@ -40,6 +40,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Encryption</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsBeforeDelete</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsBeforeDelete</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_EncryptionClientServer</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

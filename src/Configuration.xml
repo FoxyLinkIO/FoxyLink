@@ -53,7 +53,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.8.14</Version>
+			<Version>0.9.8.15</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -270,6 +270,7 @@
 			<CommonModule>FL_CommonUseReUse</CommonModule>
 			<CommonModule>FL_DataComposition</CommonModule>
 			<CommonModule>FL_Encryption</CommonModule>
+			<CommonModule>FL_EncryptionClientServer</CommonModule>
 			<CommonModule>FL_ErrorsClientServer</CommonModule>
 			<CommonModule>FL_Events</CommonModule>
 			<CommonModule>FL_EventsReUse</CommonModule>
