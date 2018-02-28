@@ -32,6 +32,7 @@
 				<xr:Object>Enum.FL_CRUDMethods</xr:Object>
 				<xr:Object>DataProcessor.FL_DataProcessorCSV</xr:Object>
 				<xr:Object>DataProcessor.FL_DataProcessorJSON</xr:Object>
+				<xr:Object>DataProcessor.FL_RabbitMQ</xr:Object>
 				<xr:Object>InformationRegister.FL_TasksHeartbeat</xr:Object>
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Integration</xr:Object>
 				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins</xr:Object>

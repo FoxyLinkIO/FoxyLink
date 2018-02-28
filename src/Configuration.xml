@@ -53,7 +53,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.8.15</Version>
+			<Version>0.9.8.16</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -312,6 +312,7 @@
 			<DataProcessor>FL_AdministrationPanel</DataProcessor>
 			<DataProcessor>FL_DataProcessorCSV</DataProcessor>
 			<DataProcessor>FL_DataProcessorJSON</DataProcessor>
+			<DataProcessor>FL_RabbitMQ</DataProcessor>
 			<DataProcessor>FL_SelfExport</DataProcessor>
 			<DataProcessor>FL_SelfFiles</DataProcessor>
 			<InformationRegister>FL_JobState</InformationRegister>
