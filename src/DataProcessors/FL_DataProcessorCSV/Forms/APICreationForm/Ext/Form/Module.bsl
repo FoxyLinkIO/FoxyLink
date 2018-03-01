@@ -39,10 +39,40 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
             
         EndIf;
     EndIf;
+    
+    If Delimiter = Chars.Tab Then
+        FormatType = "TSV";    
+    ElsIf IsBlankString(Delimiter) 
+        OR Delimiter = "," Then
+        FormatType = "CSV";
+    Else
+        FormatType = "DSV";    
+    EndIf;
+    
+    Items.Delimiter.Visible = FormatType = "DSV";
   
 EndProcedure // OnCreateAtServer()
 
 #EndRegion // FormEventHandlers
+
+#Region FormItemsEventHandlers
+
+&AtClient
+Procedure FormatTypeOnChange(Item)
+    
+    If FormatType = "CSV" Then
+        Delimiter = ",";
+    ElsIf FormatType = "TSV" Then
+        Delimiter = Chars.Tab;
+    Else 
+        Delimiter = ",";
+    EndIf;
+    
+    Items.Delimiter.Visible = FormatType = "DSV";
+    
+EndProcedure // FormatTypeOnChange() 
+
+#EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
 
@@ -69,7 +99,8 @@ Function PutValueTableToTempStorage(Val OwnerUUID)
         Return "";
     EndIf;
     
-    If IsBlankString(Delimiter) Then
+    If IsBlankString(Delimiter) 
+        AND Delimiter <> Chars.Tab Then
         Delimiter = ",";        
     EndIf;
     
@@ -78,7 +109,7 @@ Function PutValueTableToTempStorage(Val OwnerUUID)
     NewRow = Object.APISchema.Add();
     NewRow.FieldName = "Delimiter";
     NewRow.FieldValue = Delimiter;
-    
+        
     NewRow = Object.APISchema.Add();
     NewRow.FieldName = "AddCarriageReturnToLastRow";
     NewRow.FieldValue = AddCarriageReturnToLastRow;

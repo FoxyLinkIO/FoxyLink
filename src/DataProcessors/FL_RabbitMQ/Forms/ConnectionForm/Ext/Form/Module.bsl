@@ -35,7 +35,8 @@ Procedure ConnectToRabbitMQ(Command)
     
     If IsBlankString(ConnectionPath) Then
         
-        FL_CommonUseClientServer.NotifyUser(NStr("en='Fill the connection path.';
+        FL_CommonUseClientServer.NotifyUser(NStr("
+                |en='Fill the connection path.';
                 |ru='Заполните путь для подключения.';
                 |uk='Заповніть шлях для підключення.';
                 |en_CA='Fill the connection path.'"),
@@ -52,7 +53,8 @@ Procedure ConnectToRabbitMQ(Command)
     If FilterResult.Count() = 1 Then
         Close(Object); 
     Else
-        Explanation = NStr("en='Failed to connect to RabbitMQ.';
+        Explanation = NStr("
+            |en='Failed to connect to RabbitMQ.';
             |ru='Не удалось подключиться к RabbitMQ.';
             |uk='Не вдалось підключитись до RabbitMQ.';
             |en_CA='Failed to connect to RabbitMQ.'");

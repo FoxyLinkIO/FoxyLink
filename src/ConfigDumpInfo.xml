@@ -138,10 +138,10 @@
 		<Metadata name="CommonModule.FL_CommonUseReUse.Module" id="0437fd06-1081-4776-86a6-6ba3b5ee640a.0" configVersion="f89f0cf28ee9b440bd5fb2f949397b3700000000"/>
 		<Metadata name="CommonModule.FL_DataComposition" id="55ea697a-b5cf-4f2d-944e-58625713ff98" configVersion="42fb9e521eaa8f4aa6bfe58fbc1b7e3000000000"/>
 		<Metadata name="CommonModule.FL_DataComposition.Module" id="55ea697a-b5cf-4f2d-944e-58625713ff98.0" configVersion="6968cb0d349aba4d84f7f0a05ef55a7300000000"/>
-		<Metadata name="CommonModule.FL_Encryption" id="837a6e10-d078-46f1-9322-ef88d4649f13" configVersion="820ebcfabed8de409a44dc61e76272dc00000000"/>
-		<Metadata name="CommonModule.FL_Encryption.Module" id="837a6e10-d078-46f1-9322-ef88d4649f13.0" configVersion="a29c423e13f04a42b614ee1039ef4f3600000000"/>
-		<Metadata name="CommonModule.FL_EncryptionClientServer" id="484c1492-3e5f-4757-a7a7-e2c1baa294ec" configVersion="498b07dc78babb448b3ce6c0b9e8ab0600000000"/>
-		<Metadata name="CommonModule.FL_EncryptionClientServer.Module" id="484c1492-3e5f-4757-a7a7-e2c1baa294ec.0" configVersion="92d31624b05f5c4b9bd7702d421421a000000000"/>
+		<Metadata name="CommonModule.FL_Encryption" id="837a6e10-d078-46f1-9322-ef88d4649f13" configVersion="beb2a0bc814aeb429f5a783827a7155400000000"/>
+		<Metadata name="CommonModule.FL_Encryption.Module" id="837a6e10-d078-46f1-9322-ef88d4649f13.0" configVersion="c136b0cedf9a0f4e8266070f1da56db900000000"/>
+		<Metadata name="CommonModule.FL_EncryptionClientServer" id="484c1492-3e5f-4757-a7a7-e2c1baa294ec" configVersion="ac2070ac68ac6e4996ffed9198fd55df00000000"/>
+		<Metadata name="CommonModule.FL_EncryptionClientServer.Module" id="484c1492-3e5f-4757-a7a7-e2c1baa294ec.0" configVersion="758542b560008d47adaf9b3b7dc9c69700000000"/>
 		<Metadata name="CommonModule.FL_ErrorsClientServer" id="d6c6d228-fcea-4e03-bf6a-1c5a4dee628c" configVersion="a34bb18f23f465488744f026a451074200000000"/>
 		<Metadata name="CommonModule.FL_ErrorsClientServer.Module" id="d6c6d228-fcea-4e03-bf6a-1c5a4dee628c.0" configVersion="6df6a9e12099ec4aa618984971745e7b00000000"/>
 		<Metadata name="CommonModule.FL_Events" id="fb56a4dc-7071-4ef3-9806-5560862be366" configVersion="3c39817c0577e349921520e15789388f00000000"/>
@@ -266,7 +266,7 @@
 		<Metadata name="CommonPicture.FL_ValidMethodSettings.Picture" id="71420c33-fbed-4e8e-8015-76bc7a0dbd19.0" configVersion="17efc702cdd91b43ae5ab86c198d4f9400000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE" id="4cc3426b-e953-4bd9-b838-2153998228de" configVersion="581927af0e4d7e44846e3a24740bdf6700000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE.Template" id="4cc3426b-e953-4bd9-b838-2153998228de.0" configVersion="a3107b1e2e297649811382e1f34ff0a400000000"/>
-		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="32ca2c6bd3c4b04fb5fc98d3776c960e00000000"/>
+		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="c690a9699e28de49aa3ca5a04488e4c300000000"/>
 		<Metadata name="Configuration.FoxyLink.ClientApplicationInterface" id="d93db53b-5a84-46dd-b01b-c5c745936a50.b" configVersion="11629064c93eff4886978d5b451f1c6800000000"/>
 		<Metadata name="Configuration.FoxyLink.Logo" id="d93db53b-5a84-46dd-b01b-c5c745936a50.1" configVersion="9659276839a8dc428c0d1192ab0a0d9b00000000"/>
 		<Metadata name="Configuration.FoxyLink.MainSectionPicture" id="d93db53b-5a84-46dd-b01b-c5c745936a50.c" configVersion="ff26138f08918640818c02536eca4d0000000000"/>
@@ -287,17 +287,17 @@
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.Form.Form" id="51b0f629-f787-4347-8825-21a041413f6d.0" configVersion="ab188a6a764abf419ff3b6ab76ecaf7600000000"/>
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.License" id="513c7982-a3b0-4491-bdf6-23ef41def92c" configVersion="74181202e506424991464e39fc63103400000000"/>
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.License.Form" id="513c7982-a3b0-4491-bdf6-23ef41def92c.0" configVersion="28359ef08dce4b4faa8ac62b11010ed100000000"/>
-		<Metadata name="DataProcessor.FL_DataProcessorCSV" id="31c58ae0-ad45-408b-abc1-919060aad9cc" configVersion="6588eff7cc55b74385ea68eb7c74c2a800000000">
+		<Metadata name="DataProcessor.FL_DataProcessorCSV" id="31c58ae0-ad45-408b-abc1-919060aad9cc" configVersion="098375dc29e1da4e815d5534f00e34be00000000">
 			<Metadata name="DataProcessor.FL_DataProcessorCSV.Attribute.TextEncoding" id="4b338cb7-6cbe-4012-a2b9-e338149d5b0e"/>
 			<Metadata name="DataProcessor.FL_DataProcessorCSV.Attribute.HeaderLine" id="5ced2873-1dd4-40e8-90af-8ad3e659a911"/>
 			<Metadata name="DataProcessor.FL_DataProcessorCSV.Attribute.APISchema" id="8ffaaa7e-bb03-444f-bb68-cccf1c8e56a6"/>
 			<Metadata name="DataProcessor.FL_DataProcessorCSV.Attribute.Delimiter" id="99b3fc24-b5db-4fb8-a470-f6d767736c83"/>
 			<Metadata name="DataProcessor.FL_DataProcessorCSV.Attribute.AddCarriageReturnToLastRow" id="b5664a9a-fec3-4066-b2c0-fc729e90bc8e"/>
 		</Metadata>
-		<Metadata name="DataProcessor.FL_DataProcessorCSV.Form.APICreationForm" id="930c5bd1-96d8-4760-86c1-d08a02c36b80" configVersion="a4b5e5f1ecf18f4eae6bf70255832fec00000000"/>
-		<Metadata name="DataProcessor.FL_DataProcessorCSV.Form.APICreationForm.Form" id="930c5bd1-96d8-4760-86c1-d08a02c36b80.0" configVersion="83b3bc9c65f8a64c80abf58f0e95ebf500000000"/>
+		<Metadata name="DataProcessor.FL_DataProcessorCSV.Form.APICreationForm" id="930c5bd1-96d8-4760-86c1-d08a02c36b80" configVersion="4cc21a98490da8458e512efb6e30b06f00000000"/>
+		<Metadata name="DataProcessor.FL_DataProcessorCSV.Form.APICreationForm.Form" id="930c5bd1-96d8-4760-86c1-d08a02c36b80.0" configVersion="36f01428a96a5f45b944aa39a5de820500000000"/>
 		<Metadata name="DataProcessor.FL_DataProcessorCSV.ManagerModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.2" configVersion="70307528a4c9534680ad2ee3ae4e40ea00000000"/>
-		<Metadata name="DataProcessor.FL_DataProcessorCSV.ObjectModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.0" configVersion="e788730d824b8844986a6b9fa8fdb3e000000000"/>
+		<Metadata name="DataProcessor.FL_DataProcessorCSV.ObjectModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.0" configVersion="c61bdd9daff26b4f90ebc5cbc956d3b800000000"/>
 		<Metadata name="DataProcessor.FL_DataProcessorJSON" id="82f21374-0d79-4c03-b10b-8874d75d2d1a" configVersion="ce65b72b62d8a548b5d39cd2fc6a5b4900000000">
 			<Metadata name="DataProcessor.FL_DataProcessorJSON.Attribute.APISchema" id="a589bd6d-d60d-46ad-872c-e729daadc1b9"/>
 		</Metadata>
@@ -306,7 +306,7 @@
 		<Metadata name="DataProcessor.FL_DataProcessorJSON.Form.APICreationForm.Help" id="88af31b0-2ac9-4bb3-a028-49bc86640268.1" configVersion="dd53610861238b4aa84c665f0c2ce12c00000000"/>
 		<Metadata name="DataProcessor.FL_DataProcessorJSON.ManagerModule" id="82f21374-0d79-4c03-b10b-8874d75d2d1a.2" configVersion="cb334a3a9501ad46b546934f6a598d7d00000000"/>
 		<Metadata name="DataProcessor.FL_DataProcessorJSON.ObjectModule" id="82f21374-0d79-4c03-b10b-8874d75d2d1a.0" configVersion="4376d1faf786a54994b0703e8ed87c8600000000"/>
-		<Metadata name="DataProcessor.FL_RabbitMQ" id="2b5d1e25-9c65-49aa-95e5-babe01e9f593" configVersion="0db406d4ca7f2b48a7f006486a76e3fd00000000">
+		<Metadata name="DataProcessor.FL_RabbitMQ" id="2b5d1e25-9c65-49aa-95e5-babe01e9f593" configVersion="418de92af200944da7bb83ff96792e7400000000">
 			<Metadata name="DataProcessor.FL_RabbitMQ.TabularSection.EncryptedData" id="1fe8cd86-7b7f-4c57-bf94-c43533d020ab"/>
 			<Metadata name="DataProcessor.FL_RabbitMQ.TabularSection.ChannelResources" id="3429475b-dbde-4165-b330-f73c3c076cff"/>
 			<Metadata name="DataProcessor.FL_RabbitMQ.TabularSection.EncryptedData.Attribute.FieldName" id="44b28a0e-ee5a-4051-97f3-62d861df23b7"/>
@@ -322,12 +322,12 @@
 		</Metadata>
 		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ChannelForm" id="c1328670-a194-4e55-8aa5-7ce5538eb026" configVersion="8ca261626cb2bb46afe47615eff3691d00000000"/>
 		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ChannelForm.Form" id="c1328670-a194-4e55-8aa5-7ce5538eb026.0" configVersion="3cd516961325d04a8685939e4c066fdb00000000"/>
-		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ConnectionForm" id="33025224-b9f3-4fcb-9066-3888de6e4606" configVersion="c028b0c728391b4b8d53ccd1bf933fd100000000"/>
-		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ConnectionForm.Form" id="33025224-b9f3-4fcb-9066-3888de6e4606.0" configVersion="3f33a74ae9b29047aed9723b9d02e33a00000000"/>
-		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ResourcesForm" id="157e599b-9271-4a6e-867c-227b775e7da0" configVersion="2bef2d5882b8444486404f1a50950d7100000000"/>
-		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ResourcesForm.Form" id="157e599b-9271-4a6e-867c-227b775e7da0.0" configVersion="6b682af3cafe4a4bb502f4869856a54800000000"/>
+		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ConnectionForm" id="33025224-b9f3-4fcb-9066-3888de6e4606" configVersion="5e163f4a062f904383effdb01d36eb3100000000"/>
+		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ConnectionForm.Form" id="33025224-b9f3-4fcb-9066-3888de6e4606.0" configVersion="2fdd2a332db2df46a5e9bd14457d09f000000000"/>
+		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ResourcesForm" id="157e599b-9271-4a6e-867c-227b775e7da0" configVersion="d6de20023401614dba72a49c2de08bf500000000"/>
+		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ResourcesForm.Form" id="157e599b-9271-4a6e-867c-227b775e7da0.0" configVersion="e505ec6819c7c3488a1f57024169daa000000000"/>
 		<Metadata name="DataProcessor.FL_RabbitMQ.ManagerModule" id="2b5d1e25-9c65-49aa-95e5-babe01e9f593.2" configVersion="5a40ce227a67ed4e9976b1698098423600000000"/>
-		<Metadata name="DataProcessor.FL_RabbitMQ.ObjectModule" id="2b5d1e25-9c65-49aa-95e5-babe01e9f593.0" configVersion="a0bd9325b82f0e40ba12fb6cb81ef8cf00000000"/>
+		<Metadata name="DataProcessor.FL_RabbitMQ.ObjectModule" id="2b5d1e25-9c65-49aa-95e5-babe01e9f593.0" configVersion="b1767a80baad104da3788d3c0905188500000000"/>
 		<Metadata name="DataProcessor.FL_SelfExport" id="ce1b6baf-8f48-4f21-bde4-1aaa96175930" configVersion="d999879cb9e687408e0a45874aa9d4f400000000">
 			<Metadata name="DataProcessor.FL_SelfExport.TabularSection.ChannelResources.Attribute.FieldValue" id="1c4dcc6a-e73c-4871-b7c8-c81e34143bc9"/>
 			<Metadata name="DataProcessor.FL_SelfExport.TabularSection.ChannelData" id="22fbd4a6-4ff8-49d9-9bfc-998c6145fa6f"/>
@@ -471,7 +471,7 @@
 			<Metadata name="ExternalDataSource.DataBank.Table.dbo_FactShopVisits.Field.Income" id="f00798f7-85f8-41d2-a12d-c0719d439c55"/>
 		</Metadata>
 		<Metadata name="FunctionalOption.FL_LicenseAccepted" id="6dac776b-7fc4-46c8-b56a-175150b8905a" configVersion="4edead29537e794590b8cd5a06a76e7100000000"/>
-		<Metadata name="FunctionalOption.FL_UseFoxyLink" id="051a868b-13e0-4fae-9405-c407f5906b7f" configVersion="9c31323b02860e4c9dd47defc6b7714900000000"/>
+		<Metadata name="FunctionalOption.FL_UseFoxyLink" id="051a868b-13e0-4fae-9405-c407f5906b7f" configVersion="c01f91142439bc4b83f09d1838947ca400000000"/>
 		<Metadata name="InformationRegister.FL_JobState" id="7a8ee14c-375d-49df-b6fb-76b0bd7478e9" configVersion="a4c02ab999ca544fb84918dbd930e78800000000">
 			<Metadata name="InformationRegister.FL_JobState.Resource.PerformanceDuration" id="291292c8-97e0-44a2-b665-dbf4212e2c37"/>
 			<Metadata name="InformationRegister.FL_JobState.Dimension.CreatedAt" id="551a1c87-ce8d-438f-8620-64f9b8eb5204"/>
@@ -495,11 +495,11 @@
 		<Metadata name="Subsystem.FoxyLink.CommandInterface" id="9966ecee-1ccc-493e-94d3-e780545214fc.1" configVersion="3f001c4fb5f7c94db8f485d60aba0a1800000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.GeneralSettings" id="3963fa99-5a8d-4df3-8bf6-22103e6c4417" configVersion="7a6cb2a8eb1d744db62ed9059179401e00000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.GeneralSettings.CommandInterface" id="3963fa99-5a8d-4df3-8bf6-22103e6c4417.1" configVersion="f83a98958d818248807ad444e62db95700000000"/>
-		<Metadata name="Subsystem.FoxyLink.Subsystem.Integration" id="f708e06a-a99f-4fb0-9ac9-e662d5b4a098" configVersion="894663f61827424ba9e19a803e5a3ee500000000"/>
+		<Metadata name="Subsystem.FoxyLink.Subsystem.Integration" id="f708e06a-a99f-4fb0-9ac9-e662d5b4a098" configVersion="35ff09d143a5d94cb11294e27cba44ac00000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Integration.CommandInterface" id="f708e06a-a99f-4fb0-9ac9-e662d5b4a098.1" configVersion="b0e1320ee923b348aa848eb0eb82976900000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins" id="2c24fa32-a19d-44d4-a5a4-1e9daa2bb265" configVersion="f22192e58613d4458f88e3bd136f6ae400000000"/>
-		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="22bdbd4f6d4bce419541cdbe8ab1fc2300000000"/>
-		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="13d730a4f3e3f446b048a2eb28538eeb00000000"/>
+		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="d2fcb5e2519af84ab5d29c131db4672300000000"/>
+		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="cc063e10797217498f4a009c2eecdd0000000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Tasks" id="99d97624-ec69-4a4b-8804-4cc3a20b6a92" configVersion="18c401829203004f8b85e51ce38879f100000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Tasks.CommandInterface" id="99d97624-ec69-4a4b-8804-4cc3a20b6a92.1" configVersion="556d499f8287dd478eeb99e3ffcab70900000000"/>
 	</ConfigVersions>
