@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
+	<AutoTitle>false</AutoTitle>
 	<Customizable>false</Customizable>
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
@@ -176,16 +177,20 @@
 					<TitleLocation>None</TitleLocation>
 					<InputHint>
 						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Значение по умолчанию= '%2F'</v8:content>
-						</v8:item>
-						<v8:item>
 							<v8:lang>en</v8:lang>
 							<v8:content>Default value = '%2F'</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
 							<v8:content>Default value = '%2F'</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Значение по умолчанию= '%2F'</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Значення по замовчуванню= '%2F'</v8:content>
 						</v8:item>
 					</InputHint>
 					<ContextMenu name="VirtualHostContextMenu" id="26"/>
@@ -585,7 +590,7 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Назва обміну</v8:content>
+					<v8:content>І'мя обміну</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -775,7 +780,7 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Індент. кореляції</v8:content>
+					<v8:content>Ідент. кореляції</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -883,7 +888,7 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Термін життя</v8:content>
+					<v8:content>Час життя</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -910,7 +915,7 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Індент. повідомлення</v8:content>
+					<v8:content>Ідент. повідомлення</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -987,7 +992,7 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Індент. користувача</v8:content>
+					<v8:content>Ідент. користувача</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -1014,7 +1019,7 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Індент. додатку</v8:content>
+					<v8:content>Ідент. додатку</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -1034,12 +1039,16 @@
 					<v8:content>Save and close</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Save and close</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Сохранить и закрыть</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Save and close</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Зберегти та закрити</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>

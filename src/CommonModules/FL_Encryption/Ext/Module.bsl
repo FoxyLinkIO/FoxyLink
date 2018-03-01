@@ -140,9 +140,62 @@ Function Hash(Value, HashFunction) Export
     
 EndFunction // Hash()
 
+// Calculates a simple checksum used to validate a variety of identification 
+// numbers.
+//
+// Parameters:
+//  Number - Number - number for which is needed to calculate a simple checksum.
+//
+// Returns:
+//  Number - calculated checksum. 
+//
+Function LuhnAlgorithm(Val Number) Export
+    
+    Result = 0;
+    Pair = StrLen(Format(Number, "NG=0")) % 2 = 0;
+    While Number > 0 Do
+        
+        Mod = Number % 10;
+        Number = Int(Number / 10);
+        
+        If Pair Then
+            
+            Mod = Mod * 2;
+            Result = Result + ?(Mod < 10, Mod, Mod % 10 + Int(Mod / 10)); 
+            
+        Else
+            Result = Result + Mod;    
+        EndIf;
+        
+        Pair = NOT Pair;
+        
+    EndDo;
+    
+    Return (Result * 9) % 10;
+    
+EndFunction // LuhnAlgorithm() 
+
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
+
+// Adds and encrypts field value to encrypted data.
+//
+// Parameters:
+//  EncryptedData - FormDataCollection - collection with encrypted data.
+//                - ValueTable         - value table with encrypted data.
+//  FieldName     - String             - field name.
+//  FieldValue    - String             - field value.
+//
+Procedure AddAndEncryptFieldValue(EncryptedData, FieldName, FieldValue) Export
+    
+    NewEncryptedDataRow = EncryptedData.Add();
+    NewEncryptedDataRow.FieldName  = FieldName;
+    NewEncryptedDataRow.FieldValue = FieldValue;
+    FL_EncryptionKeys.EncryptString(NewEncryptedDataRow.FieldValue, 
+        NewEncryptedDataRow.EncryptNumber);
+    
+EndProcedure // AddAndEncryptFieldValue()
 
 // Updates encrypted data table from string body.
 //

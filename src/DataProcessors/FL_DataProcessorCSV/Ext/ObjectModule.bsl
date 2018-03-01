@@ -122,9 +122,12 @@ Procedure Initialize(Stream, APISchema = Undefined) Export
             
             Delimiter = ",";
             FindResult = APISchema.Find("Delimiter", "FieldName");
-            If FindResult <> Undefined 
-                AND NOT IsBlankString(FindResult.FieldValue) Then
-                Delimiter = FindResult.FieldValue;
+            If FindResult <> Undefined Then
+                If FindResult.FieldValue = Chars.Tab Then
+                    Delimiter = FindResult.FieldValue;
+                ElsIf NOT IsBlankString(FindResult.FieldValue) Then
+                    Delimiter = FindResult.FieldValue;
+                EndIf;
             EndIf;
             
         Else
@@ -412,7 +415,7 @@ EndProcedure // APISchemaOutput()
 //
 Function Version() Export
     
-    Return "1.0.3";
+    Return "1.0.4";
     
 EndFunction // Version()
 

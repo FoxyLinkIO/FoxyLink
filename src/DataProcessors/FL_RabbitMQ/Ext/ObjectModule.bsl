@@ -395,7 +395,7 @@ EndFunction // NewHTTPRequestHeaders()
 //
 Function Version() Export
     
-    Return "1.0.3";
+    Return "1.0.4";
     
 EndFunction // Version()
 

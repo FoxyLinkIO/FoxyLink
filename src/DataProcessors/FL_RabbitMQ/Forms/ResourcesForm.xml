@@ -9,12 +9,16 @@
 					<v8:content>Resources form</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Resources form</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Форма ресурсов</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Resources form</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Форма ресурсів</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>

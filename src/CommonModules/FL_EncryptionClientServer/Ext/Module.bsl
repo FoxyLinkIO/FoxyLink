@@ -19,17 +19,33 @@
 
 #Region ProgramInterface
 
+// Adds field value to channel data.
+//
+// Parameters:
+//  ChannelData - FormDataCollection - collection with channel data.
+//              - ValueTable         - value table with channel data.
+//  FieldName   - String             - field name.
+//  FieldValue  - String             - field value.
+//
+Procedure AddFieldValue(ChannelData, FieldName, FieldValue) Export
+    
+    NewChannelDataRow = ChannelData.Add();
+    NewChannelDataRow.FieldName  = FieldName;
+    NewChannelDataRow.FieldValue = FieldValue;
+    
+EndProcedure // AddFieldValue()
+
 // Returns field value by the passed field name.
 //
 // Parameters:
-//  FieldName   - String             - field name.
 //  ChannelData - FormDataCollection - collection with channel data.
 //              - ValueTable         - value table with channel data.
+//  FieldName   - String             - field name.
 //
 // Returns:
 //  String - field value.
 //
-Function FieldValue(FieldName, ChannelData) Export
+Function FieldValue(ChannelData, FieldName) Export
     
     FilterParameters = New Structure("FieldName", FieldName);
     FilterResult = ChannelData.FindRows(FilterParameters);
