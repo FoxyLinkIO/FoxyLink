@@ -116,6 +116,9 @@ EndFunction // FormatMediaType()
 //
 Procedure Initialize(Stream, APISchema = Undefined) Export
     
+    // Clear cache.
+    ThisObject.APISchema.Rows.Clear();
+    
     RefTypesCache = New Map;
     RefTypesCache.Insert(Type("String"), False);
     RefTypesCache.Insert(Type("Number"), False);
@@ -670,7 +673,7 @@ EndProcedure // CheckDublicateProperty()
 //
 Function Version() Export
     
-    Return "1.0.0.0";
+    Return "1.0.1";
     
 EndFunction // Version()
 

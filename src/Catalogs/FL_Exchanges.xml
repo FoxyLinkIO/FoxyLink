@@ -31,12 +31,16 @@
 					<v8:content>Exchanges</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Обмены</v8:content>
-				</v8:item>
-				<v8:item>
 					<v8:lang>en_CA</v8:lang>
 					<v8:content>Exchanges</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Настройки обменов</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Налаштування обмінів</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
@@ -337,12 +341,16 @@
 					<v8:content>Exchange</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Exchange</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Обмен</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Exchange</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Обмін</v8:content>
 				</v8:item>
 			</ObjectPresentation>
 			<ExtendedObjectPresentation/>
@@ -354,12 +362,16 @@
 					<v8:content>List of exchanges. For exchange could be set the exchange format, connect channels, subscriptions, etc.</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>List of exchanges. For exchange could be set the exchange format, connect channels, subscriptions, etc.</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Список обменов. Для обмена могут быть заданы формат обмена, подключены каналы обмена, подписки и т. п.</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>List of exchanges. For exchange could be set the exchange format, connect channels, subscriptions, etc.</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Список обмінів. Для обміну можуть бути задані формат обміну, підключені канали обміну, підписки і т. п.</v8:content>
 				</v8:item>
 			</Explanation>
 			<CreateOnInput>DontUse</CreateOnInput>
