@@ -114,7 +114,10 @@ EndFunction // FormatMediaType()
 //                  Default value: Undefined.
 //
 Procedure Initialize(Stream, APISchema = Undefined) Export
-      
+    
+    // Clear cache.
+    ThisObject.APISchema.Clear(); 
+    
     If APISchema <> Undefined Then
         If TypeOf(ThisObject.APISchema) = TypeOf(APISchema) Then    
             
@@ -415,7 +418,7 @@ EndProcedure // APISchemaOutput()
 //
 Function Version() Export
     
-    Return "1.0.4";
+    Return "1.0.5";
     
 EndFunction // Version()
 
