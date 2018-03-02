@@ -116,14 +116,17 @@ EndFunction // FormatMediaType()
 Procedure Initialize(Stream, APISchema = Undefined) Export
     
     // Clear cache.
-    ThisObject.APISchema.Clear(); 
+    ThisObject.APISchema.Clear();
+    ThisObject.AddCarriageReturnToLastRow = False;
+    ThisObject.Delimiter = ",";
+    ThisObject.HeaderLine = "";
+    ThisObject.TextEncoding = "UTF-8";
     
     If APISchema <> Undefined Then
         If TypeOf(ThisObject.APISchema) = TypeOf(APISchema) Then    
             
             ThisObject.APISchema = APISchema.Copy();
             
-            Delimiter = ",";
             FindResult = APISchema.Find("Delimiter", "FieldName");
             If FindResult <> Undefined Then
                 If FindResult.FieldValue = Chars.Tab Then
@@ -290,8 +293,8 @@ Procedure BasicOutput(Item, DataCompositionProcessor,
     //            ColumnCount = ColumnNames.Count() - 1;
     //            For Each ColumnName In ColumnNames Do
     //                
-    //                StreamWriter.WriteChars(String(
-    //                    Item.ParameterValues[ColumnName.Key].Value));
+    //                StreamWriter.WriteChars(StrReplace(String(
+    //                    Item.ParameterValues[ColumnName.Key].Value), ",", " "));
     //                
     //                If ColumnIndex <> ColumnCount Then
     //                    StreamWriter.WriteChars(",");
@@ -309,7 +312,7 @@ Procedure BasicOutput(Item, DataCompositionProcessor,
     //    
     //EndDo;       
     
-    Var Level; CRLF = Chars.CR + Chars.LF; End = DataCompositionResultItemType.End; Begin = DataCompositionResultItemType.Begin; BeginAndEnd = DataCompositionResultItemType.BeginAndEnd; While Item <> Undefined Do If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = BeginAndEnd Then Level = ?(Level = Undefined, 0, Level + 1); EndIf; EndIf; EndIf; If Level <> Undefined Then If Item.ItemType = End Then Item = DataCompositionProcessor.Next(); If Item.ItemType = End Then Level = ?(Level - 1 < 0, Undefined, Level - 1); Else StreamWriter.WriteChars(CRLF); EndIf; ElsIf NOT IsBlankString(Item.Template) Then ColumnNames = TemplateColumns[Item.Template]; ColumnIndex = 0; ColumnCount = ColumnNames.Count() - 1; For Each ColumnName In ColumnNames Do StreamWriter.WriteChars(String(Item.ParameterValues[ColumnName.Key].Value)); If ColumnIndex <> ColumnCount Then StreamWriter.WriteChars(","); EndIf; ColumnIndex = ColumnIndex + 1; EndDo; EndIf; EndIf; Item = DataCompositionProcessor.Next(); EndDo;   
+    Var Level; CRLF = Chars.CR + Chars.LF; End = DataCompositionResultItemType.End; Begin = DataCompositionResultItemType.Begin; BeginAndEnd = DataCompositionResultItemType.BeginAndEnd; While Item <> Undefined Do If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = BeginAndEnd Then Level = ?(Level = Undefined, 0, Level + 1); EndIf; EndIf; EndIf; If Level <> Undefined Then If Item.ItemType = End Then Item = DataCompositionProcessor.Next(); If Item.ItemType = End Then Level = ?(Level - 1 < 0, Undefined, Level - 1); Else StreamWriter.WriteChars(CRLF); EndIf; ElsIf NOT IsBlankString(Item.Template) Then ColumnNames = TemplateColumns[Item.Template]; ColumnIndex = 0; ColumnCount = ColumnNames.Count() - 1; For Each ColumnName In ColumnNames Do StreamWriter.WriteChars(StrReplace(String(Item.ParameterValues[ColumnName.Key].Value), ",", " ")); If ColumnIndex <> ColumnCount Then StreamWriter.WriteChars(","); EndIf; ColumnIndex = ColumnIndex + 1; EndDo; EndIf; EndIf; Item = DataCompositionProcessor.Next(); EndDo;   
     
 EndProcedure // BasicOutput() 
 
@@ -380,8 +383,8 @@ Procedure APISchemaOutput(Item, DataCompositionProcessor,
     //            ColumnCount = ColumnNames.Count() - 1;
     //            For Each ColumnName In ColumnNames Do
     //                
-    //                StreamWriter.WriteChars(String(
-    //                    Item.ParameterValues[ColumnName.Key].Value));
+    //                StreamWriter.WriteChars(StrReplace(String(
+    //                    Item.ParameterValues[ColumnName.Key].Value), Delimiter, " "));
     //                
     //                If ColumnIndex <> ColumnCount Then
     //                    StreamWriter.WriteChars(Delimiter);
@@ -403,7 +406,7 @@ Procedure APISchemaOutput(Item, DataCompositionProcessor,
     //    StreamWriter.WriteChars(CRLF);        
     //EndIf;
  
-    Var Level; CRLF = Chars.CR + Chars.LF; If NOT IsBlankString(HeaderLine) Then StreamWriter.WriteChars(HeaderLine); StreamWriter.WriteChars(CRLF); EndIf; End = DataCompositionResultItemType.End; Begin = DataCompositionResultItemType.Begin; BeginAndEnd = DataCompositionResultItemType.BeginAndEnd; While Item <> Undefined Do If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = BeginAndEnd Then Level = ?(Level = Undefined, 0, Level + 1); EndIf; EndIf; EndIf; If Level <> Undefined Then If Item.ItemType = End Then Item = DataCompositionProcessor.Next(); If Item.ItemType = End Then Level = ?(Level - 1 < 0, Undefined, Level - 1); Else StreamWriter.WriteChars(CRLF); EndIf; ElsIf NOT IsBlankString(Item.Template) Then ColumnNames = TemplateColumns[Item.Template]; ColumnIndex = 0; ColumnCount = ColumnNames.Count() - 1; For Each ColumnName In ColumnNames Do StreamWriter.WriteChars(String(Item.ParameterValues[ColumnName.Key].Value)); If ColumnIndex <> ColumnCount Then StreamWriter.WriteChars(Delimiter); EndIf; ColumnIndex = ColumnIndex + 1; EndDo; EndIf; EndIf; Item = DataCompositionProcessor.Next(); EndDo; If AddCarriageReturnToLastRow Then StreamWriter.WriteChars(CRLF); EndIf;
+    Var Level; CRLF = Chars.CR + Chars.LF; If NOT IsBlankString(HeaderLine) Then StreamWriter.WriteChars(HeaderLine); StreamWriter.WriteChars(CRLF); EndIf; End = DataCompositionResultItemType.End; Begin = DataCompositionResultItemType.Begin; BeginAndEnd = DataCompositionResultItemType.BeginAndEnd; While Item <> Undefined Do If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = Begin Then Item = DataCompositionProcessor.Next(); If Item.ItemType = BeginAndEnd Then Level = ?(Level = Undefined, 0, Level + 1); EndIf; EndIf; EndIf; If Level <> Undefined Then If Item.ItemType = End Then Item = DataCompositionProcessor.Next(); If Item.ItemType = End Then Level = ?(Level - 1 < 0, Undefined, Level - 1); Else StreamWriter.WriteChars(CRLF); EndIf; ElsIf NOT IsBlankString(Item.Template) Then ColumnNames = TemplateColumns[Item.Template]; ColumnIndex = 0; ColumnCount = ColumnNames.Count() - 1; For Each ColumnName In ColumnNames Do StreamWriter.WriteChars(StrReplace(String(Item.ParameterValues[ColumnName.Key].Value), Delimiter, " ")); If ColumnIndex <> ColumnCount Then StreamWriter.WriteChars(Delimiter); EndIf; ColumnIndex = ColumnIndex + 1; EndDo; EndIf; EndIf; Item = DataCompositionProcessor.Next(); EndDo; If AddCarriageReturnToLastRow Then StreamWriter.WriteChars(CRLF); EndIf;
    
 EndProcedure // APISchemaOutput()
 
@@ -418,7 +421,7 @@ EndProcedure // APISchemaOutput()
 //
 Function Version() Export
     
-    Return "1.0.5";
+    Return "1.0.6";
     
 EndFunction // Version()
 

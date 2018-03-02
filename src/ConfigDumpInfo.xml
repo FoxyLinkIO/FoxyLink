@@ -287,7 +287,7 @@
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.Form.Form" id="51b0f629-f787-4347-8825-21a041413f6d.0" configVersion="ab188a6a764abf419ff3b6ab76ecaf7600000000"/>
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.License" id="513c7982-a3b0-4491-bdf6-23ef41def92c" configVersion="74181202e506424991464e39fc63103400000000"/>
 		<Metadata name="DataProcessor.FL_AdministrationPanel.Form.License.Form" id="513c7982-a3b0-4491-bdf6-23ef41def92c.0" configVersion="28359ef08dce4b4faa8ac62b11010ed100000000"/>
-		<Metadata name="DataProcessor.FL_DataProcessorCSV" id="31c58ae0-ad45-408b-abc1-919060aad9cc" configVersion="da81add9463ae34e82ac9b382587ace200000000">
+		<Metadata name="DataProcessor.FL_DataProcessorCSV" id="31c58ae0-ad45-408b-abc1-919060aad9cc" configVersion="4f575b8fd256c84abd4c71a677f8032700000000">
 			<Metadata name="DataProcessor.FL_DataProcessorCSV.Attribute.TextEncoding" id="4b338cb7-6cbe-4012-a2b9-e338149d5b0e"/>
 			<Metadata name="DataProcessor.FL_DataProcessorCSV.Attribute.HeaderLine" id="5ced2873-1dd4-40e8-90af-8ad3e659a911"/>
 			<Metadata name="DataProcessor.FL_DataProcessorCSV.Attribute.APISchema" id="8ffaaa7e-bb03-444f-bb68-cccf1c8e56a6"/>
@@ -297,7 +297,7 @@
 		<Metadata name="DataProcessor.FL_DataProcessorCSV.Form.APICreationForm" id="930c5bd1-96d8-4760-86c1-d08a02c36b80" configVersion="4cc21a98490da8458e512efb6e30b06f00000000"/>
 		<Metadata name="DataProcessor.FL_DataProcessorCSV.Form.APICreationForm.Form" id="930c5bd1-96d8-4760-86c1-d08a02c36b80.0" configVersion="36f01428a96a5f45b944aa39a5de820500000000"/>
 		<Metadata name="DataProcessor.FL_DataProcessorCSV.ManagerModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.2" configVersion="70307528a4c9534680ad2ee3ae4e40ea00000000"/>
-		<Metadata name="DataProcessor.FL_DataProcessorCSV.ObjectModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.0" configVersion="352d8f286525fa41951ca95b3762f9cc00000000"/>
+		<Metadata name="DataProcessor.FL_DataProcessorCSV.ObjectModule" id="31c58ae0-ad45-408b-abc1-919060aad9cc.0" configVersion="15a19372cc2500429c2725e3dd2e63fe00000000"/>
 		<Metadata name="DataProcessor.FL_DataProcessorJSON" id="82f21374-0d79-4c03-b10b-8874d75d2d1a" configVersion="8f9ba1a808f8ca41b1f80c9264b2c21600000000">
 			<Metadata name="DataProcessor.FL_DataProcessorJSON.Attribute.APISchema" id="a589bd6d-d60d-46ad-872c-e729daadc1b9"/>
 		</Metadata>
