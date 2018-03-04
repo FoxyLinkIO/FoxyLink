@@ -93,7 +93,7 @@ EndProcedure // SaveAndClose()
 Function PutValueTableToTempStorage(Val OwnerUUID)
     
     If IsBlankString(HeaderLine) 
-        AND IsBlankString(Delimiter)
+        AND IsBlankString(Delimiter) AND Delimiter <> Chars.Tab
         AND IsBlankString(TextEncoding) 
         AND IsBlankString(AddCarriageReturnToLastRow) Then
         Return "";
