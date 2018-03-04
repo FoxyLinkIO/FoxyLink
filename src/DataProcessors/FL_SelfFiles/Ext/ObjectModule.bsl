@@ -102,7 +102,8 @@ Function DeliverMessage(Stream, Properties) Export
             "FileName", FileName, Type("String"));
     EndIf; 
     
-    FileStream = New FileStream(FileName, FileOpenMode.Create, 
+    FullName = FileName + Properties.JobProperties.FileExtension;
+    FileStream = New FileStream(FullName, FileOpenMode.Create, 
         FileAccess.Write);
     DataWriter = New DataWriter(FileStream);
     DataReader = New DataReader(Stream);
@@ -180,7 +181,7 @@ EndFunction // SuppliedIntegration()
 //
 Function Version() Export
     
-    Return "1.0.1";
+    Return "1.0.2";
     
 EndFunction // Version()
 
