@@ -174,6 +174,7 @@ EndProcedure // FillInvocationContext()
 Procedure FillRegisterInvocationContext(Context, Filter, 
     PrimaryKeys, AttributeValues) Export
     
+    SynonymsEN = FL_CommonUseReUse.StandardAttributeSynonymsEN();
     For Each PrimaryKey In PrimaryKeys Do
             
         FilterValue = Filter.Find(PrimaryKey.Key);
@@ -183,7 +184,13 @@ Procedure FillRegisterInvocationContext(Context, Filter,
             Continue;
         EndIf;
         
-        ColumnValues = AttributeValues.UnloadColumn(PrimaryKey.Key);
+        KeyName = PrimaryKey.Key;
+        Column = AttributeValues.Columns.Find(KeyName);
+        If Column = Undefined Then
+            KeyName = SynonymsEN.Get(Upper(PrimaryKey.Key));        
+        EndIf;
+        
+        ColumnValues = AttributeValues.UnloadColumn(KeyName);
         For Each ColumnValue In ColumnValues Do
             AddToInvocationContext(Context, PrimaryKey.Key, ColumnValue);   
         EndDo;
