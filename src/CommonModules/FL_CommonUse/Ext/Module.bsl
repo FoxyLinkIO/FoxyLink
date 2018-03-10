@@ -1708,6 +1708,14 @@ Procedure FillInformationRegisterPrimaryKeys(MetadataObject, PrimaryKeys)
         PrimaryKeys.Insert("Period", Types);
         
     EndIf;
+    
+    If MetadataObject.WriteMode = 
+        Metadata.ObjectProperties.RegisterWriteMode.RecorderSubordinate Then
+        
+        RecorderAttribute = MetadataObject.StandardAttributes.Recorder;
+        PrimaryKeys.Insert("Recorder", RecorderAttribute.Type.Types());
+        
+    EndIf;
 
     For Each Dimension In MetadataObject.Dimensions Do
         PrimaryKeys.Insert(Dimension.Name, Dimension.Type.Types());    

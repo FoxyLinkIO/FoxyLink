@@ -166,17 +166,19 @@ Procedure DocumentOnWrite(Source, Cancel) Export
     
 EndProcedure // DocumentOnWrite()
 
-// Handler of BeforeWrite information register event subscription.
+// Handler of BeforeWrite information, accumulation register event subscription.
 //
 // Parameters:
-//  Source    - InformationRegisterRecordSet - represents a collection of 
+//  Source    - InformationRegisterRecordSet  - represents a collection of 
 //                                  records of information register in memory.
+//            - AccumulationRegisterRecordSet - represents a collection of 
+//                                  records of accumulation register in memory.
 //  Cancel    - Boolean - action execution cancel flag. 
 //  Replacing - Boolean - sets write mode. 
 //          True  - the set records in the database are replaced by writing.
 //          False - the current record set is added to the database by writing. 
 //
-Procedure InformationRegisterBeforeWrite(Source, Cancel, Replacing) Export
+Procedure RegisterBeforeWrite(Source, Cancel, Replacing) Export
     
     If Source.DataExchange.Load OR Cancel Then
         Return;
@@ -186,6 +188,35 @@ Procedure InformationRegisterBeforeWrite(Source, Cancel, Replacing) Export
     If NOT FL_EventsReUse.IsEventPublisher(SourceMetadata.FullName()) Then
         Return;    
     EndIf;
+    
+    // Adding current record set to the database.
+    Operation = Catalogs.FL_Operations.Create;
+    
+    If Replacing Then
+        
+        AttributeValues = FL_CommonUse.RegisterAttributeValues(
+            Source.Metadata(), Source.Filter);
+            
+        RecordsCount = Source.Count();
+        If RecordsCount > 0 AND AttributeValues.Count() > 0 Then
+            
+            // Rewriting records to the database.
+            Operation = Catalogs.FL_Operations.Update;
+            
+        ElsIf RecordsCount > 0 Then    
+            
+            // Adding current record set to the database.
+            Operation = Catalogs.FL_Operations.Create;
+            
+        Else 
+            
+            Operation = Catalogs.FL_Operations.Delete;
+            
+        EndIf; 
+        
+    EndIf;
+    
+    ApplyInvocationData(Source, Operation, Replacing);
     
     //SourceMetadata = Source.Metadata();
     //MetadataObject = SourceMetadata.FullName();
@@ -222,43 +253,27 @@ Procedure InformationRegisterBeforeWrite(Source, Cancel, Replacing) Export
     //    
     //EndIf;    
           
-EndProcedure // InformationRegisterBeforeWrite()
+EndProcedure // RegisterBeforeWrite()
 
-// Handler of BeforeWrite accumulation register event subscription.
+// Handler of OnWrite information, accumulation register event subscription.
 //
 // Parameters:
-//  Source    - AccumulationRegisterRecordSet - represents a collection of 
+//  Source    - InformationRegisterRecordSet  - represents a collection of 
+//                                  records of information register in memory.
+//            - AccumulationRegisterRecordSet - represents a collection of 
 //                                  records of accumulation register in memory.
 //  Cancel    - Boolean - action execution cancel flag. 
 //  Replacing - Boolean - sets write mode. 
 //          True  - the set records in the database are replaced by writing.
 //          False - the current record set is added to the database by writing. 
 //
-Procedure AccumulationRegisterBeforeWrite(Source, Cancel, Replacing) Export
+Procedure RegisterOnWrite(Source, Cancel, Replacing) Export
     
     If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
-
-    ApplyInvocationData(Source, Catalogs.FL_Operations.Update, Replacing);
-            
-EndProcedure // AccumulationRegisterBeforeWrite()
-
-// Handler of OnWrite information register event subscription.
-//
-// Parameters:
-//  Source    - InformationRegisterRecordSet - represents a collection of 
-//                                  records of information register in memory.
-//  Cancel    - Boolean - action execution cancel flag. 
-//  Replacing - Boolean - sets write mode. 
-//          True  - the set records in the database are replaced by writing.
-//          False - the current record set is added to the database by writing. 
-//
-Procedure InformationRegisterOnWrite(Source, Cancel, Replacing) Export
     
-    If Source.DataExchange.Load OR Cancel Then
-        Return;
-    EndIf;
+    EnqueueEvent(Source); 
     
     //Properties = Source.AdditionalProperties;
     //If NOT IsInvocationDataFilled(InvocationData, Properties) Then
@@ -286,27 +301,7 @@ Procedure InformationRegisterOnWrite(Source, Cancel, Replacing) Export
     //    
     //EndIf;
     
-EndProcedure // InformationRegisterOnWrite()
-
-// Handler of OnWrite accumulation register event subscription.
-//
-// Parameters:
-//  Source    - AccumulationRegisterRecordSet - represents a collection of 
-//                                  records of accumulation register in memory.
-//  Cancel    - Boolean - action execution cancel flag. 
-//  Replacing - Boolean - sets write mode. 
-//          True  - the set records in the database are replaced by writing.
-//          False - the current record set is added to the database by writing. 
-//
-Procedure AccumulationRegisterOnWrite(Source, Cancel, Replacing) Export
-    
-    If Source.DataExchange.Load OR Cancel Then
-        Return;
-    EndIf;
-    
-    EnqueueEvent(Source);
-    
-EndProcedure // AccumulationRegisterOnWrite()
+EndProcedure // RegisterOnWrite()
 
 #EndRegion // ProgramInterface
 
@@ -403,15 +398,19 @@ Procedure ApplyInvocationData(Source, Operation, Replacing = False)
 
     If Replacing Then
         
-        If FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(MetadataObject) Then
+        If FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(MetadataObject) 
+            OR FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(MetadataObject) Then
             
             PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
                 SourceMetadata);
             AttributeValues = FL_CommonUse.RegisterAttributeValues(
                 SourceMetadata, Source.Filter, PrimaryKeys);
                      
-            FL_BackgroundJob.FillRegisterInvocationContext(InvocationData.InvocationContext, 
-                Source.Filter, PrimaryKeys, AttributeValues);
+            FL_BackgroundJob.FillRegisterInvocationContext(
+                InvocationData.InvocationContext, 
+                Source.Filter, 
+                PrimaryKeys, 
+                AttributeValues);
                 
             // Do not change this line. It is easy to break passing by reference.
             FL_CommonUse.RemoveDuplicatesFromValueTable(

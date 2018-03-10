@@ -53,7 +53,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.8.17</Version>
+			<Version>0.9.8.19</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -282,17 +282,15 @@
 			<CommonModule>FL_RecurringJob</CommonModule>
 			<CommonModule>FL_RunInSafeMode</CommonModule>
 			<CommonModule>FL_Tasks</CommonModule>
-			<EventSubscription>FL_AccumulationRegistersBeforeWrite</EventSubscription>
-			<EventSubscription>FL_AccumulationRegistersOnWrite</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
 			<EventSubscription>FL_CatalogsOnWrite</EventSubscription>
 			<EventSubscription>FL_DocumentsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_DocumentsBeforeWrite</EventSubscription>
 			<EventSubscription>FL_DocumentsOnWrite</EventSubscription>
-			<EventSubscription>FL_InformationRegistersBeforeWrite</EventSubscription>
-			<EventSubscription>FL_InformationRegistersOnWrite</EventSubscription>
 			<EventSubscription>FL_LicenseAcceptedOnWrite</EventSubscription>
+			<EventSubscription>FL_RegistersBeforeWrite</EventSubscription>
+			<EventSubscription>FL_RegistersOnWrite</EventSubscription>
 			<ScheduledJob>FL_JobServer</ScheduledJob>
 			<ScheduledJob>FL_RecurringServer</ScheduledJob>
 			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>

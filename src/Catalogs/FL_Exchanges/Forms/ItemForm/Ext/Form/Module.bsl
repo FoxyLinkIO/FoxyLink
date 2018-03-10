@@ -220,25 +220,15 @@ EndProcedure // RowComposerSettingsOrderOnChange()
 #Region FormCommandHandlers
 
 &AtClient
-Procedure AddOperation(Command)
+Procedure AddChannel(Command)
     
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationToAdd",
-        ThisObject), AvailableOperations(), Items.AddOperation);
+    // It is needed to clear resource cache.
+    TransitionChannelResources.Clear();
+    
+    ShowChooseFromList(New NotifyDescription("DoAfterChooseChannelToAdd",
+        ThisObject), ExchangeChannels(), Items.AddChannel);
         
-EndProcedure // AddOperation()
-    
-&AtClient
-Procedure DeleteOperation(Command)
-    
-    ExchangeOperations = New ValueList();
-    For Each Item In Object.Operations Do
-        ExchangeOperations.Add(Item.Operation);   
-    EndDo;
-
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationToDelete",
-        ThisObject), ExchangeOperations, Items.DeleteOperation);
-    
-EndProcedure // DeleteOperation()
+EndProcedure // AddChannel()
 
 &AtClient
 Procedure AddEvent(Command)
@@ -253,6 +243,155 @@ Procedure AddEvent(Command)
         FormWindowOpeningMode.LockOwnerWindow);    
     
 EndProcedure // AddEvent()
+
+&AtClient
+Procedure AddOperation(Command)
+    
+    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationToAdd",
+        ThisObject), AvailableOperations(), Items.AddOperation);
+        
+EndProcedure // AddOperation()
+
+&AtClient
+Procedure CopyAPI(Command)
+    
+    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationAPIToCopy",
+        ThisObject), CurrentOperationsWithAPISchema(), Items.CopyAPI);    
+    
+EndProcedure // CopyAPI()
+
+&AtClient
+Procedure CopyDataCompositionSchema(Command)
+    
+    ShowChooseFromList(New NotifyDescription(
+            "DoAfterChooseDataCompositionSchemaToCopy", ThisObject), 
+        CurrentOperationsWithDataCompositionSchema(), Items.CopyDataCompositionSchema);
+    
+EndProcedure // CopyDataCompositionSchema()
+
+&AtClient
+Procedure DeleteAPI(Command)
+    
+    ShowQueryBox(New NotifyDescription("DoAfterChooseAPISchemaToDelete", 
+            ThisObject),
+        NStr("en='Delete API schema from the current operation?';
+            |ru='Удалить API схему из текущей операции?';
+            |en_CA='Delete API schema from the current operation?'"),
+        QuestionDialogMode.YesNo, 
+        , 
+        DialogReturnCode.No);    
+    
+EndProcedure // DeleteAPI()
+
+&AtClient
+Procedure DeleteChannel(Command)
+    
+    CurrentData = Items.Channels.CurrentData;
+    If CurrentData <> Undefined Then
+        
+        ShowQueryBox(New NotifyDescription("DoAfterChooseChannelToDelete", 
+            ThisObject, New Structure("Identifier", CurrentData.GetID())),
+            NStr("en='Permanently delete the selected channel?';
+                |ru='Удалить выбранный канал?';
+                |en_CA='Permanently delete the selected channel?'"),
+            QuestionDialogMode.YesNo, , DialogReturnCode.No);     
+        
+    EndIf;
+    
+EndProcedure // DeleteChannel()
+
+&AtClient
+Procedure DeleteEvent(Command)
+    
+    CurrentData = Items.Events.CurrentData;
+    If CurrentData <> Undefined Then
+        
+        ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDelete", 
+            ThisObject, New Structure("Identifier ", CurrentData.GetID())),
+            NStr("en='Permanently delete the selected event?';
+                |ru='Удалить выбранное событие?';
+                |en_CA='Permanently delete the selected event?'"),
+            QuestionDialogMode.YesNo, , DialogReturnCode.No);     
+        
+    EndIf;
+    
+EndProcedure // DeleteEvent() 
+
+&AtClient
+Procedure DeleteOperation(Command)
+    
+    ExchangeOperations = New ValueList();
+    For Each Item In Object.Operations Do
+        ExchangeOperations.Add(Item.Operation);   
+    EndDo;
+
+    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationToDelete",
+        ThisObject), ExchangeOperations, Items.DeleteOperation);
+    
+EndProcedure // DeleteOperation()
+
+&AtClient
+Procedure DescribeAPI(Command)
+           
+    DescribeAPIData = DescribeAPIParameters();
+    OpenForm(DescribeAPIData.FormName, 
+        DescribeAPIData.Parameters, 
+        ThisObject,
+        New UUID, 
+        , 
+        , 
+        New NotifyDescription("DoAfterCloseAPICreationForm", ThisObject), 
+        FormWindowOpeningMode.LockOwnerWindow);
+         
+EndProcedure // DescribeAPI()
+
+&AtClient
+Procedure EditChannelResources(Command)
+   
+    // It is needed to clear resource cache.
+    TransitionChannelResources.Clear();
+    
+    CurrentData = Items.Channels.CurrentData;
+    If CurrentData <> Undefined Then
+        ChannelParameters = RequiredChannelResources(CurrentData.Channel);
+        If ChannelParameters <> Undefined Then
+            
+            FilterParameters = ChannelFilterParameters();
+            FillPropertyValues(FilterParameters, CurrentData);
+            FilterResults = Object.ChannelResources.FindRows(FilterParameters);
+            For Each FilterResult In FilterResults Do
+                FillPropertyValues(TransitionChannelResources.Add(), FilterResult);         
+            EndDo;
+            
+            OpenChannelResourceForm(ChannelParameters, CurrentData.Channel);
+            
+        EndIf;
+    EndIf;
+    
+EndProcedure // EditChannelResources()
+
+&AtClient
+Procedure EditDataCompositionSchema(Command)
+    
+    #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then
+        
+        // Copy existing data composition schema.
+        DataCompositionSchema = XDTOSerializer.ReadXDTO(XDTOSerializer.WriteXDTO(
+            GetFromTempStorage(DataCompositionSchemaEditAddress)));
+        
+        Wizard = New DataCompositionSchemaWizard(DataCompositionSchema);
+        Wizard.Edit(ThisObject);
+        
+    #Else
+        
+        ShowMessageBox(Undefined,
+            NStr("en='To edit the layout scheme, run configuration in thick client mode.';
+                |ru='Для того, чтобы редактировать схему компоновки, необходимо запустить конфигурацию в режиме толстого клиента.';
+                |en_CA='To edit the layout scheme, run configuration in thick client mode.'"));
+        
+    #EndIf
+    
+EndProcedure // EditDataCompositionSchema()
 
 &AtClient
 Procedure EnqueueEvents(Command)
@@ -287,106 +426,6 @@ Procedure EnqueueEvents(Command)
 EndProcedure // EnqueueEvents()
 
 &AtClient
-Procedure DeleteEvent(Command)
-    
-    CurrentData = Items.Events.CurrentData;
-    If CurrentData <> Undefined Then
-        
-        ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDelete", 
-            ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en='Permanently delete the selected event?';
-                |ru='Удалить выбранное событие?';
-                |en_CA='Permanently delete the selected event?'"),
-            QuestionDialogMode.YesNo, , DialogReturnCode.No);     
-        
-    EndIf;
-    
-EndProcedure // DeleteEvent() 
-
-&AtClient
-Procedure AddChannel(Command)
-    
-    // It is needed to clear resource cache.
-    TransitionChannelResources.Clear();
-    
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseChannelToAdd",
-        ThisObject), ExchangeChannels(), Items.AddChannel);
-        
-EndProcedure // AddChannel()
-
-&AtClient
-Procedure EditChannelResources(Command)
-   
-    // It is needed to clear resource cache.
-    TransitionChannelResources.Clear();
-    
-    CurrentData = Items.Channels.CurrentData;
-    If CurrentData <> Undefined Then
-        ChannelParameters = RequiredChannelResources(CurrentData.Channel);
-        If ChannelParameters <> Undefined Then
-            
-            FilterParameters = ChannelFilterParameters();
-            FillPropertyValues(FilterParameters, CurrentData);
-            FilterResults = Object.ChannelResources.FindRows(FilterParameters);
-            For Each FilterResult In FilterResults Do
-                FillPropertyValues(TransitionChannelResources.Add(), FilterResult);         
-            EndDo;
-            
-            OpenChannelResourceForm(ChannelParameters, CurrentData.Channel);
-            
-        EndIf;
-    EndIf;
-    
-EndProcedure // EditChannelResources()
-
-&AtClient
-Procedure DeleteChannel(Command)
-    
-    CurrentData = Items.Channels.CurrentData;
-    If CurrentData <> Undefined Then
-        
-        ShowQueryBox(New NotifyDescription("DoAfterChooseChannelToDelete", 
-            ThisObject, New Structure("Identifier", CurrentData.GetID())),
-            NStr("en='Permanently delete the selected channel?';
-                |ru='Удалить выбранный канал?';
-                |en_CA='Permanently delete the selected channel?'"),
-            QuestionDialogMode.YesNo, , DialogReturnCode.No);     
-        
-    EndIf;
-    
-EndProcedure // DeleteChannel()
-
-&AtClient
-Procedure EditDataCompositionSchema(Command)
-    
-    #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then
-        
-        // Copy existing data composition schema.
-        DataCompositionSchema = XDTOSerializer.ReadXDTO(XDTOSerializer.WriteXDTO(
-            GetFromTempStorage(DataCompositionSchemaEditAddress)));
-        
-        Wizard = New DataCompositionSchemaWizard(DataCompositionSchema);
-        Wizard.Edit(ThisObject);
-        
-    #Else
-        
-        ShowMessageBox(Undefined,
-            NStr("en='To edit the layout scheme, run configuration in thick client mode.';
-                |ru='Для того, чтобы редактировать схему компоновки, необходимо запустить конфигурацию в режиме толстого клиента.';
-                |en_CA='To edit the layout scheme, run configuration in thick client mode.'"));
-        
-    #EndIf
-    
-EndProcedure // EditDataCompositionSchema()
-
-&AtClient
-Procedure GenerateSpreadsheetDocument(Command)
-    
-    GenerateSpreadsheetDocumentAtServer();
-    
-EndProcedure // GenerateSpreadsheetDocument()
-
-&AtClient
 Procedure GenerateSpecificDocument(Command)
     
     GenerateSpecificDocumentAtServer();   
@@ -394,41 +433,11 @@ Procedure GenerateSpecificDocument(Command)
 EndProcedure // GenerateSpecificDocument() 
 
 &AtClient
-Procedure DescribeAPI(Command)
-           
-    DescribeAPIData = DescribeAPIParameters();
-    OpenForm(DescribeAPIData.FormName, 
-        DescribeAPIData.Parameters, 
-        ThisObject,
-        New UUID, 
-        , 
-        , 
-        New NotifyDescription("DoAfterCloseAPICreationForm", ThisObject), 
-        FormWindowOpeningMode.LockOwnerWindow);
-         
-EndProcedure // DescribeAPI()
-
-&AtClient
-Procedure CopyAPI(Command)
+Procedure GenerateSpreadsheetDocument(Command)
     
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationAPIToCopy",
-        ThisObject), CurrentOperationsWithAPISchema(), Items.CopyAPI);    
+    GenerateSpreadsheetDocumentAtServer();
     
-EndProcedure // CopyAPI()
-
-&AtClient
-Procedure DeleteAPI(Command)
-    
-    ShowQueryBox(New NotifyDescription("DoAfterChooseAPISchemaToDelete", 
-            ThisObject),
-        NStr("en='Delete API schema from the current operation?';
-            |ru='Удалить API схему из текущей операции?';
-            |en_CA='Delete API schema from the current operation?'"),
-        QuestionDialogMode.YesNo, 
-        , 
-        DialogReturnCode.No);    
-    
-EndProcedure // DeleteAPI()
+EndProcedure // GenerateSpreadsheetDocument()
 
 #EndRegion // FormCommandHandlers
 
@@ -578,6 +587,30 @@ Function NewAPISchemaData()
     
 EndFunction // NewAPISchemaData()
 
+// Returns list of currently used operations with filled API schema.
+//
+&AtServer
+Function CurrentOperationsWithAPISchema()
+    
+    ValueList = New ValueList();
+    CurrentData = CurrentOperationData(RowOperation);  
+    For Each Item In Object.Operations Do
+        
+        If Item.GetID() = CurrentData.GetID() Then
+            Continue;
+        EndIf;
+        
+        If IsTempStorageURL(Item.APISchemaAddress) Then
+            FilterParameters = NewOperationFilterParameters();
+            FilterParameters.Operation = Item.Operation;
+            ValueList.Add(FilterParameters, Item.Operation);   
+        EndIf;
+    EndDo;
+    
+    Return ValueList;
+    
+EndFunction // CurrentOperationsWithAPISchema()
+
 #EndRegion // Formats 
 
 #Region Operations
@@ -652,6 +685,58 @@ Procedure DoAfterChooseOperationToDelete(SelectedElement,
     EndIf;
     
 EndProcedure // DoAfterChooseOperationToDelete() 
+
+// Copies data composition schema from the selected operation to the current 
+// operation.
+//
+// Parameters:
+//  SelectedElement      - ValueListItem - the selected list item or Undefined 
+//                                          if the user has not selected anything. 
+//  AdditionalParameters - Arbitrary     - the value specified when the 
+//                                          NotifyDescription object was created. 
+//
+&AtClient
+Procedure DoAfterChooseDataCompositionSchemaToCopy(SelectedElement, 
+    AdditionalParameters) Export
+    
+    If SelectedElement <> Undefined Then
+        
+        FilterResult = Object.Operations.FindRows(SelectedElement.Value);
+        If FilterResult.Count() > 0 Then
+            
+            CopyDataCompositionSchemaAtServer(FilterResult[0].GetId());
+            
+            Explanation = NStr("en='Data composition schema successfully copied.';
+                |ru='Схема компоновки данных успешно скопирована.';
+                |uk='Схема компоновки даних успішно скопійована.';
+                |en_CA='Data composition schema successfully copied.'");
+            
+            ShowUserNotification(Title, , Explanation, 
+                PictureLib.FL_Logotype64);
+                
+        EndIf;
+        
+    EndIf;    
+    
+EndProcedure // DoAfterChooseDataCompositionSchemaToCopy()
+
+&AtServer
+Procedure CopyDataCompositionSchemaAtServer(OperationId)
+    
+    Source = Object.Operations.FindByID(OperationId);
+    If Source = Undefined Then
+        Return;
+    EndIf;
+    
+    If IsTempStorageURL(Source.DataCompositionSchemaAddress) Then
+        
+        Modified = True;
+        UpdateDataCompositionSchema(GetFromTempStorage(
+            Source.DataCompositionSchemaAddress));
+            
+    EndIf;
+    
+EndProcedure // CopyDataCompositionSchemaAtServer()
 
 &AtServer
 Procedure GenerateSpreadsheetDocumentAtServer()
@@ -920,10 +1005,11 @@ Function AvailableOperations()
     
 EndFunction // AvailableOperations()
 
-// Returns list of currently used operations with filled API schema.
+// Returns list of currently used operations with filled data composition 
+// schema.
 //
 &AtServer
-Function CurrentOperationsWithAPISchema()
+Function CurrentOperationsWithDataCompositionSchema()
     
     ValueList = New ValueList();
     CurrentData = CurrentOperationData(RowOperation);  
@@ -933,7 +1019,7 @@ Function CurrentOperationsWithAPISchema()
             Continue;
         EndIf;
         
-        If IsTempStorageURL(Item.APISchemaAddress) Then
+        If IsTempStorageURL(Item.DataCompositionSchemaAddress) Then
             FilterParameters = NewOperationFilterParameters();
             FilterParameters.Operation = Item.Operation;
             ValueList.Add(FilterParameters, Item.Operation);   
@@ -942,7 +1028,7 @@ Function CurrentOperationsWithAPISchema()
     
     Return ValueList;
     
-EndFunction // CurrentOperationsWithAPISchema()
+EndFunction // CurrentOperationsWithDataCompositionSchema()
 
 // Finds and returns operation data in object.
 //
