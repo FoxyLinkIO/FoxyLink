@@ -212,8 +212,9 @@ Procedure EnqueueEventsAtServer()
             
     If FL_CommonUseReUse.IsReferenceTypeObjectCached(MetadataObject) Then
         EnqueueReferenceEvents(EventsTable);    
-    ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(MetadataObject) Then
-        EnqueueInformationRegisterEvents(EventsTable);    
+    ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(MetadataObject)
+        OR FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(MetadataObject) Then
+        EnqueueRegisterEvents(EventsTable);    
     EndIf;
             
 EndProcedure // EnqueueEventsAtServer()
@@ -238,7 +239,6 @@ Procedure EnqueueReferenceEvents(Events)
     
     // Event mock
     SourceMock = FL_Events.NewSourceMock();
-    
     InvocationMock = SourceMock.AdditionalProperties.InvocationData;
     InvocationMock.MetadataObject = MetadataObject;
     InvocationMock.Operation = Operation;
@@ -253,46 +253,51 @@ Procedure EnqueueReferenceEvents(Events)
         //For Each Event In Events Do
         //
         //    SourceMock.Ref = Event[AttributeName];
-        //    InvocationMock.Arguments = SourceMock.Ref;
         //    FL_Events.EnqueueEvent(SourceMock);
+        //    SourceMock.AdditionalProperties.InvocationData.InvocationContext.Clear();
         //        
         //EndDo;
         
-        For Each Event In Events Do SourceMock.Ref = Event[AttributeName]; InvocationMock.Arguments = SourceMock.Ref; FL_Events.EnqueueEvent(SourceMock); EndDo;
+        For Each Event In Events Do SourceMock.Ref = Event[AttributeName]; FL_Events.EnqueueEvent(SourceMock); SourceMock.AdditionalProperties.InvocationData.InvocationContext.Clear(); EndDo;
                 
     EndIf;
-        
+      
 EndProcedure // EnqueueReferenceEvents()
 
 // Only for internal use.
 //
 &AtServer
-Procedure EnqueueInformationRegisterEvents(Events)
+Procedure EnqueueRegisterEvents(Events)
     
-    // Event mock
-    SourceMock = FL_Events.NewSourceMock();
-    
-    InvocationMock = SourceMock.AdditionalProperties.InvocationData;
+    // Invocation mock
+    InvocationMock = FL_BackgroundJob.NewInvocationData();
     InvocationMock.MetadataObject = MetadataObject;
     InvocationMock.Operation = Operation;
     InvocationMock.Owner = Exchange;
     
-    ParametersMock = InvocationMock.Parameters;
+    SourceMock = FL_CommonUse.ObjectManagerByFullName(MetadataObject)
+        .CreateRecordSet();
+    SourceMock.AdditionalProperties.Insert("InvocationData", InvocationMock);
     For Each Column In Events.Columns Do
-        ParametersMock.Insert(Column.Name);        
+        SourceMock.Filter[Column.Name].Use = True;
     EndDo;
     
     // The code in the comment written in one line is below this comment.
     // To edit the code, remove the comment.
     // For more information about the code in 1 line see http://infostart.ru/public/71130/.
-        
+    
     //For Each Event In Events Do
-    //    FillPropertyValues(ParametersMock, Event); 
+    //    For Each Column In Events.Columns Do
+    //        SourceMock.Filter[Column.Name].Value = Event[Column.Name];
+    //    EndDo;
+    //    FillPropertyValues(SourceMock.Add(), Event);
     //    FL_Events.EnqueueEvent(SourceMock);
+    //    SourceMock.Clear();
+    //    SourceMock.AdditionalProperties.InvocationData.InvocationContext.Clear();
     //EndDo;
     
-    For Each Event In Events Do FillPropertyValues(ParametersMock, Event); FL_Events.EnqueueEvent(SourceMock); EndDo;
-    
-EndProcedure // EnqueueInformationRegisterEvents()
+    For Each Event In Events Do For Each Column In Events.Columns Do SourceMock.Filter[Column.Name].Value = Event[Column.Name]; EndDo; FillPropertyValues(SourceMock.Add(), Event); FL_Events.EnqueueEvent(SourceMock); SourceMock.Clear(); SourceMock.AdditionalProperties.InvocationData.InvocationContext.Clear(); EndDo;
+        
+EndProcedure // EnqueueRegisterEvents()
 
 #EndRegion // ServiceProceduresAndFunctions
