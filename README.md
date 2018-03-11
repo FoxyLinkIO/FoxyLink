@@ -34,7 +34,7 @@ It's easy to start using it with any configuration on "1C:Enterprise 8" platform
 - Platform version: 8.3.10.2252 (minimal), **recommended 8.3.11.2924** and higher
 - Data lock control mode: **Managed**
 - Compatibility mode: **8.3.7** and higher
-- 1C:Enterprise server cluster and Database server for the best performance 
+- «1C:Enterprise 8» server cluster and Database server for the best performance 
 
 FoxyLink subsystem is available as configuration, so you can install it using command:
 ```1C:Enterprise 8 -> Designer -> Configuration -> Compare and merge with configuration from file...```. 
@@ -49,11 +49,11 @@ FoxyLink subsystem is available as configuration, so you can install it using co
 
 FoxyLink provides an unified programming model to handle integration tasks in a reliable way and run them on 1C:Enterprise server cluster. You can start with a simple setup and grow computational power for integration jobs with time for these scenarios: 
 
-- incredibly easy way to output reports in json, xml, etc.
+- incredibly easy way to output reports in JSON, CSV, XML, etc.
 - integration with different business intelligence systems
 - fire-and-forget jobs
 - mass notifications/newsletters
-- export data to json, xml, etc.
+- export data to JSON, CSV, XML, etc.
 - export data with arbitrary hierarchy  
 - creation of messages for message exchange systems
 - plugins support
