@@ -22,6 +22,9 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
+    PropTimestamp = True;
+    PropDeliveryMode = "non-persistent";
+    
     If Parameters.Property("ChannelResources") Then
         
         ChannelResources = Parameters.ChannelResources;
@@ -101,6 +104,10 @@ Procedure SaveAndClose(Command)
     ResourceRow = Object.ChannelResources.Add();
     ResourceRow.FieldName = "PayloadEncoding";
     ResourceRow.FieldValue = PayloadEncoding;
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "PropDeliveryMode";
+    ResourceRow.FieldValue = PropDeliveryMode;
  
     Close(Object);
     

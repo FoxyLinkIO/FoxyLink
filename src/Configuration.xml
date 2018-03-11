@@ -35,11 +35,15 @@
 					<v8:content>FoxyLink</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>FoxyLink</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>FoxyLink</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
+					<v8:lang>uk</v8:lang>
 					<v8:content>FoxyLink</v8:content>
 				</v8:item>
 			</Synonym>
@@ -53,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.8.19</Version>
+			<Version>0.9.8.20</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -134,12 +138,16 @@
 					<v8:content>FoxyLink, version 1.0</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>FoxyLink, version 1.0</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>FoxyLink, версия 1.0</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>FoxyLink, version 1.0</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>FoxyLink, версія 1.0</v8:content>
 				</v8:item>
 			</BriefInformation>
 			<DetailedInformation>
@@ -148,12 +156,16 @@
 					<v8:content>FoxyLink, version 1.0</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>FoxyLink, version 1.0</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>FoxyLink, версия 1.0</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>FoxyLink, version 1.0</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>FoxyLink, версія 1.0</v8:content>
 				</v8:item>
 			</DetailedInformation>
 			<Copyright>
@@ -162,12 +174,16 @@
 					<v8:content>Copyright © Petro Bazeliuk, 2016-2018. All rights reserved</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Copyright © Petro Bazeliuk, 2016-2018. All rights reserved</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Копирайт © Петр Базелюк, 2016-2018. Все права защищены</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Copyright © Petro Bazeliuk, 2016-2018. All rights reserved</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Копірайт © Петро Базелюк, 2016-2018. Всі права захищені</v8:content>
 				</v8:item>
 			</Copyright>
 			<VendorInformationAddress>
@@ -176,11 +192,15 @@
 					<v8:content>https://pbazeliuk.com</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>https://pbazeliuk.com</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>https://pbazeliuk.com</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
+					<v8:lang>uk</v8:lang>
 					<v8:content>https://pbazeliuk.com</v8:content>
 				</v8:item>
 			</VendorInformationAddress>
@@ -190,11 +210,15 @@
 					<v8:content>https://github.com/FoxyLinkIO/FoxyLink</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>https://github.com/FoxyLinkIO/FoxyLink</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>https://github.com/FoxyLinkIO/FoxyLink</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
+					<v8:lang>uk</v8:lang>
 					<v8:content>https://github.com/FoxyLinkIO/FoxyLink</v8:content>
 				</v8:item>
 			</ConfigurationInformationAddress>

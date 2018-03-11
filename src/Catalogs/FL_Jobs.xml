@@ -592,7 +592,7 @@
 							<v8:content>Операция</v8:content>
 						</v8:item>
 					</Synonym>
-					<Comment/>
+					<Comment>The type of change experienced.</Comment>
 					<Type>
 						<v8:Type>cfg:CatalogRef.FL_Operations</v8:Type>
 					</Type>

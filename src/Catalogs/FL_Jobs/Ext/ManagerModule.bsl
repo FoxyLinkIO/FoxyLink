@@ -201,6 +201,7 @@ Procedure StreamOutExchangeData(JobProperties, Cache)
     
     // Fill MIME-type information.
     JobProperties.ContentType = StreamObject.FormatMediaType();
+    JobProperties.ContentEncoding = StreamObject.ContentEncoding;
     JobProperties.FileExtension = StreamObject.FormatFileExtension();
     JobProperties.ReadonlyStream = Stream.GetReadOnlyStream(); 
     
@@ -392,6 +393,7 @@ Function NewJobProperties()
     
     JobProperties = New Structure;
     JobProperties.Insert("ContentType");
+    JobProperties.Insert("ContentEncoding");
     JobProperties.Insert("CurrentState", Catalogs.FL_States.Succeeded);
     JobProperties.Insert("FileExtension");
     JobProperties.Insert("Job");

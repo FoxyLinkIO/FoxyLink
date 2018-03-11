@@ -202,19 +202,19 @@
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Message properties (In this version of FoxyLink not supported)</v8:content>
+					<v8:content>Message properties</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Message properties (In this version of FoxyLink not supported)</v8:content>
+					<v8:content>Message properties</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Свойства сообщения (В этой версии FoxyLink не поддерживаются)</v8:content>
+					<v8:content>Свойства сообщения</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Властивості повідомлення (В цій версії FoxyLink не підтримуються)</v8:content>
+					<v8:content>Властивості повідомлення</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
@@ -316,11 +316,66 @@
 								</v8:item>
 							</ToolTip>
 							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<ListChoiceMode>true</ListChoiceMode>
+							<TextEdit>false</TextEdit>
+							<ChoiceList>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation>
+											<v8:item>
+												<v8:lang>en</v8:lang>
+												<v8:content>Non-persistent</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>en_CA</v8:lang>
+												<v8:content>Non-persistent</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>ru</v8:lang>
+												<v8:content>Не сохранять</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>uk</v8:lang>
+												<v8:content>Не зберігати</v8:content>
+											</v8:item>
+										</Presentation>
+										<Value xsi:type="xs:string">non-persistent</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation>
+											<v8:item>
+												<v8:lang>en</v8:lang>
+												<v8:content>Persistent</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>en_CA</v8:lang>
+												<v8:content>Persistent</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>ru</v8:lang>
+												<v8:content>Сохранять</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>uk</v8:lang>
+												<v8:content>Зберігати</v8:content>
+											</v8:item>
+										</Presentation>
+										<Value xsi:type="xs:string">persistent </Value>
+									</xr:Value>
+								</xr:Item>
+							</ChoiceList>
 							<ContextMenu name="PropDeliveryModeContextMenu" id="45"/>
 							<ExtendedTooltip name="PropDeliveryModeExtendedTooltip" id="46"/>
 						</InputField>
 						<InputField name="PropContentType" id="38">
 							<DataPath>PropContentType</DataPath>
+							<ReadOnly>true</ReadOnly>
 							<ToolTip>
 								<v8:item>
 									<v8:lang>en</v8:lang>
@@ -340,11 +395,30 @@
 								</v8:item>
 							</ToolTip>
 							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<InputHint>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Auto-detection</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Auto-detection</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Автоопределение</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Автовизначення</v8:content>
+								</v8:item>
+							</InputHint>
 							<ContextMenu name="PropContentTypeContextMenu" id="39"/>
 							<ExtendedTooltip name="PropContentTypeExtendedTooltip" id="40"/>
 						</InputField>
 						<InputField name="PropContentEncoding" id="35">
 							<DataPath>PropContentEncoding</DataPath>
+							<ReadOnly>true</ReadOnly>
 							<ToolTip>
 								<v8:item>
 									<v8:lang>en</v8:lang>
@@ -364,6 +438,24 @@
 								</v8:item>
 							</ToolTip>
 							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<InputHint>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Auto-detection</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Auto-detection</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Автоопределение</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Автовизначення</v8:content>
+								</v8:item>
+							</InputHint>
 							<ContextMenu name="PropContentEncodingContextMenu" id="36"/>
 							<ExtendedTooltip name="PropContentEncodingExtendedTooltip" id="37"/>
 						</InputField>
@@ -473,6 +565,7 @@
 						</InputField>
 						<InputField name="PropMessageId" id="50">
 							<DataPath>PropMessageId</DataPath>
+							<ReadOnly>true</ReadOnly>
 							<ToolTip>
 								<v8:item>
 									<v8:lang>en</v8:lang>
@@ -492,27 +585,46 @@
 								</v8:item>
 							</ToolTip>
 							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<InputHint>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Auto-detection</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Auto-detection</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Автоопределение</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Автовизначення</v8:content>
+								</v8:item>
+							</InputHint>
 							<ContextMenu name="PropMessageIdContextMenu" id="51"/>
 							<ExtendedTooltip name="PropMessageIdExtendedTooltip" id="52"/>
 						</InputField>
 						<CheckBoxField name="PropTimestamp" id="59">
 							<DataPath>PropTimestamp</DataPath>
+							<ReadOnly>true</ReadOnly>
 							<ToolTip>
 								<v8:item>
 									<v8:lang>en</v8:lang>
-									<v8:content>Timestamp of the moment when message was sent.</v8:content>
+									<v8:content>Timestamp of the moment when message was created.</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>en_CA</v8:lang>
-									<v8:content>Timestamp of the moment when message was sent.</v8:content>
+									<v8:content>Timestamp of the moment when message was created.</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>ru</v8:lang>
-									<v8:content>Временная метка момента отправки сообщения.</v8:content>
+									<v8:content>Временная метка момента создания сообщения.</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>uk</v8:lang>
-									<v8:content>Тимчасова мітка моменту відправки повідомлення.</v8:content>
+									<v8:content>Тимчасова мітка моменту створення повідомлення.</v8:content>
 								</v8:item>
 							</ToolTip>
 							<ToolTipRepresentation>Button</ToolTipRepresentation>

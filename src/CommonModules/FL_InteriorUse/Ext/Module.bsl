@@ -130,24 +130,27 @@ EndFunction // NewHTTPConnection()
 // Creates HTTPRequest object.
 //
 // Parameters:
-//  ResourceAddress - String - line of the http resource.
-//  Headers         - Map    - request headers.
+//  ResourceAddress - String     - line of the http resource.
+//  Headers         - Map        - request headers.
 //                          Default value: Undefined.
-//  BodyAsString    - String - a request body as string.
-//                          Default value: "".
+//  BinaryBody      - BinaryData - contains a request body as binary data. 
+//                          Default value: Undefined.
 //
 // Returns:
 //  HTTPRequest - describes the HTTP-requests. 
 //
 Function NewHTTPRequest(ResourceAddress, Headers = Undefined, 
-    BodyAsString = "") Export
+    BinaryBody = Undefined) Export
     
     If Headers = Undefined Then
         Headers = New Map;
     EndIf;
     
     HTTPRequest = New HTTPRequest(ResourceAddress, Headers);
-    HTTPRequest.SetBodyFromString(BodyAsString);
+    If TypeOf(BinaryBody) = Type("BinaryData") Then 
+        HTTPRequest.SetBodyFromBinaryData(BinaryBody);
+    EndIf;
+    
     Return HTTPRequest;
     
 EndFunction // NewHTTPRequest()
