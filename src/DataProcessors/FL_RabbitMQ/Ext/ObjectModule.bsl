@@ -86,24 +86,15 @@ EndFunction // ChannelFullName()
 //
 Function DeliverMessage(Stream, Properties) Export
     
-    Var HTTPMethod, HTTPRequest, PayLoad;
+    Var HTTPMethod, HTTPRequest;
     
     DeliveryResult = Catalogs.FL_Channels.NewChannelDeliverResult();    
     If TypeOf(Properties) <> Type("Structure") Then   
         Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
             "Properties", Properties, Type("Structure"));
     EndIf;
-    
-    If Stream <> Undefined Then
         
-        DataReader = New DataReader(Stream);
-        BinaryData = DataReader.Read().GetBinaryData();
-        PayLoad = GetStringFromBinaryData(BinaryData);
-        DataReader.Close();
-        
-    EndIf;
-    
-    ResolveProperties(Properties, HTTPMethod, HTTPRequest, Payload);
+    ProcessProperties(Properties, HTTPMethod, HTTPRequest);
     
     If Log Then
         DeliveryResult.LogAttribute = "";     
@@ -231,6 +222,57 @@ EndFunction // ChannelsHTTPRequest()
 
 // Only for internal use.
 //
+Procedure ProcessMessageProperties(JSONWriter, Properties)
+    
+    JobProperties = Properties.JobProperties;
+    DeliveryMode = ?(Properties.PropDeliveryMode = "non-persistent", 1, 2);
+    
+    Attributes = FL_CommonUse.ObjectAttributesValues(JobProperties.Job, 
+        "Code, CreatedAt, MetadataObject, Operation"); 
+    
+    // Properties
+    JSONWriter.WritePropertyName("properties");
+    JSONWriter.WriteStartObject();
+    
+        // Non-persistent (1) or persistent (2). 
+        JSONWriter.WritePropertyName("delivery_mode");
+        JSONWriter.WriteValue(DeliveryMode);
+
+        // MIME content type. 
+        JSONWriter.WritePropertyName("content_type");
+        JSONWriter.WriteValue(JobProperties.ContentType);
+    
+        // MIME content encoding. 
+        JSONWriter.WritePropertyName("content_encoding");
+        JSONWriter.WriteValue(JobProperties.ContentEncoding);
+    
+        // Application message identifier.
+        JSONWriter.WritePropertyName("message_id");
+        JSONWriter.WriteValue(Format(Attributes.Code, "NG=0"));
+    
+        // Message timestamp.
+        JSONWriter.WritePropertyName("timestamp");
+        JSONWriter.WriteValue(Attributes.CreatedAt);
+    
+        JSONWriter.WritePropertyName("headers");
+        JSONWriter.WriteStartObject();
+    
+            // Provides access to the metadata object name.
+            JSONWriter.WritePropertyName("MetadataObject");
+            JSONWriter.WriteValue(Attributes.MetadataObject);
+    
+            // The type of change experienced.
+            JSONWriter.WritePropertyName("Operation");
+            JSONWriter.WriteValue(String(Attributes.Operation));
+
+        JSONWriter.WriteEndObject();
+    
+    JSONWriter.WriteEndObject();   
+    
+EndProcedure // ProcessMessageProperties()
+
+// Only for internal use.
+//
 Function ExchangesHTTPRequest()
     
     Return FL_InteriorUse.NewHTTPRequest("/api/exchanges", 
@@ -240,20 +282,11 @@ EndFunction // ExchangesHTTPRequest()
 
 // Only for internal use.
 //
-Function ExchangePublishHTTPRequest(Properties, Payload)
-    
-    Return FL_InteriorUse.NewHTTPRequest(Properties.ResourceAddress,  
-        NewHTTPRequestHeaders(), NewExchangePublishPayload(Properties, 
-            Payload));
-    
-EndFunction // ExchangePublishHTTPRequest()
-
-// Only for internal use.
-//
-Function NewExchangePublishPayload(Properties, Payload)
+Function NewPublishToExchangePayload(Properties)
     
     JSONWriter = New JSONWriter;
-    JSONWriter.SetString();
+    MemoryStream = New MemoryStream;
+    JSONWriter.OpenStream(MemoryStream);
     
     JSONWriter.WriteStartObject();
     
@@ -265,23 +298,26 @@ Function NewExchangePublishPayload(Properties, Payload)
     JSONWriter.WritePropertyName("payload_encoding");
     JSONWriter.WriteValue(Properties.PayloadEncoding);
     
-    // Properties
-    JSONWriter.WritePropertyName("properties");
-    JSONWriter.WriteStartObject();
-    JSONWriter.WriteEndObject();
-    
     // Payload.
+    DataReader = New DataReader(Properties.JobProperties.ReadonlyStream);
+    BinaryData = DataReader.Read().GetBinaryData();
+    DataReader.Close();
+    
     JSONWriter.WritePropertyName("payload");
     If Properties.PayloadEncoding = "string" Then
-        JSONWriter.WriteValue(Payload);    
+        JSONWriter.WriteValue(GetStringFromBinaryData(BinaryData));    
     Else
-        JSONWriter.WriteValue(Base64String(GetBinaryDataFromString(Payload)));
+        JSONWriter.WriteValue(Base64String(BinaryData));
     EndIf;
+        
+    ProcessMessageProperties(JSONWriter, Properties);
     
     JSONWriter.WriteEndObject();
-    Return JSONWriter.Close();
+    JSONWriter.Close();
     
-EndFunction // NewExchangePublishPayload()
+    Return MemoryStream.CloseAndGetBinaryData();
+    
+EndFunction // NewPublishToExchangePayload()
 
 #EndRegion // Exchanges    
 
@@ -314,14 +350,14 @@ EndFunction // AlivenessHTTPRequest()
 
 // Only for internal use.
 //
-Procedure ResolveProperties(Properties, HTTPMethod, HTTPRequest, 
-    Payload = Undefined)
+Procedure ProcessProperties(Properties, HTTPMethod, HTTPRequest)
     
     HTTPMethod = "GET";
     If Properties.Path = "PublishToExchange" Then
         
         HTTPMethod = "POST";     
-        HTTPRequest = ExchangePublishHTTPRequest(Properties, Payload);
+        HTTPRequest = FL_InteriorUse.NewHTTPRequest(Properties.ResourceAddress,  
+            NewHTTPRequestHeaders(), NewPublishToExchangePayload(Properties));
         
     ElsIf Properties.Path = "Overview" Then
         
@@ -350,27 +386,15 @@ Procedure ResolveProperties(Properties, HTTPMethod, HTTPRequest,
         
     EndIf;    
     
-EndProcedure // ResolveProperties()
-
-// Only for internal use.
-//
-Function ReadChannelDataValue(FieldName)
-    
-    SearchResult = ChannelData.Find(FieldName, "FieldName");
-    If SearchResult <> Undefined Then
-        Return SearchResult.FieldValue;
-    EndIf;
-    
-    Return Undefined;
-    
-EndFunction // ReadChannelDataValue()
+EndProcedure // ProcessProperties()
 
 // Only for internal use.
 //
 Function NewHTTPConnection()
                                      
-    Return FL_InteriorUse.NewHTTPConnection(ReadChannelDataValue("StringURI"));
-    
+    Return FL_InteriorUse.NewHTTPConnection(
+        FL_EncryptionClientServer.FieldValue(ChannelData, "StringURI"));
+        
 EndFunction // NewHTTPConnection()
 
 // Only for internal use.
@@ -395,7 +419,7 @@ EndFunction // NewHTTPRequestHeaders()
 //
 Function Version() Export
     
-    Return "1.0.4";
+    Return "1.0.5";
     
 EndFunction // Version()
 
@@ -408,6 +432,7 @@ Function BaseDescription() Export
     
     BaseDescription = NStr("en='RabbitMQ (%1) channel data processor, ver. %2';
         |ru='Обработчик канала RabbitMQ (%1), вер. %2';
+        |uk='Обробник каналу RabbitMQ (%1), вер. %2';
         |en_CA='RabbitMQ (%1) channel data processor, ver. %2'");
     BaseDescription = StrTemplate(BaseDescription, ChannelStandard(), Version());      
     Return BaseDescription;    

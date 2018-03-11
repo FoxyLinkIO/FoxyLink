@@ -117,6 +117,7 @@ EndFunction // FormatMediaType()
 Procedure Initialize(Stream, APISchema = Undefined) Export
     
     // Clear cache.
+    ContentEncoding = "UTF-8";
     ThisObject.APISchema.Rows.Clear();
     
     RefTypesCache = New Map;
@@ -135,7 +136,7 @@ Procedure Initialize(Stream, APISchema = Undefined) Export
     
     StreamWriter = New JSONWriter;
     StreamWriter.ValidateStructure = False;
-    StreamWriter.OpenStream(Stream);
+    StreamWriter.OpenStream(Stream, ContentEncoding);
     
 EndProcedure // Initialize()
 
@@ -673,7 +674,7 @@ EndProcedure // CheckDublicateProperty()
 //
 Function Version() Export
     
-    Return "1.0.1";
+    Return "1.0.2";
     
 EndFunction // Version()
 

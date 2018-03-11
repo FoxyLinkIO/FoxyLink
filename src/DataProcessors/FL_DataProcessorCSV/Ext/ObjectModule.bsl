@@ -116,32 +116,35 @@ EndFunction // FormatMediaType()
 Procedure Initialize(Stream, APISchema = Undefined) Export
     
     // Clear cache.
+    AddCarriageReturnToLastRow = False;
+    ContentEncoding = "UTF-8";
+    Delimiter = ",";
+    HeaderLine = "";
     ThisObject.APISchema.Clear();
-    ThisObject.AddCarriageReturnToLastRow = False;
-    ThisObject.Delimiter = ",";
-    ThisObject.HeaderLine = "";
-    ThisObject.TextEncoding = "UTF-8";
-    
-    If APISchema <> Undefined Then
-        If TypeOf(ThisObject.APISchema) = TypeOf(APISchema) Then    
+     
+    If APISchema <> Undefined
+        AND TypeOf(ThisObject.APISchema) = TypeOf(APISchema) Then    
             
-            ThisObject.APISchema = APISchema.Copy();
-            
-            FindResult = APISchema.Find("Delimiter", "FieldName");
-            If FindResult <> Undefined Then
-                If FindResult.FieldValue = Chars.Tab Then
-                    Delimiter = FindResult.FieldValue;
-                ElsIf NOT IsBlankString(FindResult.FieldValue) Then
-                    Delimiter = FindResult.FieldValue;
-                EndIf;
+        ThisObject.APISchema = APISchema.Copy();
+        
+        FindResult = APISchema.Find("Delimiter", "FieldName");
+        If FindResult <> Undefined Then
+            If FindResult.FieldValue = Chars.Tab Then
+                Delimiter = FindResult.FieldValue;
+            ElsIf NOT IsBlankString(FindResult.FieldValue) Then
+                Delimiter = FindResult.FieldValue;
             EndIf;
-            
-        Else
-            // Old version schema support could be implemented at this place.
         EndIf;
+        
+        FindResult = APISchema.Find("TextEncoding", "FieldName");
+        If FindResult <> Undefined 
+            AND NOT IsBlankString(FindResult.FieldValue) Then
+            ContentEncoding = FindResult.FieldValue;
+        EndIf;
+        
     EndIf;
     
-    StreamWriter = New DataWriter(Stream, , , Chars.CR + Chars.LF, "");
+    StreamWriter = New DataWriter(Stream, ContentEncoding, , Chars.CR + Chars.LF, "");
     
 EndProcedure // Initialize()
 
@@ -199,20 +202,8 @@ Procedure Output(Item, DataCompositionProcessor, ReportStructure,
     Else
 
         FindResult = APISchema.Find("AddCarriageReturnToLastRow", "FieldName");
-        If FindResult <> Undefined 
-            AND FindResult.FieldValue = "Yes" Then
-            
-            AddCarriageReturnToLastRow = True;
-            
-        EndIf;
-                
-        FindResult = APISchema.Find("TextEncoding", "FieldName");
-        If FindResult <> Undefined 
-            AND NOT IsBlankString(FindResult.FieldValue) Then
-            
-            StreamWriter.TextEncoding = FindResult.FieldValue;
-            
-        EndIf;
+        AddCarriageReturnToLastRow = FindResult <> Undefined 
+            AND FindResult.FieldValue = "Yes";
         
         FindResult = APISchema.Find("HeaderLine", "FieldName");
         If FindResult <> Undefined Then
@@ -421,7 +412,7 @@ EndProcedure // APISchemaOutput()
 //
 Function Version() Export
     
-    Return "1.0.6";
+    Return "1.0.7";
     
 EndFunction // Version()
 
