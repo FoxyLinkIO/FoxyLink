@@ -115,3 +115,17 @@ GNU Affero General Public License для получения более подр�
 Если вы не можете или не хотите переназначать эти права (ваш трудовой договор для вашего работодателя не может этого допускать), вы не должны предоставлять PR. Откройте новую задачу, и кто-то другой сможет выполнить эту работу.
 
 Это законный способ сказать: «Если вы подадите нам PR, этот код станет нашим». Мы надеемся, что это не отпугнет вас от участия в проекте.
+
+## Счастливые клиенты
+
+<p align="center">
+  <a href="https://www.riger.ca/">
+    <img src="https://github.com/FoxyLinkIO/FoxyLink/blob/develop/img/customers/Riger.ca.png" alt="" width=100px height=42px/>
+  </a>
+  <a href="https://ktc.ua/">
+    <img src="https://github.com/FoxyLinkIO/FoxyLink/blob/develop/img/customers/ktc.svg" alt="" width=196px height=42px/>
+  </a>
+  <a href="https://previa.uk.com/">
+    <img src="https://github.com/FoxyLinkIO/FoxyLink/blob/develop/img/customers/previa.uk.png" alt="" width=100px height=42px/>
+  </a>
+</p>
