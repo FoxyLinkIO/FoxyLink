@@ -294,6 +294,33 @@ Function StandardAttributeSynonymsRU() Export
     
 EndFunction // StandardAttributeSynonymsRU() 
 
+// Returns current session hash as base64-encoded string.
+//
+// Returns:
+//  String - current session hash as base64-encoded string.
+//
+Function SessionHash() Export
+    
+    InfoBaseSession = GetCurrentInfoBaseSession();
+    
+    MemoryStream = New MemoryStream;
+    DataWriter = New DataWriter(MemoryStream);
+    DataWriter.WriteChars(InfoBaseSession.ApplicationName);
+    DataWriter.WriteChars(InfoBaseSession.ComputerName);
+    DataWriter.WriteInt32(InfoBaseSession.ConnectionNumber);
+    DataWriter.WriteInt32(InfoBaseSession.SessionNumber);
+    DataWriter.WriteChars(String(InfoBaseSession.SessionStarted));
+    DataWriter.Close();
+    
+    MemoryStream.Seek(0, PositionInStream.Begin);
+    Hash = FL_Encryption.Hash(MemoryStream, 
+        HashFunction.MD5);
+    MemoryStream.Close();
+    
+    Return Base64String(Hash);
+    
+EndFunction // SessionHash()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions

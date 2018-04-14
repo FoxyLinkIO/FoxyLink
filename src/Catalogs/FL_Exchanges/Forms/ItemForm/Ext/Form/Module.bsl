@@ -401,10 +401,10 @@ Procedure EnqueueEvents(Command)
         
         FormParameters = New Structure;
         FormParameters.Insert("Exchange", Object.Ref); 
-        FormParameters.Insert("MetadataObject", CurrentData.MetadataObject);
+        FormParameters.Insert("EventSource", CurrentData.MetadataObject);
         FormParameters.Insert("Operation", CurrentData.Operation);
         
-        OpenForm("Catalog.FL_Jobs.Form.EnqueueEventsForm", 
+        OpenForm("Catalog.FL_Messages.Form.EnqueueMessagesForm", 
             FormParameters, 
             ThisObject,
             New UUID, 
@@ -1144,15 +1144,14 @@ Procedure DoAfterEnqueueEvents(QuestionResult, AdditionalParameters) Export
     
     If QuestionResult = DialogReturnCode.Yes Then    
         
-        Job = EnqueueEventAtServer();
+        EnqueueEventAtServer();
         
         Explanation = NStr("en='Event enqueued successfully.';
             |ru='Событие успешно добавлено в очередь.';
+            |uk='Подія успішно додана в чергу.';
             |en_CA='Event enqueued successfully.'");
         
-        ShowUserNotification("FoxyLink", 
-            GetURL(Job), 
-            Explanation, 
+        ShowUserNotification("FoxyLink", , Explanation, 
             PictureLib.FL_Logotype64);
         
     EndIf;    
@@ -1185,18 +1184,22 @@ EndProcedure // AddEventAtServer()
 // Only for internal use.
 //
 &AtServer
-Function EnqueueEventAtServer()
+Procedure EnqueueEventAtServer()
     
     CurrentData = CurrentOperationData(RowOperation);
     
-    InvocationData = FL_BackgroundJob.NewInvocationData();
-    InvocationData.Operation = CurrentData.Operation;
-    InvocationData.Owner = Object.Ref;
-    InvocationData.Priority = CurrentData.Priority;
+    Invocation = Catalogs.FL_Messages.NewInvocation();
+    Invocation.Operation = CurrentData.Operation;
+    Try 
+        BeginTransaction();
+        Catalogs.FL_Messages.Route(Invocation, Object.Ref);
+        CommitTransaction();
+    Except
+        RollbackTransaction();
+        Raise ErrorDescription();
+    EndTry;
     
-    Return FL_BackgroundJob.Enqueue(InvocationData);
-    
-EndFunction // EnqueueEventAtServer()
+EndProcedure // EnqueueEventAtServer()
 
 // Only for internal use.
 //
@@ -1388,7 +1391,7 @@ EndFunction // ChannelParameters()
 &AtServer
 Function RequiredChannelResources(ChannelRef, Val FormName = "ResourcesForm")
     
-    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(
+    ChannelProcessor = FL_InteriorUse.NewAppEndpointProcessor(
         ChannelRef.BasicChannelGuid);
     If ChannelProcessor.ResourcesRequired() Then
         Return Catalogs.FL_Channels.NewChannelParameters(

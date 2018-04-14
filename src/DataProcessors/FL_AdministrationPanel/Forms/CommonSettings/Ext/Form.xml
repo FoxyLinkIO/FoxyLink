@@ -87,10 +87,61 @@
 								<Event name="OnChange">FL_UseFoxyLinkOnChange</Event>
 							</Events>
 						</CheckBoxField>
+						<UsualGroup name="GroupAppSettings" id="76">
+							<Representation>None</Representation>
+							<ShowTitle>false</ShowTitle>
+							<ExtendedTooltip name="GroupAppSettingsExtendedTooltip" id="77"/>
+							<ChildItems>
+								<InputField name="FL_AppIdentifier" id="70">
+									<DataPath>ConstantsSet.FL_AppIdentifier</DataPath>
+									<TitleLocation>None</TitleLocation>
+									<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+									<HorizontalStretch>false</HorizontalStretch>
+									<ContextMenu name="FL_AppIdentifierContextMenu" id="71"/>
+									<ExtendedTooltip name="FL_AppIdentifierExtendedTooltip" id="72">
+										<TextColor>style:FieldSelectionBackColor</TextColor>
+									</ExtendedTooltip>
+									<Events>
+										<Event name="OnChange">FL_AppIdentifierOnChange</Event>
+									</Events>
+								</InputField>
+								<InputField name="MaximumMessageSize" id="73">
+									<DataPath>MaximumMessageSize</DataPath>
+									<TitleLocation>Right</TitleLocation>
+									<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+									<SpinButton>true</SpinButton>
+									<MinValue xsi:type="xs:decimal">1</MinValue>
+									<ContextMenu name="MaximumMessageSizeContextMenu" id="74"/>
+									<ExtendedTooltip name="MaximumMessageSizeExtendedTooltip" id="75">
+										<TextColor>style:FieldSelectionBackColor</TextColor>
+										<Title formatted="false">
+											<v8:item>
+												<v8:lang>en</v8:lang>
+												<v8:content>Messages that exceed the specified size will be routed to the endpoints at the call point. The message will not be saved to the database.</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>en_CA</v8:lang>
+												<v8:content>Messages that exceed the specified size will be routed to the endpoints at the call point. The message will not be saved to the database.</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>ru</v8:lang>
+												<v8:content>Сообщения которые превышают заданный размер, будут маршрутизированы в конечные точки в месте вызова. Сообщение не будет сохранено в базу данных.</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>uk</v8:lang>
+												<v8:content>Повідомлення які перевищують заданий розмір, будуть маршрутизовані до кінцевих точок з місця виклику. Повідомлення не буде збережено в базу даних.</v8:content>
+											</v8:item>
+										</Title>
+									</ExtendedTooltip>
+									<Events>
+										<Event name="OnChange">MaximumMessageSizeOnChange</Event>
+									</Events>
+								</InputField>
+							</ChildItems>
+						</UsualGroup>
 					</ChildItems>
 				</UsualGroup>
 				<UsualGroup name="GroupJobServer" id="13">
-					<ReadOnly>true</ReadOnly>
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
@@ -123,18 +174,29 @@
 					<Representation>NormalSeparation</Representation>
 					<ExtendedTooltip name="GroupJobServerExtendedTooltip" id="14"/>
 					<ChildItems>
-						<Button name="ConfigureJobServerStartUp" id="61">
-							<Type>UsualButton</Type>
-							<Representation>PictureAndText</Representation>
-							<CommandName>Catalog.FL_Jobs.Command.ConfigureJobServerStartUp</CommandName>
-							<ExtendedTooltip name="ConfigureJobServerStartUpExtendedTooltip" id="62"/>
-						</Button>
 						<UsualGroup name="GroupJobSettings" id="63">
 							<Group>Vertical</Group>
 							<Representation>None</Representation>
 							<ShowTitle>false</ShowTitle>
 							<ExtendedTooltip name="GroupJobSettingsExtendedTooltip" id="64"/>
 							<ChildItems>
+								<UsualGroup name="GroupJobSchedule" id="95">
+									<Group>Horizontal</Group>
+									<ShowTitle>false</ShowTitle>
+									<ExtendedTooltip name="GroupJobScheduleExtendedTooltip" id="96"/>
+									<ChildItems>
+										<Button name="ConfigureJobServerStartUp" id="61">
+											<Type>UsualButton</Type>
+											<CommandName>Catalog.FL_Jobs.Command.ConfigureJobServerStartUp</CommandName>
+											<ExtendedTooltip name="ConfigureJobServerStartUpExtendedTooltip" id="62"/>
+										</Button>
+										<Button name="ConfigureJobExpirationStartUp" id="97">
+											<Type>UsualButton</Type>
+											<CommandName>Catalog.FL_Jobs.Command.ConfigureJobExpirationStartUp</CommandName>
+											<ExtendedTooltip name="ConfigureJobExpirationStartUpExtendedTooltip" id="98"/>
+										</Button>
+									</ChildItems>
+								</UsualGroup>
 								<UsualGroup name="GroupWorkerSettings" id="68">
 									<Group>Horizontal</Group>
 									<Representation>None</Representation>
@@ -145,6 +207,7 @@
 											<DataPath>ConstantsSet.FL_WorkerCount</DataPath>
 											<TitleLocation>Right</TitleLocation>
 											<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+											<SpinButton>true</SpinButton>
 											<ContextMenu name="FL_WorkerCountContextMenu" id="16"/>
 											<ExtendedTooltip name="FL_WorkerCountExtendedTooltip" id="17">
 												<TextColor>style:FieldSelectionBackColor</TextColor>
@@ -157,6 +220,7 @@
 											<DataPath>ConstantsSet.FL_WorkerJobsLimit</DataPath>
 											<TitleLocation>Right</TitleLocation>
 											<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+											<SpinButton>true</SpinButton>
 											<ContextMenu name="FL_WorkerJobsLimitContextMenu" id="66"/>
 											<ExtendedTooltip name="FL_WorkerJobsLimitExtendedTooltip" id="67">
 												<TextColor>style:FieldSelectionBackColor</TextColor>
@@ -167,18 +231,59 @@
 										</InputField>
 									</ChildItems>
 								</UsualGroup>
-								<InputField name="FL_RetryAttempts" id="18">
-									<DataPath>ConstantsSet.FL_RetryAttempts</DataPath>
-									<TitleLocation>Right</TitleLocation>
-									<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
-									<ContextMenu name="FL_RetryAttemptsContextMenu" id="19"/>
-									<ExtendedTooltip name="FL_RetryAttemptsExtendedTooltip" id="20">
-										<TextColor>style:FieldSelectionBackColor</TextColor>
-									</ExtendedTooltip>
-									<Events>
-										<Event name="OnChange">FL_RetryAttemptsOnChange</Event>
-									</Events>
-								</InputField>
+								<UsualGroup name="GroupWorkerOtherSettings" id="90">
+									<Group>Horizontal</Group>
+									<Representation>None</Representation>
+									<ShowTitle>false</ShowTitle>
+									<ExtendedTooltip name="GroupWorkerOtherSettingsExtendedTooltip" id="91"/>
+									<ChildItems>
+										<InputField name="JobExpirationTimeout" id="92">
+											<DataPath>JobExpirationTimeout</DataPath>
+											<TitleLocation>Right</TitleLocation>
+											<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+											<SpinButton>true</SpinButton>
+											<MinValue xsi:type="xs:decimal">1</MinValue>
+											<ContextMenu name="JobExpirationTimeoutContextMenu" id="93"/>
+											<ExtendedTooltip name="JobExpirationTimeoutExtendedTooltip" id="94">
+												<TextColor>style:FieldSelectionBackColor</TextColor>
+												<Title formatted="false">
+													<v8:item>
+														<v8:lang>en</v8:lang>
+														<v8:content>Retention, or expiration time is setting up only for successful and deleted jobs. Other job states, including the failed state, don't have any expiration time. That is why your failed jobs will be kept infinitely before you fix/retry or delete them manually.</v8:content>
+													</v8:item>
+													<v8:item>
+														<v8:lang>en_CA</v8:lang>
+														<v8:content>Retention, or expiration time is setting up only for successful and deleted jobs. Other job states, including the failed state, don't have any expiration time. That is why your failed jobs will be kept infinitely before you fix/retry or delete them manually.</v8:content>
+													</v8:item>
+													<v8:item>
+														<v8:lang>ru</v8:lang>
+														<v8:content>Задержка или время истечения срока действия настраиваются только для успешных и удаленных заданий. Другие состояния работы, включая несостоявшееся состояние, не имеют срока действия. Вот почему ваши неудавшиеся задания будут сохраняться бесконечно до того, как вы исправите / повторите попытку или удалите их вручную.</v8:content>
+													</v8:item>
+													<v8:item>
+														<v8:lang>uk</v8:lang>
+														<v8:content>Затримка або час закінчення терміну дії налаштовуються тільки для успішних і видалених завдань. Інші стани завдань, включаючи неуспішний стан, не мають терміну дії. Ось чому ваші невдалі завдання будуть зберігатися нескінченно до того, як ви виправите / спробуйте ще раз або видалите їх вручну.</v8:content>
+													</v8:item>
+												</Title>
+											</ExtendedTooltip>
+											<Events>
+												<Event name="OnChange">JobExpirationTimeoutOnChange</Event>
+											</Events>
+										</InputField>
+										<InputField name="FL_RetryAttempts" id="18">
+											<DataPath>ConstantsSet.FL_RetryAttempts</DataPath>
+											<TitleLocation>Right</TitleLocation>
+											<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+											<SpinButton>true</SpinButton>
+											<ContextMenu name="FL_RetryAttemptsContextMenu" id="19"/>
+											<ExtendedTooltip name="FL_RetryAttemptsExtendedTooltip" id="20">
+												<TextColor>style:FieldSelectionBackColor</TextColor>
+											</ExtendedTooltip>
+											<Events>
+												<Event name="OnChange">FL_RetryAttemptsOnChange</Event>
+											</Events>
+										</InputField>
+									</ChildItems>
+								</UsualGroup>
 							</ChildItems>
 						</UsualGroup>
 					</ChildItems>
@@ -361,6 +466,9 @@
 			</Type>
 			<MainAttribute>true</MainAttribute>
 			<UseAlways>
+				<Field>ConstantsSet.FL_AppIdentifier</Field>
+				<Field>ConstantsSet.FL_JobExpirationTimeout</Field>
+				<Field>ConstantsSet.FL_MaximumMessageSize</Field>
 				<Field>ConstantsSet.FL_RetryAttempts</Field>
 				<Field>ConstantsSet.FL_UseFoxyLink</Field>
 				<Field>ConstantsSet.FL_WorkerCount</Field>
@@ -524,6 +632,70 @@
 					</Type>
 				</Column>
 			</Columns>
+		</Attribute>
+		<Attribute name="MaximumMessageSize" id="3">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Maximum message size (Kbyte)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Maximum message size (Kbyte)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Максимальный размер сообщения (Кбайт)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Максимальний розмір повідомлення (Кбайт)</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:decimal</v8:Type>
+				<v8:NumberQualifiers>
+					<v8:Digits>4</v8:Digits>
+					<v8:FractionDigits>0</v8:FractionDigits>
+					<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+				</v8:NumberQualifiers>
+			</Type>
+			<FillCheck>ShowError</FillCheck>
+			<FunctionalOptions>
+				<Item>FunctionalOption.FL_UseFoxyLink</Item>
+			</FunctionalOptions>
+		</Attribute>
+		<Attribute name="JobExpirationTimeout" id="4">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Job expiration timeout (days)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Job expiration timeout (days)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Тайм-аут удаления заданий (дней)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Тайм-аут видалення завдань (днів)</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:decimal</v8:Type>
+				<v8:NumberQualifiers>
+					<v8:Digits>2</v8:Digits>
+					<v8:FractionDigits>0</v8:FractionDigits>
+					<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+				</v8:NumberQualifiers>
+			</Type>
+			<FillCheck>ShowError</FillCheck>
+			<FunctionalOptions>
+				<Item>FunctionalOption.FL_UseFoxyLink</Item>
+			</FunctionalOptions>
 		</Attribute>
 	</Attributes>
 	<Commands>

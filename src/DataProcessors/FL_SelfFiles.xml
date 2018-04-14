@@ -52,6 +52,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Логирование включено</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Логування включено</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<Type>
@@ -646,6 +650,7 @@
 			</TabularSection>
 			<Form>ChannelForm</Form>
 			<Form>ResourcesForm</Form>
+			<Template>Self</Template>
 		</ChildObjects>
 	</DataProcessor>
 </MetaDataObject>

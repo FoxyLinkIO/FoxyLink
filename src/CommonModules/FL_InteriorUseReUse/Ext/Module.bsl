@@ -19,6 +19,53 @@
 
 #Region ProgramInterface
 
+// Returns app identifier for this database.
+//
+// Returns:
+//  String - app identifier for this database.
+//
+Function AppIdentifier() Export
+    
+    SetPrivilegedMode(True);
+    Return Constants.FL_AppIdentifier.Get();
+    
+EndFunction // AppIdentifier() 
+
+// Returns maximum message size.
+//
+// Returns:
+//  Number - maximum message size in bytes.
+//
+Function MaximumMessageSize() Export
+    
+    SetPrivilegedMode(True);
+    Return Constants.FL_MaximumMessageSize.Get();
+    
+EndFunction // MaximumMessageSize() 
+
+// Returns job expiration timeout.
+//
+// Returns:
+//  Number - job expiration timeout.
+//
+Function JobExpirationTimeout() Export
+    
+    SetPrivilegedMode(True);
+    Return Constants.FL_JobExpirationTimeout.Get();
+    
+EndFunction // JobExpirationTimeout()
+
+// Returns day in milliseconds.
+//
+// Returns:
+//  Number - day in milliseconds.
+//
+Function DayInMilliseconds() Export
+    
+    Return 60 * 60 * 24 * 1000;
+    
+EndFunction // DayInMilliseconds()
+
 // Identifies a plugin data processor name from library guid.
 //
 // Parameters:
@@ -61,6 +108,52 @@ Function IdentifyPluginProcessorName(LibraryGuid, PluggableSubsystem) Export
     
 EndFunction // IdentifyPluginProcessorName()
 
+// Returns ok status code.
+//
+// Returns:
+//  Number - ok status code. 
+//
+Function OkStatusCode() Export
+    
+    Return 200;
+    
+EndFunction // OkStatusCode()
+
+// Returns internal server error status code.
+//
+// Returns:
+//  Number - internal server error status code. 
+//
+Function InternalServerErrorStatusCode() Export
+    
+    Return 500;
+    
+EndFunction // InternalServerErrorStatusCode()
+
+// Returns HTTP success status codes 2xx.
+//
+// Returns:
+//  FixedMap - with HTTP success status codes:
+//      * Key   - Number - HTTP server status (response) code.
+//      * Value - String - string representation of status code.
+//
+Function SuccessHTTPStatusCodes() Export
+    
+    Map = New Map;
+    Map.Insert(200, "200 OK");
+    Map.Insert(201, "201 Created");
+    Map.Insert(202, "202 Accepted");
+    Map.Insert(203, "203 Non-Authoritative Information");
+    Map.Insert(204, "204 No Content");
+    Map.Insert(205, "205 Reset Content");
+    Map.Insert(206, "206 Partial Content");
+    Map.Insert(207, "207 Multi-Status");
+    Map.Insert(208, "208 Already Reported");
+    Map.Insert(226, "226 IM Used");
+    Return New FixedMap(Map);
+    
+EndFunction // SuccessHTTPStatusCodes()
+
 // Defines if HTTP method has no body.
 //
 // Parameters:
@@ -85,30 +178,6 @@ Function IsHTTPMethodWithoutBody(HTTPMethod) Export
     Return HTTPMethods.Property(HTTPMethod);
     
 EndFunction // IsHTTPMethodWithoutBody()
- 
-// Returns HTTP success status codes 2xx.
-//
-// Returns:
-//  FixedMap - with HTTP success status codes:
-//      * Key   - Number - HTTP server status (response) code.
-//      * Value - String - string representation of status code.
-//
-Function SuccessHTTPStatusCodes() Export
-    
-    Map = New Map;
-    Map.Insert(200, "200 OK");
-    Map.Insert(201, "201 Created");
-    Map.Insert(202, "202 Accepted");
-    Map.Insert(203, "203 Non-Authoritative Information");
-    Map.Insert(204, "204 No Content");
-    Map.Insert(205, "205 Reset Content");
-    Map.Insert(206, "206 Partial Content");
-    Map.Insert(207, "207 Multi-Status");
-    Map.Insert(208, "208 Already Reported");
-    Map.Insert(226, "226 IM Used");
-    Return New FixedMap(Map);
-    
-EndFunction // SuccessHTTPStatusCodes()
 
 // Defines if it is success status code.
 //

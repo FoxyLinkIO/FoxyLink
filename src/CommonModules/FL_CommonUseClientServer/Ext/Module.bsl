@@ -164,13 +164,14 @@ Procedure ExtendStructure(Receiver, Source, WithReplacement = Undefined) Export
     SearchKey = WithReplacement = Undefined Or NOT WithReplacement;
     For Each KeyAndValue In Source Do
         If SearchKey AND Receiver.Property(KeyAndValue.Key) Then
-            If NOT WithReplacement Then
-                Continue;
-            Else
+            If WithReplacement = Undefined Then
                 Raise StrTemplate(NStr("en='Source and receiver structures intersection by key {%1}.';
                     |ru='Пересечение структур источника и приемника по ключу {%1}.';
+                    |uk='Перетин структур джерела та отримувача по ключу {%1}.';
                     |en_CA='Source and receiver structures intersection by key {%1}.'"),
                     KeyAndValue.Key);
+            ElsIf NOT WithReplacement Then   
+                Continue;
             EndIf;
         EndIf;
         Receiver.Insert(KeyAndValue.Key, KeyAndValue.Value);

@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -46,7 +46,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     If IsBlankString(PayloadEncoding) Then
         PayloadEncoding = "string";
     EndIf;
-     
+         
 EndProcedure // OnCreateAtServer()
 
 #EndRegion // FormEventHandlers
@@ -55,17 +55,7 @@ EndProcedure // OnCreateAtServer()
 
 &AtClient
 Procedure SaveAndClose(Command)
-        
-    If IsBlankString(ExchangeName) Then
-        FL_CommonUseClientServer.NotifyUser(NStr("
-                |en='Field {Exchange name} must be filled.';
-                |ru='Поле {Имя обмена} должно быть заполнено.';
-                |uk='Поле {Назва обміну} повинно бути заповненим.';
-                |en_CA='Field {Exchange name} must be filled.'"), , 
-            "ExchangeName");
-        Return;    
-    EndIf;
-    
+            
     If IsBlankString(RoutingKey) Then
         FL_CommonUseClientServer.NotifyUser(NStr("
                 |en='Field {Routing key} must be filled.';
@@ -76,39 +66,46 @@ Procedure SaveAndClose(Command)
         Return;  
     EndIf;
     
-    If IsBlankString(VirtualHost) Then
-        VirtualHost = "%2F";       
-    EndIf;
-    
     ResourceRow = Object.ChannelResources.Add();
     ResourceRow.FieldName = "Path";
     ResourceRow.FieldValue = "PublishToExchange";
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "Exchange";
+    ResourceRow.FieldValue = Exchange;
     
     ResourceRow = Object.ChannelResources.Add();
     ResourceRow.FieldName = "VirtualHost";
     ResourceRow.FieldValue = VirtualHost;
     
     ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "ExchangeName";
-    ResourceRow.FieldValue = ExchangeName;
-    
-    ResourceRow = Object.ChannelResources.Add();
     ResourceRow.FieldName = "RoutingKey";
     ResourceRow.FieldValue = RoutingKey;
-    
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "ResourceAddress";
-    ResourceRow.FieldValue = StrTemplate("/api/exchanges/%1/%2/publish", 
-        VirtualHost, ExchangeName);
-    
+     
     ResourceRow = Object.ChannelResources.Add();
     ResourceRow.FieldName = "PayloadEncoding";
     ResourceRow.FieldValue = PayloadEncoding;
-    
+
     ResourceRow = Object.ChannelResources.Add();
     ResourceRow.FieldName = "PropDeliveryMode";
     ResourceRow.FieldValue = PropDeliveryMode;
- 
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "PropExpiration";
+    ResourceRow.FieldValue = PropExpiration;
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "PropPriority";
+    ResourceRow.FieldValue = PropPriority;
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "PropType";
+    ResourceRow.FieldValue = PropType;
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "PropUserId";
+    ResourceRow.FieldValue = PropUserId;
+    
     Close(Object);
     
 EndProcedure // SaveAndClose()

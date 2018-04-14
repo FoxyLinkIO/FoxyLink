@@ -32,7 +32,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     Parameters.Property("Template", Template);
     If NOT IsBlankString(LibraryGuid) AND NOT IsBlankString(Template) Then
         
-        ChannelProcessor = FL_InteriorUse.NewChannelProcessor(LibraryGuid);
+        ChannelProcessor = FL_InteriorUse.NewAppEndpointProcessor(LibraryGuid);
         BinaryData = ChannelProcessor.GetTemplate(Template);
         BinaryDataAddress = PutToTempStorage(BinaryData, UUID);
         
@@ -588,7 +588,7 @@ EndProcedure // InstallOrUpdateChannelAtServer()
 &AtServerNoContext
 Function PreAuthorizationRequired(Val LibraryGuid)
     
-    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(LibraryGuid);
+    ChannelProcessor = FL_InteriorUse.NewAppEndpointProcessor(LibraryGuid);
     Return ChannelProcessor.PreAuthorizationRequired(); 
     
 EndFunction // PreAuthorizationRequired()

@@ -6,7 +6,7 @@
 				<xr:Common>false</xr:Common>
 			</Visibility>
 		</Command>
-		<Command name="100:316f6daa-a287-45ec-ac90-67e764a8a474">
+		<Command name="Constant.FL_AppIdentifier.StandardCommand.Open">
 			<Visibility>
 				<xr:Common>false</xr:Common>
 			</Visibility>

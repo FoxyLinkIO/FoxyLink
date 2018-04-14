@@ -363,40 +363,25 @@ Procedure RemoveDuplicatesFromValueTable(Source) Export
         TemporaryTable = Source;    
     EndIf;
     
-    Query = New Query;
-    Query.Text = "
-        |SELECT DISTINCT
-        |   Source.*
-        |INTO SourceTable
-        |FROM
-        |   &Source AS Source
-        |;
-        |
-        |////////////////////////////////////////////////////////////////////////////////
-        |SELECT
-        |   *
-        |FROM
-        |   SourceTable
-        |;
-        |
-        |////////////////////////////////////////////////////////////////////////////////
-        |DROP SourceTable
-        |;
-        |
-        |";
-    If TypeOf(Source) = Type("FormDataCollection") Then
-        Query.SetParameter("Source", Source.Unload());
-    Else
-        Query.SetParameter("Source", Source);    
-    EndIf;
+    GroupColumns = "";
+    NotFirstColumn = False;
+    For Each Column In TemporaryTable.Columns Do
+        
+        If NotFirstColumn Then
+            GroupColumns = GroupColumns + ", ";    
+        EndIf;
+        
+        GroupColumns = GroupColumns + Column.Name;
+        NotFirstColumn = True;
+        
+    EndDo;
     
-    ValueTable = Query.Execute().Unload();
-    If TypeOf(Source) = Type("FormDataCollection") Then
-        Source.Load(ValueTable);
-    Else
-        Source = ValueTable;    
-    EndIf;
+    TemporaryTable.GroupBy(GroupColumns);
     
+    If TypeOf(Source) = Type("FormDataCollection") Then
+        Source.Load(TemporaryTable);
+    EndIf;
+        
 EndProcedure // RemoveDuplicatesFromValueTable() 
 
 // Handles three state checkbox in the ValueTree object.
@@ -546,19 +531,6 @@ EndFunction // FixedData()
 Function ConfigurationMetadataTree(Filter = Undefined) Export
 
     PictureIndexSize = 2;
-    PictureCatalogOrder                   = 1;
-    PictureDocumentOrder                  = 2;
-    PictureInformationRegisterOrder       = 3;
-    PictureChartOfCharacteristicTypeOrder = 4;
-    PictureAccountingRegisterOrder        = 5;
-    PictureAccumulationRegisterOrder      = 6;
-    PictureBusinessProcessOrder           = 7;
-    PictureCalculationRegisterOrder       = 8;
-    PictureChartOfCalculationTypeOrder    = 9;
-    PictureConstantOrder                  = 10;
-    PictureTaskOrder                      = 16;
-    PictureChartOfAccountOrder            = 32;
-
     CollectionsOfMetadataObjects = New ValueTable;
     CollectionsOfMetadataObjects.Columns.Add("Name");
     CollectionsOfMetadataObjects.Columns.Add("Synonym");
@@ -566,100 +538,25 @@ Function ConfigurationMetadataTree(Filter = Undefined) Export
     CollectionsOfMetadataObjects.Columns.Add("ObjectPicture");
     CollectionsOfMetadataObjects.Columns.Add("PictureIndex", 
         NumberTypeDescription(PictureIndexSize));
-
-    NewMetadataObjectCollectionRow(TypeNameScheduledJobs(),               
-        NStr("en='Scheduled jobs';ru='Регламентные задания';en_CA='Scheduled jobs'"),                 
-        PictureLib.ScheduledJob,              
-        PictureLib.ScheduledJob,        
-        0,
-        CollectionsOfMetadataObjects);     
         
-    NewMetadataObjectCollectionRow(TypeNameConstants(),               
-        NStr("en='Constants';ru='Константы';en_CA='Constants'"),                 
-        PictureLib.Constant,              
-        PictureLib.Constant,        
-        PictureConstantOrder,
-        CollectionsOfMetadataObjects);
+    AddScheduledJob(CollectionsOfMetadataObjects);
+    AddHTTPService(CollectionsOfMetadataObjects);
         
-    NewMetadataObjectCollectionRow(TypeNameCatalogs(),             
-        NStr("en='Catalogs';ru='Справочники';en_CA='Catalogs'"),               
-        PictureLib.Catalog,             
-        PictureLib.Catalog,
-        PictureCatalogOrder,
-        CollectionsOfMetadataObjects);
-        
-    NewMetadataObjectCollectionRow(TypeNameDocuments(),               
-        NStr("en='Documents';ru='Документы';en_CA='Documents'"),                 
-        PictureLib.Document,               
-        PictureLib.DocumentObject,
-        PictureDocumentOrder,
-        CollectionsOfMetadataObjects);
-        
-    NewMetadataObjectCollectionRow(TypeNameChartsOfCharacteristicTypes(), 
-        NStr("en='Charts of characteristics types';ru='Планы видов характеристик';
-            |en_CA='Charts of characteristics types'"), 
-        PictureLib.ChartOfCharacteristicTypes, 
-        PictureLib.ChartOfCharacteristicTypesObject,
-        PictureChartOfCharacteristicTypeOrder,
-        CollectionsOfMetadataObjects);
-        
-    NewMetadataObjectCollectionRow(TypeNameChartsOfAccounts(),             
-        NStr("en='Charts of accounts';ru='Планы счетов';en_CA='Charts of accounts'"),              
-        PictureLib.ChartOfAccounts,             
-        PictureLib.ChartOfAccountsObject,
-        PictureChartOfAccountOrder,
-        CollectionsOfMetadataObjects);
-        
-    NewMetadataObjectCollectionRow(TypeNameChartsOfCalculationTypes(),       
-        NStr("en='Charts of calculation types';ru='Планы видов расчета';
-            |en_CA='Charts of calculation types'"), 
-        PictureLib.ChartOfCalculationTypes, 
-        PictureLib.ChartOfCalculationTypesObject,
-        PictureChartOfCalculationTypeOrder,
-        CollectionsOfMetadataObjects);
-        
-    NewMetadataObjectCollectionRow(TypeNameInformationRegisters(),        
-        NStr("en='Information registers';ru='Регистры сведений';en_CA='Information registers'"),         
-        PictureLib.InformationRegister,        
-        PictureLib.InformationRegister,
-        PictureInformationRegisterOrder,
-        CollectionsOfMetadataObjects);
-        
-    NewMetadataObjectCollectionRow(TypeNameAccumulationRegisters(),      
-        NStr("en='Accumulation registers';ru='Регистры накопления';en_CA='Accumulation registers'"),       
-        PictureLib.AccumulationRegister,      
-        PictureLib.AccumulationRegister,
-        PictureAccumulationRegisterOrder,
-        CollectionsOfMetadataObjects);
-        
-    NewMetadataObjectCollectionRow(TypeNameAccountingRegisters(),     
-        NStr("en='Accounting registers';ru='Регистры бухгалтерии';en_CA='Accounting registers'"),      
-        PictureLib.AccountingRegister,     
-        PictureLib.AccountingRegister, 
-        PictureAccountingRegisterOrder,
-        CollectionsOfMetadataObjects);
-        
-    NewMetadataObjectCollectionRow(TypeNameCalculationRegisters(),         
-        NStr("en='Calculation registers';ru='Регистры расчета';en_CA='Calculation registers'"),          
-        PictureLib.CalculationRegister,         
-        PictureLib.CalculationRegister,
-        PictureCalculationRegisterOrder,
-        CollectionsOfMetadataObjects);
-        
-    NewMetadataObjectCollectionRow(TypeNameBusinessProcess(),          
-        NStr("en='Business processes';ru='Бизнес-процессы';en_CA='Business processes'"),           
-        PictureLib.BusinessProcess,          
-        PictureLib.BusinessProcessObject,
-        PictureBusinessProcessOrder,
-        CollectionsOfMetadataObjects);
-        
-    NewMetadataObjectCollectionRow(TypeNameTasks(),                  
-        NStr("en='Tasks';ru='Задания';en_CA='Tasks'"),                    
-        PictureLib.Task,                 
-        PictureLib.TaskObject,
-        PictureTaskOrder,
-        CollectionsOfMetadataObjects);
-
+    AddConstant(CollectionsOfMetadataObjects);
+    AddCatalog(CollectionsOfMetadataObjects);
+    AddDocument(CollectionsOfMetadataObjects);
+    AddChartOfCharacteristicTypes(CollectionsOfMetadataObjects);
+    AddChartOfAccounts(CollectionsOfMetadataObjects);
+    AddChartOfCalculationTypes(CollectionsOfMetadataObjects);
+    
+    AddInformationRegister(CollectionsOfMetadataObjects);
+    AddAccumulationRegister(CollectionsOfMetadataObjects);
+    AddAccountingRegister(CollectionsOfMetadataObjects);
+    AddCalculationRegister(CollectionsOfMetadataObjects);
+    
+    AddBusinessProcess(CollectionsOfMetadataObjects); 
+    AddTask(CollectionsOfMetadataObjects);
+     
     // Return value of the function.
     MetadataTree = New ValueTree;
     MetadataTree.Columns.Add("Name");
@@ -845,6 +742,17 @@ Function TypeNameScheduledJobs() Export
     Return "ScheduledJobs";
 
 EndFunction // TypeNameScheduledJobs()
+
+// Returns the value to identify the common type of "HTTPServices".
+//
+// Returns:
+//  String.
+//
+Function TypeNameHTTPServices() Export
+
+    Return "HTTPServices";
+
+EndFunction // TypeNameHTTPServices()
 
 // Returns the value to identify the common type of "Constants".
 //
@@ -1470,6 +1378,37 @@ Function ValueFromJSONString(Value) Export
 
 EndFunction // ValueFromJSONString()
 
+// Deserializes object from a XML string and XMLDataType.
+//
+// Parameters:
+//  XMLValue     - String - the value to be deserialized.
+//  TypeName     - String - XML type name. 
+//  NamespaceURI - String - XML type URI namespace.
+//
+// Returns:
+//  Arbitrary - deserialized object from the XML string and XMLDataType.
+//
+Function ValueFromXMLTypeAndValue(XMLValue, TypeName, NamespaceURI) Export
+    
+    Try
+        
+        Type = FromXMLType(TypeName, NamespaceURI);
+        Return XMLValue(Type, XMLValue);
+        
+    Except
+        
+        WriteLogEvent("FoxyLink", 
+            EventLogLevel.Error,
+            Metadata.CommonModules.FL_CommonUse,
+            ,
+            ErrorDescription());
+        
+    EndTry;
+    
+    Return Undefined; 
+    
+EndFunction // ValueFromXMLTypeAndValue()
+
 // Returns conversion result.
 //
 // Parameters:
@@ -1572,6 +1511,8 @@ EndFunction // ChangeParentValueOfThreeStateCheckBox()
 
 #EndRegion // ValueTreeOperations
 
+#Region MetadataTree
+
 // Only for internal use.
 //
 Procedure NewMetadataObjectCollectionRow(Name, Synonym, Picture, ObjectPicture, 
@@ -1585,26 +1526,6 @@ Procedure NewMetadataObjectCollectionRow(Name, Synonym, Picture, ObjectPicture,
     NewRow.PictureIndex  = PictureIndex;
 
 EndProcedure // NewMetadataObjectCollectionRow()
-
-// Only for internal use.
-//
-Procedure FillMetadataTreeCollection(MetadataTree, CollectionsOfMetadataObjects, 
-    Filter)
-    
-    For Each CollectionRow In CollectionsOfMetadataObjects Do
-        
-        TreeRow = MetadataTree.Rows.Add();
-        FillPropertyValues(TreeRow, CollectionRow);
-        For Each MetadataObject In Metadata[CollectionRow.Name] Do
-            
-            AddToMetadataTreeCollection(TreeRow, CollectionRow, MetadataObject, 
-                Filter);
-            
-        EndDo;
-        
-    EndDo;
-    
-EndProcedure // FillMetadataTreeCollection() 
 
 // Only for internal use.
 //
@@ -1648,6 +1569,266 @@ Procedure AddToMetadataTreeCollection(MetadataTreeRow, CollectionRow,
     MOTreeRow.PictureIndex = CollectionRow.PictureIndex;
                 
 EndProcedure // AddToMetadataTreeCollection() 
+
+// Only for internal use.
+//
+Procedure FillMetadataTreeCollection(MetadataTree, CollectionsOfMetadataObjects, 
+    Filter)
+    
+    For Each CollectionRow In CollectionsOfMetadataObjects Do
+        
+        TreeRow = MetadataTree.Rows.Add();
+        FillPropertyValues(TreeRow, CollectionRow);
+        For Each MetadataObject In Metadata[CollectionRow.Name] Do
+            
+            AddToMetadataTreeCollection(TreeRow, CollectionRow, MetadataObject, 
+                Filter);
+            
+        EndDo;
+        
+    EndDo;
+    
+EndProcedure // FillMetadataTreeCollection() 
+
+// Only for internal use.
+//
+Procedure AddScheduledJob(CollectionsOfMetadataObjects)
+    
+    PictureScheduledJobOrder = 38;
+    NewMetadataObjectCollectionRow(TypeNameScheduledJobs(),               
+        NStr("en='Scheduled jobs';
+            |ru='Регламентные задания';
+            |uk='Регламентні завдання';
+            |en_CA='Scheduled jobs'"),                 
+        PictureLib.ScheduledJob,              
+        PictureLib.ScheduledJob,        
+        PictureScheduledJobOrder,
+        CollectionsOfMetadataObjects);
+    
+EndProcedure // AddScheduledJob()
+
+// Only for internal use.
+//
+Procedure AddHTTPService(CollectionsOfMetadataObjects)
+    
+    PictureHTTPServiceOrder = 39;
+    NewMetadataObjectCollectionRow(TypeNameHTTPServices(),               
+        NStr("en='HTTP services';
+            |ru='HTTP-сервисы';
+            |uk='HTTP-сервіси';
+            |en_CA='HTTP services'"),                 
+        PictureLib.GeographicalSchema,              
+        PictureLib.GeographicalSchema,        
+        PictureHTTPServiceOrder,
+        CollectionsOfMetadataObjects);
+    
+EndProcedure // AddHTTPService()
+
+// Only for internal use.
+//
+Procedure AddConstant(CollectionsOfMetadataObjects)
+    
+    PictureConstantOrder = 10;
+    NewMetadataObjectCollectionRow(TypeNameConstants(),               
+        NStr("en='Constants';
+            |ru='Константы';
+            |uk='Константи';
+            |en_CA='Constants'"),                 
+        PictureLib.Constant,              
+        PictureLib.Constant,        
+        PictureConstantOrder,
+        CollectionsOfMetadataObjects);
+    
+EndProcedure // AddConstant()
+
+// Only for internal use.
+//
+Procedure AddCatalog(CollectionsOfMetadataObjects)
+    
+    PictureCatalogOrder = 1;
+    NewMetadataObjectCollectionRow(TypeNameCatalogs(),             
+        NStr("en='Catalogs';
+            |ru='Справочники';
+            |uk='Довідники';
+            |en_CA='Catalogs'"),               
+        PictureLib.Catalog,             
+        PictureLib.Catalog,
+        PictureCatalogOrder,
+        CollectionsOfMetadataObjects);
+
+EndProcedure // AddCatalog()
+
+// Only for internal use.
+//
+Procedure AddDocument(CollectionsOfMetadataObjects)
+    
+    PictureDocumentOrder = 2;
+    NewMetadataObjectCollectionRow(TypeNameDocuments(),               
+        NStr("en='Documents';
+            |ru='Документы';
+            |uk='Документи';
+            |en_CA='Documents'"),                 
+        PictureLib.Document,               
+        PictureLib.DocumentObject,
+        PictureDocumentOrder,
+        CollectionsOfMetadataObjects);
+
+EndProcedure // AddDocument()
+
+// Only for internal use.
+//
+Procedure AddChartOfCharacteristicTypes(CollectionsOfMetadataObjects)
+    
+    PictureChartOfCharacteristicTypeOrder = 4;
+    NewMetadataObjectCollectionRow(TypeNameChartsOfCharacteristicTypes(), 
+        NStr("en='Charts of characteristics types';
+            |ru='Планы видов характеристик';
+            |uk='Плани видів характеристик';
+            |en_CA='Charts of characteristics types'"), 
+        PictureLib.ChartOfCharacteristicTypes, 
+        PictureLib.ChartOfCharacteristicTypesObject,
+        PictureChartOfCharacteristicTypeOrder,
+        CollectionsOfMetadataObjects);
+
+EndProcedure // AddChartOfCharacteristicTypes() 
+
+// Only for internal use.
+//
+Procedure AddChartOfAccounts(CollectionsOfMetadataObjects)
+    
+    PictureChartOfAccountOrder = 32;    
+    NewMetadataObjectCollectionRow(TypeNameChartsOfAccounts(),             
+        NStr("en='Charts of accounts';
+            |ru='Планы счетов';
+            |uk='Плани рахунків';
+            |en_CA='Charts of accounts'"),              
+        PictureLib.ChartOfAccounts,             
+        PictureLib.ChartOfAccountsObject,
+        PictureChartOfAccountOrder,
+        CollectionsOfMetadataObjects);
+
+EndProcedure // AddChartOfAccounts()
+
+// Only for internal use.
+//
+Procedure AddChartOfCalculationTypes(CollectionsOfMetadataObjects)
+
+    PictureChartOfCalculationTypeOrder = 9;
+    NewMetadataObjectCollectionRow(TypeNameChartsOfCalculationTypes(),       
+        NStr("en='Charts of calculation types';
+            |ru='Планы видов расчета';
+            |uk='Плани видів розрахунків';
+            |en_CA='Charts of calculation types'"), 
+        PictureLib.ChartOfCalculationTypes, 
+        PictureLib.ChartOfCalculationTypesObject,
+        PictureChartOfCalculationTypeOrder,
+        CollectionsOfMetadataObjects);
+
+EndProcedure // AddChartOfCalculationTypes()
+
+// Only for internal use.
+//
+Procedure AddInformationRegister(CollectionsOfMetadataObjects)
+    
+    PictureInformationRegisterOrder = 3;
+    NewMetadataObjectCollectionRow(TypeNameInformationRegisters(),        
+        NStr("en='Information registers';
+            |ru='Регистры сведений';
+            |uk='Регістр відомостей';
+            |en_CA='Information registers'"),         
+        PictureLib.InformationRegister,        
+        PictureLib.InformationRegister,
+        PictureInformationRegisterOrder,
+        CollectionsOfMetadataObjects);
+        
+EndProcedure // AddInformationRegister()
+        
+// Only for internal use.
+//
+Procedure AddAccumulationRegister(CollectionsOfMetadataObjects)
+    
+    PictureAccumulationRegisterOrder = 6;    
+    NewMetadataObjectCollectionRow(TypeNameAccumulationRegisters(),      
+        NStr("en='Accumulation registers';
+            |ru='Регистры накопления';
+            |uk='Регістр накопичення';
+            |en_CA='Accumulation registers'"),       
+        PictureLib.AccumulationRegister,      
+        PictureLib.AccumulationRegister,
+        PictureAccumulationRegisterOrder,
+        CollectionsOfMetadataObjects);
+        
+EndProcedure // AddAccumulationRegister()
+       
+// Only for internal use.
+//
+Procedure AddAccountingRegister(CollectionsOfMetadataObjects)
+    
+    PictureAccountingRegisterOrder = 5;     
+    NewMetadataObjectCollectionRow(TypeNameAccountingRegisters(),     
+        NStr("en='Accounting registers';
+            |ru='Регистры бухгалтерии';
+            |uk='Регістр бехгалтерії';
+            |en_CA='Accounting registers'"),      
+        PictureLib.AccountingRegister,     
+        PictureLib.AccountingRegister, 
+        PictureAccountingRegisterOrder,
+        CollectionsOfMetadataObjects);
+        
+EndProcedure // AddAccountingRegister()        
+
+// Only for internal use.
+//
+Procedure AddCalculationRegister(CollectionsOfMetadataObjects)
+    
+    PictureCalculationRegisterOrder = 8;     
+    NewMetadataObjectCollectionRow(TypeNameCalculationRegisters(),         
+        NStr("en='Calculation registers';
+            |ru='Регистры расчета';
+            |uk='Регістр розрахунків';
+            |en_CA='Calculation registers'"),          
+        PictureLib.CalculationRegister,         
+        PictureLib.CalculationRegister,
+        PictureCalculationRegisterOrder,
+        CollectionsOfMetadataObjects);
+        
+EndProcedure // AddCalculationRegister()
+
+// Only for internal use.
+//
+Procedure AddBusinessProcess(CollectionsOfMetadataObjects)
+    
+    PictureBusinessProcessOrder = 7;
+    NewMetadataObjectCollectionRow(TypeNameBusinessProcess(),          
+        NStr("en='Business processes';
+            |ru='Бизнес-процессы';
+            |uk='Бізнес-процеси';
+            |en_CA='Business processes'"),           
+        PictureLib.BusinessProcess,          
+        PictureLib.BusinessProcessObject,
+        PictureBusinessProcessOrder,
+        CollectionsOfMetadataObjects);
+ 
+EndProcedure // AddBusinessProcess()
+       
+// Only for internal use.
+//
+Procedure AddTask(CollectionsOfMetadataObjects)
+    
+    PictureTaskOrder = 16;
+    NewMetadataObjectCollectionRow(TypeNameTasks(),                  
+        NStr("en='Tasks';
+            |ru='Задания';
+            |uk='Завдання';
+            |en_CA='Tasks'"),                    
+        PictureLib.Task,                 
+        PictureLib.TaskObject,
+        PictureTaskOrder,
+        CollectionsOfMetadataObjects);
+        
+EndProcedure // AddTask()
+
+#EndRegion // MetadataTree 
 
 // Only for internal use.
 //

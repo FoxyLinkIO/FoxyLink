@@ -37,6 +37,11 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     // No dependencies.
     FormConstantsSet = FL_InteriorUse.SetOfConstants(ConstantsSet);
     
+    // File functions.
+    MaximumMessageSize = FL_InteriorUseReUse.MaximumMessageSize() / 1024;
+    JobExpirationTimeout = FL_InteriorUseReUse.JobExpirationTimeout() 
+        / FL_InteriorUseReUse.DayInMilliseconds();
+    
     Integrations = Catalogs.FL_Channels.SuppliedIntegrations();
     FL_CommonUseClientServer.ExtendValueTable(Integrations, 
         SuppliedIntegrations);
@@ -58,6 +63,30 @@ Procedure FL_UseFoxyLinkOnChange(Item)
 EndProcedure // FL_UseFoxyLinkOnChange()
 
 &AtClient
+Procedure FL_AppIdentifierOnChange(Item)
+    
+    Attachable_OnAttributeChange(Item, False);
+    
+EndProcedure // FL_AppIdentifierOnChange()
+
+&AtClient
+Procedure MaximumMessageSizeOnChange(Item)
+    
+    If MaximumMessageSize = 0 Then
+        ErrorMessage = NStr("
+            |en='Field {Maximum message size} is empty.';
+            |ru='Поле {Максимальный размер сообщения} не заполнено.';
+            |uk='Поле {Максимальний розмір повідомлення} не заповнено.';
+            |en_CA='Field {Maximum message size} is empty.'");
+        FL_CommonUseClientServer.NotifyUser(ErrorMessage, , "MaximumMessageSize");
+        Return;
+    EndIf;
+
+    Attachable_OnAttributeChange(Item, False);
+
+EndProcedure // MaximumMessageSizeOnChange()
+
+&AtClient
 Procedure FL_RetryAttemptsOnChange(Item)
     
     Attachable_OnAttributeChange(Item, False);
@@ -70,6 +99,23 @@ Procedure FL_WorkerCountOnChange(Item)
     Attachable_OnAttributeChange(Item, False);    
     
 EndProcedure // FL_WorkerCountOnChange()
+
+&AtClient
+Procedure JobExpirationTimeoutOnChange(Item)
+    
+    If JobExpirationTimeout = 0 Then
+        ErrorMessage = NStr("
+            |en='Field {Job expiration timeout} is empty.';
+            |ru='Поле {Тайм-аут удаления заданий } не заполнено.';
+            |uk='Поле {Тайм-аут видалення завдань} не заповнено.';
+            |en_CA='Field {Job expiration timeout} is empty.'");
+        FL_CommonUseClientServer.NotifyUser(ErrorMessage, , "JobExpirationTimeout");
+        Return;
+    EndIf;
+
+    Attachable_OnAttributeChange(Item, False);
+    
+EndProcedure // JobExpirationTimeoutOnChange()
 
 &AtClient
 Procedure FL_WorkerJobsLimitOnChange(Item)
@@ -175,9 +221,19 @@ Procedure SaveAttributeValue(AttributePathToData, Result)
         // If the path to attribute data is specified through "ConstantsSet".
         ConstantName = Mid(AttributePathToData, 14);
     Else
+        
         // Definition of name and attribute value record in the corresponding 
         // constant from "ConstantsSet".
         // Used for the attributes of the form directly connected with constants.
+        If AttributePathToData = "MaximumMessageSize" Then
+            ConstantsSet.FL_MaximumMessageSize = MaximumMessageSize * 1024;
+            ConstantName = "FL_MaximumMessageSize";
+        ElsIf AttributePathToData = "JobExpirationTimeout" Then
+            ConstantsSet.FL_JobExpirationTimeout = JobExpirationTimeout 
+                * FL_InteriorUseReUse.DayInMilliseconds();
+            ConstantName = "FL_JobExpirationTimeout";
+        EndIf;
+        
     EndIf;
 
     // Saving the constant value.
@@ -211,9 +267,13 @@ Procedure SetEnabled(AttributePathToData = "")
         OR IsBlankString(AttributePathToData) Then
         
         ConstantValue = ConstantsSet.FL_UseFoxyLink;
-        
+         
+        FL_InteriorUse.SetFormItemProperty(Items, "GroupAppSettings", 
+            "Visible", ConstantValue);
         FL_InteriorUse.SetFormItemProperty(Items, "GroupJobServer", 
-            "ReadOnly", NOT ConstantValue);
+            "Visible", ConstantValue);
+        FL_InteriorUse.SetFormItemProperty(Items, "GroupSuppliedIntegrations", 
+            "Visible", ConstantValue);
     
     EndIf;
 

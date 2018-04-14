@@ -27,11 +27,9 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Operations</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_DataComposition</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Events</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_EventsReUse</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">d83e7dea-d92a-4700-b2bc-8a10b4ccd792</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsOnWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsBeforeWrite</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">3e6e5321-8e3e-4bdb-9527-ad72c33853be</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">dd95273e-c5b1-4bd3-a501-735d64dfb8aa</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_CRUDMethods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_RESTMethods</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Channels</xr:Item>
@@ -41,6 +39,8 @@
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsBeforeDelete</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsBeforeDelete</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_EncryptionClientServer</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Messages</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_MessagePublishers</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>
