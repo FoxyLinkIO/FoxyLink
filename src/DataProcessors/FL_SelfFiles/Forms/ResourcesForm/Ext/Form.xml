@@ -1,5 +1,25 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
+	<Title>
+		<v8:item>
+			<v8:lang>en</v8:lang>
+			<v8:content>File message parameters</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>en_CA</v8:lang>
+			<v8:content>File message parameters</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>ru</v8:lang>
+			<v8:content>Файловые параметры сообщения</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>uk</v8:lang>
+			<v8:content>Файлові параметри повідомлення</v8:content>
+		</v8:item>
+	</Title>
+	<AutoTitle>false</AutoTitle>
+	<Customizable>false</Customizable>
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
 		<ChildItems>
@@ -25,6 +45,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Основные настройки</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Основні налаштування</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -35,16 +59,66 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Основные настройки</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Основні налаштування</v8:content>
+				</v8:item>
 			</ToolTip>
 			<Group>Vertical</Group>
 			<Representation>None</Representation>
 			<ExtendedTooltip name="GroupMainSettingsExtendedTooltip" id="29"/>
 			<ChildItems>
-				<InputField name="TableName" id="9">
-					<DataPath>FileName</DataPath>
-					<ChooseType>false</ChooseType>
-					<ContextMenu name="TableNameContextMenu" id="10"/>
-					<ExtendedTooltip name="TableNameExtendedTooltip" id="11"/>
+				<InputField name="Path" id="33">
+					<DataPath>Path</DataPath>
+					<AutoMarkIncomplete>true</AutoMarkIncomplete>
+					<ContextMenu name="PathContextMenu" id="34"/>
+					<ExtendedTooltip name="PathExtendedTooltip" id="35"/>
+				</InputField>
+				<InputField name="BaseName" id="30">
+					<DataPath>BaseName</DataPath>
+					<InputHint>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Auto-generate</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Auto-generate</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Автогенерировать</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Автогенерувати</v8:content>
+						</v8:item>
+					</InputHint>
+					<ContextMenu name="BaseNameContextMenu" id="31"/>
+					<ExtendedTooltip name="BaseNameExtendedTooltip" id="32"/>
+				</InputField>
+				<InputField name="Extension" id="36">
+					<DataPath>Extension</DataPath>
+					<InputHint>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Auto-generate</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Auto-generate</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Автогенерировать</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Автогенерувати</v8:content>
+						</v8:item>
+					</InputHint>
+					<ContextMenu name="ExtensionContextMenu" id="37"/>
+					<ExtendedTooltip name="ExtensionExtendedTooltip" id="38"/>
 				</InputField>
 			</ChildItems>
 		</UsualGroup>
@@ -55,30 +129,6 @@
 				<v8:Type>cfg:DataProcessorObject.FL_SelfFiles</v8:Type>
 			</Type>
 			<MainAttribute>true</MainAttribute>
-		</Attribute>
-		<Attribute name="FileName" id="3">
-			<Title>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>File name</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>File name</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Имя файла</v8:content>
-				</v8:item>
-			</Title>
-			<Type>
-				<v8:Type>xs:string</v8:Type>
-				<v8:StringQualifiers>
-					<v8:Length>0</v8:Length>
-					<v8:AllowedLength>Variable</v8:AllowedLength>
-				</v8:StringQualifiers>
-			</Type>
-			<FillCheck>ShowError</FillCheck>
 		</Attribute>
 		<Attribute name="Channel" id="4">
 			<Title>
@@ -95,6 +145,87 @@
 				<v8:Type>cfg:CatalogRef.FL_Channels</v8:Type>
 			</Type>
 		</Attribute>
+		<Attribute name="Path" id="5">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Path</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Path</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Путь</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Шлях</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="BaseName" id="6">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Base name</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Base name</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Имя без расширения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Ім'я без розширення</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="Extension" id="7">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Extension</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Extension</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Расширение</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Розширення</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
 	</Attributes>
 	<Commands>
 		<Command name="SaveAndClose" id="1">
@@ -107,6 +238,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Сохранить и закрыть</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Зберегти та закрити</v8:content>
+				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
@@ -116,6 +251,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Сохранить и закрыть</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Зберегти та закрити</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>

@@ -29,16 +29,13 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     Parameters.Property("Channel", Channel);
     If Parameters.Property("ChannelResources") Then
         
-        ChannelResources = Parameters.ChannelResources;
-        
         Attributes = GetAttributes();
-        FilterParameters = New Structure("FieldName");
         For Each Attribute In Attributes Do
             
-            FilterParameters.FieldName = Attribute.Name;
-            SearchResult = ChannelResources.FindRows(FilterParameters);
-            If SearchResult.Count() = 1 Then 
-                ThisObject[Attribute.Name] = SearchResult[0].FieldValue;                   
+            FieldValue = FL_EncryptionClientServer.FieldValueNoException(
+                Parameters.ChannelResources, Attribute.Name);
+            If ValueIsFilled(FieldValue) Then 
+                ThisObject[Attribute.Name] = FieldValue;                   
             EndIf;
             
         EndDo;
@@ -54,18 +51,27 @@ EndProcedure // OnCreateAtServer()
 &AtClient
 Procedure SaveAndClose(Command)
         
-    If IsBlankString(FileName) Then
+    If IsBlankString(Path) Then
         FL_CommonUseClientServer.NotifyUser(NStr("
-                |en='Field {File name} must be filled.';
-                |ru='Поле {Имя файла} должно быть заполнено.';
-                |en_CA='Field {File name} must be filled.'"), , 
-            "FileName");
+                |en='Field {Path} must be filled.';
+                |ru='Поле {Путь} должно быть заполнено.';
+                |uk='Поле {Шлях} повинно бути заповненим.';
+                |en_CA='Field {Path} must be filled.'"), , 
+            "Path");
         Return;    
     EndIf;
     
     ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "FileName";
-    ResourceRow.FieldValue = FileName;
+    ResourceRow.FieldName = "Path";
+    ResourceRow.FieldValue = Path;
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "BaseName";
+    ResourceRow.FieldValue = BaseName;
+    
+    ResourceRow = Object.ChannelResources.Add();
+    ResourceRow.FieldName = "Extension";
+    ResourceRow.FieldValue = Extension;
         
     Close(Object);
     

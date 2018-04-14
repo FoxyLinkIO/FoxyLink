@@ -28,6 +28,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
 
     Raise NStr("en='Channel form is not intended for usage.';
         |ru='Форма канала не предназначена для использования.';
+        |uk='Форма канала не предназначена для використання.';
         |en_CA='Channel form is not intended for usage.'");
 
 EndProcedure // OnCreateAtServer()

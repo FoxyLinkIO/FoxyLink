@@ -321,11 +321,11 @@ EndProcedure // InitSettingsComposer()
 // Sets the message settings into data composition settings composer.
 //
 // Parameters:
-//  SettingsComposer  - DataCompositionSettingsComposer - describes relation of 
-//                              data composition settings and data composition schema.
-//  InvocationContext - ValueTable - see function FL_BackgroundJob.NewInvocationContext.
+//  SettingsComposer - DataCompositionSettingsComposer - describes relation of 
+//                          data composition settings and data composition schema.
+//  Context          - ValueTable - see function Catalogs.FL_Messages.NewContext.
 //
-Procedure SetDataToSettingsComposer(SettingsComposer, InvocationContext) Export
+Procedure SetDataToSettingsComposer(SettingsComposer, Context) Export
     
     Var MessageBody, Parameters, Filter;
     
@@ -334,14 +334,19 @@ Procedure SetDataToSettingsComposer(SettingsComposer, InvocationContext) Export
             "SettingsComposer", SettingsComposer, Type("DataCompositionSettingsComposer"));          
     EndIf;
     
-    If TypeOf(InvocationContext) <> Type("ValueTable") Then      
+    If TypeOf(Context) = Type("CatalogTabularSection.FL_Messages.Context") Then
+        ConvertedContext = Context.Unload();
+    Else
+        ConvertedContext = Context;    
+    EndIf;
+    
+    If TypeOf(ConvertedContext) <> Type("ValueTable") Then      
         Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "InvocationContext", InvocationContext, Type("ValueTable"));     
+            "Context", ConvertedContext, Type("ValueTable"));     
     EndIf;
              
     DataParameters = SettingsComposer.Settings.DataParameters;
-    FillDataCompositionParameterValueCollection(DataParameters, 
-        InvocationContext);
+    FillDataCompositionParameterValueCollection(DataParameters, ConvertedContext);
                                 
 EndProcedure // SetDataToSettingsComposer()
 
@@ -783,12 +788,11 @@ EndProcedure // FillReportStructure()
 // Fills data composition parameter value collection from MessageSettings.Body.Parameters.
 //
 // Parameters:
-//  DataParameters    - DataCompositionParameterValues - values of data parameters. 
+//  DataParameters - DataCompositionParameterValues - values of data parameters. 
 //                                      They are implemented as parameter values.
-//  InvocationContext - ValueTable                      - invocation context.
+//  Context        - ValueTable                     - invocation context.
 //
-Procedure FillDataCompositionParameterValueCollection(DataParameters, 
-    InvocationContext)
+Procedure FillDataCompositionParameterValueCollection(DataParameters, Context)
 
     // Verification is necessary as the type can be Undefined.
     AvailableParameters = DataParameters.AvailableParameters;
@@ -801,7 +805,7 @@ Procedure FillDataCompositionParameterValueCollection(DataParameters,
         
         PrimaryKey = String(Item.Parameter);
         FilterParameters.PrimaryKey = Upper(PrimaryKey);  
-        Parameters = InvocationContext.FindRows(FilterParameters);
+        Parameters = Context.FindRows(FilterParameters);
         If Parameters.Count() = 1 Then
             
             InvocationParameter = Parameters[0];

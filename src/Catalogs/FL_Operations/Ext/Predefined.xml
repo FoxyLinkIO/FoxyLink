@@ -42,6 +42,12 @@
 		<Description>Send</Description>
 		<IsFolder>false</IsFolder>
 	</Item>
+	<Item id="816bc5d6-d2b0-4f36-b412-4c7763ab56fa">
+		<Name>Transfer</Name>
+		<Code/>
+		<Description>Transfer</Description>
+		<IsFolder>false</IsFolder>
+	</Item>
 	<Item id="031256a1-34bc-4d23-883f-97875a617113">
 		<Name>Update</Name>
 		<Code/>

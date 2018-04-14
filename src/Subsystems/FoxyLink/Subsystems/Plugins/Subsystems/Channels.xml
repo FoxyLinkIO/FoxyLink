@@ -24,7 +24,6 @@
 			<Picture/>
 			<Content>
 				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_RabbitMQ</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_SelfExport</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_SelfFiles</xr:Item>
 			</Content>
 		</Properties>

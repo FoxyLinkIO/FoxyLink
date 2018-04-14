@@ -70,59 +70,79 @@ EndFunction // ChannelFullName()
 
 #Region ProgramInterface
 
-// Delivers a stream object to the current channel.
+// Delivers a data object to the file export application endpoint.
 //
 // Parameters:
-//  Stream         - Stream       - a data stream that can be read successively 
-//                              or/and where you can record successively. 
-//                 - MemoryStream - specialized version of Stream object for 
-//                              operation with the data located in the RAM.
-//                 - FileStream   - specialized version of Stream object for 
-//                              operation with the data located in a file on disk.
-//  Properties     - Structure    - channel parameters.
+//  Payload    - Arbitrary - the data that can be read successively and 
+//                               delivered to RabbitMQ.
+//  Properties - Structure - RabbitMQ resources and message parameters.
+//  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
-// Returns:
-//  Structure - see function Catalogs.FL_Channels.NewChannelDeliverResult.
-//
-Function DeliverMessage(Stream, Properties) Export
+Procedure DeliverMessage(Payload, Properties, JobResult) Export
     
-    Var PayLoad, FileName;
+    Path = FL_EncryptionClientServer.FieldValue(ChannelResources, "Path"); 
     
-    SuccessCode = 200;
-    DeliveryResult = Catalogs.FL_Channels.NewChannelDeliverResult();    
-    
-    If TypeOf(Properties) <> Type("Structure") Then   
-        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "Properties", Properties, Type("Structure"));
+    BaseName = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "BaseName");
+    If NOT ValueIsFilled(BaseName) Then
+        BaseName = StrReplace(New UUID, "-", "");
     EndIf;
-
-    Properties.Property("FileName", FileName);
-    If TypeOf(FileName) <> Type("String") Then   
-        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "FileName", FileName, Type("String"));
-    EndIf; 
     
-    FullName = FileName + Properties.JobProperties.FileExtension;
-    FileStream = New FileStream(FullName, FileOpenMode.Create, 
-        FileAccess.Write);
-    DataWriter = New DataWriter(FileStream);
-    DataReader = New DataReader(Stream);
-    DataReader.CopyTo(DataWriter);
+    Extension = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "Extension");
+    If NOT ValueIsFilled(Extension) Then
+        Extension = Properties.FileExtension;
+    EndIf;
     
-    DataReader.Close();
-    DataWriter.Close();
-    FileStream.Close();
+    Try 
+    
+        FullName = StrTemplate("%1%2%3", Path, BaseName, Extension);
+        If TypeOf(Payload) = Type("SpreadsheetDocument") Then
+            WriteSpreadsheetDocument(Payload, FullName, Extension);    
+        Else
+            Payload.Write(FullName);
+        EndIf;
         
-    If Log Then
-        DeliveryResult.LogAttribute = "200 Success";
-    EndIf;
-    DeliveryResult.Success = True;
-    DeliveryResult.StatusCode = SuccessCode;
-    DeliveryResult.StringResponse = "200 Success";
-    
-    Return DeliveryResult;
-    
-EndFunction // DeliverMessage() 
+        FileProperties = FL_InteriorUseClientServer.NewFileProperties(FullName);   
+        ProcessAdditionalOutputProperties(FileProperties);     
+ 
+        // OutPayload
+        MemoryStream = New MemoryStream;
+        JSONWriter = New JSONWriter;
+        JSONWriter.OpenStream(MemoryStream);
+        WriteJSON(JSONWriter, FileProperties);
+        JSONWriter.Close();
+        OutPayload = MemoryStream.CloseAndGetBinaryData();
+        
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Payload", OutPayload);
+        
+        // OutProperties
+        OutProperties = Catalogs.FL_Exchanges.NewProperties();
+        FillPropertyValues(OutProperties, Properties);
+        OutProperties.ContentEncoding = "UTF-8";
+        OutProperties.ContentType = "application/json";
+        OutProperties.FileExtension = ".json";
+        OutProperties.Timestamp = CurrentUniversalDateInMilliseconds();
+        
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", OutProperties);
+        
+        JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode(); 
+        If Log Then
+            JobResult.LogAttribute = "200 Success";
+        EndIf;
+        
+    Except
+        
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+        JobResult.LogAttribute = ErrorDescription();
+        
+    EndTry;
+          
+    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        JobResult.StatusCode);
+        
+EndProcedure // DeliverMessage() 
 
 // Invalidates the channel data. 
 //
@@ -165,12 +185,73 @@ EndFunction // ResourcesRequired()
 //
 Function SuppliedIntegrations() Export
     
-    SuppliedIntegrations = New Array;    
+    SuppliedIntegrations = New Array;
+    
+    BasicPhrases = New Array;
+    BasicPhrases.Add(NStr("en='Exchange description service helps to transfer ';
+        |ru='Сервис описания обменов помогает переносить обмены из одной ';
+        |uk='Сервіс опису обмінів допомагає переносити обміни з однієї ';
+        |en_CA='Exchange description service helps to transfer '"));
+    BasicPhrases.Add(NStr("en='exchanges from one accounting system to another.';
+        |ru='учетной системы в другие.';
+        |uk='облікової системи в інші.';
+        |en_CA='exchanges from one accounting system to another.'"));
+    
+    PluggableSettings = FL_InteriorUse.NewPluggableSettings();   
+    PluggableSettings.Name = NStr("en='Exchange description service';
+        |ru='Сервис описания обменов';
+        |uk='Сервіс опису обмінів';
+        |en_CA='Exchange description service'");
+    PluggableSettings.Template = "Self";
+    PluggableSettings.ToolTip = StrConcat(BasicPhrases);
+    PluggableSettings.Version = "1.2.5";
+    SuppliedIntegrations.Add(PluggableSettings);
+    
     Return SuppliedIntegrations;
-          
+        
 EndFunction // SuppliedIntegration()
 
 #EndRegion // ProgramInterface
+
+#Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Procedure WriteSpreadsheetDocument(Payload, FullName, Extension)
+    
+    If Upper(Extension) = ".PDF" Then
+        Payload.Write(FullName, SpreadsheetDocumentFileType.PDF);
+    ElsIf Upper(Extension) = ".MXL" Then
+        Payload.Write(FullName, SpreadsheetDocumentFileType.MXL);    
+    Else
+        Raise NStr("en='Unsupported file type for spreadsheet document.';
+            |ru='Неподдерживаемый тип файла для табличного документа.';
+            |uk='Непідтримуваний тип файлу для табличного документу.';
+            |en_CA='Unsupported file type for spreadsheet document.'");
+    EndIf;    
+    
+EndProcedure // WriteSpreadsheetDocument()
+
+// Only for internal use.
+//
+Procedure ProcessAdditionalOutputProperties(FileProperties)
+    
+    AdditionalProperties = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "AdditionalOutputProperties");
+    If ValueIsFilled(AdditionalProperties) Then
+        
+        AdditionalProperties = FL_CommonUse.ValueFromJSONString(
+            AdditionalProperties);
+        If TypeOf(AdditionalProperties) = Type("Structure") Then
+            FL_CommonUseClientServer.ExtendStructure(FileProperties, 
+                AdditionalProperties, True); 
+        EndIf;
+        
+    EndIf;
+    
+EndProcedure // ProcessAdditionalOutputProperties()
+
+#EndRegion // ServiceProceduresAndFunctions
 
 #Region ExternalDataProcessorInfo
 
@@ -181,7 +262,7 @@ EndFunction // SuppliedIntegration()
 //
 Function Version() Export
     
-    Return "1.0.2";
+    Return "1.0.4";
     
 EndFunction // Version()
 
@@ -192,9 +273,10 @@ EndFunction // Version()
 //
 Function BaseDescription() Export
     
-    BaseDescription = NStr("en='Export data to file (%1) channel processor, ver. %2'; 
-        |ru='Обработчик канала экспорта данных в файл (%1), вер. %2';
-        |en_CA='Export data to file (%1) channel processor, ver. %2'");
+    BaseDescription = NStr("en='Export data to file (%1) app endpoint processor, ver. %2'; 
+        |ru='Обработчик конечной точки приложения экспорта данных в файл (%1), вер. %2';
+        |uk='Обробник кінцевої точки додатку експорту данних в файл (%1), вер. %2';
+        |en_CA='Export data to file (%1) app endpoint processor, ver. %2'");
     BaseDescription = StrTemplate(BaseDescription, ChannelStandard(), Version());      
     Return BaseDescription;    
     

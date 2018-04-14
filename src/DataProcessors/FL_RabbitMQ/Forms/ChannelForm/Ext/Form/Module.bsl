@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -91,17 +91,11 @@ Procedure FillOverviewPage(MainObject)
     
     ClearOverviewPage();
     
-    DeliveryResult = MainObject.DeliverMessage(Undefined, 
-        New Structure("Path", "Overview"));
-        
-    LogAttribute = LogAttribute + DeliveryResult.LogAttribute;
-    If NOT DeliveryResult.Success Then
+    Response = DeliverToAppEndpoint(MainObject, "Overview");
+    If Response = Undefined Then
         Return;
     EndIf;
-        
-    Response = MainObject.ConvertResponseToMap(
-        DeliveryResult.StringResponse);  
-        
+     
     ClusterName = Response["cluster_name"];
     Erlang_version = Response["erlang_version"];
     RabbitMQVersion = Response["rabbitmq_version"];
@@ -152,16 +146,7 @@ Procedure FillConnectionsPage(MainObject)
     
     ClearConnectionsPage(); 
     
-    DeliveryResult = MainObject.DeliverMessage(Undefined, 
-        New Structure("Path", "Connections"));
-        
-    LogAttribute = LogAttribute + DeliveryResult.LogAttribute;
-    If NOT DeliveryResult.Success Then
-        Return;
-    EndIf;
-
-    Response = MainObject.ConvertResponseToMap(
-        DeliveryResult.StringResponse);
+    Response = DeliverToAppEndpoint(MainObject, "Connections");
     If TypeOf(Response) = Type("Array") Then
         FL_CommonUse.ExtendValueTableFromArray(Response, Connections);
     EndIf;
@@ -173,16 +158,7 @@ Procedure FillChannelsPage(MainObject)
     
     ClearChannelsPage(); 
     
-    DeliveryResult = MainObject.DeliverMessage(Undefined, 
-        New Structure("Path", "Channels"));
-        
-    LogAttribute = LogAttribute + DeliveryResult.LogAttribute;    
-    If NOT DeliveryResult.Success Then
-        Return;
-    EndIf;
-
-    Response = MainObject.ConvertResponseToMap(
-        DeliveryResult.StringResponse);
+    Response = DeliverToAppEndpoint(MainObject, "Channels");    
     If TypeOf(Response) <> Type("Array") Then
         Return;
     EndIf;
@@ -230,16 +206,7 @@ Procedure FillExchangesPage(MainObject)
     
     ClearExchangesPage(); 
     
-    DeliveryResult = MainObject.DeliverMessage(Undefined, 
-        New Structure("Path", "Exchanges"));
-        
-    LogAttribute = LogAttribute + DeliveryResult.LogAttribute;
-    If NOT DeliveryResult.Success Then
-        Return;
-    EndIf;
-
-    Response = MainObject.ConvertResponseToMap(
-        DeliveryResult.StringResponse);
+    Response = DeliverToAppEndpoint(MainObject, "Exchanges");
     If TypeOf(Response) = Type("Array") Then
         For Each Item In Response Do
             
@@ -267,16 +234,7 @@ Procedure FillQueuesPage(MainObject)
     
     ClearQueuesPage(); 
     
-    DeliveryResult = MainObject.DeliverMessage(Undefined, 
-        New Structure("Path", "Queues"));
-        
-    LogAttribute = LogAttribute + DeliveryResult.LogAttribute;
-    If NOT DeliveryResult.Success Then
-        Return;
-    EndIf;
-
-    Response = MainObject.ConvertResponseToMap(
-        DeliveryResult.StringResponse);
+    Response = DeliverToAppEndpoint(MainObject, "Queues");
     If TypeOf(Response) = Type("Array") Then
         For Each Item In Response Do
             
@@ -370,5 +328,25 @@ Procedure ClearQueuesPage()
     Queues.Clear();       
     
 EndProcedure // ClearQueuesPage()
+
+&AtServer
+Function DeliverToAppEndpoint(MainObject, ResourceName)
+    
+    MainObject.ChannelResources.Clear();
+    FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
+        "Path", ResourceName);
+    
+    JobResult = Catalogs.FL_Jobs.NewJobResult();
+    MainObject.DeliverMessage(Undefined, Undefined, JobResult); 
+        
+    LogAttribute = LogAttribute + JobResult.LogAttribute;
+    If NOT JobResult.Success Then
+        Return Undefined;
+    EndIf;
+    
+    BinaryData = JobResult.Output[0].Value;
+    Return MainObject.ConvertResponseToMap(BinaryData.OpenStreamForRead());
+    
+EndFunction // DeliverToAppEndpoint()
 
 #EndRegion // ServiceProceduresAndFunctions 

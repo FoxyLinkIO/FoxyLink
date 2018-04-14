@@ -38,6 +38,7 @@ Procedure LicenseAcceptedOnWrite(Source, Cancel) Export
     If NOT Source.Value Then
         Raise NStr("en='It is not possible to cancel an accepted license.';
             |ru='Невозможно аннулировать принятую лицензию.';
+            |uk='Неможливо анулювати прийняту ліцензію.';
             |en_CA='It is not possible to cancel an accepted license.'");    
     EndIf;
     
@@ -56,8 +57,7 @@ Procedure CatalogBeforeWrite(Source, Cancel) Export
         Return;
     EndIf;
         
-    ApplyInvocationData(Source, ?(Source.IsNew(), 
-        Catalogs.FL_Operations.Create, 
+    ApplyInvocation(Source, ?(Source.IsNew(), Catalogs.FL_Operations.Create, 
         Catalogs.FL_Operations.Update));
     
 EndProcedure // CatalogBeforeWrite()
@@ -77,10 +77,8 @@ Procedure CatalogBeforeDelete(Source, Cancel) Export
         Return;
     EndIf;
         
-    ApplyInvocationData(Source, Catalogs.FL_Operations.Delete);
-        
-    // Full serialization or only guid / code / description?
-    //EnqueueEvent(Source);
+    ApplyInvocation(Source, Catalogs.FL_Operations.Delete);
+    EnqueueEvent(Source);
     
 EndProcedure // CatalogBeforeDelete()
 
@@ -121,8 +119,7 @@ Procedure DocumentBeforeWrite(Source, Cancel, WriteMode, PostingMode) Export
         Return;
     EndIf;
     
-    ApplyInvocationData(Source, ?(Source.IsNew(), 
-        Catalogs.FL_Operations.Create, 
+    ApplyInvocation(Source, ?(Source.IsNew(), Catalogs.FL_Operations.Create, 
         Catalogs.FL_Operations.Update));
      
 EndProcedure // DocumentBeforeWrite()
@@ -142,10 +139,8 @@ Procedure DocumentBeforeDelete(Source, Cancel) Export
         Return;
     EndIf;
         
-    ApplyInvocationData(Source, Catalogs.FL_Operations.Delete);
-        
-    // Full serialization or only guid / code / description?
-    //EnqueueEvent(Source);
+    ApplyInvocation(Source, Catalogs.FL_Operations.Delete);
+    EnqueueEvent(Source);
     
 EndProcedure // CatalogBeforeDelete()
 
@@ -179,80 +174,45 @@ EndProcedure // DocumentOnWrite()
 //          False - the current record set is added to the database by writing. 
 //
 Procedure RegisterBeforeWrite(Source, Cancel, Replacing) Export
-    
+   
     If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
     
     SourceMetadata = Source.Metadata();
-    If NOT FL_EventsReUse.IsEventPublisher(SourceMetadata.FullName()) Then
+    EventSource = SourceMetadata.FullName();
+    If NOT Catalogs.FL_Messages.IsPublisher(EventSource) Then
         Return;    
     EndIf;
     
-    // Adding current record set to the database.
-    Operation = Catalogs.FL_Operations.Create;
-    
-    If Replacing Then
+    RecordsCount = Source.Count();
+    PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(SourceMetadata);
+    AttributeValues = FL_CommonUse.RegisterAttributeValues(SourceMetadata, 
+        Source.Filter, PrimaryKeys);
         
-        AttributeValues = FL_CommonUse.RegisterAttributeValues(
-            Source.Metadata(), Source.Filter);
-            
-        RecordsCount = Source.Count();
-        If RecordsCount > 0 AND AttributeValues.Count() > 0 Then
-            
-            // Rewriting records to the database.
-            Operation = Catalogs.FL_Operations.Update;
-            
-        ElsIf RecordsCount > 0 Then    
-            
-            // Adding current record set to the database.
-            Operation = Catalogs.FL_Operations.Create;
-            
-        Else 
-            
-            Operation = Catalogs.FL_Operations.Delete;
-            
-        EndIf; 
-        
+    // It is nothing to register, return.
+    ValuesCount = AttributeValues.Count();
+    If RecordsCount = 0 AND ValuesCount = 0 Then
+        Return;
     EndIf;
     
-    ApplyInvocationData(Source, Operation, Replacing);
+    Operation = RegisterMessageOperation(RecordsCount, ValuesCount, Replacing);
+    If NOT Catalogs.FL_Messages.IsMessagePublisher(EventSource, Operation) Then
+        Return;    
+    EndIf;
     
-    //SourceMetadata = Source.Metadata();
-    //MetadataObject = SourceMetadata.FullName();
-    //If IsEventPublisher(MetadataObject) Then
-    //    
-    //    InvocationData = FL_BackgroundJob.NewInvocationData();
-    //    InvocationData.MetadataObject = MetadataObject;
-    //    
-    //    If Replacing Then
-    //        
-    //        Records = FL_CommonUse.RegisterRecordValues(SourceMetadata, 
-    //            Source.Filter);
-    //            
-    //        InvocationData.Arguments = Records;
-    //        InvocationData.Operation = Catalogs.FL_Operations.Delete;
-    //        InvocationData.State = Catalogs.FL_States.Awaiting;
-    //        
-    //        SessionRecords = New Structure;
-    //        SessionRecords.Insert("Records", Records);
-    //        SessionRecords.Insert("Filter", Source.Filter);
-    //        
-    //        NewSessionContext = InvocationData.SessionContext.Add();
-    //        NewSessionContext.MetadataObject = MetadataObject;
-    //        NewSessionContext.Session = FL_EventsReUse.SessionHash();
-    //        NewSessionContext.ValueStorage = New ValueStorage(SessionRecords, 
-    //            New Deflation(9));
-    //        
-    //    Else
-    //        InvocationData.Operation = Catalogs.FL_Operations.Create;    
-    //    EndIf;
-    //    
-    //    Source.AdditionalProperties.Insert("InvocationData", 
-    //        InvocationData);
-    //    
-    //EndIf;    
-          
+    Invocation = Catalogs.FL_Messages.NewInvocation();
+    Invocation.EventSource = EventSource;
+    Invocation.Operation = Operation;
+    
+    // Saving invocation context.
+    If Replacing Then
+        FillRegisterContext(Invocation, PrimaryKeys, Source.Filter, 
+            AttributeValues);   
+    EndIf;
+
+    Source.AdditionalProperties.Insert("Invocation", Invocation); 
+         
 EndProcedure // RegisterBeforeWrite()
 
 // Handler of OnWrite information, accumulation register event subscription.
@@ -275,32 +235,6 @@ Procedure RegisterOnWrite(Source, Cancel, Replacing) Export
     
     EnqueueEvent(Source); 
     
-    //Properties = Source.AdditionalProperties;
-    //If NOT IsInvocationDataFilled(InvocationData, Properties) Then
-    //    Return;    
-    //EndIf;
-    //    
-    //If Replacing Then
-    //    EnqueueEvent(Source);
-    //Else
-    //    
-    //    Query = New Query;
-    //    Query.Text = "
-    //        |SELECT 
-    //        |   SessionContext.Ref AS Ref,
-    //        |   SessionContext.ValueStorage AS ValueStorage
-    //        |FROM 
-    //        |   Catalog.FL_Jobs.SessionContext AS SessionContext
-    //        |WHERE 
-    //        |    SessionContext.Session = &Session
-    //        |AND SessionContext.MetadataObject = &MetadataObject
-    //        |";
-    //    Query.SetParameter("Session", FL_EventsReUse.SessionHash());
-    //    Query.SetParameter("MetadataObject", InvocationData.MetadataObject);
-    //    QueryResult = Query.Execute();
-    //    
-    //EndIf;
-    
 EndProcedure // RegisterOnWrite()
 
 #EndRegion // ProgramInterface
@@ -312,70 +246,23 @@ EndProcedure // RegisterOnWrite()
 // Parameters:
 //  Source - Arbitrary - arbitrary object.
 //
-// Returns:
-//  Array - refs to enqueued background jobs.
-//
 Procedure EnqueueEvent(Source) Export
     
-    Var InvocationData;
+    Var Invocation;
     
     Properties = Source.AdditionalProperties;
-    If NOT IsInvocationDataFilled(InvocationData, Properties) Then
+    If NOT IsInvocationFilled(Invocation, Properties) Then
         Return;
     EndIf;
     
     // Start measuring.
-    InvocationData.CreatedAt = CurrentUniversalDateInMilliseconds();
-    FL_BackgroundJob.FillInvocationContext(Source, InvocationData); 
-
-    If InvocationData.Owner = Undefined Then
-        
-        Publishers = FL_EventsReUse.EventPublishers(InvocationData.MetadataObject, 
-            InvocationData.Operation);
-            
-    Else
-        
-        Publishers = New Array;
-        Publishers.Add(InvocationData.Owner);
-        
-    EndIf;
-
-    For Each Publisher In Publishers Do
-            
-        InvocationData.Owner = Publisher;
-        InvocationData.Priority = FL_EventsReUse.EventPriority(Publisher, 
-            InvocationData.Operation);        
-        InvocationData.Source = Source;
-        
-        FL_BackgroundJob.Enqueue(InvocationData);
-        
-    EndDo;
-      
+    Catalogs.FL_Messages.FillContext(Source, Invocation); 
+    Catalogs.FL_Messages.Create(Invocation);
+    
+    // Clear context. 
+    Properties.Delete("Invocation");
+    
 EndProcedure // EnqueueEvent()
-
-// Returns a new source mock.
-//
-// Returns:
-//  Structure - mock of source event object.
-//      * Ref                  - AnyRef     - ref to object.
-//      * Filter               - Filter     - it contains the object Filter, for
-//                                  which current filtration of records is performed.
-//      * AttributeValues      - ValueTable - value table with primary keys values.
-//      * AdditionalProperties - Structure  - additional properties.
-//          * InvocationData - Structure - see function FL_BackgroundJob.NewInvocationData.
-//
-Function NewSourceMock() Export
-    
-    SourceMock = New Structure;
-    SourceMock.Insert("Ref");
-    SourceMock.Insert("Filter");
-    SourceMock.Insert("AttributeValues");
-    SourceMock.Insert("AdditionalProperties", New Structure);
-    SourceMock.AdditionalProperties.Insert("InvocationData", 
-        FL_BackgroundJob.NewInvocationData());     
-    Return SourceMock;
-    
-EndFunction // NewSourceMock()
 
 #EndRegion // ServiceInterface
 
@@ -383,69 +270,90 @@ EndFunction // NewSourceMock()
 
 // Only for internal use.
 //
-Procedure ApplyInvocationData(Source, Operation, Replacing = False)
+Procedure ApplyInvocation(Source, Operation)
 
     SourceMetadata = Source.Metadata();
-    MetadataObject = SourceMetadata.FullName();
-    Publishers = FL_EventsReUse.EventPublishers(MetadataObject, Operation);
-    If Publishers.Count() = 0 Then
-        Return;
+    EventSource = SourceMetadata.FullName();
+    If NOT Catalogs.FL_Messages.IsMessagePublisher(EventSource, Operation) Then
+        Return;    
     EndIf;
+    
+    Invocation = Catalogs.FL_Messages.NewInvocation();
+    Invocation.EventSource = EventSource;
+    Invocation.Operation = Operation;
 
-    InvocationData = FL_BackgroundJob.NewInvocationData();
-    InvocationData.MetadataObject = MetadataObject;
-    InvocationData.Operation = Operation;
-
-    If Replacing Then
-        
-        If FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(MetadataObject) 
-            OR FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(MetadataObject) Then
-            
-            PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
-                SourceMetadata);
-            AttributeValues = FL_CommonUse.RegisterAttributeValues(
-                SourceMetadata, Source.Filter, PrimaryKeys);
-                     
-            FL_BackgroundJob.FillRegisterInvocationContext(
-                InvocationData.InvocationContext, 
-                Source.Filter, 
-                PrimaryKeys, 
-                AttributeValues);
-                
-            // Do not change this line. It is easy to break passing by reference.
-            FL_CommonUse.RemoveDuplicatesFromValueTable(
-                InvocationData.InvocationContext);
-            
-        EndIf;
-                
-    EndIf;
-
-    Source.AdditionalProperties.Insert("InvocationData", 
-        InvocationData);
+    Source.AdditionalProperties.Insert("Invocation", Invocation);
     
 EndProcedure // ApplyInvocationData()
 
 // Only for internal use.
 //
-Function IsInvocationDataFilled(InvocationData, Properties)
+Procedure FillRegisterContext(Invocation, PrimaryKeys, Filter, Values) 
+    
+    If FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(Invocation.EventSource) 
+        OR FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(Invocation.EventSource) Then
+               
+        Catalogs.FL_Messages.FillRegisterContext(Invocation.Context, Filter, 
+            PrimaryKeys, Values);
+            
+        // Do not change this line. It is easy to break passing by reference.
+        FL_CommonUse.RemoveDuplicatesFromValueTable(Invocation.Context);
         
-    If NOT Properties.Property("InvocationData", InvocationData) 
-        OR TypeOf(InvocationData) <> Type("Structure") Then
+    EndIf;
+    
+EndProcedure // FillRegisterContext()
+
+// Only for internal use.
+//
+Function RegisterMessageOperation(RecordsCount, ValuesCount, Replacing)
+    
+    Operation = Catalogs.FL_Operations.Create;    
+    If Replacing Then
+        
+        If RecordsCount > 0 AND ValuesCount > 0 Then
+            
+            // Rewriting records to the database.
+            Operation = Catalogs.FL_Operations.Update;
+            
+        ElsIf RecordsCount > 0 Then    
+            
+            // Adding current record set to the database.
+            Operation = Catalogs.FL_Operations.Create;
+            
+        Else 
+            
+            // Deleting current record set from the database.
+            Operation = Catalogs.FL_Operations.Delete;
+            
+        EndIf; 
+        
+    EndIf;
+    
+    Return Operation;
+    
+EndFunction // RegisterMessageOperation()
+
+// Only for internal use.
+//
+Function IsInvocationFilled(Invocation, Properties)
+        
+    If NOT Properties.Property("Invocation", Invocation) 
+        OR TypeOf(Invocation) <> Type("Structure") Then
         Return False;    
     EndIf;
     
-    If NOT InvocationData.Property("MetadataObject")
-        OR IsBlankString(InvocationData.MetadataObject) Then
+    If NOT Invocation.Property("EventSource")
+        OR IsBlankString(Invocation.EventSource) Then
         Return False;
     EndIf;
     
-    If NOT InvocationData.Property("Operation") 
-        OR InvocationData.Operation = Undefined Then
+    If NOT Invocation.Property("Operation") 
+        OR Invocation.Operation = Undefined Then
         Return False;
     EndIf;
     
     Return True;
     
-EndFunction // IsInvocationDataFilled()
+EndFunction // IsInvocationFilled()
 
 #EndRegion // ServiceProceduresAndFunctions

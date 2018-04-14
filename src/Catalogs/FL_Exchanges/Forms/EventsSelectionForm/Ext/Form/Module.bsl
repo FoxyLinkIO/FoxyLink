@@ -28,10 +28,6 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     EndIf;
     
     MetadataObjectArray = New Array;
-    //MetadataObjectArray.Add("ScheduledJob.FL_JobServer");
-    //MetadataObjectArray.Add("РегламентноеЗадание.FL_JobServer");
-    //MetadataObjectArray.Add("ScheduledJob.FL_RecurringServer");
-    //MetadataObjectArray.Add("РегламентноеЗадание.FL_RecurringServer");
     MetadataObjectArray.Add("Catalog.*");
     MetadataObjectArray.Add("Справочник.*");
     MetadataObjectArray.Add("Document.*");

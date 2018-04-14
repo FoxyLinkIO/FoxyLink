@@ -46,8 +46,7 @@ EndFunction // SetOfConstants()
 
 #Region HTTPInteraction
 
-// Sends data at the specified address to be processed using 
-// the specified HTTP-method.
+// Sends data at the specified address to be processed using the specified HTTP-method.
 //
 // Parameters:
 //  HTTPConnection - HTTPConnection - an object to interact with external 
@@ -55,35 +54,45 @@ EndFunction // SetOfConstants()
 //  HTTPRequest    - HTTPRequest    - describes the HTTP-requests sent using 
 //                                      the HTTPConnection object.
 //  HTTPMethod     - HTTPMethod     - HTTP method name.
-//  Result         - Structure      - see function Catalogs.FL_Channels.NewChannelDeliverResult.
+//  JobResult      - Structure      - see function Catalogs.FL_Jobs.NewJobResult.
 //
-Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, Result) Export
+Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, 
+    JobResult) Export
         
-    If Result.LogAttribute <> Undefined Then
-        LogObject = StartLogHTTPRequest(HTTPConnection, HTTPRequest, 
-            HTTPMethod);
+    If JobResult.LogAttribute <> Undefined Then
+        LogObject = StartLogHTTPRequest(HTTPConnection, HTTPRequest, HTTPMethod);
     EndIf;
 
     Try
+        
         HTTPResponse = HTTPConnection.CallHTTPMethod(HTTPMethod, HTTPRequest);
-        StatusCode = HTTPResponse.StatusCode;
-        ResponseBody = HTTPResponse.GetBodyAsString();
+        
+        Headers = HTTPResponse.Headers;
+        Payload = HTTPResponse.GetBodyAsBinaryData();
+        JobResult.StatusCode = HTTPResponse.StatusCode;
+        
+        Properties = Catalogs.FL_Exchanges.NewProperties();
+        Properties.ContentType = Headers.Get("Content-Type");
+        
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Payload", Payload);
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", Properties);    
+        
+        If JobResult.LogAttribute <> Undefined Then
+            JobResult.LogAttribute = JobResult.LogAttribute + EndLogHTTPRequest(
+                LogObject, JobResult.StatusCode, HTTPResponse.GetBodyAsString());    
+        EndIf;
+        
     Except
-        HTTPResponse = Undefined;
-        StatusCode = CodeStatusInternalServerError();
-        ResponseBody = ErrorDescription();     
+        
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+        JobResult.LogAttribute = ErrorDescription();
+        
     EndTry;
     
-    If Result.LogAttribute <> Undefined Then
-        Result.LogAttribute = Result.LogAttribute + 
-            EndLogHTTPRequest(LogObject, StatusCode, ResponseBody);    
-    EndIf;
-
-    Result.OriginalResponse = HTTPResponse;
-    Result.StatusCode = StatusCode;
-    Result.StringResponse = ResponseBody;
-    Result.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(StatusCode);
-    
+    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        JobResult.StatusCode);
+        
 EndProcedure // CallHTTPMethod()
 
 // Creates HTTPConnection object. 
@@ -489,16 +498,16 @@ Function NewPluggableSettings() Export
     
 EndFunction // NewPluggableSettings()
 
-// Returns new channel data processor for every server call.
+// Returns a new app endpoint data processor for every server call.
 //
 // Parameters:
 //  LibraryGuid - String - library guid which is used to identify 
-//                         different implementations of specific channel.
+//                         different implementations of specific app endpoint.
 //
 // Returns:
-//  DataProcessorObject.<Data processor name> - channel data processor.
+//  DataProcessorObject.<Data processor name> - app endpoint data processor.
 //
-Function NewChannelProcessor(Val LibraryGuid) Export
+Function NewAppEndpointProcessor(Val LibraryGuid) Export
     
     DataProcessorName = FL_InteriorUseReUse.IdentifyPluginProcessorName(
         LibraryGuid, "Channels");
@@ -506,12 +515,13 @@ Function NewChannelProcessor(Val LibraryGuid) Export
     If DataProcessorName = Undefined Then
         Raise NStr("en='Requested channel processor is not installed.';
             |ru='Запрашиваемый процессор канала не установлен.';
+            |uk='Запитуваний процесор каналу не встановлено.';
             |en_CA='Requested channel processor is not installed.'");    
     EndIf;    
         
     Return DataProcessors[DataProcessorName].Create();
     
-EndFunction // NewChannelProcessor()
+EndFunction // NewAppEndpointProcessor()
 
 // Returns new format data processor for every server call.
 //
@@ -556,18 +566,6 @@ EndProcedure // AdministrativeRights()
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
-
-#Region HTTPInteraction
-
-// Only for internal use.
-//
-Function CodeStatusInternalServerError()
-    
-    Return 500;
-    
-EndFunction // CodeStatusInternalServerError()
-
-#EndRegion // HTTPInteraction
 
 #Region FormInteraction
 
@@ -771,7 +769,7 @@ Procedure InitializeChannels()
     
     Try
     
-        SelfExportProcessor = NewChannelProcessor(
+        SelfExportProcessor = NewAppEndpointProcessor(
             "7fdeb371-1ad5-47e7-b1d6-f9acc55d893e");
         
         SelfExport = Catalogs.FL_Channels.SelfExport.GetObject();
@@ -794,7 +792,7 @@ Procedure InitializeChannels()
     
     Try
     
-        SelfFilesProcessor = NewChannelProcessor(
+        SelfFilesProcessor = NewAppEndpointProcessor(
             "595e752d-57f4-4398-a1cb-e6c5a6aaa65c");
         
         SelfFiles = Catalogs.FL_Channels.SelfFiles.GetObject();

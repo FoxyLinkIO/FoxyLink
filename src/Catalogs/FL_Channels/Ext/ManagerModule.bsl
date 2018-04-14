@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -20,6 +20,90 @@
 #If Server Or ThickClientOrdinaryApplication Or ExternalConnection Then
 
 #Region ProgramInterface
+
+// Returns a processing result.
+//
+// Parameters:
+//  AppProperties - Structure - see function Catalogs.FL_Channels.NewAppEndpointProperties.
+//  Payload       - Arbitrary - payload.
+//  Properties    - Structure - see function Catalogs.FL_Exchanges.NewProperties.
+//
+// Returns:
+//  Structure - see fucntion Catalogs.FL_Jobs.NewJobResult. 
+//
+Function ProcessMessage(AppProperties, Payload, Properties) Export
+    
+    JobResult = Catalogs.FL_Jobs.NewJobResult();
+                
+    Query = New Query;
+    Query.Text = QueryTextAppEndpointSettings();
+    Query.SetParameter("AppEndpoint", AppProperties.AppEndpoint);
+    QueryResult = Query.Execute();
+    If QueryResult.IsEmpty() Then
+    
+        JobResult.LogAttribute = NStr("
+            |en='Failed to load application endpoint settings.';
+            |ru='Не удалось загрузить настройки конечной точки приложения.';
+            |uk='Не вдалось завантажити налаштування кінцевої точки додатку.';
+            |en_CA='Failed to load application endpoint settings.'");
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+        JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+            JobResult.StatusCode);
+        Return JobResult;
+        
+    EndIf;
+    
+    AppEndpointSettings = QueryResult.Select();
+    AppEndpointSettings.Next();
+    If NOT AppEndpointSettings.Connected Then
+       
+        JobResult.LogAttribute = NStr("
+            |en='The endpoint is not connected to the application.';
+            |ru='Конечная точка не подключена к приложению.';
+            |uk='Кінцева точка не підключена до додатку.';
+            |en_CA='The endpoint is not connected to the application.'");
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+        JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+            JobResult.StatusCode);
+        Return JobResult;
+        
+    EndIf;
+    
+    Try
+    
+        AppEndpointProcessor = FL_InteriorUse.NewAppEndpointProcessor(
+            AppEndpointSettings.BasicChannelGuid);
+        
+        AppEndpointProcessor.Log = AppEndpointSettings.Log;
+        AppEndpointProcessor.ChannelData.Load(
+            AppEndpointSettings.ChannelData.Unload());
+        AppEndpointProcessor.ChannelResources.Load(AppProperties.AppResources);
+        AppEndpointProcessor.EncryptedData.Load(
+            AppEndpointSettings.EncryptedData.Unload());
+                    
+        AppEndpointProcessor.DeliverMessage(Payload, Properties, JobResult);      
+            
+    Except
+        
+        JobResult.LogAttribute = ErrorDescription();
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+        JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+            JobResult.StatusCode);    
+            
+        WriteLogEvent("FoxyLink.Integration.ProcessMessage", 
+            EventLogLevel.Error,
+            Metadata.Catalogs.FL_Channels,
+            ,
+            JobResult.LogAttribute);
+    
+    EndTry;
+    
+    Return JobResult;
+   
+EndFunction // ProcessMessage()
 
 // Returns available plugable channels.
 //
@@ -74,7 +158,7 @@ Function SuppliedIntegrations() Export
         
         Try
             
-            ChannelProcessor = FL_InteriorUse.NewChannelProcessor(
+            ChannelProcessor = FL_InteriorUse.NewAppEndpointProcessor(
                 Channel.Value);
             Integrations = ChannelProcessor.SuppliedIntegrations();
             For Each Integration In Integrations Do
@@ -107,7 +191,7 @@ Function ExchangeChannels() Export
     ValueList = New ValueList;
 
     Query = New Query;
-    Query.Text = QueryTextConnectedChannels();
+    Query.Text = QueryTextConnectedAppEndpoints();
     QueryResult = Query.Execute();
     If NOT QueryResult.IsEmpty() Then
         
@@ -125,30 +209,6 @@ Function ExchangeChannels() Export
     Return ValueList;
     
 EndFunction // ExchangeChannels()
-
-// Returns new delivery result structure.
-//
-// Returns:
-//  Structure - message delivery result with values:
-//      * LogAttribute     - String       - detailed log of the channel operations.
-//      * OriginalResponse - ValueStorage - original response object.
-//      * StatusCode       - Number       - state (reply) code returned by the HTTP service.
-//      * StringResponse   - String       - string response presentation.
-//      * Success          - Boolean      - shows whether delivery was successful.
-//
-Function NewChannelDeliverResult() Export
-
-    ChannelDeliveryResult = New Structure;
-    ChannelDeliveryResult.Insert("LogAttribute");
-    ChannelDeliveryResult.Insert("OriginalResponse", 
-        New ValueStorage(Undefined));
-    ChannelDeliveryResult.Insert("StatusCode");
-    ChannelDeliveryResult.Insert("StringResponse");
-    ChannelDeliveryResult.Insert("Success", False);
-
-    Return ChannelDeliveryResult;
-    
-EndFunction // ChannelDeliveryResult()
 
 // Returns a new channel parameters structure.
 //
@@ -170,7 +230,7 @@ EndFunction // ChannelDeliveryResult()
 //  
 Function NewChannelParameters(Val LibraryGuid, FormName) Export
     
-    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(LibraryGuid);      
+    ChannelProcessor = FL_InteriorUse.NewAppEndpointProcessor(LibraryGuid);      
     ChannelProcessorMetadata = ChannelProcessor.Metadata();
     
     ChannelParameters = NewChannelParametersStructure();
@@ -184,48 +244,25 @@ Function NewChannelParameters(Val LibraryGuid, FormName) Export
     
 EndFunction // NewChannelParameters()
 
-// Transfers the stream to the specified exchange channel.
-//
-// Parameters:
-//  Channel    - CatalogRef.FL_Channels - exchange channel.
-//  Stream     - Stream                 - a data stream that can be read successively 
-//                                          or/and where you can record successively. 
-//             - MemoryStream           - specialized version of Stream object for 
-//                                          operation with the data located in the RAM.
-//             - FileStream             - specialized version of Stream object for 
-//                                          operation with the data located in a file on disk.
-//  Properties - Structure              - channel properties.
-//      * Key   - String - property name.
-//      * Value - String - property value.
+// Returns a new app endpoint properties.
 //
 // Returns:
-//  Structure - the deliver result, see function Catalogs.FL_Channels.NewChannelDeliverResult.
+//  Structure - app endpoint properties with keys:
+//      * AppEndpoint  - CatalogRef.FL_Channels - reference to the app endpoint.
+//      * AppResources - ValueTable             - build from the mock app resources table. 
 //
-Function TransferStreamToChannel(Channel, Stream, Properties) Export
+Function NewAppEndpointProperties() Export
     
-    Query = New Query;
-    Query.Text = QueryTextChannelSettings();
-    Query.SetParameter("ChannelRef", Channel);
-    QueryResult = Query.Execute();
-    If QueryResult.IsEmpty() Then
-        // Error    
-    EndIf;
+    AppResources = Metadata.Catalogs.FL_Channels.TabularSections.AppResources;
     
-    ChannelSettings = QueryResult.Select();
-    ChannelSettings.Next();
-    If NOT ChannelSettings.Connected Then
-        // Error    
-    EndIf;
+    AppEndpointProperties = New Structure;
+    AppEndpointProperties.Insert("AppEndpoint");
+    AppEndpointProperties.Insert("AppResources", FL_CommonUse
+        .NewMockOfMetadataObjectAttributes(AppResources));
     
-    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(
-        ChannelSettings.BasicChannelGuid);
-    ChannelProcessor.Log = ChannelSettings.Log;
-    ChannelProcessor.ChannelData.Load(ChannelSettings.ChannelData.Unload());
-    ChannelProcessor.EncryptedData.Load(
-        ChannelSettings.EncryptedData.Unload());    
-    Return ChannelProcessor.DeliverMessage(Stream, Properties);    
+    Return AppEndpointProperties;
     
-EndFunction // TransferStreamToChannel()
+EndFunction // NewAppEndpointProperties()
 
 #EndRegion // ProgramInterface
 
@@ -247,56 +284,56 @@ EndFunction // NewChannelParametersStructure()
 
 // Only for internal use.
 // 
-Function QueryTextConnectedChannels()
+Function QueryTextConnectedAppEndpoints()
     
     QueryText = "
         |SELECT
-        |   Channels.Ref         AS Ref,
-        |   Channels.Connected   AS Connected
+        |   AppEndpoints.Ref         AS Ref,
+        |   AppEndpoints.Connected   AS Connected
         |FROM
-        |   Catalog.FL_Channels AS Channels
+        |   Catalog.FL_Channels AS AppEndpoints
         |WHERE
-        |   Channels.DeletionMark = False   
+        |   AppEndpoints.DeletionMark = False   
         |";
     Return QueryText;
     
-EndFunction // QueryTextConnectedChannels()
+EndFunction // QueryTextConnectedAppEndpoints()
 
 // Only for internal use.
 // 
-Function QueryTextChannelSettings()
+Function QueryTextAppEndpointSettings()
     
     QueryText = "
         |SELECT
-        |   Channels.Ref                AS Ref,
-        |   Channels.Description        AS Description,
+        |   AppEndpoints.Ref              AS Ref,
+        |   AppEndpoints.Description      AS Description,
         |
-        |   Channels.BasicChannelGuid   AS BasicChannelGuid,
-        |   Channels.Connected          AS Connected,
-        |   Channels.Log                AS Log,
-        |   Channels.Version            AS Version,  
+        |   AppEndpoints.BasicChannelGuid AS BasicChannelGuid,
+        |   AppEndpoints.Connected        AS Connected,
+        |   AppEndpoints.Log              AS Log,
+        |   AppEndpoints.Version          AS Version,  
         |
-        |   Channels.ChannelData.(
+        |   AppEndpoints.ChannelData.(
         |       FieldName   AS FieldName,
         |       FieldValue  AS FieldValue
         |       ) AS ChannelData,
         |   
-        |   Channels.EncryptedData.(
+        |   AppEndpoints.EncryptedData.(
         |       EncryptNumber AS EncryptNumber,
         |       FieldName     AS FieldName,
         |       FieldValue    AS FieldValue
         |       ) AS EncryptedData
         |   
         |FROM
-        |   Catalog.FL_Channels AS Channels
+        |   Catalog.FL_Channels AS AppEndpoints
         |   
         |WHERE
-        |    Channels.Ref = &ChannelRef
-        |AND Channels.DeletionMark = FALSE
+        |    AppEndpoints.Ref = &AppEndpoint
+        |AND AppEndpoints.DeletionMark = FALSE
         |";  
     Return QueryText;
     
-EndFunction // QueryTextChannelSettings()
+EndFunction // QueryTextAppEndpointSettings()
 
 #EndRegion // ServiceProceduresAndFunctions
 

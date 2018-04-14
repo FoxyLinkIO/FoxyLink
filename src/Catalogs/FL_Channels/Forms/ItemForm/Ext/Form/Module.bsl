@@ -201,7 +201,7 @@ Procedure LoadBasicChannelInfo()
 
     Items.HeaderGroupLeft.Visible = True;
     Items.HeaderPages.CurrentPage = Items.HeaderPageBasicChannel;
-    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(
+    ChannelProcessor = FL_InteriorUse.NewAppEndpointProcessor(
         Object.BasicChannelGuid);
         
     ChannelName = StrTemplate("%1 (%2)", ChannelProcessor.ChannelFullName(),
@@ -228,7 +228,7 @@ EndProcedure // LoadBasicChannelInfo()
 &AtServer
 Procedure DisconnectChannel(Val LibraryGuid)
     
-    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(LibraryGuid);
+    ChannelProcessor = FL_InteriorUse.NewAppEndpointProcessor(LibraryGuid);
     ChannelProcessor.ChannelData.Load(Object.ChannelData.Unload());
     ChannelProcessor.EncryptedData.Load(Object.EncryptedData.Unload());
     If ChannelProcessor.Disconnect() Then
@@ -259,7 +259,7 @@ EndFunction // ChannelParameters()
 &AtServerNoContext
 Function ChannelStandardLink(Val LibraryGuid) 
     
-    ChannelProcessor = FL_InteriorUse.NewChannelProcessor(LibraryGuid);     
+    ChannelProcessor = FL_InteriorUse.NewAppEndpointProcessor(LibraryGuid);     
     Return ChannelProcessor.ChannelStandardLink();
     
 EndFunction // ChannelStandardLink()

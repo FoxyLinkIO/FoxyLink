@@ -45,6 +45,13 @@
 				<xr:Object>InformationRegister.FL_JobState</xr:Object>
 				<xr:Object>Catalog.FL_Exchanges.Command.ExportExchange</xr:Object>
 				<xr:Object>Catalog.FL_Exchanges.Command.ImportExchange</xr:Object>
+				<xr:Object>Catalog.FL_Messages</xr:Object>
+				<xr:Object>InformationRegister.FL_JobContinuations</xr:Object>
+				<xr:Object>InformationRegister.FL_MessagePublishers</xr:Object>
+				<xr:Object>InformationRegister.FL_MessagePublishers.Command.EditMessagePublishers</xr:Object>
+				<xr:Object>Constant.FL_AppIdentifier</xr:Object>
+				<xr:Object>Constant.FL_MaximumMessageSize</xr:Object>
+				<xr:Object>Catalog.FL_Jobs.Command.ConfigureJobExpirationStartUp</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

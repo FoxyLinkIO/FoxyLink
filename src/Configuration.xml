@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.8.20</Version>
+			<Version>0.9.9.143</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -277,6 +277,7 @@
 			<CommonPicture>FL_ProcessingWarning</CommonPicture>
 			<CommonPicture>FL_Prototype</CommonPicture>
 			<CommonPicture>FL_Response</CommonPicture>
+			<CommonPicture>FL_Route</CommonPicture>
 			<CommonPicture>FL_Save</CommonPicture>
 			<CommonPicture>FL_SaveAndClose</CommonPicture>
 			<CommonPicture>FL_Schedule</CommonPicture>
@@ -297,7 +298,6 @@
 			<CommonModule>FL_EncryptionClientServer</CommonModule>
 			<CommonModule>FL_ErrorsClientServer</CommonModule>
 			<CommonModule>FL_Events</CommonModule>
-			<CommonModule>FL_EventsReUse</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
 			<CommonModule>FL_InteriorUseClient</CommonModule>
 			<CommonModule>FL_InteriorUseClientServer</CommonModule>
@@ -315,11 +315,15 @@
 			<EventSubscription>FL_LicenseAcceptedOnWrite</EventSubscription>
 			<EventSubscription>FL_RegistersBeforeWrite</EventSubscription>
 			<EventSubscription>FL_RegistersOnWrite</EventSubscription>
+			<ScheduledJob>FL_JobExpiration</ScheduledJob>
 			<ScheduledJob>FL_JobServer</ScheduledJob>
 			<ScheduledJob>FL_RecurringServer</ScheduledJob>
 			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
 			<FunctionalOption>FL_UseFoxyLink</FunctionalOption>
+			<Constant>FL_AppIdentifier</Constant>
+			<Constant>FL_JobExpirationTimeout</Constant>
 			<Constant>FL_LicenseAccepted</Constant>
+			<Constant>FL_MaximumMessageSize</Constant>
 			<Constant>FL_RetryAttempts</Constant>
 			<Constant>FL_UseFoxyLink</Constant>
 			<Constant>FL_WorkerCount</Constant>
@@ -327,6 +331,7 @@
 			<Catalog>FL_Channels</Catalog>
 			<Catalog>FL_Exchanges</Catalog>
 			<Catalog>FL_Jobs</Catalog>
+			<Catalog>FL_Messages</Catalog>
 			<Catalog>FL_Operations</Catalog>
 			<Catalog>FL_States</Catalog>
 			<Enum>FL_CRUDMethods</Enum>
@@ -335,9 +340,10 @@
 			<DataProcessor>FL_DataProcessorCSV</DataProcessor>
 			<DataProcessor>FL_DataProcessorJSON</DataProcessor>
 			<DataProcessor>FL_RabbitMQ</DataProcessor>
-			<DataProcessor>FL_SelfExport</DataProcessor>
 			<DataProcessor>FL_SelfFiles</DataProcessor>
+			<InformationRegister>FL_JobContinuations</InformationRegister>
 			<InformationRegister>FL_JobState</InformationRegister>
+			<InformationRegister>FL_MessagePublishers</InformationRegister>
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
 			<ExternalDataSource>DataBank</ExternalDataSource>
 		</ChildObjects>

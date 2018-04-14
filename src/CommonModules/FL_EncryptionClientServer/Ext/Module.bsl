@@ -59,5 +59,28 @@ Function FieldValue(ChannelData, FieldName) Export
         |en_CA='Value not found or duplicated.'");
     
 EndFunction // FieldValue()
+
+// Returns field value by the passed field name without exception.
+//
+// Parameters:
+//  ChannelData - FormDataCollection - collection with channel data.
+//              - ValueTable         - value table with channel data.
+//  FieldName   - String             - field name.
+//
+// Returns:
+//  String    - field value.
+//  Undefined - field value not found.
+//
+Function FieldValueNoException(ChannelData, FieldName) Export
+    
+    FilterParameters = New Structure("FieldName", FieldName);
+    FilterResult = ChannelData.FindRows(FilterParameters);
+    If FilterResult.Count() = 1 Then
+        Return FilterResult[0].FieldValue;
+    EndIf;
+    
+    Return Undefined;
+    
+EndFunction // FieldValueNoException()
    
 #EndRegion // ProgramInterface

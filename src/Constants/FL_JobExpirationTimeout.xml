@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
+	<Constant uuid="74b1a3de-1dfa-40e7-bfb9-5fb49adbde0a">
+		<InternalInfo>
+			<xr:GeneratedType name="ConstantManager.FL_JobExpirationTimeout" category="Manager">
+				<xr:TypeId>2e3219df-de35-49a9-82c2-c8d49e4f7451</xr:TypeId>
+				<xr:ValueId>de0f97e0-c951-4238-b276-8e545b290028</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="ConstantValueManager.FL_JobExpirationTimeout" category="ValueManager">
+				<xr:TypeId>8a75918a-df46-44c5-bd61-91ff910d78fa</xr:TypeId>
+				<xr:ValueId>df6d30f2-3980-40b4-b78c-46042b6d964b</xr:ValueId>
+			</xr:GeneratedType>
+		</InternalInfo>
+		<Properties>
+			<Name>FL_JobExpirationTimeout</Name>
+			<Synonym>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Job expiration timeout</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Job expiration timeout</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Тайм-аут удаления заданий</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Тайм-аут видалення завдань</v8:content>
+				</v8:item>
+			</Synonym>
+			<Comment>Retention, or expiration time is setting up only for successful and deleted jobs.</Comment>
+			<Type>
+				<v8:Type>xs:decimal</v8:Type>
+				<v8:NumberQualifiers>
+					<v8:Digits>10</v8:Digits>
+					<v8:FractionDigits>0</v8:FractionDigits>
+					<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+				</v8:NumberQualifiers>
+			</Type>
+			<UseStandardCommands>false</UseStandardCommands>
+			<DefaultForm/>
+			<ExtendedPresentation/>
+			<Explanation/>
+			<PasswordMode>false</PasswordMode>
+			<Format/>
+			<EditFormat/>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Retention, or expiration time is setting up only for successful and deleted jobs. Other job states, including the failed state, don't have any expiration time. That is why your failed jobs will be kept infinitely before you fix/retry or delete them manually.</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Retention, or expiration time is setting up only for successful and deleted jobs. Other job states, including the failed state, don't have any expiration time. That is why your failed jobs will be kept infinitely before you fix/retry or delete them manually.</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Задержка или время истечения срока действия настраиваются только для успешных и удаленных заданий. Другие состояния работы, включая несостоявшееся состояние, не имеют срока действия. Вот почему ваши неудавшиеся задания будут сохраняться бесконечно до того, как вы исправите / повторите попытку или удалите их вручную.</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Затримка або час закінчення терміну дії налаштовуються тільки для успішних і видалених завдань. Інші стани завдань, включаючи неуспішний стан, не мають терміну дії. Ось чому ваші невдалі завдання будуть зберігатися нескінченно до того, як ви виправите / спробуйте ще раз або видалите їх вручну.</v8:content>
+				</v8:item>
+			</ToolTip>
+			<MarkNegatives>false</MarkNegatives>
+			<Mask/>
+			<MultiLine>false</MultiLine>
+			<ExtendedEdit>false</ExtendedEdit>
+			<MinValue xsi:type="xs:string">86400</MinValue>
+			<MaxValue xsi:nil="true"/>
+			<FillChecking>ShowError</FillChecking>
+			<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
+			<ChoiceParameterLinks/>
+			<ChoiceParameters/>
+			<QuickChoice>DontUse</QuickChoice>
+			<ChoiceForm/>
+			<LinkByType/>
+			<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
+			<DataLockControlMode>Managed</DataLockControlMode>
+		</Properties>
+	</Constant>
+</MetaDataObject>

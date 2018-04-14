@@ -21,6 +21,10 @@
 
 // Returns a new file properties structure.
 //
+// Parameters:
+//  FileName - String - full name of the file or directory which is linked to the object to be created.
+//                  Default value: Undefined.
+//
 // Returns:
 //  Structure - with keys:
 //      * Name                - String  - the name of the file.
@@ -36,7 +40,7 @@
 //      * ReadOnly            - Boolean - indicates that the "Read only" attribute is set for the file.
 //      * Hidden              - Boolean - indicates that the "Hidden" attribute is set for the file.
 //
-Function NewFileProperties() Export
+Function NewFileProperties(FileName = Undefined) Export
     
     FileProperties = New Structure;
     FileProperties.Insert("Name");      // "FileName.json"
@@ -51,6 +55,24 @@ Function NewFileProperties() Export
     FileProperties.Insert("ModificationTimeUTC");
     FileProperties.Insert("ReadOnly");
     FileProperties.Insert("Hidden");
+    
+    If FileName <> Undefined Then
+        
+        File = New File(FileName);
+        FileProperties.Name                = File.Name;    
+        FileProperties.BaseName            = File.BaseName; 
+        FileProperties.FullName            = File.FullName; 
+        FileProperties.Extension           = File.Extension; 
+        FileProperties.Path                = File.Path;      
+        FileProperties.Size                = File.Size();      
+        FileProperties.IsFile              = File.IsFile();
+        FileProperties.ModificationTime    = File.GetModificationTime();
+        FileProperties.ModificationTimeUTC = File.GetModificationUniversalTime();
+        FileProperties.ReadOnly            = File.GetReadOnly();
+        FileProperties.Hidden              = File.GetHidden();
+        
+    EndIf;
+    
     Return FileProperties;
     
 EndFunction // NewFileProperties()

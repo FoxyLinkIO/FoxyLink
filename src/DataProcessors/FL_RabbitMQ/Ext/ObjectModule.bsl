@@ -70,42 +70,47 @@ EndFunction // ChannelFullName()
 
 #Region ProgramInterface
 
-// Delivers a stream object to the current channel.
+// Delivers a data object to the RabbitMQ application.
 //
 // Parameters:
-//  Stream         - Stream       - a data stream that can be read successively 
-//                              or/and where you can record successively. 
-//                 - MemoryStream - specialized version of Stream object for 
-//                              operation with the data located in the RAM.
-//                 - FileStream   - specialized version of Stream object for 
-//                              operation with the data located in a file on disk.
-//  Properties     - Structure    - channel parameters.
+//  Payload    - Arbitrary - the data that can be read successively and 
+//                               delivered to RabbitMQ.
+//  Properties - Structure - RabbitMQ resources and message parameters.
+//  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
-// Returns:
-//  Structure - see function Catalogs.FL_Channels.NewChannelDeliverResult.
-//
-Function DeliverMessage(Stream, Properties) Export
+Procedure DeliverMessage(Payload, Properties, JobResult) Export
     
-    Var HTTPMethod, HTTPRequest;
+    Path = FL_EncryptionClientServer.FieldValue(ChannelResources, "Path");
     
-    DeliveryResult = Catalogs.FL_Channels.NewChannelDeliverResult();    
-    If TypeOf(Properties) <> Type("Structure") Then   
-        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "Properties", Properties, Type("Structure"));
+    HTTPMethod = "GET";
+    If Path = "PublishToExchange" Then
+        
+        HTTPMethod = "POST";
+        HTTPRequest = ExchangePublish(NewPublishToExchangePayload(Payload, 
+            Properties));
+            
+    ElsIf Path = "Overview" Then
+        HTTPRequest = Overview();
+    ElsIf Path = "Connections" Then
+        HTTPRequest = Connections();
+    ElsIf Path = "Channels" Then
+        HTTPRequest = Channels();
+    ElsIf Path = "Exchanges" Then
+        HTTPRequest = Exchanges();
+    ElsIf Path = "Queues" Then
+        HTTPRequest = Queues();
+    ElsIf Path = "Aliveness" Then
+        HTTPRequest = Aliveness();
     EndIf;
         
-    ProcessProperties(Properties, HTTPMethod, HTTPRequest);
-    
     If Log Then
-        DeliveryResult.LogAttribute = "";     
+        JobResult.LogAttribute = "";     
     EndIf;
     
-    FL_InteriorUse.CallHTTPMethod(NewHTTPConnection(), HTTPRequest, 
-        HTTPMethod, DeliveryResult);
-        
-    Return DeliveryResult;
-    
-EndFunction // DeliverMessage() 
+    FL_InteriorUse.CallHTTPMethod(NewHTTPConnection(), HTTPRequest, HTTPMethod, 
+        JobResult);
+            
+EndProcedure // DeliverMessage() 
 
 // Invalidates the channel data. 
 //
@@ -157,18 +162,18 @@ EndFunction // SuppliedIntegration()
 
 #Region ServiceInterface
 
-// Converts a JSON string into Map or Array object.
+// Converts a JSON stream into Map or Array object.
 //
 // Parameters:
-//  ResponseBody - String - JSON string to be converted.  
+//  Stream - Stream - JSON stream to be read and converted.  
 //
 // Returns:
 //  Map, Array - converted object.
 //
-Function ConvertResponseToMap(ResponseBody) Export
+Function ConvertResponseToMap(Stream) Export
     
     JSONReader = New JSONReader;
-    JSONReader.SetString(ResponseBody);
+    JSONReader.OpenStream(Stream);
     Response = ReadJSON(JSONReader, True);
     JSONReader.Close();
     Return Response; 
@@ -183,12 +188,12 @@ EndFunction // ConvertResponseToMap()
 
 // Only for internal use.
 //
-Function OverviewHTTPRequest()
+Function Overview()
     
     Return FL_InteriorUse.NewHTTPRequest("/api/overview", 
         NewHTTPRequestHeaders());
      
-EndFunction // OverviewHTTPRequest()
+EndFunction // Overview()
 
 #EndRegion // Overview
 
@@ -196,12 +201,12 @@ EndFunction // OverviewHTTPRequest()
 
 // Only for internal use.
 //
-Function ConnectionsHTTPRequest()
+Function Connections()
     
     Return FL_InteriorUse.NewHTTPRequest("/api/connections", 
         NewHTTPRequestHeaders());
      
-EndFunction // OverviewHTTPRequest()
+EndFunction // Connections()
     
 #EndRegion // Connections 
 
@@ -209,12 +214,12 @@ EndFunction // OverviewHTTPRequest()
 
 // Only for internal use.
 //
-Function ChannelsHTTPRequest()
+Function Channels()
     
     Return FL_InteriorUse.NewHTTPRequest("/api/channels", 
         NewHTTPRequestHeaders());
      
-EndFunction // ChannelsHTTPRequest()
+EndFunction // Channels()
 
 #EndRegion // Channels
 
@@ -224,46 +229,86 @@ EndFunction // ChannelsHTTPRequest()
 //
 Procedure ProcessMessageProperties(JSONWriter, Properties)
     
-    JobProperties = Properties.JobProperties;
-    DeliveryMode = ?(Properties.PropDeliveryMode = "non-persistent", 1, 2);
-    
-    Attributes = FL_CommonUse.ObjectAttributesValues(JobProperties.Job, 
-        "Code, CreatedAt, MetadataObject, Operation"); 
-    
     // Properties
     JSONWriter.WritePropertyName("properties");
     JSONWriter.WriteStartObject();
     
-        // Non-persistent (1) or persistent (2). 
-        JSONWriter.WritePropertyName("delivery_mode");
-        JSONWriter.WriteValue(DeliveryMode);
+        // Identifier of the application that produced the message. 
+        JSONWriter.WritePropertyName("app_id");
+        JSONWriter.WriteValue(Properties.AppId);
+        
+        // Non-persistent (1) or persistent (2).
+        PropDeliveryMode = FL_EncryptionClientServer.FieldValueNoException(
+            ChannelResources, "PropDeliveryMode");
+        If ValueIsFilled(PropDeliveryMode) Then    
+            JSONWriter.WritePropertyName("delivery_mode");
+            JSONWriter.WriteValue(?(PropDeliveryMode = "non-persistent", 1, 2));
+        EndIf;
 
         // MIME content type. 
         JSONWriter.WritePropertyName("content_type");
-        JSONWriter.WriteValue(JobProperties.ContentType);
+        JSONWriter.WriteValue(Properties.ContentType);
     
         // MIME content encoding. 
         JSONWriter.WritePropertyName("content_encoding");
-        JSONWriter.WriteValue(JobProperties.ContentEncoding);
-    
+        JSONWriter.WriteValue(Properties.ContentEncoding);
+        
+        // Expiration time after which the message will be deleted.
+        PropExpiration = FL_EncryptionClientServer.FieldValueNoException(
+            ChannelResources, "PropExpiration");
+        If ValueIsFilled(PropExpiration) Then
+            JSONWriter.WritePropertyName("expiration");
+            JSONWriter.WriteValue(PropExpiration);
+        EndIf;
+        
         // Application message identifier.
         JSONWriter.WritePropertyName("message_id");
-        JSONWriter.WriteValue(Format(Attributes.Code, "NG=0"));
+        JSONWriter.WriteValue(Properties.MessageId);
+        
+        // Message priority.
+        PropPriority = FL_EncryptionClientServer.FieldValueNoException(
+            ChannelResources, "PropPriority");
+        If ValueIsFilled(PropPriority) Then
+            JSONWriter.WritePropertyName("priority");
+            JSONWriter.WriteValue(Number(PropPriority));
+        EndIf;
+        
+        // Message type.
+        PropType = FL_EncryptionClientServer.FieldValueNoException(
+            ChannelResources, "PropType");
+        If ValueIsFilled(PropType) Then
+            JSONWriter.WritePropertyName("type");
+            JSONWriter.WriteValue(PropType);
+        EndIf;
     
         // Message timestamp.
         JSONWriter.WritePropertyName("timestamp");
-        JSONWriter.WriteValue(Attributes.CreatedAt);
-    
+        JSONWriter.WriteValue(Properties.Timestamp);
+        
+        // Optional user ID.
+        PropUserId = FL_EncryptionClientServer.FieldValueNoException(
+            ChannelResources, "PropUserId");
+        If ValueIsFilled(PropUserId) Then
+            JSONWriter.WritePropertyName("user_id");
+            JSONWriter.WriteValue(PropUserId);
+        EndIf;
+        
         JSONWriter.WritePropertyName("headers");
         JSONWriter.WriteStartObject();
-    
-            // Provides access to the metadata object name.
-            JSONWriter.WritePropertyName("MetadataObject");
-            JSONWriter.WriteValue(Attributes.MetadataObject);
-    
-            // The type of change experienced.
+        
+            // Provides access to the event source name.
+            JSONWriter.WritePropertyName("EventSource");
+            JSONWriter.WriteValue(Properties.EventSource);
+            
+            JSONWriter.WritePropertyName("FileExtension");
+            JSONWriter.WriteValue(Properties.FileExtension);
+
             JSONWriter.WritePropertyName("Operation");
-            JSONWriter.WriteValue(String(Attributes.Operation));
+            JSONWriter.WriteValue(String(Properties.Operation));
+            
+            // The user id of change experienced.
+            JSONWriter.WritePropertyName("UserId");
+            JSONWriter.WriteValue(Properties.UserId);
 
         JSONWriter.WriteEndObject();
     
@@ -273,16 +318,45 @@ EndProcedure // ProcessMessageProperties()
 
 // Only for internal use.
 //
-Function ExchangesHTTPRequest()
+Function ExchangePublish(Payload)
+    
+    Exchange = FL_EncryptionClientServer.FieldValue(ChannelResources, 
+        "Exchange");
+    If NOT ValueIsFilled(Exchange) Then
+        Exchange = "amq.default";
+    EndIf;
+    
+    VirtualHost = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "VirtualHost");
+    If NOT ValueIsFilled(VirtualHost) Then
+        VirtualHost = "%2F";
+    EndIf;
+    
+    ResourceAddress = StrTemplate("/api/exchanges/%1/%2/publish", VirtualHost, 
+        Exchange);
+    
+    Return FL_InteriorUse.NewHTTPRequest(ResourceAddress, 
+        NewHTTPRequestHeaders(), Payload);    
+    
+EndFunction // ExchangePublish()
+
+// Only for internal use.
+//
+Function Exchanges()
     
     Return FL_InteriorUse.NewHTTPRequest("/api/exchanges", 
         NewHTTPRequestHeaders());
     
-EndFunction // ExchangesHTTPRequest()
+EndFunction // Exchanges()
 
 // Only for internal use.
 //
-Function NewPublishToExchangePayload(Properties)
+Function NewPublishToExchangePayload(Payload, Properties)
+    
+    RoutingKey = FL_EncryptionClientServer.FieldValue(ChannelResources, 
+        "RoutingKey");
+    PayloadEncoding = FL_EncryptionClientServer.FieldValue(ChannelResources, 
+        "PayloadEncoding");
     
     JSONWriter = New JSONWriter;
     MemoryStream = New MemoryStream;
@@ -292,22 +366,17 @@ Function NewPublishToExchangePayload(Properties)
     
     // Routing key.
     JSONWriter.WritePropertyName("routing_key");
-    JSONWriter.WriteValue(Properties.RoutingKey);
+    JSONWriter.WriteValue(RoutingKey);
     
     // Payload encoding.
     JSONWriter.WritePropertyName("payload_encoding");
-    JSONWriter.WriteValue(Properties.PayloadEncoding);
-    
-    // Payload.
-    DataReader = New DataReader(Properties.JobProperties.ReadonlyStream);
-    BinaryData = DataReader.Read().GetBinaryData();
-    DataReader.Close();
+    JSONWriter.WriteValue(PayloadEncoding);
     
     JSONWriter.WritePropertyName("payload");
-    If Properties.PayloadEncoding = "string" Then
-        JSONWriter.WriteValue(GetStringFromBinaryData(BinaryData));    
+    If PayloadEncoding = "string" Then
+        JSONWriter.WriteValue(GetStringFromBinaryData(Payload));    
     Else
-        JSONWriter.WriteValue(Base64String(BinaryData));
+        JSONWriter.WriteValue(Base64String(Payload));
     EndIf;
         
     ProcessMessageProperties(JSONWriter, Properties);
@@ -325,12 +394,12 @@ EndFunction // NewPublishToExchangePayload()
 
 // Only for internal use.
 //
-Function QueuesHTTPRequest()
+Function Queues()
     
     Return FL_InteriorUse.NewHTTPRequest("/api/queues", 
         NewHTTPRequestHeaders());
     
-EndFunction // ExchangesHTTPRequest()
+EndFunction // Queues()
 
 #EndRegion // Queues
 
@@ -338,55 +407,23 @@ EndFunction // ExchangesHTTPRequest()
 
 // Only for internal use.
 //
-Function AlivenessHTTPRequest(VirtualHost)
+Function Aliveness()
     
-    Return FL_InteriorUse.NewHTTPRequest(StrTemplate("/api/aliveness-test/%1", 
-            VirtualHost), 
+    VirtualHost = FL_EncryptionClientServer.FieldValue(ChannelResources, 
+        "VirtualHost");
+    
+    If NOT ValueIsFilled(VirtualHost) Then
+        VirtualHost = "%2F";
+    EndIf;
+    
+    ResourceAddress = StrTemplate("/api/aliveness-test/%1", VirtualHost);
+    
+    Return FL_InteriorUse.NewHTTPRequest(ResourceAddress, 
         NewHTTPRequestHeaders());
     
-EndFunction // AlivenessHTTPRequest()
+EndFunction // Aliveness()
 
 #EndRegion // Aliveness 
-
-// Only for internal use.
-//
-Procedure ProcessProperties(Properties, HTTPMethod, HTTPRequest)
-    
-    HTTPMethod = "GET";
-    If Properties.Path = "PublishToExchange" Then
-        
-        HTTPMethod = "POST";     
-        HTTPRequest = FL_InteriorUse.NewHTTPRequest(Properties.ResourceAddress,  
-            NewHTTPRequestHeaders(), NewPublishToExchangePayload(Properties));
-        
-    ElsIf Properties.Path = "Overview" Then
-        
-        HTTPRequest = OverviewHTTPRequest();
-        
-    ElsIf Properties.Path = "Connections" Then
-        
-        HTTPRequest = ConnectionsHTTPRequest();
-        
-    ElsIf Properties.Path = "Channels" Then
-        
-        HTTPRequest = ChannelsHTTPRequest();
-        
-    ElsIf Properties.Path = "Exchanges" Then
-        
-        HTTPRequest = ExchangesHTTPRequest();
-        
-    ElsIf Properties.Path = "Queues" Then
-        
-        HTTPRequest = QueuesHTTPRequest();
-        
-    ElsIf Properties.Path = "Aliveness" Then
-        
-        VirtualHost = Properties.VirtualHost;
-        HTTPRequest = AlivenessHTTPRequest(VirtualHost);
-        
-    EndIf;    
-    
-EndProcedure // ProcessProperties()
 
 // Only for internal use.
 //
@@ -419,7 +456,7 @@ EndFunction // NewHTTPRequestHeaders()
 //
 Function Version() Export
     
-    Return "1.0.5";
+    Return "1.1.36";
     
 EndFunction // Version()
 

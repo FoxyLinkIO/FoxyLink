@@ -58,31 +58,6 @@ Procedure StopJobServer() Export
             
 EndProcedure // StopJobServer()
 
-// Runs an expiration manager task.
-//
-// Parameters:
-//  BackgroundJob - BackgroundJob - the expiration manager task.
-//
-Procedure RunExpirationManager(BackgroundJob) Export
-    
-    If TypeOf(BackgroundJob) = Type("BackgroundJob") Then
-        
-        BackgroundJob = BackgroundJobByUUID(BackgroundJob.UUID);
-        If BackgroundJob <> Undefined
-            AND TypeOf(BackgroundJob) = Type("BackgroundJob")
-            AND BackgroundJob.State = BackgroundJobState.Active Then 
-            Return;      
-        EndIf;
-        
-    EndIf; 
-    
-    Task = FL_Tasks.NewTask();
-    Task.MethodName = "FL_JobServer.ExpirationManagerAction";
-    Task.Description = "Expiration manager task (FL)";
-    BackgroundJob = FL_Tasks.Run(Task);
-
-EndProcedure // RunExpirationManager()
-
 // Returns registered or register the job server in the current infobase.
 // 
 // Returns:
@@ -176,6 +151,8 @@ EndFunction // ScheduledJob()
 //
 Procedure JobServerAction() Export
     
+    Catalogs.FL_Messages.Route();
+    
     RetryJobs = NewRetryTable();
     ProcessingJobs = NewProcessingTable();
     
@@ -184,57 +161,40 @@ Procedure JobServerAction() Export
     PopJobServerState(WorkerCount, ProcessingJobs, RetryJobs);
     ClearJobServerState();
     PushJobServerState(WorkerCount, ProcessingJobs, RetryJobs);
-    
-    //While True Do
-    
-    // Read Jobs 
-    
-    // Renew queue state.
-    //
-    // Read from register 
-    // check jobs
         
-        // Sleep function.
-        //StartDate = CurrentUniversalDate();
-        //EndDate = StartDate + 60;
-        //While EndDate > StartDate Do
-        //    StartDate = CurrentUniversalDate();    
-        //EndDo;
-        
-    //RunExpirationManager(ExpirationManagerTask);
-         
-    //EndDo;
-    
 EndProcedure // JobServerAction()
 
-// Default ExpirationManager action.
+// Default ExpirationManager action. 
 //
-// Parameters:
-//  NumberOfRecordsInSinglePass - Number - number of records to be processed 
-//                                          during this action execution. 
-//
-Procedure ExpirationManagerAction(NumberOfRecordsInSinglePass = 1000) Export
+Procedure JobExpirationAction() Export
     
     Query = New Query;
-    Query.Text = QueryTextExpiredJobs(NumberOfRecordsInSinglePass);    
+    Query.Text = QueryTextExpiredJobs();
+    Query.SetParameter("CurrentUTCTime", CurrentUniversalDateInMilliseconds()); 
     QueryResult = Query.Execute();
     If NOT QueryResult.IsEmpty() Then
         
         QueryResultSelection = QueryResult.Select();
         While QueryResultSelection.Next() Do
             
-            JobObject = QueryResultSelection.BackgroundJob.GetObject(); 
             Try 
+                JobObject = QueryResultSelection.Job.GetObject(); 
                 JobObject.Delete();
             Except
-                // TODO: Process exception    
+               
+                WriteLogEvent("FoxyLink.Tasks.JobExpirationAction", 
+                    EventLogLevel.Error,
+                    Metadata.ScheduledJobs.FL_JobExpiration,
+                    ,
+                    ErrorDescription());
+                
             EndTry;
             
         EndDo;
         
     EndIf;
     
-EndProcedure // ExpirationManagerAction()
+EndProcedure // JobExpirationAction()
 
 #EndRegion // Actions
 
@@ -673,7 +633,7 @@ Function QueryTextEnqueuedJobs(WorkerCount)
         |AND Jobs.Ref NOT IN (Select Job From TasksHeartbeatCache)
         |
         |ORDER BY
-        |   Jobs.Priority ASC   
+        |   Jobs.Priority, Jobs.Code ASC   
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////
@@ -694,9 +654,9 @@ EndFunction // QueryTextEnqueuedJobs()
  
 // Only for internal use.
 //
-Function QueryTextExpiredJobs(NumberOfRecordsInSinglePass)
+Function QueryTextExpiredJobs()
     
-    QueryText = StrTemplate("
+    QueryText = "
         |SELECT
         |   States.Ref AS State   
         |INTO StatesCache
@@ -708,7 +668,7 @@ Function QueryTextExpiredJobs(NumberOfRecordsInSinglePass)
         |
         |UNION ALL
         |
-        |Select
+        |SELECT
         |   Value(Catalog.FL_States.EmptyRef)
         |
         |INDEX BY
@@ -716,20 +676,22 @@ Function QueryTextExpiredJobs(NumberOfRecordsInSinglePass)
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////
-        |SELECT TOP %1
-        |   BackgroundJobs.Ref AS BackgroundJob        
+        |SELECT 
+        |   Jobs.Ref AS Job        
         |FROM
-        |   Catalog.FL_Jobs AS BackgroundJobs
+        |   Catalog.FL_Jobs AS Jobs
         |
         |INNER JOIN StatesCache AS States
-        |ON States.State = BackgroundJobs.State 
-        |   
+        |ON States.State = Jobs.State
+        |
+        |WHERE
+        |   Jobs.ExpireAt < &CurrentUTCTime   
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////
         |DROP StatesCache
         |;
-        |", Format(NumberOfRecordsInSinglePass, "NG=0"));  
+        |";  
     Return QueryText;
     
 EndFunction // QueryTextExpiredJobs()

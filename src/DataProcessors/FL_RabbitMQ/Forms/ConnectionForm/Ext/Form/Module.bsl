@@ -80,19 +80,32 @@ Procedure ConnectToRabbitMQAtServer()
     
     MainObject = FormAttributeToValue("Object");
     MainObject.ChannelData.Clear();
+    MainObject.ChannelResources.Clear();
     
-    NewRow = MainObject.ChannelData.Add();
-    NewRow.FieldName = "StringURI";
-    NewRow.FieldValue = FL_CommonUseClientServer.StringURI(URIStructure);
+    FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelData, 
+        "StringURI", FL_CommonUseClientServer.StringURI(URIStructure));
+    FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
+        "Path", "Aliveness");
+    FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
+        "VirtualHost", VirtualHost);    
     
-    DeliveryResult = MainObject.DeliverMessage(Undefined, New Structure(
-        "Path, VirtualHost", "Aliveness", VirtualHost));
+    JobResult = Catalogs.FL_Jobs.NewJobResult();
+    MainObject.DeliverMessage(Undefined, Undefined, JobResult);
     
-    LogAttribute = LogAttribute + DeliveryResult.LogAttribute;
+    LogAttribute = LogAttribute + JobResult.LogAttribute;
     
-    If DeliveryResult.Success 
-        AND DeliveryResult.StringResponse = "{""status"":""ok""}" Then
-        ValueToFormAttribute(MainObject.ChannelData, "Object.ChannelData");    
+    If JobResult.Success Then
+        
+        BinaryData = JobResult.Output[0].Value;
+        Response = MainObject.ConvertResponseToMap(
+            BinaryData.OpenStreamForRead());
+        If TypeOf(Response) = Type("Map")
+            AND TypeOf(Response.Get("status")) = Type("String")
+            AND Upper(Response.Get("status")) = "OK" Then
+            
+            ValueToFormAttribute(MainObject.ChannelData, "Object.ChannelData");
+            
+        EndIf;
     EndIf;
         
 EndProcedure // ConnectToRabbitMQAtServer()
