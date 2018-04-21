@@ -93,6 +93,19 @@ Procedure UpdateOperationsView(ManagedForm) Export
     
 EndProcedure // UpdateOperationsView()
 
+// Updates operations view on managed form.
+//
+// Parameters:
+//  ManagedForm - ManagedForm              - catalog form.
+//  Operation   - CatalogRef.FL_Operations - an operation for updating catalog form. 
+//
+Procedure UpdateOperationView(ManagedForm, Operation) Export
+    
+    Items = ManagedForm.Items;
+    Operations = ManagedForm.Object.Operations;
+    
+EndProcedure // UpdateOperationView() 
+
 // Helps to save untracked changes in catalog form.
 //
 // Parameters:
@@ -449,6 +462,36 @@ Function NewProperties() Export
     Return Properties;
     
 EndFunction // NewProperties()
+
+// Returns the external event handler info structure for this module.
+//
+// Returns:
+//  Structure - see function FL_InteriorUse.NewExternalEventHandlerInfo.
+//
+Function EventHandlerInfo() Export
+    
+    EventHandlerInfo = FL_InteriorUse.NewExternalEventHandlerInfo();
+    EventHandlerInfo.EventHandler = "Catalog.FL_Exchanges";
+    EventHandlerInfo.Version = "0.9.9.177";
+    EventHandlerInfo.Description = StrTemplate(NStr("
+            |en='Standard event handler, ver. %1.';
+            |ru='Стандартный обработчик событий, вер. %1.';
+            |uk='Стандартний обробник подій, вер. %1.';
+            |en_CA='Standard event handler, ver. %1.'", 
+        EventHandlerInfo.Version));
+            
+    EventHandlerInfo.Publishers.Add("Catalog.*");
+    EventHandlerInfo.Publishers.Add("Справочник.*");
+    EventHandlerInfo.Publishers.Add("Document.*");
+    EventHandlerInfo.Publishers.Add("Документ.*");
+    EventHandlerInfo.Publishers.Add("InformationRegister.*");
+    EventHandlerInfo.Publishers.Add("РегистрСведений.*");
+    EventHandlerInfo.Publishers.Add("AccumulationRegister.*");
+    EventHandlerInfo.Publishers.Add("РегистрНакопления.*");
+        
+    Return EventHandlerInfo;
+    
+EndFunction // EventHandlerInfo()
 
 #EndRegion // ServiceInterface
 

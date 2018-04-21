@@ -1173,6 +1173,35 @@ Function MetadataObjectNameByManagerName(ManagerName) Export
     
 EndFunction // MetadataObjectNameByManagerName()
 
+// Returns a reference to the common or manager module by the provided module name.
+//
+// Parameters:
+//  ModuleName - String - common module or manager module name.
+//
+// Returns:
+//  CommonModule - reference to the common module. 
+//  <Type>Manager.<Object name> - reference to the manager module.
+//
+Function CommonModule(Val ModuleName) Export
+
+    Module = Undefined;
+    If Metadata.CommonModules.Find(ModuleName) <> Undefined Then
+        Module = FL_RunInSafeMode.EvalInSafeMode(ModuleName);
+    ElsIf StrOccurrenceCount(ModuleName, ".") > 0 Then
+        Return ObjectManagerByFullName(ModuleName);
+    EndIf;
+
+    If TypeOf(Module) <> Type("CommonModule") Then
+        Raise StrTemplate(NStr("en='Common module {%1} is not found.';
+            |ru='Общий модуль {%1} не найден.';
+            |uk='Загальний модуль {%1} не знайдено.';
+            |en_CA='Common module {%1} is not found.'"), ModuleName);
+    EndIf;
+
+    Return Module;
+
+EndFunction // CommonModule()
+
 // Returns the object manager by a full metadata object name.
 //
 // Parameters:
@@ -1184,89 +1213,75 @@ EndFunction // MetadataObjectNameByManagerName()
 //
 Function ObjectManagerByFullName(FullName) Export
     
+    ManagerMap = New Map;
+    If FL_CommonUseReUse.IsReferenceTypeObjectCached(FullName) Then
+        
+        ManagerMap.Insert("EXCHANGEPLAN", ExchangePlans);
+        ManagerMap.Insert("ПЛАНОБМЕНА", ExchangePlans);
+        ManagerMap.Insert("CATALOG", Catalogs);
+        ManagerMap.Insert("СПРАВОЧНИК", Catalogs);
+        ManagerMap.Insert("DOCUMENT", Documents);
+        ManagerMap.Insert("ДОКУМЕНТ", Documents);
+        ManagerMap.Insert("ENUM", Enums);
+        ManagerMap.Insert("ПЕРЕЧИСЛЕНИЕ", Enums);
+        ManagerMap.Insert("CHARTOFCHARACTERISTICTYPES", ChartsOfCharacteristicTypes);
+        ManagerMap.Insert("ПЛАНВИДОВХАРАКТЕРИСТИК", ChartsOfCharacteristicTypes);
+        ManagerMap.Insert("CHARTOFACCOUNTS", ChartsOfAccounts);
+        ManagerMap.Insert("ПЛАНСЧЕТОВ", ChartsOfAccounts);
+        ManagerMap.Insert("CHARTOFCALCULATIONTYPES", ChartsOfCalculationTypes);
+        ManagerMap.Insert("ПЛАНВИДОВРАСЧЕТА", ChartsOfCalculationTypes);
+        ManagerMap.Insert("BUSINESSPROCESS", BusinessProcesses);
+        ManagerMap.Insert("БИЗНЕСПРОЦЕСС", BusinessProcesses);
+        ManagerMap.Insert("TASK", Tasks);
+        ManagerMap.Insert("ЗАДАЧА", Tasks);
+
+    ElsIf FL_CommonUseReUse.IsRegisterTypeObjectCached(FullName) Then    
+        
+        ManagerMap.Insert("INFORMATIONREGISTER", InformationRegisters);
+        ManagerMap.Insert("РЕГИСТРСВЕДЕНИЙ", InformationRegisters);
+        ManagerMap.Insert("ACCUMULATIONREGISTER", AccumulationRegisters);
+        ManagerMap.Insert("РЕГИСТРНАКОПЛЕНИЯ", AccumulationRegisters);
+        ManagerMap.Insert("ACCOUNTINGREGISTER", AccountingRegisters);
+        ManagerMap.Insert("РЕГИСТРБУХГАЛТЕРИИ", AccountingRegisters);
+        ManagerMap.Insert("CALCULATIONREGISTER", CalculationRegisters);
+        ManagerMap.Insert("РЕГИСТРРАСЧЕТА", CalculationRegisters);
+        
+    Else
+        
+        ManagerMap.Insert("DOCUMENTJOURNAL", DocumentJournals);
+        ManagerMap.Insert("ЖУРНАЛДОКУМЕНТОВ", DocumentJournals);
+        ManagerMap.Insert("REPORT", Reports);
+        ManagerMap.Insert("ОТЧЕТ", Reports);
+        ManagerMap.Insert("DATAPROCESSOR", DataProcessors);
+        ManagerMap.Insert("ОБРАБОТКА", DataProcessors);
+        ManagerMap.Insert("CONSTANT", Constants);
+        ManagerMap.Insert("КОНСТАНТА", Constants);
+        ManagerMap.Insert("SEQUENCE", Sequences);
+        ManagerMap.Insert("ПОСЛЕДОВАТЕЛЬНОСТЬ", Sequences);
+        
+    EndIf;
+     
+    MetaObjectTypeIndex = 0;
+    MetaObjectNameIndex = 1;
     Parts = StrSplit(FullName, ".");
-    If Parts.Count() >= 2 Then
-        MOType = Upper(Parts[0]);
-        MOName = Parts[1];
+    
+    TwoNameParts = 2;
+    If Parts.Count() >= TwoNameParts Then
+        MetaObjectType = Upper(Parts[MetaObjectTypeIndex]);
+        MetaObjectName = Parts[MetaObjectNameIndex];
     EndIf;
     
-    If MOType = "EXCHANGEPLAN" 
-        Or MOType = "ПЛАНОБМЕНА" Then
-        Manager = ExchangePlans;
-    ElsIf MOType = "CATALOG"    
-        Or MOType = "СПРАВОЧНИК" Then
-        Manager = Catalogs;
-    ElsIf MOType = "DOCUMENT" 
-        Or MOType = "ДОКУМЕНТ" Then
-        Manager = Documents;
-    ElsIf MOType = "DOCUMENTJOURNAL" 
-        Or MOType = "ЖУРНАЛДОКУМЕНТОВ" Then
-        Manager = DocumentJournals;
-    ElsIf MOType = "ENUM" 
-        Or MOType = "ПЕРЕЧИСЛЕНИЕ" Then
-        Manager = Enums;
-    ElsIf MOType = "REPORT" 
-        Or MOType = "ОТЧЕТ" Then
-        Manager = Reports;
-    ElsIf MOType = "DATAPROCESSOR" 
-        Or MOType = "ОБРАБОТКА" Then
-        Manager = DataProcessors;
-    ElsIf MOType = "CHARTOFCHARACTERISTICTYPES" 
-        Or MOType = "ПЛАНВИДОВХАРАКТЕРИСТИК" Then
-        Manager = ChartsOfCharacteristicTypes;
-    ElsIf MOType = "CHARTOFACCOUNTS" 
-        Or MOType = "ПЛАНСЧЕТОВ" Then
-        Manager = ChartsOfAccounts;
-    ElsIf MOType = "CHARTOFCALCULATIONTYPES" 
-        Or MOType = "ПЛАНВИДОВРАСЧЕТА" Then
-        Manager = ChartsOfCalculationTypes;
-    ElsIf MOType = "INFORMATIONREGISTER" 
-        Or  MOType = "РЕГИСТРСВЕДЕНИЙ" Then
-        Manager = InformationRegisters;
-    ElsIf MOType = "ACCUMULATIONREGISTER" 
-        Or MOType = "РЕГИСТРНАКОПЛЕНИЯ" Then
-        Manager = AccumulationRegisters;
-    ElsIf MOType = "ACCOUNTINGREGISTER" 
-        Or MOType = "РЕГИСТРБУХГАЛТЕРИИ" Then
-        Manager = AccountingRegisters;
-    ElsIf MOType = "CALCULATIONREGISTER"
-        Or MOType = "РЕГИСТРРАСЧЕТА" Then
-        
-        If Parts.Count() = 2 Then
-            // Calculation register
-            Manager = CalculationRegisters;
-        Else
-            MOSubordinate = Upper(Parts[2]);
-            SlaveName = Parts[3];
-            If MOSubordinate = "RECALCULATION" 
-                Or MOSubordinate = "ПЕРЕРАСЧЕТ" Then
-                // Recalculation
-                Try
-                    Manager = CalculationRegisters[MOName].Recalculations;
-                    MOName = SlaveName;
-                Except
-                    Manager = Undefined;
-                EndTry;
-            EndIf;
-        EndIf;
-        
-    ElsIf MOType = "BUSINESSPROCESS"
-        Or MOType = "БИЗНЕСПРОЦЕСС" Then
-        Manager = BusinessProcesses;
-    ElsIf MOType = "TASK"
-        Or MOType = "ЗАДАЧА" Then
-        Manager = Tasks;
-    ElsIf MOType = "CONSTANT" 
-        Or MOType = "КОНСТАНТА" Then
-        Manager = Constants;
-    ElsIf MOType = "SEQUENCE" 
-        Or MOType = "ПОСЛЕДОВАТЕЛЬНОСТЬ" Then
-        Manager = Sequences;
-    EndIf;
+    Manager = ManagerMap.Get(MetaObjectType);
     
+    FourNameParts = 4;
+    If Parts.Count() = FourNameParts Then
+        ProcessRecalculationObjectManager(Manager, Parts, MetaObjectName, 
+            MetaObjectType);        
+    EndIf;
+       
     If Manager <> Undefined Then
         Try
-            Return Manager[MOName];
+            Return Manager[MetaObjectName];
         Except
             Manager = Undefined;
         EndTry;
@@ -1274,6 +1289,7 @@ Function ObjectManagerByFullName(FullName) Export
     
     ErrorMessage = NStr("en='Unknown type of metadata object {%1}.';
         |ru='Неизвестный тип объекта метаданных {%1}.';
+        |uk='Невідомий тип метаданих {%1}.';
         |en_CA='Unknown type of metadata object {%1}.'");
     
     Raise StrTemplate(ErrorMessage, FullName);
@@ -1594,7 +1610,6 @@ EndProcedure // FillMetadataTreeCollection()
 //
 Procedure AddScheduledJob(CollectionsOfMetadataObjects)
     
-    PictureScheduledJobOrder = 38;
     NewMetadataObjectCollectionRow(TypeNameScheduledJobs(),               
         NStr("en='Scheduled jobs';
             |ru='Регламентные задания';
@@ -1602,7 +1617,7 @@ Procedure AddScheduledJob(CollectionsOfMetadataObjects)
             |en_CA='Scheduled jobs'"),                 
         PictureLib.ScheduledJob,              
         PictureLib.ScheduledJob,        
-        PictureScheduledJobOrder,
+        FL_CommonUseReUse.ScheduledJobPicSequenceIndex(),
         CollectionsOfMetadataObjects);
     
 EndProcedure // AddScheduledJob()
@@ -1611,7 +1626,6 @@ EndProcedure // AddScheduledJob()
 //
 Procedure AddHTTPService(CollectionsOfMetadataObjects)
     
-    PictureHTTPServiceOrder = 39;
     NewMetadataObjectCollectionRow(TypeNameHTTPServices(),               
         NStr("en='HTTP services';
             |ru='HTTP-сервисы';
@@ -1619,7 +1633,7 @@ Procedure AddHTTPService(CollectionsOfMetadataObjects)
             |en_CA='HTTP services'"),                 
         PictureLib.GeographicalSchema,              
         PictureLib.GeographicalSchema,        
-        PictureHTTPServiceOrder,
+        FL_CommonUseReUse.HTTPServicePicSequenceIndex(),
         CollectionsOfMetadataObjects);
     
 EndProcedure // AddHTTPService()
@@ -1628,7 +1642,6 @@ EndProcedure // AddHTTPService()
 //
 Procedure AddConstant(CollectionsOfMetadataObjects)
     
-    PictureConstantOrder = 10;
     NewMetadataObjectCollectionRow(TypeNameConstants(),               
         NStr("en='Constants';
             |ru='Константы';
@@ -1636,7 +1649,7 @@ Procedure AddConstant(CollectionsOfMetadataObjects)
             |en_CA='Constants'"),                 
         PictureLib.Constant,              
         PictureLib.Constant,        
-        PictureConstantOrder,
+        FL_CommonUseReUse.ConstantPicSequenceIndex(),
         CollectionsOfMetadataObjects);
     
 EndProcedure // AddConstant()
@@ -1645,7 +1658,6 @@ EndProcedure // AddConstant()
 //
 Procedure AddCatalog(CollectionsOfMetadataObjects)
     
-    PictureCatalogOrder = 1;
     NewMetadataObjectCollectionRow(TypeNameCatalogs(),             
         NStr("en='Catalogs';
             |ru='Справочники';
@@ -1653,7 +1665,7 @@ Procedure AddCatalog(CollectionsOfMetadataObjects)
             |en_CA='Catalogs'"),               
         PictureLib.Catalog,             
         PictureLib.Catalog,
-        PictureCatalogOrder,
+        FL_CommonUseReUse.CatalogPicSequenceIndex(),
         CollectionsOfMetadataObjects);
 
 EndProcedure // AddCatalog()
@@ -1662,7 +1674,6 @@ EndProcedure // AddCatalog()
 //
 Procedure AddDocument(CollectionsOfMetadataObjects)
     
-    PictureDocumentOrder = 2;
     NewMetadataObjectCollectionRow(TypeNameDocuments(),               
         NStr("en='Documents';
             |ru='Документы';
@@ -1670,7 +1681,7 @@ Procedure AddDocument(CollectionsOfMetadataObjects)
             |en_CA='Documents'"),                 
         PictureLib.Document,               
         PictureLib.DocumentObject,
-        PictureDocumentOrder,
+        FL_CommonUseReUse.DocumentPicSequenceIndex(),
         CollectionsOfMetadataObjects);
 
 EndProcedure // AddDocument()
@@ -1679,7 +1690,6 @@ EndProcedure // AddDocument()
 //
 Procedure AddChartOfCharacteristicTypes(CollectionsOfMetadataObjects)
     
-    PictureChartOfCharacteristicTypeOrder = 4;
     NewMetadataObjectCollectionRow(TypeNameChartsOfCharacteristicTypes(), 
         NStr("en='Charts of characteristics types';
             |ru='Планы видов характеристик';
@@ -1687,7 +1697,7 @@ Procedure AddChartOfCharacteristicTypes(CollectionsOfMetadataObjects)
             |en_CA='Charts of characteristics types'"), 
         PictureLib.ChartOfCharacteristicTypes, 
         PictureLib.ChartOfCharacteristicTypesObject,
-        PictureChartOfCharacteristicTypeOrder,
+        FL_CommonUseReUse.ChartOfCharacteristicTypePicSequenceIndex(),
         CollectionsOfMetadataObjects);
 
 EndProcedure // AddChartOfCharacteristicTypes() 
@@ -1695,8 +1705,7 @@ EndProcedure // AddChartOfCharacteristicTypes()
 // Only for internal use.
 //
 Procedure AddChartOfAccounts(CollectionsOfMetadataObjects)
-    
-    PictureChartOfAccountOrder = 32;    
+       
     NewMetadataObjectCollectionRow(TypeNameChartsOfAccounts(),             
         NStr("en='Charts of accounts';
             |ru='Планы счетов';
@@ -1704,7 +1713,7 @@ Procedure AddChartOfAccounts(CollectionsOfMetadataObjects)
             |en_CA='Charts of accounts'"),              
         PictureLib.ChartOfAccounts,             
         PictureLib.ChartOfAccountsObject,
-        PictureChartOfAccountOrder,
+        FL_CommonUseReUse.ChartOfAccountPicSequenceIndex(),
         CollectionsOfMetadataObjects);
 
 EndProcedure // AddChartOfAccounts()
@@ -1713,7 +1722,6 @@ EndProcedure // AddChartOfAccounts()
 //
 Procedure AddChartOfCalculationTypes(CollectionsOfMetadataObjects)
 
-    PictureChartOfCalculationTypeOrder = 9;
     NewMetadataObjectCollectionRow(TypeNameChartsOfCalculationTypes(),       
         NStr("en='Charts of calculation types';
             |ru='Планы видов расчета';
@@ -1721,7 +1729,7 @@ Procedure AddChartOfCalculationTypes(CollectionsOfMetadataObjects)
             |en_CA='Charts of calculation types'"), 
         PictureLib.ChartOfCalculationTypes, 
         PictureLib.ChartOfCalculationTypesObject,
-        PictureChartOfCalculationTypeOrder,
+        FL_CommonUseReUse.ChartOfCalculationTypePicSequenceIndex(),
         CollectionsOfMetadataObjects);
 
 EndProcedure // AddChartOfCalculationTypes()
@@ -1730,7 +1738,6 @@ EndProcedure // AddChartOfCalculationTypes()
 //
 Procedure AddInformationRegister(CollectionsOfMetadataObjects)
     
-    PictureInformationRegisterOrder = 3;
     NewMetadataObjectCollectionRow(TypeNameInformationRegisters(),        
         NStr("en='Information registers';
             |ru='Регистры сведений';
@@ -1738,7 +1745,7 @@ Procedure AddInformationRegister(CollectionsOfMetadataObjects)
             |en_CA='Information registers'"),         
         PictureLib.InformationRegister,        
         PictureLib.InformationRegister,
-        PictureInformationRegisterOrder,
+        FL_CommonUseReUse.InformationRegisterPicSequenceIndex(),
         CollectionsOfMetadataObjects);
         
 EndProcedure // AddInformationRegister()
@@ -1746,8 +1753,7 @@ EndProcedure // AddInformationRegister()
 // Only for internal use.
 //
 Procedure AddAccumulationRegister(CollectionsOfMetadataObjects)
-    
-    PictureAccumulationRegisterOrder = 6;    
+        
     NewMetadataObjectCollectionRow(TypeNameAccumulationRegisters(),      
         NStr("en='Accumulation registers';
             |ru='Регистры накопления';
@@ -1755,7 +1761,7 @@ Procedure AddAccumulationRegister(CollectionsOfMetadataObjects)
             |en_CA='Accumulation registers'"),       
         PictureLib.AccumulationRegister,      
         PictureLib.AccumulationRegister,
-        PictureAccumulationRegisterOrder,
+        FL_CommonUseReUse.AccumulationRegisterPicSequenceIndex(),
         CollectionsOfMetadataObjects);
         
 EndProcedure // AddAccumulationRegister()
@@ -1763,8 +1769,7 @@ EndProcedure // AddAccumulationRegister()
 // Only for internal use.
 //
 Procedure AddAccountingRegister(CollectionsOfMetadataObjects)
-    
-    PictureAccountingRegisterOrder = 5;     
+       
     NewMetadataObjectCollectionRow(TypeNameAccountingRegisters(),     
         NStr("en='Accounting registers';
             |ru='Регистры бухгалтерии';
@@ -1772,7 +1777,7 @@ Procedure AddAccountingRegister(CollectionsOfMetadataObjects)
             |en_CA='Accounting registers'"),      
         PictureLib.AccountingRegister,     
         PictureLib.AccountingRegister, 
-        PictureAccountingRegisterOrder,
+        FL_CommonUseReUse.AccountingRegisterPicSequenceIndex(),
         CollectionsOfMetadataObjects);
         
 EndProcedure // AddAccountingRegister()        
@@ -1780,8 +1785,7 @@ EndProcedure // AddAccountingRegister()
 // Only for internal use.
 //
 Procedure AddCalculationRegister(CollectionsOfMetadataObjects)
-    
-    PictureCalculationRegisterOrder = 8;     
+       
     NewMetadataObjectCollectionRow(TypeNameCalculationRegisters(),         
         NStr("en='Calculation registers';
             |ru='Регистры расчета';
@@ -1789,7 +1793,7 @@ Procedure AddCalculationRegister(CollectionsOfMetadataObjects)
             |en_CA='Calculation registers'"),          
         PictureLib.CalculationRegister,         
         PictureLib.CalculationRegister,
-        PictureCalculationRegisterOrder,
+        FL_CommonUseReUse.CalculationRegisterPicSequenceIndex(),
         CollectionsOfMetadataObjects);
         
 EndProcedure // AddCalculationRegister()
@@ -1798,7 +1802,6 @@ EndProcedure // AddCalculationRegister()
 //
 Procedure AddBusinessProcess(CollectionsOfMetadataObjects)
     
-    PictureBusinessProcessOrder = 7;
     NewMetadataObjectCollectionRow(TypeNameBusinessProcess(),          
         NStr("en='Business processes';
             |ru='Бизнес-процессы';
@@ -1806,7 +1809,7 @@ Procedure AddBusinessProcess(CollectionsOfMetadataObjects)
             |en_CA='Business processes'"),           
         PictureLib.BusinessProcess,          
         PictureLib.BusinessProcessObject,
-        PictureBusinessProcessOrder,
+        FL_CommonUseReUse.BusinessProcessPicSequenceIndex(),
         CollectionsOfMetadataObjects);
  
 EndProcedure // AddBusinessProcess()
@@ -1815,7 +1818,6 @@ EndProcedure // AddBusinessProcess()
 //
 Procedure AddTask(CollectionsOfMetadataObjects)
     
-    PictureTaskOrder = 16;
     NewMetadataObjectCollectionRow(TypeNameTasks(),                  
         NStr("en='Tasks';
             |ru='Задания';
@@ -1823,7 +1825,7 @@ Procedure AddTask(CollectionsOfMetadataObjects)
             |en_CA='Tasks'"),                    
         PictureLib.Task,                 
         PictureLib.TaskObject,
-        PictureTaskOrder,
+        FL_CommonUseReUse.TaskPicSequenceIndex(),
         CollectionsOfMetadataObjects);
         
 EndProcedure // AddTask()
@@ -1917,6 +1919,28 @@ Procedure FillAccumulationRegisterPrimaryKeys(MetadataObject, PrimaryKeys)
     EndDo;
 
 EndProcedure // FillAccumulationRegisterPrimaryKeys()
+
+// Only for internal use.
+//
+Procedure ProcessRecalculationObjectManager(Manager, Parts, MetaObjectName, MetaObjectType)
+    
+    MetaObjectTypeIndex = 2;
+    MetaObjectNameIndex = 3;
+    
+    MetaObjectType = Upper(Parts[MetaObjectTypeIndex]);
+    If MetaObjectType = "RECALCULATION"
+        OR MetaObjectType = "ПЕРЕРАСЧЕТ" Then
+        
+        Try
+            Manager = Manager[MetaObjectName].Recalculations;
+            MetaObjectName = Parts[MetaObjectNameIndex];
+        Except
+            Manager = Undefined;
+        EndTry;
+        
+    EndIf;
+
+EndProcedure // ProcessRecalculationObjectManager()
 
 #EndRegion // ObjectTypes
 

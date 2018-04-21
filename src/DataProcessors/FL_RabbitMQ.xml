@@ -15,16 +15,20 @@
 			<Name>FL_RabbitMQ</Name>
 			<Synonym>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Канал RabbitMQ</v8:content>
-				</v8:item>
-				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>RabbitMQ channel</v8:content>
+					<v8:content>RabbitMQ app endpoint</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>RabbitMQ channel</v8:content>
+					<v8:content>RabbitMQ app endpoint</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Конечная точка приложения RabbitMQ</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Кінцева точка додатку RabbitMQ</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
@@ -98,15 +102,19 @@
 					<Synonym>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Channel data</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Данные канала</v8:content>
+							<v8:content>Endpoint data</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Channel data</v8:content>
+							<v8:content>Endpoint data</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Данные конечной точки</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Дані кінцевої точки</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>

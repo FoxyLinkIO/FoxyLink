@@ -27,7 +27,6 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Operations</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_DataComposition</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Events</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">d83e7dea-d92a-4700-b2bc-8a10b4ccd792</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsOnWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_CatalogsBeforeWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_CRUDMethods</xr:Item>
@@ -41,6 +40,8 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_EncryptionClientServer</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Messages</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_MessagePublishers</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">HTTPService.FL_AppEndpoint</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_AppEnpointProcessor</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

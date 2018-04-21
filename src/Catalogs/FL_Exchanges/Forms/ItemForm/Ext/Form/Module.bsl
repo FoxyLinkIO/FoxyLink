@@ -234,7 +234,7 @@ EndProcedure // AddChannel()
 Procedure AddEvent(Command)
     
     OpenForm("Catalog.FL_Exchanges.Form.EventsSelectionForm", 
-        New Structure("MarkedEvents", MarkedEvents()), 
+        New Structure("Operation, MarkedEvents", RowOperation, MarkedEvents()), 
         ThisObject,
         New UUID, 
         , 
@@ -1091,10 +1091,8 @@ Procedure DoAfterChooseEventToAdd(ClosureResult,
     AdditionalParameters) Export
     
     If ClosureResult <> Undefined
-        AND TypeOf(ClosureResult) = Type("Array") Then
-        
+        AND TypeOf(ClosureResult) = Type("ValueList") Then
         AddEventAtServer(ClosureResult);
-        
     EndIf;
     
 EndProcedure // DoAfterChooseEventToAdd() 
@@ -1161,7 +1159,7 @@ EndProcedure // DoAfterEnqueueEvents()
 // Only for internal use.
 //
 &AtServer
-Procedure AddEventAtServer(EventsArray)
+Procedure AddEventAtServer(EventValueList)
 
     CurrentData = CurrentOperationData(RowOperation);   
     FilterParameters = NewOperationFilterParameters();
@@ -1170,11 +1168,14 @@ Procedure AddEventAtServer(EventsArray)
     FL_CommonUseClientServer.DeleteRowsByFilter(Object.Events, 
         FilterParameters, Modified);
     
-    For Each Event In EventsArray Do
+    For Each Event In EventValueList Do
         
         Modified = True;
         EventRow = Object.Events.Add();
-        EventRow.MetadataObject = Event;
+        EventRow.EventName = Event.Presentation;
+        EventRow.MetadataObject = Event.Value;
+        EventRow.PictureIndex = FL_CommonUseReUse.PicSequenceIndexByFullName(
+            Event.Value);
         FillPropertyValues(EventRow, FilterParameters);
         
     EndDo;

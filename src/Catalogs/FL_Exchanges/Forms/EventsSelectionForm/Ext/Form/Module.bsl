@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -22,23 +22,27 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
+    Var Operation;
+    
     If Parameters.Property("AutoTest") Then
         // Return if the form for analysis is received.
         Return;
     EndIf;
     
-    MetadataObjectArray = New Array;
-    MetadataObjectArray.Add("Catalog.*");
-    MetadataObjectArray.Add("Справочник.*");
-    MetadataObjectArray.Add("Document.*");
-    MetadataObjectArray.Add("Документ.*");
-    MetadataObjectArray.Add("InformationRegister.*");
-    MetadataObjectArray.Add("РегистрСведений.*");
-    MetadataObjectArray.Add("AccumulationRegister.*");
-    MetadataObjectArray.Add("РегистрНакопления.*");
+    Parameters.Property("Operation", Operation);
+    If TypeOf(Operation) = Type("String") Then
+        Operation = FL_CommonUse.ReferenceByDescription(
+            Metadata.Catalogs.FL_Operations, Operation);
+    EndIf;
 
+    If TypeOf(Operation) <> Type("CatalogRef.FL_Operations") Then
+        ErrorMessage = FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
+            "Operation", Operation, Type("CatalogRef.FL_Operations"));
+        Raise ErrorMessage;
+    EndIf;
+    
     Filter = New Structure;
-    Filter.Insert("MetadataObjectClass", MetadataObjectArray);
+    Filter.Insert("MetadataObjectClass", PublishersArray(Operation));
     ValueTree = FL_CommonUse.ConfigurationMetadataTree(Filter);
     
     For Each MarkedEvent In Parameters.MarkedEvents Do
@@ -73,17 +77,56 @@ EndProcedure // EventsTreeCheckOnChange()
 &AtClient
 Procedure SaveAndClose(Command)
     
-    Array = New Array;
+    ValueList = New ValueList;
     For Each Events In EventsTree.GetItems() Do
         For Each Event In Events.GetItems() Do
             If Event.Check = 1 Then
-                Array.Add(Event.FullName);
+                ValueList.Add(Event.FullName, Event.Synonym);
             EndIf;
         EndDo;
     EndDo;
     
-    Close(Array);
+    Close(ValueList);
     
 EndProcedure // SaveAndClose()
 
 #EndRegion // FormCommandHandlers
+
+#Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+&AtServerNoContext
+Function PublishersArray(Operation)
+    
+    Query = New Query;
+    Query.Text = QueryTextOperationMessagePublishers();
+    Query.SetParameter("Operation", Operation);
+    QueryResult = Query.Execute();
+    If QueryResult.IsEmpty() Then
+        Return New Array;
+    Else
+        Return QueryResult.Unload().UnloadColumn("EventSource");
+    EndIf;
+     
+EndFunction // PublishersArray()
+
+// Only for internal use.
+//
+&AtServerNoContext
+Function QueryTextOperationMessagePublishers()
+
+    QueryText = "
+        |SELECT 
+        |   MessagePublishers.EventSource AS EventSource
+        |FROM
+        |   InformationRegister.FL_MessagePublishers AS MessagePublishers
+        |WHERE
+        |   MessagePublishers.Operation = &Operation
+        |AND MessagePublishers.InUse
+        |";
+    Return QueryText;   
+    
+EndFunction // QueryTextOperationMessagePublishers()
+
+#EndRegion // ServiceProceduresAndFunctions

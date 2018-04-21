@@ -456,7 +456,7 @@ EndFunction // NewHTTPRequestHeaders()
 //
 Function Version() Export
     
-    Return "1.1.36";
+    Return "1.1.37";
     
 EndFunction // Version()
 
@@ -467,10 +467,10 @@ EndFunction // Version()
 //
 Function BaseDescription() Export
     
-    BaseDescription = NStr("en='RabbitMQ (%1) channel data processor, ver. %2';
-        |ru='Обработчик канала RabbitMQ (%1), вер. %2';
-        |uk='Обробник каналу RabbitMQ (%1), вер. %2';
-        |en_CA='RabbitMQ (%1) channel data processor, ver. %2'");
+    BaseDescription = NStr("en='RabbitMQ (%1) application endpoint data processor, ver. %2';
+        |ru='Обработчик конечной точки приложения RabbitMQ (%1), вер. %2';
+        |uk='Обробник кінцевої точки додатку RabbitMQ (%1), вер. %2';
+        |en_CA='RabbitMQ (%1) application endpoint data processor, ver. %2'");
     BaseDescription = StrTemplate(BaseDescription, ChannelStandard(), Version());      
     Return BaseDescription;    
     

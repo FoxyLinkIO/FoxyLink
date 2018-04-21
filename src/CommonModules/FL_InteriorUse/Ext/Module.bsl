@@ -238,9 +238,11 @@ Function AddItemToItemFormCollection(Items, Parameters,
         
     If TypeOf(Parameters) <> Type("Structure") Then
         
-        ErrorMessage = StrTemplate(NStr("en='Parameter(2) failed to convert. Expected type {%1} and received type is {%2}.';
-            |ru='Параметр(2) не удалось преобразовать. Ожидался тип {%1}, а получили тип {%2}.';
-            |en_CA='Parameter(2) failed to convert. Expected type {%1} and received type is {%2}.'"),
+        ErrorMessage = StrTemplate(NStr("
+                |en='Parameter(2) failed to convert. Expected type {%1} and received type is {%2}.';
+                |ru='Параметр(2) не удалось преобразовать. Ожидался тип {%1}, а получили тип {%2}.';
+                |uk='Параметр(2) не вдалось перетворити. Очікувався тип {%1}, а отримали тип {%2}.';
+                |en_CA='Parameter(2) failed to convert. Expected type {%1} and received type is {%2}.'"),
             String(Type("Structure")),
             String(TypeOf(Parameters)));
 
@@ -251,16 +253,19 @@ Function AddItemToItemFormCollection(Items, Parameters,
     ItemName = ParametersPropertyValue(Parameters, "Name", 
         NStr("en='Error: Item name is not set.';
             |ru='Ошибка: Имя элемента не задано.';
+            |uk='Помилка: Назву елементу не вказано.'
             |en_CA='Error: Item name is not set.'"), True, True);
                                                     
     ElementType = ParametersPropertyValue(Parameters, "ElementType", 
         NStr("en='Error: The element type is not specified.';
             |ru='Ошибка: Тип элемента не задан.';
+            |uk='Помилка: Тип елементу не вказано.';
             |en_CA='Error: The element type is not specified.'"), True, True);
                                                     
     ItemType = ParametersPropertyValue(Parameters, "Type", 
         NStr("en='Error: Type of element is not specified.';
             |ru='Ошибка: Вид элемента не задан.';
+            |uk='Помилка: Вид елементу не вказано.';
             |en_CA='Error: Type of element is not specified.'"), False, True);
 
     If Parent <> Undefined 
@@ -268,12 +273,15 @@ Function AddItemToItemFormCollection(Items, Parameters,
         AND TypeOf(Parent) <> Type("FormTable") 
         AND TypeOf(Parent) <> Type("ManagedForm") Then
            
-        ErrorMessage = StrTemplate(NStr("en='Error: Parameter(3) failed to convert.
-                |Expected type {%1}, {%2}, {%3} and received type is {%4}.';
-            |ru='Ошибка: Тип параметра(3) не удалось преобразовать. 
-                |Ожидался тип {%1}, {%2}, {%3}, а получили тип {%4}.';
-            |en_CA='Error: Parameter(3) failed to convert. 
-                |Expected type {%1}, {%2}, {%3} and received type is {%4}.'"),
+        ErrorMessage = StrTemplate(NStr("
+                |en='Error: Parameter(3) failed to convert.
+                    |Expected type {%1}, {%2}, {%3} and received type is {%4}.';
+                |ru='Ошибка: Тип параметра(3) не удалось преобразовать. 
+                    |Ожидался тип {%1}, {%2}, {%3}, а получили тип {%4}.';
+                |uk='Помилка: Тип параметру(3) не вдалось перетворити. 
+                    |Очікувався тип {%1}, {%2}, {%3}, а отримали тип {%4}.';
+                |en_CA='Error: Parameter(3) failed to convert. 
+                    |Expected type {%1}, {%2}, {%3} and received type is {%4}.'"),
             String(Type("ManagedForm")),
             String(Type("FormGroup")),
             String(Type("FormTable")),
@@ -448,6 +456,7 @@ Function PluggableSubsystem(SubsystemName) Export
         
         ErrorMessage = NStr("en='Failed to find main subsystem {FoxyLink}.';
             |ru='Не удалось найти основную подсистему {FoxyLink}.';
+            |uk='Не вдалось знайти основну підсистему {FoxyLink}.';
             |en_CA='Failed to find main subsystem {FoxyLink}.'");
         Raise ErrorMessage;
         
@@ -458,6 +467,7 @@ Function PluggableSubsystem(SubsystemName) Export
         
         ErrorMessage = NStr("en='Failed to find {FoxyLink -> Plugins} subsystem.';
             |ru='Не удалось найти подсистему {FoxyLink -> Plugins}.';
+            |uk='Не вдалось знайти підсистему {FoxyLink -> Plugins}.';
             |en_CA='Failed to find {FoxyLink -> Plugins} subsystem.'");
         Raise ErrorMessage;
         
@@ -467,8 +477,9 @@ Function PluggableSubsystem(SubsystemName) Export
     If PluggableSubsystem = Undefined Then
         
         ErrorMessage = StrTemplate(NStr("en='Failed to find {FoxyLink -> Plugins -> %1} subsystem.';
-            |ru='Не удалось найти подсистему {FoxyLink -> Plugins -> %1}.';
-            |en_CA='Failed to find {FoxyLink -> Plugins -> %1} subsystem.'"),
+                |ru='Не удалось найти подсистему {FoxyLink -> Plugins -> %1}.';
+                |uk='Не вдалось знайти підсистему {FoxyLink -> Plugins -> %1}.';
+                |en_CA='Failed to find {FoxyLink -> Plugins -> %1} subsystem.'"),
             SubsystemName);
         Raise ErrorMessage;
         
@@ -540,12 +551,34 @@ Function NewFormatProcessor(Val LibraryGuid) Export
     If DataProcessorName = Undefined Then
         Raise NStr("en='Requested format processor is not installed.';
             |ru='Запрашиваемый процессор формата не установлен.';
+            |uk='Запитуваний процесор формату не встановлено.';
             |en_CA='Requested format processor is not installed.'");    
     EndIf;
         
     Return DataProcessors[DataProcessorName].Create();
         
 EndFunction // NewFormatProcessor()
+
+// Returns a new external event handler info structure.
+//
+// Returns:
+//  Structure - with keys:
+//      * EventHandler - String - event handler module.
+//      * Description  - String - event handler description.
+//      * Publishers   - Array  - publishers array.
+//      * Version      - String - event handler version.
+//
+Function NewExternalEventHandlerInfo() Export
+    
+    EventHandlerInfo = New Structure;
+    EventHandlerInfo.Insert("EventHandler");
+    EventHandlerInfo.Insert("Description");
+    EventHandlerInfo.Insert("Publishers", New Array);
+    EventHandlerInfo.Insert("Version");
+    
+    Return EventHandlerInfo;
+    
+EndFunction // NewExternalEventHandlerInfo() 
 
 #EndRegion // SubsystemInteraction
 
@@ -769,29 +802,6 @@ Procedure InitializeChannels()
     
     Try
     
-        SelfExportProcessor = NewAppEndpointProcessor(
-            "7fdeb371-1ad5-47e7-b1d6-f9acc55d893e");
-        
-        SelfExport = Catalogs.FL_Channels.SelfExport.GetObject();
-        SelfExport.DataExchange.Load = True;
-        SelfExport.BasicChannelGuid = SelfExportProcessor.LibraryGuid();
-        SelfExport.Connected = True;
-        SelfExport.Log = False;
-        SelfExport.Version = SelfExportProcessor.Version();
-        SelfExport.Write();
-        
-    Except
-        
-        WriteLogEvent("FoxyLink.InitializeSubsystem.InitializeChannels", 
-            EventLogLevel.Error,
-            Metadata.Catalogs.FL_Channels,
-            ,
-            ErrorDescription());
-        
-    EndTry; 
-    
-    Try
-    
         SelfFilesProcessor = NewAppEndpointProcessor(
             "595e752d-57f4-4398-a1cb-e6c5a6aaa65c");
         
@@ -857,8 +867,14 @@ Function LoadImportedOperations(Operations)
         
         MockRow = MockObject.Add();
         FillPropertyValues(MockRow, Operation, , "CRUDMethod, RESTMethod");
-        MockRow.CRUDMethod = Enums.FL_CRUDMethods[Operation.CRUDMethod];
-        MockRow.RESTMethod = Enums.FL_RESTMethods[Operation.RESTMethod];
+        
+        If NOT IsBlankString(Operation.CRUDMethod) Then
+            MockRow.CRUDMethod = Enums.FL_CRUDMethods[Operation.CRUDMethod];
+        EndIf;
+        
+        If NOT IsBlankString(Operation.RESTMethod) Then
+            MockRow.RESTMethod = Enums.FL_RESTMethods[Operation.RESTMethod];
+        EndIf;
         
         Result = FL_CommonUse.ReferenceByPredefinedDataName(
             Metadata.Catalogs.FL_Operations, Operation.PredefinedDataName);
