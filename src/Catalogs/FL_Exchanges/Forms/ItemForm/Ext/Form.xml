@@ -752,6 +752,35 @@
 															<ContextMenu name="EventsEventNameContextMenu" id="320"/>
 															<ExtendedTooltip name="EventsEventNameExtendedTooltip" id="321"/>
 														</InputField>
+														<InputField name="EventsEventHandler" id="370">
+															<DataPath>Object.Events.EventHandler</DataPath>
+															<EditMode>EnterOnInput</EditMode>
+															<ChoiceButton>true</ChoiceButton>
+															<QuickChoice>false</QuickChoice>
+															<TextEdit>false</TextEdit>
+															<EditTextUpdate>Always</EditTextUpdate>
+															<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
+															<ContextMenu name="EventsEventHandlerContextMenu" id="371">
+																<Autofill>false</Autofill>
+															</ContextMenu>
+															<ExtendedTooltip name="EventsEventHandlerExtendedTooltip" id="372"/>
+															<Events>
+																<Event name="StartChoice">EventsEventHandlerStartChoice</Event>
+															</Events>
+														</InputField>
+														<InputField name="EventsDescription" id="373">
+															<DataPath>Object.Events.Description</DataPath>
+															<ReadOnly>true</ReadOnly>
+															<EditMode>EnterOnInput</EditMode>
+															<ContextMenu name="EventsDescriptionContextMenu" id="374"/>
+															<ExtendedTooltip name="EventsDescriptionExtendedTooltip" id="375"/>
+														</InputField>
+														<InputField name="EventsVersion" id="376">
+															<DataPath>Object.Events.Version</DataPath>
+															<ReadOnly>true</ReadOnly>
+															<ContextMenu name="EventsVersionContextMenu" id="377"/>
+															<ExtendedTooltip name="EventsVersionExtendedTooltip" id="378"/>
+														</InputField>
 													</ChildItems>
 												</Table>
 											</ChildItems>
@@ -1624,6 +1653,83 @@
 								<v8:FractionDigits>0</v8:FractionDigits>
 								<v8:AllowedSign>Nonnegative</v8:AllowedSign>
 							</v8:NumberQualifiers>
+						</Type>
+					</Column>
+					<Column name="Description" id="2">
+						<Title>
+							<v8:item>
+								<v8:lang>en</v8:lang>
+								<v8:content>Description</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Description</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>ru</v8:lang>
+								<v8:content>Описание</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Опис</v8:content>
+							</v8:item>
+						</Title>
+						<Type>
+							<v8:Type>xs:string</v8:Type>
+							<v8:StringQualifiers>
+								<v8:Length>0</v8:Length>
+								<v8:AllowedLength>Variable</v8:AllowedLength>
+							</v8:StringQualifiers>
+						</Type>
+					</Column>
+					<Column name="Version" id="3">
+						<Title>
+							<v8:item>
+								<v8:lang>en</v8:lang>
+								<v8:content>Version</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Version</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>ru</v8:lang>
+								<v8:content>Версия</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Версія</v8:content>
+							</v8:item>
+						</Title>
+						<Type>
+							<v8:Type>xs:string</v8:Type>
+							<v8:StringQualifiers>
+								<v8:Length>16</v8:Length>
+								<v8:AllowedLength>Variable</v8:AllowedLength>
+							</v8:StringQualifiers>
+						</Type>
+					</Column>
+					<Column name="Updated" id="4">
+						<Title>
+							<v8:item>
+								<v8:lang>en</v8:lang>
+								<v8:content>Updated</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Updated</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>ru</v8:lang>
+								<v8:content>Обновлено</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Оновлено</v8:content>
+							</v8:item>
+						</Title>
+						<Type>
+							<v8:Type>xs:boolean</v8:Type>
 						</Type>
 					</Column>
 				</AdditionalColumns>

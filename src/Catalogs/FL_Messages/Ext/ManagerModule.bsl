@@ -437,14 +437,14 @@ EndFunction // RouteToExchange()
 Procedure RouteToEndpoints(Source, Exchange, AppEndpoint)
     
     ExchangeEndpoints = ExchangeEndpoints(Source, Exchange);  
-    For Each ExchangeItem In ExchangeEndpoints Do
+    For Each Endpoint In ExchangeEndpoints Do
         
         JobData = FL_BackgroundJob.NewJobData();
-        JobData.MethodName = "Catalogs.FL_Exchanges.ProcessMessage";
+        JobData.MethodName = Endpoint.EventHandler;
         
         InputParameter = JobData.Input.Add();
         InputParameter.Name = "Exchange";
-        InputParameter.Value = ExchangeItem;
+        InputParameter.Value = Endpoint.Exchange;
         
         InputParameter = JobData.Input.Add();
         InputParameter.Name = "Message";
@@ -452,11 +452,11 @@ Procedure RouteToEndpoints(Source, Exchange, AppEndpoint)
         
         ExchangeJob = FL_BackgroundJob.Enqueue(JobData);
         NewRow = Source.Exchanges.Add();
-        NewRow.Exchange = ExchangeItem;
+        NewRow.Exchange = Endpoint.Exchange;
         NewRow.Job = ExchangeJob;
         
         If AppEndpoint = Undefined Then
-            RouteToAppEndpoints(Source, ExchangeItem, ExchangeJob);
+            RouteToAppEndpoints(Source, Endpoint.Exchange, ExchangeJob);
         Else
             // TODO: Processing dynamic AppEndpoint
         EndIf;
@@ -616,24 +616,18 @@ EndFunction // Messages()
 //
 Function ExchangeEndpoints(Source, Exchange)
     
-    ExchangeEndpoints = New Array;
-    If Exchange = Undefined Then 
+    Query = New Query;
+    Query.Text = QueryTextExchangeEndpoints();
+    Query.SetParameter("EventSource", Source.EventSource);
+    Query.SetParameter("Operation", Source.Operation);
         
-        Query = New Query;
-        Query.Text = QueryTextExchangeEndpoints();
-        Query.SetParameter("EventSource", Source.EventSource);
-        Query.SetParameter("Operation", Source.Operation);
-        
-        QueryResult = Query.Execute();
-        If NOT QueryResult.IsEmpty() Then
-            ExchangeEndpoints = QueryResult.Unload().UnloadColumn("Exchange");        
-        EndIf;
-        
-    Else         
-        ExchangeEndpoints.Add(Exchange);
+    If Exchange <> Undefined Then 
+        Query.Text = QueryTextExchangeEndpoint();
+        Query.SetParameter("Exchange", Exchange);
+        Query.SetParameter("EventHandler", "Catalogs.FL_Exchanges.ProcessMessage");
     EndIf;
     
-    Return ExchangeEndpoints;
+    Return Query.Execute().Unload();
         
 EndFunction // ExchangeEndpoints()
 
@@ -697,11 +691,45 @@ EndFunction // QueryTextMessages()
 
 // Only for internal use.
 //
+Function QueryTextExchangeEndpoint()
+
+    QueryText = "
+        |SELECT 
+        |   Exchanges.Ref AS Exchange,
+        |   IsNull(EventTable.EventHandler, &EventHandler) AS EventHandler
+        |
+        |FROM
+        |   Catalog.FL_Exchanges AS Exchanges 
+        |
+        |LEFT JOIN Catalog.FL_Exchanges.Events AS EventTable
+        // [OPPX|OPHP1 +] Attribute + Ref
+        |ON  EventTable.MetadataObject = &EventSource
+        |AND EventTable.Ref            = Exchanges.Ref
+        |AND EventTable.Operation      = &Operation
+        |
+        |LEFT JOIN Catalog.FL_Exchanges.Operations AS OperationTable
+        |ON  OperationTable.Ref = Exchanges.Ref
+        |AND OperationTable.Operation = &Operation 
+        |
+        |WHERE
+        |   Exchanges.Ref = &Exchange    
+        |
+        |ORDER BY
+        |   IsNull(OperationTable.Priority, 5) ASC
+        |";
+    Return QueryText;
+    
+EndFunction // QueryTextExchangeEndpoint()
+
+// Only for internal use.
+//
 Function QueryTextExchangeEndpoints()
 
     QueryText = "
         |SELECT 
-        |   Exchanges.Ref AS Exchange
+        |   Exchanges.Ref AS Exchange,
+        |   EventTable.EventHandler AS EventHandler
+        |
         |FROM
         |   Catalog.FL_Exchanges AS Exchanges 
         |

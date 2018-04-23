@@ -17,8 +17,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#Region ProgramInterface
+
 // Default RecurringServer action.
 //
 Procedure RecurringServerAction() Export
     
 EndProcedure // RecurringServerAction()
+
+#EndRegion // ProgramInterface

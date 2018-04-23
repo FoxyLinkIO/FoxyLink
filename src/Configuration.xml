@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.178</Version>
+			<Version>0.9.9.186</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -288,7 +288,6 @@
 			<CommonPicture>FL_Update</CommonPicture>
 			<CommonPicture>FL_ValidMethodSettings</CommonPicture>
 			<CommonTemplate>FL_LICENSE</CommonTemplate>
-			<CommonModule>FL_AppEnpointProcessor</CommonModule>
 			<CommonModule>FL_BackgroundJob</CommonModule>
 			<CommonModule>FL_BatchJob</CommonModule>
 			<CommonModule>FL_CommonUse</CommonModule>
@@ -297,6 +296,7 @@
 			<CommonModule>FL_DataComposition</CommonModule>
 			<CommonModule>FL_Encryption</CommonModule>
 			<CommonModule>FL_EncryptionClientServer</CommonModule>
+			<CommonModule>FL_EndpointHTTP</CommonModule>
 			<CommonModule>FL_ErrorsClientServer</CommonModule>
 			<CommonModule>FL_Events</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
@@ -345,6 +345,7 @@
 			<DataProcessor>FL_SelfFiles</DataProcessor>
 			<InformationRegister>FL_JobContinuations</InformationRegister>
 			<InformationRegister>FL_JobState</InformationRegister>
+			<InformationRegister>FL_MessagePayload</InformationRegister>
 			<InformationRegister>FL_MessagePublishers</InformationRegister>
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
 			<ExternalDataSource>DataBank</ExternalDataSource>

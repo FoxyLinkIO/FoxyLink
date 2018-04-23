@@ -43,6 +43,39 @@ Procedure OnCreateAtServer(ManagedForm) Export
     
 EndProcedure // OnCreateAtServer()
 
+// Updates events view on managed form.
+//
+// Parameters:
+//  ManagedForm      - ManagedForm - catalog form.
+//  FilterParameters - Structure   - event filter parameters.
+//      * Operation - CatalogRef.FL_Operations - an operation for updating catalog form.
+//
+Procedure UpdateEventsView(ManagedForm, FilterParameters) Export
+    
+    Events = ManagedForm.Object.Events;
+    
+    FilterResults = Events.FindRows(FilterParameters);
+    If FilterResults.Count() = 0 Then
+        Return;
+    EndIf;
+   
+    EventHandlers = FL_InteriorUseReUse.AvailableEventHandlers(
+        FilterParameters.Operation);
+    For Each FilterResult In FilterResults Do
+        
+        For Each EventHandler In EventHandlers Do
+            If FilterResult.EventHandler = EventHandler.EventHandler Then
+                FillPropertyValues(FilterResult, EventHandler);   
+            EndIf;
+        EndDo;
+        
+        FilterResult.PictureIndex = FL_CommonUseReUse
+            .PicSequenceIndexByFullName(FilterResult.MetadataObject);
+            
+    EndDo;
+        
+EndProcedure // UpdateEventsView()
+
 // Updates operations view on managed form.
 //
 // Parameters:
@@ -92,19 +125,6 @@ Procedure UpdateOperationsView(ManagedForm) Export
     Items.DeleteOperation.Visible = Operations.Count() > 0;   
     
 EndProcedure // UpdateOperationsView()
-
-// Updates operations view on managed form.
-//
-// Parameters:
-//  ManagedForm - ManagedForm              - catalog form.
-//  Operation   - CatalogRef.FL_Operations - an operation for updating catalog form. 
-//
-Procedure UpdateOperationView(ManagedForm, Operation) Export
-    
-    Items = ManagedForm.Items;
-    Operations = ManagedForm.Object.Operations;
-    
-EndProcedure // UpdateOperationView() 
 
 // Helps to save untracked changes in catalog form.
 //
@@ -284,7 +304,6 @@ Function AvailableFormats() Export
             Except
                 
                 FL_CommonUseClientServer.NotifyUser(ErrorDescription());
-                Continue;
                 
             EndTry;
             
@@ -471,25 +490,33 @@ EndFunction // NewProperties()
 Function EventHandlerInfo() Export
     
     EventHandlerInfo = FL_InteriorUse.NewExternalEventHandlerInfo();
-    EventHandlerInfo.EventHandler = "Catalog.FL_Exchanges";
-    EventHandlerInfo.Version = "0.9.9.177";
+    EventHandlerInfo.EventHandler = "Catalogs.FL_Exchanges.ProcessMessage";
+    EventHandlerInfo.Default = True;
+    EventHandlerInfo.Version = "1.0.1";
     EventHandlerInfo.Description = StrTemplate(NStr("
             |en='Standard event handler, ver. %1.';
             |ru='Стандартный обработчик событий, вер. %1.';
             |uk='Стандартний обробник подій, вер. %1.';
-            |en_CA='Standard event handler, ver. %1.'", 
-        EventHandlerInfo.Version));
-            
-    EventHandlerInfo.Publishers.Add("Catalog.*");
-    EventHandlerInfo.Publishers.Add("Справочник.*");
-    EventHandlerInfo.Publishers.Add("Document.*");
-    EventHandlerInfo.Publishers.Add("Документ.*");
-    EventHandlerInfo.Publishers.Add("InformationRegister.*");
-    EventHandlerInfo.Publishers.Add("РегистрСведений.*");
-    EventHandlerInfo.Publishers.Add("AccumulationRegister.*");
-    EventHandlerInfo.Publishers.Add("РегистрНакопления.*");
+            |en_CA='Standard event handler, ver. %1.'"), 
+        EventHandlerInfo.Version);
         
-    Return EventHandlerInfo;
+    EventSources = New Array;    
+    EventSources.Add(Upper("Catalog.*"));
+    EventSources.Add(Upper("Справочник.*"));
+    EventSources.Add(Upper("Document.*"));
+    EventSources.Add(Upper("Документ.*"));
+    EventSources.Add(Upper("InformationRegister.*"));
+    EventSources.Add(Upper("РегистрСведений.*"));
+    EventSources.Add(Upper("AccumulationRegister.*"));
+    EventSources.Add(Upper("РегистрНакопления.*"));
+    
+    AvailableOperations = Catalogs.FL_Operations.AvailableOperations();
+    For Each AvailableOperation In AvailableOperations Do
+        EventHandlerInfo.Publishers.Insert(AvailableOperation.Value, 
+            EventSources);    
+    EndDo;
+       
+    Return FL_CommonUse.FixedData(EventHandlerInfo);
     
 EndFunction // EventHandlerInfo()
 
@@ -579,6 +606,7 @@ Procedure AddOperationOnForm(Items, OperationDescription, Description, Picture)
 
     BasicDescription = NStr("en='Operation description is not available.';
         |ru='Описание операции не доступно.';
+        |uk='Опис операції не доступний.';
         |en_CA='Operation description is not available.'");
 
     Parameters = New Structure;

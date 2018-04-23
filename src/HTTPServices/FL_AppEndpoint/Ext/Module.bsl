@@ -17,14 +17,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#Region ProgramInterface
+
 Function MessageHandler(Request)
     
     URLParameters = Request.URLParameters;
-    ExchangeName = URLParameters.Get("exchange");
-    OperationName = URLParameters.Get("operation");
-    Sync = Upper(URLParameters.Get("type")) = "SYNC";
-    
-    Catalogs.FL_Exchanges.ExchangeSettingsByNames(
+    ExchangeName = URLParameters.Get("Exchange");
+    OperationName = URLParameters.Get("Operation");
+    Sync = Upper(URLParameters.Get("Type")) = "SYNC";
     
     Exchange = FL_CommonUse.ReferenceByDescription(
         Metadata.Catalogs.FL_Exchanges, ExchangeName);
@@ -55,12 +55,27 @@ Function MessageHandler(Request)
     EndIf;
     
     Invocation = Catalogs.FL_Messages.NewInvocation();
+    Invocation.AppId = URLParameters.Get("AppId"); 
+    Invocation.ContentEncoding = "TODO:";
+    Invocation.ContentType = "TODO:";
+    Invocation.CorrelationId = URLParameters.Get("CorrelationId");
+    Invocation.EventSource = URLParameters.Get("EventSource");
+    Invocation.Operation = Operation;
+    Invocation.ReplyTo = URLParameters.Get("ReplyTo");
     
-    FL_AppEnpointProcessor.ProcessMessage(Invocation, Exchange, 
-        Request.GetBodyAsStream(), Sync);
+    Timestamp = URLParameters.Get("Timestamp");
+    If ValueIsFilled(Timestamp) Then
+        Invocation.Timestamp = Timestamp;
+    EndIf;
     
-    Response = New HTTPServiceResponse(200);
+    UserId = URLParameters.Get("UserId");
+    If ValueIsFilled(UserId) Then 
+        Invocation.UserId = UserId;
+    EndIf;
+        
+    Response = New HTTPServiceResponse(FL_InteriorUseReUse.OkStatusCode());
     Return Response;
     
 EndFunction // MessageHandler()
 
+#EndRegion // ProgramInterface

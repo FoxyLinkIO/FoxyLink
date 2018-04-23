@@ -40,5 +40,36 @@ EndFunction // Enqueue()
 
 #Region ServiceIterface
 
+// Returns the external event handler info structure for this module.
+//
+// Returns:
+//  Structure - see function FL_InteriorUse.NewExternalEventHandlerInfo.
+//
+Function EventHandlerInfo() Export
+    
+    EventHandlerInfo = FL_InteriorUse.NewExternalEventHandlerInfo();
+    EventHandlerInfo.EventHandler = "FL_EndpointHTTP.ProcessMessage";
+    EventHandlerInfo.Default = True;
+    EventHandlerInfo.Version = "1.0.2";
+    EventHandlerInfo.Description = StrTemplate(NStr("
+            |en='Standard HTTP event handler, ver. %1.';
+            |ru='Стандартный обработчик событий HTTP, вер. %1.';
+            |uk='Стандартний обробник подій HTTP, вер. %1.';
+            |en_CA='Standard HTTP event handler, ver. %1.'"), 
+        EventHandlerInfo.Version);
+        
+    EventSources = New Array;
+    EventSources.Add(Upper("HTTPService.FL_AppEndpoint"));
+    EventSources.Add(Upper("HTTPСервис.FL_AppEndpoint"));
+    
+    AvailableOperations = Catalogs.FL_Operations.AvailableOperations();
+    For Each AvailableOperation In AvailableOperations Do
+        EventHandlerInfo.Publishers.Insert(AvailableOperation.Value, 
+            EventSources);    
+    EndDo;
+       
+    Return FL_CommonUse.FixedData(EventHandlerInfo);
+    
+EndFunction // EventHandlerInfo()
 
 #EndRegion // ServiceIterface

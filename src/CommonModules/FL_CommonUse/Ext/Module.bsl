@@ -1185,10 +1185,20 @@ EndFunction // MetadataObjectNameByManagerName()
 Function CommonModule(Val ModuleName) Export
 
     Module = Undefined;
+    PointPosition = StrFind(ModuleName, ".");
     If Metadata.CommonModules.Find(ModuleName) <> Undefined Then
+        
         Module = FL_RunInSafeMode.EvalInSafeMode(ModuleName);
-    ElsIf StrOccurrenceCount(ModuleName, ".") > 0 Then
-        Return ObjectManagerByFullName(ModuleName);
+        
+    ElsIf PointPosition > 0 Then
+        
+        SecondPart = Mid(ModuleName, PointPosition + 1);
+        If Metadata.CommonModules.Find(SecondPart) <> Undefined Then
+            Module = FL_RunInSafeMode.EvalInSafeMode(SecondPart);    
+        Else
+            Return ObjectManagerByFullName(ModuleName);
+        EndIf;
+        
     EndIf;
 
     If TypeOf(Module) <> Type("CommonModule") Then

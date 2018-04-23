@@ -558,22 +558,27 @@ Function NewFormatProcessor(Val LibraryGuid) Export
     Return DataProcessors[DataProcessorName].Create();
         
 EndFunction // NewFormatProcessor()
-
+ 
 // Returns a new external event handler info structure.
 //
 // Returns:
 //  Structure - with keys:
-//      * EventHandler - String - event handler module.
-//      * Description  - String - event handler description.
-//      * Publishers   - Array  - publishers array.
-//      * Version      - String - event handler version.
+//      * EventHandler - String  - event handler module.
+//      * Default      - Boolean - True if it's default handler.
+//                          Default value: False.
+//      * Description  - String  - event handler description.
+//      * Publishers   - Map     - publishers map.
+//          ** Key   - CatalogRef.FL_Operations - publisher operation.
+//          ** Value - Array                    - event source objects.
+//      * Version      - String  - event handler version.
 //
 Function NewExternalEventHandlerInfo() Export
     
     EventHandlerInfo = New Structure;
     EventHandlerInfo.Insert("EventHandler");
+    EventHandlerInfo.Insert("Default", False);
     EventHandlerInfo.Insert("Description");
-    EventHandlerInfo.Insert("Publishers", New Array);
+    EventHandlerInfo.Insert("Publishers", New Map);
     EventHandlerInfo.Insert("Version");
     
     Return EventHandlerInfo;

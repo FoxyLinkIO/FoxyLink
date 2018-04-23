@@ -52,7 +52,8 @@
 				<xr:Object>Constant.FL_AppIdentifier</xr:Object>
 				<xr:Object>Constant.FL_MaximumMessageSize</xr:Object>
 				<xr:Object>Catalog.FL_Jobs.Command.ConfigureJobExpirationStartUp</xr:Object>
-				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.EventProcessors</xr:Object>
+				<xr:Object>Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.EventHandlers</xr:Object>
+				<xr:Object>InformationRegister.FL_MessagePayload</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

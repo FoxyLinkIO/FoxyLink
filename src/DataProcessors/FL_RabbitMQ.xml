@@ -159,12 +159,16 @@
 									<v8:content>Field name</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field name</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование поля</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Field name</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Назва поля</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -207,12 +211,16 @@
 									<v8:content>Field value</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field value</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Значение поля</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Field value</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Значення поля</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -264,15 +272,19 @@
 					<Synonym>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Channel resources</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Ресурсы канала</v8:content>
+							<v8:content>App endpoint resources</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Channel resources</v8:content>
+							<v8:content>App endpoint resources</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Ресурсы конечной точки приложеня</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Ресурси кінцевої точки додатку</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -313,16 +325,20 @@
 							<Name>ExecutableCode</Name>
 							<Synonym>
 								<v8:item>
-									<v8:lang>ru</v8:lang>
-									<v8:content>Выполняемый код</v8:content>
-								</v8:item>
-								<v8:item>
 									<v8:lang>en</v8:lang>
 									<v8:content>Executable code</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>en_CA</v8:lang>
 									<v8:content>Executable code</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Выполняемый код</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Виконуваний код</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -361,12 +377,16 @@
 									<v8:content>Field name</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field name</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование поля</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Field name</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Назва поля</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -409,12 +429,16 @@
 									<v8:content>Field value</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field value</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Значение поля</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Field value</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Значення поля</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -469,12 +493,16 @@
 							<v8:content>Encrypted data</v8:content>
 						</v8:item>
 						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Encrypted data</v8:content>
+						</v8:item>
+						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Зашифрованные данные</v8:content>
 						</v8:item>
 						<v8:item>
-							<v8:lang>en_CA</v8:lang>
-							<v8:content>Encrypted data</v8:content>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Зашифровані дані</v8:content>
 						</v8:item>
 					</Synonym>
 					<Comment/>
@@ -519,12 +547,16 @@
 									<v8:content>Encrypt number</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Encrypt number</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Номер шифрования</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Encrypt number</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Номер шифрування</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -567,12 +599,16 @@
 									<v8:content>Field name</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field name</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование поля</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Field name</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Назва поля</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -615,12 +651,16 @@
 									<v8:content>Field value</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Field value</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Значение поля</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Field value</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Значення поля</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -647,7 +687,7 @@
 							<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
 							<ChoiceParameterLinks/>
 							<ChoiceParameters/>
-							<QuickChoice>Auto</QuickChoice>
+							<QuickChoice>DontUse</QuickChoice>
 							<CreateOnInput>DontUse</CreateOnInput>
 							<ChoiceForm/>
 							<LinkByType/>

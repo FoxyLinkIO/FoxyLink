@@ -41,7 +41,8 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Messages</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_MessagePublishers</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">HTTPService.FL_AppEndpoint</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_AppEnpointProcessor</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_EndpointHTTP</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_MessagePayload</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

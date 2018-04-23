@@ -131,7 +131,6 @@ Function AvailableChannels() Export
             Except
                 
                 FL_CommonUseClientServer.NotifyUser(ErrorDescription());
-                Continue;
                 
             EndTry;
             
