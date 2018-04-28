@@ -77,6 +77,12 @@ Procedure AfterWriteAtServer(CurrentObject, WriteParameters)
     // user has some problems with editing. It helps in this case. 
     Catalogs.FL_Exchanges.OnCreateAtServer(ThisObject);    
     
+    If NOT IsBlankString(RowOperation) Then
+        FilterParameters = NewOperationFilterParameters();
+        FillPropertyValues(FilterParameters, CurrentOperationData(RowOperation));
+        Catalogs.FL_Exchanges.UpdateEventsView(ThisForm, FilterParameters);
+    EndIf;
+    
 EndProcedure // AfterWriteAtServer()
 
 #EndRegion // FormEventHandlers

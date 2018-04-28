@@ -972,15 +972,24 @@ EndFunction // LoadImportedChannels()
 //
 Function StartLogHTTPRequest(HTTPConnection, HTTPRequest, HTTPMethod)
     
+    MessageSize = HTTPRequest.GetBodyAsStream().Size();
+    
     LogMessage = NewLogMessageHTTP();
     LogMessage.HostURL = HTTPConnection.Host;
     LogMessage.HTTPMethod = Upper(HTTPMethod);
     LogMessage.ResourceAddress = HTTPRequest.ResourceAddress;
     If FL_InteriorUseReUse.IsHTTPMethodWithoutBody(Upper(HTTPMethod)) Then
         LogMessage.Delete("RequestBody");
+    ElsIf FL_InteriorUseReUse.MaximumMessageSize() < MessageSize Then
+        LogMessage.RequestBody = NStr(
+            "en='The body of the message was deleted as it exceeded the maximum message size.';
+            |ru='Тело сообщения удалено, так как оно превысило максимальный размер сообщения.';
+            |uk='Тіло повідомлення видалено, так як воно перевищило максимальний розмір повідомлення.';
+            |en_CA='The body of the message was deleted as it exceeded the maximum message size.'");         
     Else
         LogMessage.RequestBody = HTTPRequest.GetBodyAsString();   
     EndIf;
+    
     Return LogMessage;
     
 EndFunction // StartLogHTTPRequest()

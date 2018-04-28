@@ -172,14 +172,15 @@ Function ProcessMessage(Exchange, Message) Export
     Try
         
         Settings = ExchangeSettingsByRefs(Exchange, Message.Operation);
-        StreamObject = FL_InteriorUse.NewFormatProcessor(Settings.BasicFormatGuid);
+        StreamObject = FL_InteriorUse.NewFormatProcessor(
+            Settings.BasicFormatGuid);
         
         // Open new memory stream and initialize format processor.
         Stream = New MemoryStream;
         StreamObject.Initialize(Stream, Settings.APISchema);
         
-        OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(Settings, 
-            DeserializeContext(Message));
+        OutputParameters = NewOutputParameters(Settings, 
+            Catalogs.FL_Messages.DeserializeContext(Message));
                     
         FL_DataComposition.Output(StreamObject, OutputParameters);
         
@@ -492,7 +493,7 @@ Function EventHandlerInfo() Export
     EventHandlerInfo = FL_InteriorUse.NewExternalEventHandlerInfo();
     EventHandlerInfo.EventHandler = "Catalogs.FL_Exchanges.ProcessMessage";
     EventHandlerInfo.Default = True;
-    EventHandlerInfo.Version = "1.0.1";
+    EventHandlerInfo.Version = "1.0.2";
     EventHandlerInfo.Description = StrTemplate(NStr("
             |en='Standard event handler, ver. %1.';
             |ru='Стандартный обработчик событий, вер. %1.';
@@ -500,7 +501,9 @@ Function EventHandlerInfo() Export
             |en_CA='Standard event handler, ver. %1.'"), 
         EventHandlerInfo.Version);
         
-    EventSources = New Array;    
+    EventSources = New Array;
+    EventSources.Add(Upper("HTTPService.FL_AppEndpoint"));
+    EventSources.Add(Upper("HTTPСервис.FL_AppEndpoint"));
     EventSources.Add(Upper("Catalog.*"));
     EventSources.Add(Upper("Справочник.*"));
     EventSources.Add(Upper("Document.*"));
@@ -633,21 +636,6 @@ Procedure AddOperationOnForm(Items, OperationDescription, Description, Picture)
 EndProcedure // AddOperationOnForm()
 
 #EndRegion // ObjectFormInteraction
-
-// Only for internal use.
-//
-Function DeserializeContext(Message)
-    
-    Context = Message.Context.Unload();
-    Context.Columns.Add("Value");
-    For Each Row In Context Do
-        Row.Value = FL_CommonUse.ValueFromXMLTypeAndValue(Row.XMLValue, 
-            Row.TypeName, Row.NamespaceURI);     
-    EndDo;
-    
-    Return Context;
-    
-EndFunction // DeserializeContext()
 
 // Only for internal use.
 //

@@ -21,11 +21,80 @@
 
 Function MessageHandler(Request)
     
-    URLParameters = Request.URLParameters;
-    ExchangeName = URLParameters.Get("Exchange");
-    OperationName = URLParameters.Get("Operation");
-    Sync = Upper(URLParameters.Get("Type")) = "SYNC";
+    Var Exchange, Operation, Async;
     
+    ProcessURLParameters(Request.URLParameters, Exchange, Operation, Async);
+    
+    Headers = Request.Headers;
+    Invocation = Catalogs.FL_Messages.NewInvocation();
+    
+    // https://tools.ietf.org/html/rfc1049 
+    // Content-type header field for internet messages.
+    ContentType = Headers.Get("Content-Type");
+    If ValueIsFilled(ContentType) Then
+        
+        SplitResults = StrSplit(ContentType, ";");    
+        Invocation.ContentType = SplitResults[0];
+        For Each SplitResult In SplitResults Do
+            
+            Position = StrFind(SplitResult, "charset=");
+            If Position > 0 Then
+                Position = Position + StrLen("charset=");    
+                Invocation.ContentEncoding = Upper(Mid(SplitResult, Position));         
+            EndIf;
+            
+        EndDo;
+        
+    EndIf;
+    
+    // Helps to resolve problem with english and russian configurations. 
+    Invocation.EventSource = Metadata.HTTPServices.FL_AppEndpoint.Fullname();
+    
+    Invocation.Operation = Operation;
+    Invocation.Payload = Request.GetBodyAsBinaryData(); 
+    Invocation.ReplyTo = Headers.Get("ReplyTo");
+    Invocation.CorrelationId = Headers.Get("CorrelationId");
+    
+    Timestamp = Headers.Get("Timestamp");
+    If ValueIsFilled(Timestamp) Then
+        Invocation.Timestamp = Timestamp;
+    EndIf;
+    
+    UserId = Headers.Get("UserId");
+    If ValueIsFilled(UserId) Then 
+        Invocation.UserId = UserId;
+    EndIf;
+    
+    AppEndpoint = Undefined;
+    If ValueIsFilled(Invocation.ReplyTo) Then
+        AppEndpoint = FL_CommonUse.ReferenceByDescription(
+            Metadata.Catalogs.FL_Channels, Headers.Get("AppId"));
+    EndIf;
+    
+    // Avoid using hierarchical transactions. 
+    Invocation.Routed = True;
+    Message = Catalogs.FL_Messages.Create(Invocation);
+    
+    If Async Then
+        Catalogs.FL_Messages.Route(Message, Exchange, AppEndpoint, True);     
+    Else 
+        Catalogs.FL_Messages.RouteAndRun(Message, Exchange, AppEndpoint);    
+    EndIf;
+    
+    Response = New HTTPServiceResponse(FL_InteriorUseReUse.OkStatusCode());
+    Return Response;
+    
+EndFunction // MessageHandler()
+
+#EndRegion // ProgramInterface
+
+#Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Procedure ProcessURLParameters(URLParameters, Exchange, Operation, Async)
+    
+    ExchangeName = URLParameters.Get("Exchange");
     Exchange = FL_CommonUse.ReferenceByDescription(
         Metadata.Catalogs.FL_Exchanges, ExchangeName);
     If Exchange = Undefined Then
@@ -40,6 +109,7 @@ Function MessageHandler(Request)
          
     EndIf;
     
+    OperationName = URLParameters.Get("Operation");
     Operation = FL_CommonUse.ReferenceByDescription(
         Metadata.Catalogs.FL_Operations, OperationName);
     If Operation = Undefined Then
@@ -53,29 +123,9 @@ Function MessageHandler(Request)
         Raise ErrorMessage;
          
     EndIf;
+   
+    Async = Upper(URLParameters.Get("Type")) = "ASYNC";
     
-    Invocation = Catalogs.FL_Messages.NewInvocation();
-    Invocation.AppId = URLParameters.Get("AppId"); 
-    Invocation.ContentEncoding = "TODO:";
-    Invocation.ContentType = "TODO:";
-    Invocation.CorrelationId = URLParameters.Get("CorrelationId");
-    Invocation.EventSource = URLParameters.Get("EventSource");
-    Invocation.Operation = Operation;
-    Invocation.ReplyTo = URLParameters.Get("ReplyTo");
-    
-    Timestamp = URLParameters.Get("Timestamp");
-    If ValueIsFilled(Timestamp) Then
-        Invocation.Timestamp = Timestamp;
-    EndIf;
-    
-    UserId = URLParameters.Get("UserId");
-    If ValueIsFilled(UserId) Then 
-        Invocation.UserId = UserId;
-    EndIf;
-        
-    Response = New HTTPServiceResponse(FL_InteriorUseReUse.OkStatusCode());
-    Return Response;
-    
-EndFunction // MessageHandler()
+EndProcedure // ProcessURLParameters()
 
-#EndRegion // ProgramInterface
+#EndRegion // ServiceProceduresAndFunctions

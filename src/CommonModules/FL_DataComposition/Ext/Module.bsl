@@ -324,10 +324,9 @@ EndProcedure // InitSettingsComposer()
 //  SettingsComposer - DataCompositionSettingsComposer - describes relation of 
 //                          data composition settings and data composition schema.
 //  Context          - ValueTable - see function Catalogs.FL_Messages.NewContext.
+//                   - Structure  - deserialized context from payload.
 //
 Procedure SetDataToSettingsComposer(SettingsComposer, Context) Export
-    
-    Var MessageBody, Parameters, Filter;
     
     If TypeOf(SettingsComposer) <> Type("DataCompositionSettingsComposer") Then
         Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
@@ -340,9 +339,16 @@ Procedure SetDataToSettingsComposer(SettingsComposer, Context) Export
         ConvertedContext = Context;    
     EndIf;
     
-    If TypeOf(ConvertedContext) <> Type("ValueTable") Then      
-        Raise FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "Context", ConvertedContext, Type("ValueTable"));     
+    If TypeOf(ConvertedContext) <> Type("ValueTable") 
+        AND TypeOf(ConvertedContext) <> Type("Structure") Then      
+        
+        ErrorMessage = StrTemplate("%1. %2", 
+            FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected("Context", 
+                ConvertedContext, Type("ValueTable")),
+            FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected("Context", 
+                ConvertedContext, Type("Structure")));
+        Raise ErrorMessage;
+        
     EndIf;
              
     DataParameters = SettingsComposer.Settings.DataParameters;
@@ -790,10 +796,38 @@ EndProcedure // FillReportStructure()
 // Parameters:
 //  DataParameters - DataCompositionParameterValues - values of data parameters. 
 //                                      They are implemented as parameter values.
-//  Context        - ValueTable                     - invocation context.
+//  Context        - ValueTable - invocation context.
+//                 - Structure  - deserialized context from payload.
 //
 Procedure FillDataCompositionParameterValueCollection(DataParameters, Context)
+    
+    If Context.Count() = 0 Then
+        Return;
+    EndIf;
+    
+    If TypeOf(Context) = Type("ValueTable") Then
+        
+        FillParameterValueCollectionFromValueTable(DataParameters, Context);
+        
+    ElsIf TypeOf(Context) = Type("Structure") Then
+        
+        Settings = Undefined;
+        If NOT Context.Property("Settings", Settings) 
+            OR TypeOf(Settings) <> Type("Structure")
+            OR Settings.Count() = 0 Then 
+            Return;    
+        EndIf;    
+        
+        FillParameterValueCollectionFromStructure(DataParameters, Settings);
+        
+    EndIf;
+     
+EndProcedure // FillDataCompositionParameterValueCollection()
 
+// Only for internal use.
+//
+Procedure FillParameterValueCollectionFromValueTable(DataParameters, Context)
+    
     // Verification is necessary as the type can be Undefined.
     AvailableParameters = DataParameters.AvailableParameters;
     If TypeOf(AvailableParameters) <> Type("DataCompositionAvailableParameters") Then
@@ -842,7 +876,61 @@ Procedure FillDataCompositionParameterValueCollection(DataParameters, Context)
                 
     EndDo;
     
-EndProcedure // FillDataCompositionParameterValueCollection()
+EndProcedure // FillParameterValueCollectionFromValueTable()
+
+// Only for internal use.
+//
+Procedure FillParameterValueCollectionFromStructure(DataParameters, Settings)
+    
+    // Verification is necessary as the type can be Undefined.
+    AvailableParameters = DataParameters.AvailableParameters;
+    If TypeOf(AvailableParameters) <> Type("DataCompositionAvailableParameters") Then
+        Return;
+    EndIf;
+    
+    CriticalError = False;
+    ErrorMessages = New Array;
+    For Each Setting In Settings Do
+        
+        Parameter = New DataCompositionParameter(Setting.Key);   
+        AvailableParameter = AvailableParameters.FindParameter(Parameter);
+        If AvailableParameter = Undefined Then
+            
+            ErrorMessage = StrTemplate(
+                NStr("en='Warning: Available parameter not found for {%1}.'; 
+                    |ru='Предупреждение: Доступный параметр не найден для {%1}.'; 
+                    |uk='Попередження: Доступний параметр не знайдено для {%1}.';
+                    |en_CA='Warning: Available parameter not found for {%1}.';"),
+                Setting.Key);
+            ErrorMessages.Add(ErrorMessage);
+            Continue;
+            
+        EndIf;
+        
+        ConversionResult = FL_CommonUse.ConvertValueIntoPlatformObject(
+            Setting.Value, AvailableParameter.Type.Types());
+        If ConversionResult.TypeConverted Then
+            
+            SetDataCompositionDataParameterValue(DataParameters, Setting.Key, 
+                ConversionResult.ConvertedValue);
+                
+        Else
+            
+            CriticalError = True;
+            For Each ErrorMessage In ConversionResult.ErrorMessages Do
+                ErrorMessages.Add(StrTemplate(ErrorMessage, Setting.Key));    
+            EndDo;
+            
+        EndIf;
+        
+    EndDo;
+    
+    If CriticalError Then
+        ResultError = StrConcat(ErrorMessages, Chars.CR + Chars.LF);
+        Raise ResultError; 
+    EndIf;
+    
+EndProcedure // FillParameterValueCollectionFromStructure() 
 
 // Sets value of data parameter by identifier. 
 //

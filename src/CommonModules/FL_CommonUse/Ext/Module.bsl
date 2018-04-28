@@ -617,6 +617,21 @@ Function IsReference(Type) Export
     
 EndFunction // IsReference()
 
+// Specifies that the metadata object belongs to the catalog type.
+// 
+// Parameters:
+//  MetadataObject - MetadataObject - object for which it is necessary to specify 
+//                                    whether it belongs to the catalog type.
+// 
+// Returns:
+//  Boolean - True if metadata object belongs to the catalog type.
+//
+Function IsCatalog(MetadataObject) Export
+
+    Return Metadata.Catalogs.Contains(MetadataObject);
+
+EndFunction // IsCatalog()
+
 // Checks if the record about the passed reference value is actually in the data infobase.
 // 
 // Parameters:
@@ -1306,6 +1321,21 @@ Function ObjectManagerByFullName(FullName) Export
     
 EndFunction // ObjectManagerByFullName()
 
+// Returns the object manager by a reference to object.
+//
+// Parameters:
+//  Ref - AnyRef - the object for which it is required to receive object manager.
+//
+// Returns:
+//  ObjectManager - object manager received by a reference to object.
+//
+Function ObjectManagerByReference(Ref) Export
+    
+    FullName = TableNameByRef(Ref);
+    Return ObjectManagerByFullName(FullName);
+    
+EndFunction // ObjectManagerByReference()
+
 #EndRegion // ObjectTypes
 
 // Returns a value table mock for a metadata object.
@@ -1457,14 +1487,14 @@ Function ConvertValueIntoPlatformObject(Val Value, SupportedTypes) Export
             ConversionResult.TypeConverted  = True;
         ElsIf Type = Type("String") Then
             ConvertValueIntoString(Value, ConversionResult);
-        //ElsIf Type = Type("Number") Then
-        //    ConvertValueIntoNumber(Value, ConversionResult);
-        //ElsIf Type = Type("Date") Then
-        //    ConvertValueIntoDate(Value, ConversionResult);
-        //ElsIf Type = Type("StandardPeriod") Then
-        //    ConvertValueIntoStandardPeriod(Value, ConversionResult);
-        //ElsIf IsReference(Type) Then
-        //    ConvertValueIntoRef(Value, Type, ConversionResult);
+        ElsIf Type = Type("Number") Then
+            ConvertValueIntoNumber(Value, ConversionResult);
+        ElsIf Type = Type("Date") Then
+            ConvertValueIntoDate(Value, ConversionResult);
+        ElsIf Type = Type("StandardPeriod") Then
+            ConvertValueIntoStandardPeriod(Value, ConversionResult);
+        ElsIf IsReference(Type) Then
+            ConvertValueIntoReference(Value, Type, ConversionResult);
         EndIf;
         
         If ConversionResult.TypeConverted Then
@@ -1956,21 +1986,508 @@ EndProcedure // ProcessRecalculationObjectManager()
 
 #Region ValueConversion
 
-// Converts value into "String" type.
+// Converts value into {String} type.
 //
 // Parameters:
-//  Value            - Arbitrary - value to be converted into "String" type.
+//  Value            - Arbitrary - value to be converted into {String} type.
 //  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
 //
 Procedure ConvertValueIntoString(Value, ConversionResult)
 
-    TypeMatch = ValueTypeMatchExpected(Value, Type("String"), ConversionResult);    
+    TypeMatch = ValueTypeMatchExpected(Value, Type("String"), 
+        ConversionResult);    
     If TypeMatch Then
+        ConversionResult.TypeConverted = True;
         ConversionResult.ConvertedValue = Value;
-        ConversionResult.TypeConverted  = True;
     EndIf;
                         
 EndProcedure // ConvertValueIntoString()
+
+// Converts value into {Number} type.
+//
+// Parameters:
+//  Value            - Arbitrary - value to be converted into {Number} type.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure ConvertValueIntoNumber(Value, ConversionResult)
+
+    TypeMatch = ValueTypeMatchExpected(Value, Type("Number"), 
+        ConversionResult);    
+    If TypeMatch Then
+        ConversionResult.TypeConverted = True;
+        ConversionResult.ConvertedValue = Value;
+    EndIf;
+                        
+EndProcedure // ConvertValueIntoNumber()
+
+// Converts value into {Date} type.
+//
+// Parameters:
+//  Value            - Arbitrary - value to be converted into {Date} type.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure ConvertValueIntoDate(Value, ConversionResult)
+
+    TypeMatch = ValueTypeMatchExpected(Value, Type("String"), 
+        ConversionResult);
+    If TypeMatch Then
+    
+        ConvertedValue = ConvertStringIntoDate(Value);
+        TypeMatch = ValueTypeMatchExpected(ConvertedValue, Type("Date"), 
+            ConversionResult);    
+        If TypeMatch Then
+            ConversionResult.TypeConverted = True;
+            ConversionResult.ConvertedValue = ConvertedValue;
+        EndIf;
+        
+    EndIf;
+                        
+EndProcedure // ConvertValueIntoDate()
+
+// Converts value into {StandardPeriod} type.
+//
+// Parameters:
+//  Value            - Arbitrary - value to be converted into {StandardPeriod} type.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure ConvertValueIntoStandardPeriod(Value, ConversionResult)
+
+    Var StartDate, EndDate, Variant;
+
+    TypeMatch = ValueTypeMatchExpected(Value, Type("Structure"), 
+        ConversionResult);
+    If NOT TypeMatch Then
+        Return;
+    EndIf;
+        
+    FoundVariant = Value.Property("Variant", Variant)
+        OR Value.Property("Вариант", Variant);
+        
+    FoundStartDate = Value.Property("StartDate", StartDate)
+        OR Value.Property("ДатаНачала", StartDate);
+                   
+    FoundEndDate = Value.Property("EndDate", EndDate)
+        OR Value.Property("ДатаОкончания", EndDate);
+        
+    If FoundStartDate AND FoundEndDate Then
+        ConvertValueIntoStandardPeriodUsingDate(StartDate, EndDate, 
+            ConversionResult);   
+    EndIf;
+            
+    If FoundVariant Then
+        ConvertValueIntoStandardPeriodUsingVariant(Variant, ConversionResult);         
+    EndIf;
+
+    If NOT ConversionResult.TypeConverted Then
+        
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Unable to parse {StandardPeriod} ({StartDate} and {EndDate} or {Variant} not found).'; 
+                |ru='%1 Не удалось распознать {СтандартныйПериод} ({ДатаНачала} и {ДатаОкончания} или {Вариант} не найдены).'; 
+                |uk='%1 Не вдалось розпізнати {СтандартнийПеріод} ({ДатаПочатку} та [ДатаЗакінчення} чи {Варіант} не знайдено).';
+                |en_CA='%1 Unable to parse {StandardPeriod} ({StartDate} and {EndDate} or {Variant} not found).'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate());
+        ConversionResult.ErrorMessages.Add(ErrorMessage);                
+            
+    EndIf;      
+        
+EndProcedure // ConvertValueIntoStandardPeriod()
+
+// Only for internal use.
+//
+Procedure ConvertValueIntoStandardPeriodUsingDate(StartDate, EndDate, 
+    ConversionResult)
+    
+    If ConversionResult.TypeConverted Then
+        Return;
+    EndIf;
+    
+    StartDate = ConvertStringIntoDate(StartDate);
+    TypeMatchSD = ValueTypeMatchExpected(StartDate, Type("Date"), 
+        ConversionResult);
+        
+    EndDate = ConvertStringIntoDate(EndDate);
+    TypeMatchED = ValueTypeMatchExpected(EndDate, Type("Date"), 
+        ConversionResult);
+        
+    If TypeMatchSD AND TypeMatchED Then
+        
+        StandardPeriod = New StandardPeriod(StartDate, EndDate);
+        If StandardPeriod.StartDate <= StandardPeriod.EndDate Then
+            
+            ConversionResult.TypeConverted = True;
+            ConversionResult.ConvertedValue = StandardPeriod;
+            Return;
+            
+        Else
+            
+            ErrorMessage = StrTemplate(
+                NStr("en='%1 {StartDate} is greater than {EndDate}.'; 
+                    |ru='%1 {ДатаНачала} не может быть больше {ДатаОкончания}.'; 
+                    |uk='%1 {ДатаПочатку} не може бути більшою {ДатиЗакінення}.';
+                    |en_CA='%1 {StartDate} is greater than {EndDate}.'"),
+                FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate());
+            ConversionResult.ErrorMessages.Add(ErrorMessage);
+            
+        EndIf;
+        
+    EndIf;
+    
+EndProcedure // ConvertValueIntoStandardPeriodUsingDate()
+
+// Only for internal use.
+//
+Procedure ConvertValueIntoStandardPeriodUsingVariant(Variant, ConversionResult)
+
+    If ConversionResult.TypeConverted Then
+        Return;
+    EndIf;
+    
+    TypeMatchV = ValueTypeMatchExpected(Variant, Type("String"), 
+        ConversionResult);   
+    If TypeMatchV Then
+        
+        Try
+    
+            StandardPeriod = New StandardPeriod(
+                StandardPeriodVariant[Variant]);
+                
+            ConversionResult.TypeConverted = True;
+            ConversionResult.ConvertedValue = StandardPeriod;
+            Return;
+
+        Except
+            
+            ErrorMessage = StrTemplate(
+                NStr("en='%1 {Variant} is unknown. %2'; 
+                    |ru='%1 {Вариант} неизвестен. %2'; 
+                    |uk='%1 {Варіант} невідомий. %2';
+                    |en_CA='%1 {Variant} is unknown. %2'"),
+                FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(), 
+                ErrorDescription());        
+            ConversionResult.ErrorMessages.Add(ErrorMessage);
+            
+        EndTry;
+        
+    EndIf; 
+    
+EndProcedure // ConvertValueIntoStandardPeriodUsingVariant()
+
+// Converts value into {Reference} type.
+//
+// Parameters:
+//  Value            - Arbitrary - value to be converted into {Reference} type.
+//  Type             - Type      - the type of the object to which the value is converted. 
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure ConvertValueIntoReference(Value, Type, ConversionResult)
+    
+    TypeMatch = ValueTypeMatchExpected(Value, Type("Structure"), 
+        ConversionResult);
+    If NOT TypeMatch Then
+        Return;
+    EndIf;
+       
+    Try
+        TypeEmptyRef = New(Type);
+    Except
+        
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Unable to indetify object type for {%2}. %3.'; 
+                |ru='%1 Не удалось идетифицировать тип значения для {%2}. %3.'; 
+                |uk='%1 Не вдалось ідентифікувати тип значення для {%2}. %3.';
+                |en_CA='%1 Unable to indetify object type for {%2}. %3.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(), 
+            String(Type), ErrorDescription()); 
+        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        Return;
+        
+    EndTry;
+    
+    Try
+        ObjectManager = ObjectManagerByReference(TypeEmptyRef);
+    Except
+        
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Unable to indetify object manager for {%2}. %3.'; 
+                |ru='%1 Не удалось идетифицировать менеджер значения для {%2}. %3.'; 
+                |uk='%1 Не вдалось ідентифікувати менеджер значення для {%2}. %3.';
+                |en_CA='%1 Unable to indetify object manager for {%2}. %3.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(), 
+            String(Type), ErrorDescription()); 
+        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        Return;
+        
+    EndTry;
+    
+    ConvertValueIntoReferenceUsingGUID(Value, Type, ConversionResult);
+    ConvertValueIntoReferenceUsingCode(Value, Type, ObjectManager, 
+        TypeEmptyRef, ConversionResult);
+    ConvertValueIntoReferenceUsingEnum(Value, Type, ObjectManager,
+        ConversionResult); 
+    ConvertValueIntoReferenceUsingNumber(Value, Type, ObjectManager, 
+        TypeEmptyRef, ConversionResult); 
+    ConvertValueIntoReferenceUsingDescription(Value, Type, ObjectManager, 
+        TypeEmptyRef, ConversionResult);
+    
+    If NOT ConversionResult.TypeConverted Then 
+        
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Unable to find {%2}.'; 
+                |ru='%1 Не удалось найти {%2}.'; 
+                |uk='%1 Не вдалось знайти {%2}.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),        
+            String(Type));
+        ConversionResult.ErrorMessages.Add(ErrorMessage);
+        
+    EndIf;       
+    
+EndProcedure // ConvertValueIntoReference()
+
+// Only for internal use.
+//
+Procedure ConvertValueIntoReferenceUsingGUID(Value, Type, ConversionResult)
+    
+    Var KeyValue;
+    
+    If ConversionResult.TypeConverted Then
+        Return;
+    EndIf;
+    
+    // Search for an object using a unique identifier.
+    If Value.Property("Guid", KeyValue)
+        OR Value.Property("УникальныйИдентификатор", KeyValue) Then
+     
+         If ValueMatchUniqueIdentifier(KeyValue, ConversionResult) Then
+            
+            ConvertedValue = XMLValue(Type, KeyValue);
+            If RefExists(ConvertedValue) Then
+                
+                ConversionResult.TypeConverted = True;
+                ConversionResult.ConvertedValue = ConvertedValue;
+                Return;
+                
+            Else
+                
+                ErrorMessage = StrTemplate(
+                    NStr("en='%1 Unable to find {%2} with guid {%3}.'; 
+                        |ru='%1 Не удалось найти {%2} c уникальным идентификатором {%3}.'; 
+                        |uk='%1 Не вдалось знайти {%2} з унікальним ідентифікатором {%3}.';
+                        |en_CA='%1 Unable to find {%2} with guid {%3}.'"),
+                    FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),                         
+                    String(Type), KeyValue);   
+                ConversionResult.ErrorMessages.Add(ErrorMessage);
+
+            EndIf;
+                        
+        EndIf;
+             
+    EndIf;
+    
+EndProcedure // ConvertValueIntoReferenceUsingGUID()
+
+// Only for internal use.
+//
+Procedure ConvertValueIntoReferenceUsingCode(Value, Type, ObjectManager, 
+    TypeEmptyRef, ConversionResult)
+    
+    Var KeyValue;
+    
+    If ConversionResult.TypeConverted Then
+        Return;
+    EndIf;
+    
+    // Search for an object using a code.
+    If Value.Property("Code", KeyValue)
+        OR Value.Property("Код", KeyValue) Then
+        
+        If ValueMatchCodeType(KeyValue, TypeEmptyRef, ConversionResult) Then
+            
+            ConvertedValue = ObjectManager.FindByCode(KeyValue);
+            If NOT ConvertedValue.IsEmpty() Then
+                
+                ConversionResult.TypeConverted = True;
+                ConversionResult.ConvertedValue = ConvertedValue;
+                Return;
+                
+            Else
+                
+                ErrorMessage = StrTemplate(
+                    NStr("en='%1 Unable to find {%2} with Code {%3}.'; 
+                        |ru='%1 Не удалось найти {%2} c Кодом {%3}.'; 
+                        |uk='%1 Не вдалось знайти {%2} з Кодом {%3}.';
+                        |en_CA='%1 Unable to find {%2} with Code {%3}.'"),
+                    FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),  
+                    String(Type), String(KeyValue));                                           
+                ConversionResult.ErrorMessages.Add(ErrorMessage);
+                
+            EndIf;
+            
+        EndIf;
+                
+    EndIf;
+        
+EndProcedure // ConvertValueIntoReferenceUsingCode()
+
+// Only for internal use.
+//
+Procedure ConvertValueIntoReferenceUsingEnum(Value, Type, ObjectManager, 
+    ConversionResult)
+    
+    Var KeyValue;
+    
+    If ConversionResult.TypeConverted Then
+        Return;
+    EndIf;
+    
+    // Search for an object using a enum name.
+    If Value.Property("EnumValueName", KeyValue)
+        OR Value.Property("ПеречислениеИмяЗначения", KeyValue) Then
+     
+        ConvertValueIntoReferenceUsingEnumValueName(KeyValue, Type, 
+            ObjectManager, ConversionResult);    
+             
+    EndIf;
+    
+    // Search for an object using a enum index.
+    If Value.Property("EnumValueIndex", KeyValue)
+        OR Value.Property("ПеречислениеИндексЗначения", KeyValue) Then
+        
+        ConvertValueIntoReferenceUsingEnumValueIndex(KeyValue, Type, 
+            ObjectManager, ConversionResult);      
+     
+    EndIf;
+    
+EndProcedure // ConvertValueIntoReferenceUsingEnum()
+
+// Only for internal use.
+//
+Procedure ConvertValueIntoReferenceUsingEnumValueName(Value, Type, 
+    ObjectManager, ConversionResult)
+    
+    If ConversionResult.TypeConverted Then
+        Return;
+    EndIf;
+    
+    TypeMatch = ValueTypeMatchExpected(TypeOf(Value), 
+        Type("String"), ConversionResult);
+        
+    If TypeMatch Then
+        
+        Try
+            
+            ConvertedValue = ObjectManager[Value];
+            ConversionResult.TypeConverted = True;                
+            ConversionResult.ConvertedValue = ConvertedValue;
+            Return;
+        
+        Except
+            
+            ErrorMessage = StrTemplate(
+                NStr("en='%1 Enum {%2} value name {%3} not found. %4.'; 
+                    |ru='%1 Наименование значения {%3} перечисления {%2} не найдено. %4.'; 
+                    |uk='%1 Назва значення {%3} переліку {%2} не знайдено. %4.';
+                    |en_CA='%1 Enum {%2} value name {%3} not found. %4.'"),
+                FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),                        
+                String(Type), Value, ErrorDescription());
+            ConversionResult.ErrorMessages.Add(ErrorMessage);    
+            
+        EndTry;
+        
+    EndIf;
+    
+EndProcedure // ConvertValueIntoReferenceUsingEnumValueName()
+
+// Only for internal use.
+//
+Procedure ConvertValueIntoReferenceUsingEnumValueIndex(Value, Type, 
+    ObjectManager, ConversionResult)
+    
+    If ConversionResult.TypeConverted Then
+        Return;
+    EndIf;
+    
+    TypeMatch = ValueTypeMatchExpected(TypeOf(Value), 
+        Type("Number"), ConversionResult);
+        
+    If TypeMatch Then
+        
+        If Value >= 0 AND Value < ObjectManager.Count() Then
+            
+            ConvertedValue = ObjectManager.Get(Value);
+            ConversionResult.TypeConverted = True;                
+            ConversionResult.ConvertedValue = ConvertedValue;
+            Return;
+            
+        Else
+            
+            ErrorMessage = StrTemplate(
+                NStr("en='%1 Enum {%2} value index {%3} is out of range.'; 
+                    |ru='%1 Индекс {%3} перечисления {%2} находится вне диапазона.'; 
+                    |uk='%1 Індекс {%3} переліку {%2} знаходиться поза діапазоном.';
+                    |en_CA='%1 Enum {%2} value index {%3} is out of range."),
+                FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),                          
+                String(Type), String(Value));
+            ConversionResult.ErrorMessages.Add(ErrorMessage);
+    
+        EndIf;
+        
+    EndIf;       
+    
+EndProcedure // ConvertValueIntoReferenceUsingEnumValueIndex()
+
+// Only for internal use.
+//
+Procedure ConvertValueIntoReferenceUsingNumber(Value, Type, ObjectManager, 
+    TypeEmptyRef, ConversionResult)
+    
+    Var KeyValue;
+    
+    If ConversionResult.TypeConverted Then
+        Return;
+    EndIf;
+    
+    // Search for an object using a unique identifier.
+    If Value.Property("Number", KeyValue)
+        OR Value.Property("Номер", KeyValue) Then
+      
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Currently search by {Number} field not supported.'; 
+                |ru='%1 На текущий момент поиск по полю {Номер} не поддерживается.'; 
+                |uk='%1 На даний час пошук по полю {Номер} не підтримується.';
+                |en_CA='%1 Currently search by {Number} field not supported.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate());   
+        ConversionResult.ErrorMessages.Add(ErrorMessage);
+                       
+    EndIf;
+    
+EndProcedure // ConvertValueIntoReferenceUsingNumber()
+
+// Only for internal use.
+//
+Procedure ConvertValueIntoReferenceUsingDescription(Value, Type, ObjectManager, 
+    TypeEmptyRef, ConversionResult)
+    
+    Var KeyValue;
+    
+    If ConversionResult.TypeConverted Then
+        Return;
+    EndIf;
+    
+    // Search for an object using a unique identifier.
+    If Value.Property("Description", KeyValue)
+        OR Value.Property("Наименование", KeyValue) Then
+     
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Currently search by {Description} field not supported.'; 
+                |ru='%1 На текущий момент поиск по полю {Наименование} не поддерживается.'; 
+                |uk='%1 На даний час пошук по полю {Наименование} не підтримується.';
+                |en_CA='%1 Currently search by {Description} field not supported.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate());   
+        ConversionResult.ErrorMessages.Add(ErrorMessage);
+             
+    EndIf;
+    
+EndProcedure // ConvertValueIntoReferenceUsingDescription()
 
 // Returns base convertion result structure.
 //
@@ -1980,15 +2497,270 @@ EndProcedure // ConvertValueIntoString()
 //      * TypeConverted  - Boolean   - initial value 'False', when 'True' is set 
 //                                    it means value conversion was successful.
 //                          Default value: False.
+//      * ErrorMessages  - Array     - conversion error messages.
+//          ** ArrayItem - String - conversion error message.
 //
 Function NewConversionResult()
 
     ConversionResult = New Structure;
     ConversionResult.Insert("ConvertedValue");
     ConversionResult.Insert("TypeConverted", False);
+    ConversionResult.Insert("ErrorMessages", New Array);
     Return ConversionResult;
 
 EndFunction // NewConversionResult()
+
+// Converts a string into a date type value.
+//
+// Parameters:
+//  StringDate - String - string to be converted to a date.
+//
+// Returns:
+//  Date - converted value.
+//
+Function ConvertStringIntoDate(StringDate)
+    
+    Var ConvertedValue;
+
+    If ConvertStringIntoDateByFormat(StringDate, JSONDateFormat.ISO, ConvertedValue) Then
+        Return ConvertedValue;
+    EndIf;
+
+    If ConvertStringIntoDateByFormat(StringDate, JSONDateFormat.JavaScript, ConvertedValue) Then
+        Return ConvertedValue;
+    EndIf;
+
+    If ConvertStringIntoDateByFormat(StringDate, JSONDateFormat.Microsoft, ConvertedValue) Then
+        Return ConvertedValue;
+    EndIf;
+
+    Try
+        ConvertedValue = Date(StringDate);
+    Except
+        ConvertedValue = Undefined;
+    EndTry;
+
+    Return ConvertedValue;    
+    
+EndFunction // ConvertStringIntoDate()
+
+// Only for internal use.
+//
+Function ConvertStringIntoDateByFormat(Val StringDate, Format, ConvertedValue)
+
+    Try
+        ConvertedValue = ReadJSONDate(StringDate, Format);
+    Except
+        Return False; 
+    EndTry;
+
+    Return True;
+
+EndFunction // ConvertStringIntoDateByFormat()
+
+// Only for internal use.
+//
+Function ValueMatchUniqueIdentifier(Value, ConversionResult)
+    
+    If TypeOf(Value) = Type("UUID") Then
+        Return True;
+    EndIf;
+    
+    If TypeOf(Value) <> Type("String") Then
+        
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Guid expected type {%2} and received type is {%3}.'; 
+                |ru='%1 Уникальный идентификатор ожидался тип {%2}, а получили тип {%3}.'; 
+                |uk='%1 Унікальний ідентифікатор очікувався тип {%2}, але отримали тип {%3}.';
+                |en_CA='%1 Guid expected type {%2} and received type is {%3}.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),
+            String(Type("String")), String(TypeOf(Value)));
+        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        Return False;
+        
+    EndIf;
+        
+    If IsBlankString(Value) Then
+        
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Guid cannot be empty.'; 
+                |ru='%1 Уникальный идентификатор не может быть пустым.'; 
+                |uk='%1 Унікальний ідентифікатор не може бути порожнім.';
+                |en_CA='%1 Guid cannot be empty.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate());
+        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        Return False;        
+            
+    EndIf;
+
+    GuidLength = 36;
+    If StrLen(TrimAll(Value)) <> GuidLength Then
+        
+         ErrorMessage = StrTemplate(
+            NStr("en='%1 Guid must be 36 symbols long.'; 
+                |ru='%1 Уникальный идентификатор должен иметь длину 36 символов.'; 
+                |uk='%1 Унікальний ідентифікатор повинен мати довжину 36 символів.';
+                |en_CA='%1 Guid must be 36 symbols long.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate());
+        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        Return False;
+            
+    EndIf;
+
+    If NOT UniqueIdentifierHypenValid(Value) Then
+        
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Guid must contain the symbol {-} on 9, 14, 19, 24 positions.'; 
+                |ru='%1 Уникальный идентификатор должен содержать символ {-} на 9, 14, 19, 24 позициях.'; 
+                |uk='%1 Унікальний ідентифікатор повинен містити символ {-} на 9, 14, 19, 24 позиціях.'
+                |en_CA='%1 Guid must contain the symbol {-} on 9, 14, 19, 24 positions.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate());
+        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        Return False;
+            
+    EndIf;
+
+    For Index = 1 To StrLen(Value) Do
+        
+        If NOT UniqueIdentifierHypenPosition(Index) Then
+            
+            Symbol = Mid(Value, Index, 1);
+            If NOT FL_CommonUseClientServer.IsLatinLetter(Symbol)
+               AND NOT  FL_CommonUseClientServer.IsNumber(Symbol) Then
+               
+                ErrorMessage = StrTemplate(
+                    NStr("en='%1 Guid contains illegal characters. Latin letters and numbers are allowed only.';
+                        |ru='%1 Уникальный идентификатор содержит запрещенные символы. Разрешены только латинские буквы и цифры.';
+                        |uk='%1 Унікальний ідентифікатор містить заборонені символи. Дозволені тільки латинські літери та цифри.';
+                        |en_CA='%1 Guid contains illegal characters. Latin letters and numbers are allowed only.'"),
+                    FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate());
+                ConversionResult.ErrorMessages.Add(ErrorMessage);    
+                Return False;
+               
+            EndIf;
+            
+        EndIf;
+                
+    EndDo;
+            
+    Return True;
+
+EndFunction // ValueMatchUniqueIdentifier()
+
+// Only for internal use.
+//
+Function ValueMatchCodeType(Value, TypeEmptyRef, ConversionResult) 
+        
+    MetadataObject = TypeEmptyRef.Metadata();
+    If IsCatalog(MetadataObject) Then
+        Return ValueMatchCatalogCodeType(Value, MetadataObject, 
+            ConversionResult);       
+    Else
+            
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Code in {%2} is not supported in configuration.'; 
+                |ru='%1 Код в {%2} не поддерживается в конфигурации.'; 
+                |uk='%1 Код в {%2} не підтримується в конфігурації.';
+                |en_CA='%1 Code in {%2} is not supported in configuration.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(), 
+            String(TypeOf(TypeEmptyRef))); 
+        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        Return False;
+                        
+    EndIf;
+
+    Return True;
+        
+EndFunction // ValueMatchCodeType()
+
+// Only for internal use.
+//
+Function ValueMatchCatalogCodeType(Value, MetadataObject, ConversionResult)
+    
+    ObjectProperties = Metadata.ObjectProperties;
+    If MetadataObject.CodeLength = 0 Then
+        
+        ErrorMessage =  StrTemplate(
+            NStr("en='%1 Code in configuration has zero length.'; 
+                |ru='%1 Длина поля Код в конфигурации равна нулю.'; 
+                |uk='%1 Довжина поля Код в конфігурації рівна нулю.';
+                |en_CA='%1 Code in configuration has zero length.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate());       
+        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        Return False;
+            
+    EndIf;
+
+    CodeType = MetadataObject.CodeType;
+    If CodeType = ObjectProperties.CatalogCodeType.String Then
+        
+        If TypeOf(Value) <> Type("String") Then 
+            
+            ErrorMessage = StrTemplate(
+                NStr("en='%1 Expected Code type {%2} and received type is {%3}.'; 
+                    |ru='%1 Тип Кода ожидался {%2}, а получили тип {%3}.'; 
+                    |uk='%1 Тип Коду очікувався {%2}, але отримали тип {%3}.';
+                    |en_CA='%1 Expected Code type {%2} and received type is {%3}.'"),
+                FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),                          
+                String(Type("String")), String(TypeOf(Value))); 
+            ConversionResult.ErrorMessages.Add(ErrorMessage);    
+            Return False;
+                            
+        EndIf;
+        
+    ElsIf CodeType = ObjectProperties.CatalogCodeType.Number Then
+        
+        If TypeOf(Value) <> Type("Number") Then
+            
+            ErrorMessage = StrTemplate(
+                NStr("en='%1 Expected Code type {%2} and received type is {%3}.'; 
+                    |ru='%1 Тип Кода ожидался {%2}, а получили тип {%3}.'; 
+                    |uk='%1 Тип Коду очікувався {%2}, але отримали тип {%3}.';
+                    |en_CA='%1 Expected Code type {%2} and received type is {%3}.'"),                
+                FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),
+                String(Type("String")), String(TypeOf(Value)));    
+            ConversionResult.ErrorMessages.Add(ErrorMessage);    
+            Return False;
+            
+        EndIf;
+        
+    Else
+        
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Code type {%2} not supported.'; 
+                |ru='%1 Тип Кода {%2} не поддерживается.'; 
+                |uk='%1 Тип Коду {%2} не підтримується.';
+                |en_CA='%1 Code type {%2} not supported.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),     
+            String(CodeType));   
+        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        Return False;
+        
+    EndIf;
+        
+    If TypeOf(Value) = Type("Number") Then
+        CodeLength = StrLen(Format(Value, "NG=0"));
+    Else
+        CodeLength = StrLen(TrimAll(Value));
+    EndIf;
+    
+    If MetadataObject.CodeLength < CodeLength Then
+        
+        ErrorMessage = StrTemplate(
+            NStr("en='%1 Code lenght is {%2} and maximum length is {%3}.'; 
+                |ru='%1 Длина Кода равна {%2}, что больше максимальной длины {%3}.'; 
+                |uk='%1 Довжина Коду рівна {%2}, що більше максимальної {%3}.';
+                |en_CA='%1 Code lenght is {%2} and maximum length is {%3}.'"),
+            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),
+            CodeLength, MetadataObject.CodeLength);
+        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        Return False;
+                        
+    EndIf;
+    
+    Return True;
+    
+EndFunction // ValueMatchCatalogCodeType()
 
 // Checks value type to the expected type. 
 //
@@ -2005,16 +2777,46 @@ Function ValueTypeMatchExpected(Value, ExpectedType, ConversionResult)
 
     If TypeOf(Value) <> ExpectedType Then
         
-        // FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-        //      "SettingsComposer", Value, ExpectedType);
-        
+        ErrorMessage = FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
+            "%1", Value, ExpectedType);
+        ConversionResult.ErrorMessages.Add(ErrorMessage);
         Return False;
-            
+        
     EndIf;
         
     Return True;
 
 EndFunction // ValueTypeMatchExpected()
+
+// Only for internal use.
+//
+Function UniqueIdentifierHypenValid(Value)
+    
+    GuidPart09 = 9;
+    GuidPart14 = 14;
+    GuidPart19 = 19;
+    GuidPart24 = 24;
+    
+    Return Mid(Value, GuidPart09, 1) = "-" AND Mid(Value, GuidPart14, 1) = "-"
+       AND Mid(Value, GuidPart19, 1) = "-" AND Mid(Value, GuidPart24, 1) = "-";
+    
+EndFunction // UniqueIdentifierHypenValid()
+
+// Only for internal use.
+//
+Function UniqueIdentifierHypenPosition(Index)
+    
+    GuidPart09 = 9;
+    GuidPart14 = 14;
+    GuidPart19 = 19;
+    GuidPart24 = 24;
+    
+    Return Index = GuidPart09 OR Index = GuidPart14 
+        OR Index = GuidPart19 OR Index = GuidPart24;    
+    
+EndFunction // UniqueIdentifierHypenPosition()
+
+#EndRegion // ValueConversion
 
 // Only for internal use.
 //
@@ -2047,7 +2849,5 @@ Function QueryTextReferenceByPredefinedDataName()
     Return QueryText;
 
 EndFunction // QueryTextReferenceByPredefinedDataName()
-
-#EndRegion // ValueConversion
 
 #EndRegion // ServiceProceduresAndFunctions

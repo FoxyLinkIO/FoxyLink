@@ -19,6 +19,21 @@
 
 #Region ProgramInterface
 
+// Returns {failed to process parameter template} error description.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorFailedToProcessParameterTemplate() Export
+    
+    ErrorMessage = NStr("en='Error: Failed to process parameter {%1}.'; 
+        |ru='Ошибка: Не удалось обработать параметр {%1}.';
+        |uk='Помилка: Не вдалось опрацювати параметр {%1}.';
+        |en_CA='Error: Failed to process parameter {%1}.'");
+    Return ErrorMessage;
+    
+EndFunction // ErrorFailedToProcessParameterTemplate()
+
 // Returns wrong type error description.
 //
 // Parameters:
@@ -33,6 +48,7 @@ Function ErrorTypeIsDifferentFromExpected(VarName, VarValue, ExpectedType) Expor
     
     ErrorMessage = NStr("en='Error: Failed to process parameter {%1}. Expected type {%2} and received type is {%3}.';
         |ru='Ошибка: Не удалось обработать параметр {%1}. Ожидался тип {%2}, а получили тип {%3}.';
+        |uk='Помилка: Не вдалось опрацювати параметр {%1}. Очікувався тип {%2}, а отримали тип {%3}.';
         |en_CA='Error: Failed to process parameter {%1}. Expected type {%2} and received type is {%3}.'");
     ErrorMessage = StrTemplate(ErrorMessage, VarName, String(ExpectedType), 
         String(TypeOf(VarValue)));

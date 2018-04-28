@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.186</Version>
+			<Version>0.9.9.203</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -296,7 +296,6 @@
 			<CommonModule>FL_DataComposition</CommonModule>
 			<CommonModule>FL_Encryption</CommonModule>
 			<CommonModule>FL_EncryptionClientServer</CommonModule>
-			<CommonModule>FL_EndpointHTTP</CommonModule>
 			<CommonModule>FL_ErrorsClientServer</CommonModule>
 			<CommonModule>FL_Events</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
@@ -348,7 +347,6 @@
 			<InformationRegister>FL_MessagePayload</InformationRegister>
 			<InformationRegister>FL_MessagePublishers</InformationRegister>
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
-			<ExternalDataSource>DataBank</ExternalDataSource>
 		</ChildObjects>
 	</Configuration>
 </MetaDataObject>
