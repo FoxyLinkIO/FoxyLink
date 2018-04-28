@@ -3,18 +3,23 @@
 	<Title>
 		<v8:item>
 			<v8:lang>en</v8:lang>
-			<v8:content>Events</v8:content>
-		</v8:item>
-		<v8:item>
-			<v8:lang>ru</v8:lang>
-			<v8:content>События</v8:content>
+			<v8:content>Event subscriptions</v8:content>
 		</v8:item>
 		<v8:item>
 			<v8:lang>en_CA</v8:lang>
-			<v8:content>Events</v8:content>
+			<v8:content>Event subscriptions</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>ru</v8:lang>
+			<v8:content>Подписки на события</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>uk</v8:lang>
+			<v8:content>Підписки на повідомлення</v8:content>
 		</v8:item>
 	</Title>
 	<AutoTitle>false</AutoTitle>
+	<Customizable>false</Customizable>
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
 		<ChildItems>

@@ -321,6 +321,211 @@ Function SessionHash() Export
     
 EndFunction // SessionHash()
 
+#Region PictureLibrary
+
+// Returns the sequence number for the fullname of metadata 
+// in the FL_MetadataObjects collection.
+//
+// Parameters:
+//  FullName - String - full metadata object name. 
+//                  Example: "AccumulationRegister.Inventory".
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function PicSequenceIndexByFullName(FullName) Export
+    
+    Map = New Map;
+    Map.Insert("CONSTANT", ConstantPicSequenceIndex());
+    Map.Insert("КОНСТАНТА", ConstantPicSequenceIndex());
+    Map.Insert("SCHEDULEDJOB", ScheduledJobPicSequenceIndex());
+    Map.Insert("РЕГЛАМЕНТНОЕЗАДАНИЕ", ScheduledJobPicSequenceIndex());   
+    Map.Insert("HTTPSERVICE", HTTPServicePicSequenceIndex());
+    Map.Insert("HTTPСЕРВИС", HTTPServicePicSequenceIndex());
+    Map.Insert("CATALOG", CatalogPicSequenceIndex());
+    Map.Insert("СПРАВОЧНИК", CatalogPicSequenceIndex());
+    Map.Insert("DOCUMENT", DocumentPicSequenceIndex());
+    Map.Insert("ДОКУМЕНТ", DocumentPicSequenceIndex());
+    Map.Insert("CHARTOFCHARACTERISTICTYPES", ChartOfCharacteristicTypePicSequenceIndex());
+    Map.Insert("ПЛАНВИДОВХАРАКТЕРИСТИК", ChartOfCharacteristicTypePicSequenceIndex());
+    Map.Insert("CHARTOFACCOUNTS", ChartOfAccountPicSequenceIndex());
+    Map.Insert("ПЛАНСЧЕТОВ", ChartOfAccountPicSequenceIndex());
+    Map.Insert("CHARTOFCALCULATIONTYPES", ChartOfCalculationTypePicSequenceIndex());
+    Map.Insert("ПЛАНВИДОВРАСЧЕТА", ChartOfCalculationTypePicSequenceIndex());
+    Map.Insert("BUSINESSPROCESS", BusinessProcessPicSequenceIndex());
+    Map.Insert("БИЗНЕСПРОЦЕСС", BusinessProcessPicSequenceIndex());
+    Map.Insert("TASK", TaskPicSequenceIndex());
+    Map.Insert("ЗАДАЧА", TaskPicSequenceIndex()); 
+    Map.Insert("INFORMATIONREGISTER", InformationRegisterPicSequenceIndex());
+    Map.Insert("РЕГИСТРСВЕДЕНИЙ", InformationRegisterPicSequenceIndex());
+    Map.Insert("ACCUMULATIONREGISTER", AccumulationRegisterPicSequenceIndex());
+    Map.Insert("РЕГИСТРНАКОПЛЕНИЯ", AccumulationRegisterPicSequenceIndex());
+    Map.Insert("ACCOUNTINGREGISTER", AccountingRegisterPicSequenceIndex());
+    Map.Insert("РЕГИСТРБУХГАЛТЕРИИ", AccountingRegisterPicSequenceIndex());
+    Map.Insert("CALCULATIONREGISTER", CalculationRegisterPicSequenceIndex());
+    Map.Insert("РЕГИСТРРАСЧЕТА", CalculationRegisterPicSequenceIndex());
+    
+    Parts = StrSplit(FullName, ".");
+    Return Map.Get(Upper(Parts[0]));
+    
+EndFunction // PicSequenceIndexByFullName()
+
+// Returns the sequence number of the scheduled job picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function ScheduledJobPicSequenceIndex() Export
+    
+    Return 38;
+    
+EndFunction // ScheduledJobPicSequenceIndex()
+
+// Returns the sequence number of the HTTP service picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function HTTPServicePicSequenceIndex() Export
+    
+    Return 39;
+    
+EndFunction // HTTPServicePicSequenceIndex()
+
+// Returns the sequence number of the constant picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function ConstantPicSequenceIndex() Export
+    
+    Return 10;
+    
+EndFunction // ConstantPicSequenceIndex()
+
+// Returns the sequence number of the catalog picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function CatalogPicSequenceIndex() Export
+    
+    Return 1;
+    
+EndFunction // CatalogPicSequenceIndex()
+
+// Returns the sequence number of the document picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function DocumentPicSequenceIndex() Export
+    
+    Return 2;
+    
+EndFunction // DocumentPicSequenceIndex()
+
+// Returns the sequence number of the chart of characteristic type picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function ChartOfCharacteristicTypePicSequenceIndex() Export
+    
+    Return 4;
+    
+EndFunction // ChartOfCharacteristicTypePicSequenceIndex()
+
+// Returns the sequence number of the chart of account picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function ChartOfAccountPicSequenceIndex() Export
+    
+    Return 32;
+    
+EndFunction // ChartOfAccountPicSequenceIndex()
+
+// Returns the sequence number of the chart of calculation type picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function ChartOfCalculationTypePicSequenceIndex() Export
+    
+    Return 9;
+    
+EndFunction // ChartOfCalculationTypePicSequenceIndex()
+
+// Returns the sequence number of the information register picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function InformationRegisterPicSequenceIndex() Export
+    
+    Return 3;
+    
+EndFunction // InformationRegisterPicSequenceIndex()
+
+// Returns the sequence number of the accumulation register picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function AccumulationRegisterPicSequenceIndex() Export
+    
+    Return 6;
+    
+EndFunction // AccumulationRegisterPicSequenceIndex()
+
+// Returns the sequence number of the accounting register picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function AccountingRegisterPicSequenceIndex() Export
+    
+    Return 5;
+    
+EndFunction // AccountingRegisterPicSequenceIndex()
+
+// Returns the sequence number of the calculation register picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function CalculationRegisterPicSequenceIndex() Export
+    
+    Return 8;
+    
+EndFunction // CalculationRegisterPicSequenceIndex()
+
+// Returns the sequence number of the business process picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function BusinessProcessPicSequenceIndex() Export
+    
+    Return 7;
+    
+EndFunction // BusinessProcessPicSequenceIndex()
+
+// Returns the sequence number of the task picture in the FL_MetadataObjects collection.
+//
+// Returns:
+//  Number - the sequence number of the picture.
+//
+Function TaskPicSequenceIndex() Export
+    
+    Return 16;
+    
+EndFunction // TaskPicSequenceIndex()
+
+#EndRegion // PictureLibrary
+
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions

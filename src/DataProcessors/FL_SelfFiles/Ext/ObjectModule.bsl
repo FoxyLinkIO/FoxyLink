@@ -262,7 +262,7 @@ EndProcedure // ProcessAdditionalOutputProperties()
 //
 Function Version() Export
     
-    Return "1.0.4";
+    Return "1.0.5";
     
 EndFunction // Version()
 
@@ -273,10 +273,10 @@ EndFunction // Version()
 //
 Function BaseDescription() Export
     
-    BaseDescription = NStr("en='Export data to file (%1) app endpoint processor, ver. %2'; 
+    BaseDescription = NStr("en='Export data to file (%1) application endpoint processor, ver. %2'; 
         |ru='Обработчик конечной точки приложения экспорта данных в файл (%1), вер. %2';
         |uk='Обробник кінцевої точки додатку експорту данних в файл (%1), вер. %2';
-        |en_CA='Export data to file (%1) app endpoint processor, ver. %2'");
+        |en_CA='Export data to file (%1) application endpoint processor, ver. %2'");
     BaseDescription = StrTemplate(BaseDescription, ChannelStandard(), Version());      
     Return BaseDescription;    
     

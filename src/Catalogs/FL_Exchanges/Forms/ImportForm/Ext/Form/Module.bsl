@@ -256,7 +256,9 @@ Procedure SetEventMatches()
         
         MetadataObject = Metadata.FindByFullName(Item.MetadataObject);
         Item.Matched = MetadataObject <> Undefined;
-        
+        Item.PictureIndex = FL_CommonUseReUse
+            .PicSequenceIndexByFullName(Item.MetadataObject);    
+            
         If NOT Item.Matched Then
             Matched = False;
         EndIf;
@@ -266,11 +268,12 @@ Procedure SetEventMatches()
     If NOT Matched Then
         Items.EventsPage.Picture = PictureLib.FL_ExplanationMark;
         Items.EventsPage.Title = NStr("en='Events (there are events that require attention)';
-            |ru='События (есть события которые требуют внимания)';
+            |ru='События (есть события, которые требуют внимания)';
+            |uk='Події (є події, які потребують уваги)';
             |en_CA='Events (there are events that require attention)'");
     Else
         Items.EventsPage.Picture = PictureLib.FL_Ok;
-        Items.EventsPage.Title = NStr("en='Events';ru='События';en_CA='Events'");     
+        Items.EventsPage.Title = NStr("en='Events';ru='События';uk='Події';en_CA='Events'");     
     EndIf;
     
 EndProcedure // SetEventMatches()

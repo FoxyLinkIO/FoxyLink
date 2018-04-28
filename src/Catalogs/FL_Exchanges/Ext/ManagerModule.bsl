@@ -43,6 +43,39 @@ Procedure OnCreateAtServer(ManagedForm) Export
     
 EndProcedure // OnCreateAtServer()
 
+// Updates events view on managed form.
+//
+// Parameters:
+//  ManagedForm      - ManagedForm - catalog form.
+//  FilterParameters - Structure   - event filter parameters.
+//      * Operation - CatalogRef.FL_Operations - an operation for updating catalog form.
+//
+Procedure UpdateEventsView(ManagedForm, FilterParameters) Export
+    
+    Events = ManagedForm.Object.Events;
+    
+    FilterResults = Events.FindRows(FilterParameters);
+    If FilterResults.Count() = 0 Then
+        Return;
+    EndIf;
+   
+    EventHandlers = FL_InteriorUseReUse.AvailableEventHandlers(
+        FilterParameters.Operation);
+    For Each FilterResult In FilterResults Do
+        
+        For Each EventHandler In EventHandlers Do
+            If FilterResult.EventHandler = EventHandler.EventHandler Then
+                FillPropertyValues(FilterResult, EventHandler);   
+            EndIf;
+        EndDo;
+        
+        FilterResult.PictureIndex = FL_CommonUseReUse
+            .PicSequenceIndexByFullName(FilterResult.MetadataObject);
+            
+    EndDo;
+        
+EndProcedure // UpdateEventsView()
+
 // Updates operations view on managed form.
 //
 // Parameters:
@@ -139,14 +172,15 @@ Function ProcessMessage(Exchange, Message) Export
     Try
         
         Settings = ExchangeSettingsByRefs(Exchange, Message.Operation);
-        StreamObject = FL_InteriorUse.NewFormatProcessor(Settings.BasicFormatGuid);
+        StreamObject = FL_InteriorUse.NewFormatProcessor(
+            Settings.BasicFormatGuid);
         
         // Open new memory stream and initialize format processor.
         Stream = New MemoryStream;
         StreamObject.Initialize(Stream, Settings.APISchema);
         
-        OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(Settings, 
-            DeserializeContext(Message));
+        OutputParameters = NewOutputParameters(Settings, 
+            Catalogs.FL_Messages.DeserializeContext(Message));
                     
         FL_DataComposition.Output(StreamObject, OutputParameters);
         
@@ -271,7 +305,6 @@ Function AvailableFormats() Export
             Except
                 
                 FL_CommonUseClientServer.NotifyUser(ErrorDescription());
-                Continue;
                 
             EndTry;
             
@@ -450,6 +483,46 @@ Function NewProperties() Export
     
 EndFunction // NewProperties()
 
+// Returns the external event handler info structure for this module.
+//
+// Returns:
+//  Structure - see function FL_InteriorUse.NewExternalEventHandlerInfo.
+//
+Function EventHandlerInfo() Export
+    
+    EventHandlerInfo = FL_InteriorUse.NewExternalEventHandlerInfo();
+    EventHandlerInfo.EventHandler = "Catalogs.FL_Exchanges.ProcessMessage";
+    EventHandlerInfo.Default = True;
+    EventHandlerInfo.Version = "1.0.2";
+    EventHandlerInfo.Description = StrTemplate(NStr("
+            |en='Standard event handler, ver. %1.';
+            |ru='Стандартный обработчик событий, вер. %1.';
+            |uk='Стандартний обробник подій, вер. %1.';
+            |en_CA='Standard event handler, ver. %1.'"), 
+        EventHandlerInfo.Version);
+        
+    EventSources = New Array;
+    EventSources.Add(Upper("HTTPService.FL_AppEndpoint"));
+    EventSources.Add(Upper("HTTPСервис.FL_AppEndpoint"));
+    EventSources.Add(Upper("Catalog.*"));
+    EventSources.Add(Upper("Справочник.*"));
+    EventSources.Add(Upper("Document.*"));
+    EventSources.Add(Upper("Документ.*"));
+    EventSources.Add(Upper("InformationRegister.*"));
+    EventSources.Add(Upper("РегистрСведений.*"));
+    EventSources.Add(Upper("AccumulationRegister.*"));
+    EventSources.Add(Upper("РегистрНакопления.*"));
+    
+    AvailableOperations = Catalogs.FL_Operations.AvailableOperations();
+    For Each AvailableOperation In AvailableOperations Do
+        EventHandlerInfo.Publishers.Insert(AvailableOperation.Value, 
+            EventSources);    
+    EndDo;
+       
+    Return FL_CommonUse.FixedData(EventHandlerInfo);
+    
+EndFunction // EventHandlerInfo()
+
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
@@ -536,6 +609,7 @@ Procedure AddOperationOnForm(Items, OperationDescription, Description, Picture)
 
     BasicDescription = NStr("en='Operation description is not available.';
         |ru='Описание операции не доступно.';
+        |uk='Опис операції не доступний.';
         |en_CA='Operation description is not available.'");
 
     Parameters = New Structure;
@@ -562,21 +636,6 @@ Procedure AddOperationOnForm(Items, OperationDescription, Description, Picture)
 EndProcedure // AddOperationOnForm()
 
 #EndRegion // ObjectFormInteraction
-
-// Only for internal use.
-//
-Function DeserializeContext(Message)
-    
-    Context = Message.Context.Unload();
-    Context.Columns.Add("Value");
-    For Each Row In Context Do
-        Row.Value = FL_CommonUse.ValueFromXMLTypeAndValue(Row.XMLValue, 
-            Row.TypeName, Row.NamespaceURI);     
-    EndDo;
-    
-    Return Context;
-    
-EndFunction // DeserializeContext()
 
 // Only for internal use.
 //

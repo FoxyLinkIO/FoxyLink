@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.143</Version>
+			<Version>0.9.9.203</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -306,6 +306,7 @@
 			<CommonModule>FL_RecurringJob</CommonModule>
 			<CommonModule>FL_RunInSafeMode</CommonModule>
 			<CommonModule>FL_Tasks</CommonModule>
+			<HTTPService>FL_AppEndpoint</HTTPService>
 			<EventSubscription>FL_CatalogsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
 			<EventSubscription>FL_CatalogsOnWrite</EventSubscription>
@@ -343,9 +344,9 @@
 			<DataProcessor>FL_SelfFiles</DataProcessor>
 			<InformationRegister>FL_JobContinuations</InformationRegister>
 			<InformationRegister>FL_JobState</InformationRegister>
+			<InformationRegister>FL_MessagePayload</InformationRegister>
 			<InformationRegister>FL_MessagePublishers</InformationRegister>
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
-			<ExternalDataSource>DataBank</ExternalDataSource>
 		</ChildObjects>
 	</Configuration>
 </MetaDataObject>

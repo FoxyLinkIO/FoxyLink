@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -66,6 +66,61 @@ Function DayInMilliseconds() Export
     
 EndFunction // DayInMilliseconds()
 
+#Region SubsystemInteraction
+
+// Returns available events handlers for an operation.
+//
+// Parameters:
+//  Operation      - CatalogRef.FL_Operations - the operation reference.
+//  MetadataObject - String                   - the event metadata object.
+//
+// Returns:
+//  FixedArray - array of available events handlers.
+//               See function FL_InteriorUse.NewExternalEventHandlerInfo. 
+//
+Function AvailableEventHandlers(Operation, Val MetadataObject = Undefined) Export
+    
+    If ValueIsFilled(MetadataObject) Then
+        MetadataObject = Upper(MetadataObject);
+        ObjectTypeName = Left(MetadataObject, StrFind(MetadataObject, ".")) + "*";
+    EndIf;
+    
+    PublishersArray = New Array;
+    PluggableHandlers = FL_InteriorUse.PluggableSubsystem("EventHandlers");
+    For Each Item In PluggableHandlers.Content Do
+        
+        Try
+            
+            FullName = Item.FullName();
+            CommonModule = FL_CommonUse.CommonModule(FullName); 
+            
+            EventHandlerInfo = CommonModule.EventHandlerInfo();
+            EventSources = EventHandlerInfo.Publishers.Get(Operation);
+            
+            If TypeOf(EventSources) = Type("FixedArray") Then
+                
+                If NOT ValueIsFilled(MetadataObject) Then
+                    PublishersArray.Add(EventHandlerInfo);
+                ElsIf EventSources.Find(MetadataObject) <> Undefined Then
+                    PublishersArray.Add(EventHandlerInfo);
+                ElsIf EventSources.Find(ObjectTypeName) <> Undefined Then
+                    PublishersArray.Add(EventHandlerInfo);
+                EndIf;
+                
+            EndIf;
+            
+        Except
+            
+            FL_CommonUseClientServer.NotifyUser(ErrorDescription());
+            
+        EndTry;
+            
+    EndDo;
+    
+    Return New FixedArray(PublishersArray);
+    
+EndFunction // AvailableEventHandlers()
+
 // Identifies a plugin data processor name from library guid.
 //
 // Parameters:
@@ -107,6 +162,8 @@ Function IdentifyPluginProcessorName(LibraryGuid, PluggableSubsystem) Export
     Return DataProcessorName;
     
 EndFunction // IdentifyPluginProcessorName()
+
+#EndRegion // SubsystemInteraction
 
 // Returns ok status code.
 //

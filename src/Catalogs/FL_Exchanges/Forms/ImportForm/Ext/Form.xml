@@ -409,6 +409,11 @@
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
 							<DataPath>Events</DataPath>
+							<RowPictureDataPath>Events.PictureIndex</RowPictureDataPath>
+							<RowsPicture>
+								<xr:Ref>CommonPicture.FL_MetadataObjects</xr:Ref>
+								<xr:LoadTransparent>true</xr:LoadTransparent>
+							</RowsPicture>
 							<RowFilter xsi:nil="true"/>
 							<ContextMenu name="EventsContextMenu" id="34">
 								<Autofill>false</Autofill>
@@ -449,11 +454,31 @@
 								<ExtendedTooltip name="EventsSearchControlExtendedTooltip" id="45"/>
 							</SearchControlAddition>
 							<ChildItems>
-								<InputField name="EventsMetadataObject" id="46">
-									<DataPath>Events.MetadataObject</DataPath>
+								<InputField name="EventsEventName" id="199">
+									<DataPath>Events.EventName</DataPath>
 									<EditMode>EnterOnInput</EditMode>
-									<ContextMenu name="EventsMetadataObjectContextMenu" id="47"/>
-									<ExtendedTooltip name="EventsMetadataObjectExtendedTooltip" id="48"/>
+									<ContextMenu name="EventsEventNameContextMenu" id="200"/>
+									<ExtendedTooltip name="EventsEventNameExtendedTooltip" id="201"/>
+								</InputField>
+								<InputField name="EventsEventHandler" id="196">
+									<DataPath>Events.EventHandler</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="EventsEventHandlerContextMenu" id="197"/>
+									<ExtendedTooltip name="EventsEventHandlerExtendedTooltip" id="198"/>
+								</InputField>
+								<InputField name="EventsDescription" id="202">
+									<DataPath>Events.Description</DataPath>
+									<Visible>false</Visible>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="EventsDescriptionContextMenu" id="203"/>
+									<ExtendedTooltip name="EventsDescriptionExtendedTooltip" id="204"/>
+								</InputField>
+								<InputField name="EventsVersion" id="205">
+									<DataPath>Events.Version</DataPath>
+									<Visible>false</Visible>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="EventsVersionContextMenu" id="206"/>
+									<ExtendedTooltip name="EventsVersionExtendedTooltip" id="207"/>
 								</InputField>
 							</ChildItems>
 						</Table>
@@ -978,7 +1003,7 @@
 					<Type>
 						<v8:Type>xs:string</v8:Type>
 						<v8:StringQualifiers>
-							<v8:Length>100</v8:Length>
+							<v8:Length>80</v8:Length>
 							<v8:AllowedLength>Variable</v8:AllowedLength>
 						</v8:StringQualifiers>
 					</Type>
@@ -1000,6 +1025,142 @@
 					</Title>
 					<Type>
 						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Column>
+				<Column name="EventHandler" id="3">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Event handler</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Event handler</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Обработчик события</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Обробник події</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>100</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="EventName" id="4">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Event name</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Event name</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Наименование события</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Ім'я події</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="PictureIndex" id="5">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Picture index</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Picture index</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Индекс картинки</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Індекс піктограми</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>2</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Column>
+				<Column name="Description" id="6">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Description</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Description</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Описание</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Опис</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="Version" id="7">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Version</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Version</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Версия</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Версія</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>16</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
 					</Type>
 				</Column>
 			</Columns>

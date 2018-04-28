@@ -99,8 +99,8 @@ EndProcedure // SaveMessagePublishersToRegister()
 Procedure LoadBasicEventPublishers()
     
     PublishersArray = New Array;
-    PublishersArray.Add("HTTPService.FL_Endpoint");
-    PublishersArray.Add("HTTPСервис.FL_Endpoint");
+    PublishersArray.Add("HTTPService.FL_AppEndpoint");
+    PublishersArray.Add("HTTPСервис.FL_AppEndpoint");
     PublishersArray.Add("Catalog.*");
     PublishersArray.Add("Справочник.*");
     PublishersArray.Add("Document.*");
@@ -112,8 +112,15 @@ Procedure LoadBasicEventPublishers()
 
     Filter = New Structure;
     Filter.Insert("MetadataObjectClass", PublishersArray);
-    ValueToFormData(FL_CommonUse.ConfigurationMetadataTree(Filter), 
-        PublishersTree);
+    ValueTree = FL_CommonUse.ConfigurationMetadataTree(Filter);
+    
+    // Avoiding possible stack overflow
+    SearchResult = ValueTree.Rows.Find("FL_Messages", "Name", True);
+    If SearchResult <> Undefined Then
+        SearchResult.Parent.Rows.Delete(SearchResult);
+    EndIf;
+        
+    ValueToFormData(ValueTree, PublishersTree);
     
 EndProcedure // LoadBasicEventPublishers()
 

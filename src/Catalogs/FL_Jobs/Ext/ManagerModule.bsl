@@ -44,31 +44,40 @@ Procedure Trigger(Jobs, InvokeSubordinate = False, OutputCopy = Undefined) Expor
     
     For Each Job In ValidJobs Do
         
-        Try
+        If TransactionActive() Then
             
-            BeginTransaction();
-            
-            StartTime = CurrentUniversalDateInMilliseconds();
-
+            // Helps to avoid hierarchical transaction errors.
             ProcessJob(Job, InvokeSubordinate, , OutputCopy);
             
-            CommitTransaction();
+        Else
             
-        Except
-            
-            RollbackTransaction();
-            
-            WriteLogEvent("FoxyLink.Tasks.Trigger", 
-                EventLogLevel.Error,
-                Metadata.Catalogs.FL_Jobs,
-                ,
-                ErrorDescription());
+            Try
                 
-            Duration = CurrentUniversalDateInMilliseconds() - StartTime;
-            ChangeState(Job, Catalogs.FL_States.Failed, , Duration);  
+                StartTime = CurrentUniversalDateInMilliseconds();
+                
+                BeginTransaction();
+
+                ProcessJob(Job, InvokeSubordinate, , OutputCopy);
+                
+                CommitTransaction();
+                
+            Except
+                
+                RollbackTransaction();
+                
+                WriteLogEvent("FoxyLink.Tasks.Trigger", 
+                    EventLogLevel.Error,
+                    Metadata.Catalogs.FL_Jobs,
+                    ,
+                    ErrorDescription());
+                    
+                Duration = CurrentUniversalDateInMilliseconds() - StartTime;
+                ChangeState(Job, Catalogs.FL_States.Failed, , Duration);  
+                
+            EndTry;
             
-        EndTry;
-               
+        EndIf;
+                
     EndDo;
            
 EndProcedure // Trigger()

@@ -77,6 +77,12 @@ Procedure AfterWriteAtServer(CurrentObject, WriteParameters)
     // user has some problems with editing. It helps in this case. 
     Catalogs.FL_Exchanges.OnCreateAtServer(ThisObject);    
     
+    If NOT IsBlankString(RowOperation) Then
+        FilterParameters = NewOperationFilterParameters();
+        FillPropertyValues(FilterParameters, CurrentOperationData(RowOperation));
+        Catalogs.FL_Exchanges.UpdateEventsView(ThisForm, FilterParameters);
+    EndIf;
+    
 EndProcedure // AfterWriteAtServer()
 
 #EndRegion // FormEventHandlers
@@ -115,6 +121,24 @@ Procedure OperationPagesOnCurrentPageChange(Item, CurrentPage)
     LoadOperationSettings();
     
 EndProcedure // OperationPagesOnCurrentPageChange()
+
+&AtClient
+Procedure EventsEventHandlerStartChoice(Item, ChoiceData, StandardProcessing)
+    
+    StandardProcessing = False;
+    
+    CurrentData = Items.Events.CurrentData;
+    If CurrentData <> Undefined Then
+        
+        Identifier = CurrentData.GetID();   
+        NotifyDescription = New NotifyDescription(
+            "DoAfterChooseEventHandlerToSet", ThisObject, Identifier);
+        ShowChooseFromList(NotifyDescription, AvailableEventHandlers(
+                Identifier), Item);
+            
+    EndIf;
+        
+EndProcedure // EventsEventHandlerStartChoice()
 
 &AtClient
 Procedure ChannelsSelection(Item, SelectedRow, Field, StandardProcessing)
@@ -234,7 +258,7 @@ EndProcedure // AddChannel()
 Procedure AddEvent(Command)
     
     OpenForm("Catalog.FL_Exchanges.Form.EventsSelectionForm", 
-        New Structure("MarkedEvents", MarkedEvents()), 
+        New Structure("Operation, MarkedEvents", RowOperation, MarkedEvents()), 
         ThisObject,
         New UUID, 
         , 
@@ -863,6 +887,8 @@ Procedure UpdateOperationView(CurrentData)
     Items.Events.RowFilter = New FixedStructure(FilterParameters);
     Items.Channels.RowFilter = New FixedStructure(FilterParameters);
 
+    Catalogs.FL_Exchanges.UpdateEventsView(ThisForm, FilterParameters);
+    
 EndProcedure // UpdateOperationView() 
 
 // Applies changes to data composition schema.
@@ -1091,10 +1117,8 @@ Procedure DoAfterChooseEventToAdd(ClosureResult,
     AdditionalParameters) Export
     
     If ClosureResult <> Undefined
-        AND TypeOf(ClosureResult) = Type("Array") Then
-        
+        AND TypeOf(ClosureResult) = Type("ValueList") Then
         AddEventAtServer(ClosureResult);
-        
     EndIf;
     
 EndProcedure // DoAfterChooseEventToAdd() 
@@ -1130,6 +1154,36 @@ Procedure DoAfterChooseEventToDelete(QuestionResult,
     
 EndProcedure // DoAfterChooseEventToDelete()
 
+// Sets a new event handler for the operation and metadata object.
+//
+// Parameters:
+//  SelectedElement      - ValueListItem - the selected list item or Undefined 
+//                                          if the user has not selected anything. 
+//  AdditionalParameters - Arbitrary     - the value specified when the 
+//                                          NotifyDescription object was created.  
+//
+&AtClient
+Procedure DoAfterChooseEventHandlerToSet(SelectedElement, 
+    AdditionalParameters) Export
+    
+    If SelectedElement <> Undefined Then
+        
+        CurrentData = Object.Events.FindByID(AdditionalParameters);
+        If CurrentData <> Undefined Then
+            
+            Modified = True;
+            
+            SelectedValue = SelectedElement.Value;
+            CurrentData.Description = SelectedValue.Description;
+            CurrentData.EventHandler = SelectedValue.EventHandler;   
+            CurrentData.Version = SelectedValue.Version;
+            
+        EndIf;
+        
+    EndIf;
+    
+EndProcedure // DoAfterChooseEventHandlerToSet()
+
 // Enqueues event that is not connected with metadata directly.
 //
 // Parameters:
@@ -1161,23 +1215,54 @@ EndProcedure // DoAfterEnqueueEvents()
 // Only for internal use.
 //
 &AtServer
-Procedure AddEventAtServer(EventsArray)
+Procedure AddEventAtServer(EventValueList)
 
+    For Each Event In Object.Events Do
+        Event.Updated = False;
+    EndDo;
+        
     CurrentData = CurrentOperationData(RowOperation);   
     FilterParameters = NewOperationFilterParameters();
     FilterParameters.Operation = CurrentData.Operation;
+    FilterParameters.Insert("MetadataObject");
     
-    FL_CommonUseClientServer.DeleteRowsByFilter(Object.Events, 
-        FilterParameters, Modified);
-    
-    For Each Event In EventsArray Do
+    For Each Event In EventValueList Do
         
-        Modified = True;
-        EventRow = Object.Events.Add();
-        EventRow.MetadataObject = Event;
+        FilterParameters.MetadataObject = Event.Value;
+        FilterResults = Object.Events.FindRows(FilterParameters);
+        If FilterResults.Count() = 0 Then
+            Modified = True;
+            EventRow = Object.Events.Add();
+        Else
+            EventRow = FilterResults[0];    
+        EndIf;
+       
         FillPropertyValues(EventRow, FilterParameters);
         
+        EventRow.Updated = True;
+        EventRow.EventName = Event.Presentation;
+        EventRow.PictureIndex = FL_CommonUseReUse
+            .PicSequenceIndexByFullName(EventRow.MetadataObject);
+            
+        If IsBlankString(EventRow.EventHandler) Then
+            
+            EventHandlers = FL_InteriorUseReUse.AvailableEventHandlers(
+                EventRow.Operation, EventRow.MetadataObject);
+            For Each EventHandler In EventHandlers Do
+                If EventHandler.Default Then
+                    Modified = True;
+                    FillPropertyValues(EventRow, EventHandler);           
+                EndIf;
+            EndDo;    
+
+        EndIf;
+                
     EndDo;
+    
+    FilterParameters.Delete("MetadataObject");
+    FilterParameters.Insert("Updated", False);
+    FL_CommonUseClientServer.DeleteRowsByFilter(Object.Events, 
+        FilterParameters, Modified);
     
 EndProcedure // AddEventAtServer() 
 
@@ -1221,9 +1306,31 @@ Function MarkedEvents()
     
 EndFunction // MarkedEvents()
 
+// Only for internal use.
+//
+&AtServer
+Function AvailableEventHandlers(Identifier) 
+    
+    ValueList = New ValueList;
+    CurrentData = Object.Events.FindByID(Identifier);
+    If CurrentData = Undefined Then
+        Return ValueList;     
+    EndIf;
+    
+    EventHandlers = FL_InteriorUseReUse.AvailableEventHandlers(
+        CurrentData.Operation, CurrentData.MetadataObject);   
+    For Each EventHandler In EventHandlers Do
+        ValueList.Add(EventHandler, EventHandler.Description, 
+            EventHandler.Default);   
+    EndDo;
+    
+    Return ValueList;
+    
+EndFunction // AvailableEventHandlers()
+
 #EndRegion // Events
 
-#Region Channels
+#Region AppEndpoints
 
 // Adds new channel to operation to ThisObject.
 //
@@ -1423,6 +1530,6 @@ Function ExchangeChannels()
     
 EndFunction // ExchangeChannels()
 
-#EndRegion // Channels
+#EndRegion // AppEndpoints
 
 #EndRegion // ServiceProceduresAndFunctions

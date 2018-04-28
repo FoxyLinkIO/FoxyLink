@@ -32,17 +32,21 @@
 //                      Default value: Undefined.
 //  AppEndpoint - CatalogRef.FL_Channels    - a receiver channel.
 //                      Default value: Undefined.
+//  ReRoute     - Boolean                   - if True, reroutes message or messages.
+//                      Default value: False.
 //
 Procedure Route(Source = Undefined, Exchange = Undefined, 
-    AppEndpoint = Undefined) Export
+    AppEndpoint = Undefined, ReRoute = False) Export
     
     Messages = Messages(Source);
     For Each Message In Messages Do
         
         Try
             
-            If FL_CommonUse.ObjectAttributeValue(Message, "Routed") Then
-                Continue;
+            If NOT ReRoute Then
+                If FL_CommonUse.ObjectAttributeValue(Message, "Routed") Then
+                    Continue;
+                EndIf;
             EndIf;
             
             BeginTransaction();
@@ -200,7 +204,21 @@ Function Create(Invocation) Export
     EndIf;
     
     Try
+        
         MessageObject.Write();
+        
+        If Invocation.Payload <> Undefined Then
+            
+            MaxDeflation = 9;
+            RecordManager = InformationRegisters.FL_MessagePayload
+                .CreateRecordManager();
+            RecordManager.Message = MessageObject.Ref;
+            RecordManager.Payload = New ValueStorage(Invocation.Payload, 
+                New Deflation(MaxDeflation));
+            RecordManager.Write();
+            
+        EndIf;
+        
     Except
         
         WriteLogEvent("FoxyLink.Integration.Create", 
@@ -306,6 +324,67 @@ Procedure FillRegisterContext(Context, Filter, PrimaryKeys,
     
 EndProcedure // FillRegisterContext()
 
+// Deserializes a message tabular section or payload into context call.
+//
+// Parameters:
+//  Message - CatalogRef.FL_Messages - reference to the message.
+//
+// Returns:
+//  Arbitrary - deserialized context.
+//  Undefined - context is absent.
+//
+Function DeserializeContext(Message) Export
+    
+    Query = New Query;
+    Query.Text = QueryTextMessageContext();
+    Query.SetParameter("Message", Message);
+    QueryResult = Query.Execute();
+    If NOT QueryResult.IsEmpty() Then
+        
+        Context = QueryResult.Unload();
+        Context.Columns.Add("Value");
+        For Each Row In Context Do
+            Row.Value = FL_CommonUse.ValueFromXMLTypeAndValue(Row.XMLValue, 
+                Row.TypeName, Row.NamespaceURI);     
+        EndDo;
+        
+        Return Context; 
+        
+    EndIf;
+    
+    Query.Text = QueryTextMessagePayload();
+    QueryResult = Query.Execute();
+    If QueryResult.IsEmpty() Then
+        Return Undefined;    
+    EndIf;
+    
+    QueryResult = QueryResult.Select();
+    QueryResult.Next();
+    
+    Payload = QueryResult.Payload.Get();
+    If TypeOf(Payload) = Type("Structure") 
+        OR TypeOf(Payload) = Type("FixedStructure") Then
+        Return Payload;    
+    EndIf;
+    
+    If TypeOf(Payload) <> Type("BinaryData") Then
+        Return Undefined;
+    EndIf;
+    
+    If Payload.Size() = 0 Then
+        Return Undefined;
+    EndIf;
+    
+    JSONReader = New JSONReader;
+    JSONReader.OpenStream(Payload.OpenStreamForRead(), 
+        QueryResult.ContentEncoding);
+    Context = ReadJSON(JSONReader);
+    JSONReader.Close();
+    
+    Return Context;
+    
+EndFunction // DeserializeContext()
+
 // Defines if event is a publisher.
 //
 // Parameters:
@@ -367,6 +446,7 @@ EndFunction // IsMessagePublisher()
 //      * MessageId         - String                   - message identifier as a string. 
 //                                              If applications need to identify messages.
 //      * Operation         - CatalogReg.FL_Operations - the type of change experienced.
+//      * Payload           - Arbitrary                - invocation payload.
 //      * Routed            - Boolean                  - shows if message was routed.
 //                                      Default value: Boolean.
 //      * Timestamp         - Number                   - timestamp of the moment 
@@ -388,6 +468,7 @@ Function NewInvocation() Export
     Invocation.Insert("CorrelationId");
     Invocation.Insert("EventSource", "");
     Invocation.Insert("Operation");
+    Invocation.Insert("Payload");
     Invocation.Insert("ReplyTo");
     Invocation.Insert("Routed", False);
     Invocation.Insert("Timestamp", CurrentUniversalDateInMilliseconds());
@@ -437,14 +518,14 @@ EndFunction // RouteToExchange()
 Procedure RouteToEndpoints(Source, Exchange, AppEndpoint)
     
     ExchangeEndpoints = ExchangeEndpoints(Source, Exchange);  
-    For Each ExchangeItem In ExchangeEndpoints Do
+    For Each Endpoint In ExchangeEndpoints Do
         
         JobData = FL_BackgroundJob.NewJobData();
-        JobData.MethodName = "Catalogs.FL_Exchanges.ProcessMessage";
+        JobData.MethodName = Endpoint.EventHandler;
         
         InputParameter = JobData.Input.Add();
         InputParameter.Name = "Exchange";
-        InputParameter.Value = ExchangeItem;
+        InputParameter.Value = Endpoint.Exchange;
         
         InputParameter = JobData.Input.Add();
         InputParameter.Name = "Message";
@@ -452,14 +533,10 @@ Procedure RouteToEndpoints(Source, Exchange, AppEndpoint)
         
         ExchangeJob = FL_BackgroundJob.Enqueue(JobData);
         NewRow = Source.Exchanges.Add();
-        NewRow.Exchange = ExchangeItem;
+        NewRow.Exchange = Endpoint.Exchange;
         NewRow.Job = ExchangeJob;
         
-        If AppEndpoint = Undefined Then
-            RouteToAppEndpoints(Source, ExchangeItem, ExchangeJob);
-        Else
-            // TODO: Processing dynamic AppEndpoint
-        EndIf;
+        RouteToAppEndpoints(Source, Endpoint.Exchange, AppEndpoint, ExchangeJob);
         
     EndDo;
     
@@ -467,17 +544,12 @@ EndProcedure // RouteToEndpoints()
 
 // Only for internal use.
 //
-Procedure RouteToAppEndpoints(Source, Exchange, ExchangeJob)
+Procedure RouteToAppEndpoints(Source, Exchange, AppEndpoint, ExchangeJob)
     
     AppIndex = 1;
     ResourceIndex = 2;
     
-    Query = New Query;
-    Query.Text = QueryTextAppEndpoints();
-    Query.SetParameter("Exchange", Exchange);
-    Query.SetParameter("Operation", Source.Operation);
-    BatchResult = Query.ExecuteBatch();
-    
+    BatchResult = AppEndpoints(Source, Exchange, AppEndpoint);
     AppEndpoints = BatchResult[AppIndex].Unload();
     AppResources = BatchResult[ResourceIndex].Unload();
     
@@ -616,26 +688,38 @@ EndFunction // Messages()
 //
 Function ExchangeEndpoints(Source, Exchange)
     
-    ExchangeEndpoints = New Array;
-    If Exchange = Undefined Then 
+    Query = New Query;
+    Query.Text = QueryTextExchangeEndpoints();
+    Query.SetParameter("EventSource", Source.EventSource);
+    Query.SetParameter("Operation", Source.Operation);
         
-        Query = New Query;
-        Query.Text = QueryTextExchangeEndpoints();
-        Query.SetParameter("EventSource", Source.EventSource);
-        Query.SetParameter("Operation", Source.Operation);
-        
-        QueryResult = Query.Execute();
-        If NOT QueryResult.IsEmpty() Then
-            ExchangeEndpoints = QueryResult.Unload().UnloadColumn("Exchange");        
-        EndIf;
-        
-    Else         
-        ExchangeEndpoints.Add(Exchange);
+    If Exchange <> Undefined Then 
+        Query.Text = QueryTextExchangeEndpoint();
+        Query.SetParameter("Exchange", Exchange);
+        Query.SetParameter("EventHandler", "Catalogs.FL_Exchanges.ProcessMessage");
     EndIf;
     
-    Return ExchangeEndpoints;
+    Return Query.Execute().Unload();
         
 EndFunction // ExchangeEndpoints()
+
+// Only for internal use.
+//
+Function AppEndpoints(Source, Exchange, AppEndpoint)
+    
+    Query = New Query;
+    Query.Text = QueryTextAppEndpoints();
+    Query.SetParameter("Exchange", Exchange);
+    Query.SetParameter("Operation", Source.Operation);
+    
+    If AppEndpoint <> Undefined Then 
+        Query.Text = QueryTextAppEndpoint();
+        Query.SetParameter("AppEndpoint", AppEndpoint);
+    EndIf;
+    
+    Return Query.ExecuteBatch();
+    
+EndFunction // AppEndpoints()
 
 // Only for internal use.
 //
@@ -697,11 +781,43 @@ EndFunction // QueryTextMessages()
 
 // Only for internal use.
 //
+Function QueryTextExchangeEndpoint()
+
+    QueryText = "
+        |SELECT 
+        |   Exchanges.Ref AS Exchange,
+        |   IsNull(EventTable.EventHandler, &EventHandler) AS EventHandler
+        |FROM
+        |   Catalog.FL_Exchanges AS Exchanges 
+        |
+        |LEFT JOIN Catalog.FL_Exchanges.Events AS EventTable
+        // [OPPX|OPHP1 +] Attribute + Ref
+        |ON  EventTable.MetadataObject = &EventSource
+        |AND EventTable.Ref            = Exchanges.Ref
+        |AND EventTable.Operation      = &Operation
+        |
+        |LEFT JOIN Catalog.FL_Exchanges.Operations AS OperationTable
+        |ON  OperationTable.Ref = Exchanges.Ref
+        |AND OperationTable.Operation = &Operation 
+        |
+        |WHERE
+        |   Exchanges.Ref = &Exchange    
+        |
+        |ORDER BY
+        |   IsNull(OperationTable.Priority, 5) ASC
+        |";
+    Return QueryText;
+    
+EndFunction // QueryTextExchangeEndpoint()
+
+// Only for internal use.
+//
 Function QueryTextExchangeEndpoints()
 
     QueryText = "
         |SELECT 
-        |   Exchanges.Ref AS Exchange
+        |   Exchanges.Ref AS Exchange,
+        |   EventTable.EventHandler AS EventHandler
         |FROM
         |   Catalog.FL_Exchanges AS Exchanges 
         |
@@ -727,12 +843,63 @@ EndFunction // QueryTextExchangeEndpoints()
 
 // Only for internal use.
 //
+Function QueryTextAppEndpoint()
+    
+    QueryText = "
+        |SELECT
+        |   &Exchange AS Ref,
+        |   &AppEndpoint AS AppEndpoint,
+        |   &Operation AS Operation
+        |INTO AppEndpointsCache
+        |
+        |INDEX BY
+        |   AppEndpoint
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |SELECT
+        |   AppEndpoints.AppEndpoint AS AppEndpoint,
+        |   IsNull(Operations.Priority, 5) AS Priority
+        |FROM
+        |   AppEndpointsCache AS AppEndpoints
+        |
+        |LEFT JOIN Catalog.FL_Exchanges.Operations AS Operations
+        |ON  Operations.Ref = AppEndpoints.Ref
+        |AND Operations.Operation = AppEndpoints.Operation
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |SELECT 
+        |   ChannelResources.Channel        AS AppEndpoint,
+        |   ChannelResources.ExecutableCode AS ExecutableCode,
+        |   ChannelResources.FieldName      AS FieldName,
+        |   ChannelResources.FieldValue     AS FieldValue
+        |FROM
+        |   Catalog.FL_Exchanges.ChannelResources AS ChannelResources   
+        |
+        |INNER JOIN AppEndpointsCache AS AppEndpoints
+        |ON  AppEndpoints.Ref = ChannelResources.Ref
+        |AND AppEndpoints.AppEndpoint = ChannelResources.Channel
+        |AND AppEndpoints.Operation = ChannelResources.Operation
+        |;
+        |
+        |////////////////////////////////////////////////////////////////////////////////
+        |DROP AppEndpointsCache
+        |;
+        |";
+    
+    Return QueryText;  
+    
+EndFunction // QueryTextAppEndpoint()
+
+// Only for internal use.
+//
 Function QueryTextAppEndpoints()
     
     QueryText = "
         |SELECT
         |   AppEndpoints.Ref AS Ref,
-        |   AppEndpoints.Channel AS Channel,
+        |   AppEndpoints.Channel AS AppEndpoint,
         |   AppEndpoints.Operation AS Operation
         |INTO AppEndpointsCache
         |FROM
@@ -747,7 +914,7 @@ Function QueryTextAppEndpoints()
         |
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
-        |   AppEndpoints.Channel AS AppEndpoint,
+        |   AppEndpoints.AppEndpoint AS AppEndpoint,
         |   Operations.Priority AS Priority
         |FROM
         |   AppEndpointsCache AS AppEndpoints
@@ -768,7 +935,7 @@ Function QueryTextAppEndpoints()
         |
         |INNER JOIN AppEndpointsCache AS AppEndpoints
         |ON  AppEndpoints.Ref = ChannelResources.Ref
-        |AND AppEndpoints.Channel = ChannelResources.Channel
+        |AND AppEndpoints.AppEndpoint = ChannelResources.Channel
         |AND AppEndpoints.Operation = ChannelResources.Operation
         |;
         |
@@ -780,6 +947,44 @@ Function QueryTextAppEndpoints()
     Return QueryText;  
     
 EndFunction // QueryTextAppEndpoints()
+
+// Only for internal use.
+//
+Function QueryTextMessageContext()
+    
+    QueryText = "
+        |SELECT
+        |   MessageContext.Filter AS Filter,
+        |   MessageContext.NamespaceURI AS NamespaceURI,
+        |   MessageContext.PrimaryKey AS PrimaryKey,
+        |   MessageContext.TypeName AS TypeName,
+        |   MessageContext.XMLValue AS XMLValue
+        |FROM 
+        |   Catalog.FL_Messages.Context AS MessageContext
+        |WHERE
+        |   MessageContext.Ref = &Message  
+        |";
+    Return QueryText;
+    
+EndFunction // QueryTextMessageContext()
+
+// Only for internal use.
+//
+Function QueryTextMessagePayload()
+    
+    QueryText = "
+        |SELECT
+        |   MessagePayload.Message.ContentEncoding AS ContentEncoding,
+        |   MessagePayload.Message.ContentType AS ContentType,
+        |   MessagePayload.Payload AS Payload
+        |FROM 
+        |   InformationRegister.FL_MessagePayload AS MessagePayload
+        |WHERE
+        |   MessagePayload.Message = &Message  
+        |";
+    Return QueryText;
+    
+EndFunction // QueryTextMessagePayload()
 
 #EndRegion // ServiceProceduresAndFunctions
 

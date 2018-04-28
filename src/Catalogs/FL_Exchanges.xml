@@ -1041,6 +1041,14 @@
 							<v8:lang>en_CA</v8:lang>
 							<v8:content>Events</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>События</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Події</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -1076,6 +1084,59 @@
 					<Use>ForItem</Use>
 				</Properties>
 				<ChildObjects>
+					<Attribute uuid="aad2d61f-634e-4667-86eb-2323507ae24e">
+						<Properties>
+							<Name>EventHandler</Name>
+							<Synonym>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Event handler</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Event handler</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Обработчик события</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Обробник події</v8:content>
+								</v8:item>
+							</Synonym>
+							<Comment/>
+							<Type>
+								<v8:Type>xs:string</v8:Type>
+								<v8:StringQualifiers>
+									<v8:Length>100</v8:Length>
+									<v8:AllowedLength>Variable</v8:AllowedLength>
+								</v8:StringQualifiers>
+							</Type>
+							<PasswordMode>false</PasswordMode>
+							<Format/>
+							<EditFormat/>
+							<ToolTip/>
+							<MarkNegatives>false</MarkNegatives>
+							<Mask/>
+							<MultiLine>false</MultiLine>
+							<ExtendedEdit>false</ExtendedEdit>
+							<MinValue xsi:nil="true"/>
+							<MaxValue xsi:nil="true"/>
+							<FillChecking>ShowError</FillChecking>
+							<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
+							<ChoiceParameterLinks/>
+							<ChoiceParameters/>
+							<QuickChoice>DontUse</QuickChoice>
+							<CreateOnInput>DontUse</CreateOnInput>
+							<ChoiceForm/>
+							<LinkByType/>
+							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
+							<Indexing>DontIndex</Indexing>
+							<FullTextSearch>DontUse</FullTextSearch>
+							<DataHistory>DontUse</DataHistory>
+						</Properties>
+					</Attribute>
 					<Attribute uuid="b7a1001b-2727-4d0f-a618-20f78c8152ae">
 						<Properties>
 							<Name>EventName</Name>
@@ -1085,12 +1146,16 @@
 									<v8:content>Event name</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Event name</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Наименование события</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Event name</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Ім'я події</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1134,12 +1199,16 @@
 									<v8:content>Metadata object</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Metadata object</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Объект метаданных</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Metadata object</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Об'єкт метаданих</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment>Provides access to the metadata object name.</Comment>
@@ -1160,13 +1229,17 @@
 </v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Provides access to the metadata object name. Another way of getting the same value is through the global context property Metadata. 
+</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Обеспечивает доступ к имени объекта метаданных. Другой способ получить то же значение - через метаданные свойств глобального контекста.</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Provides access to the metadata object name. Another way of getting the same value is through the global context property Metadata. 
-</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Забезпечує доступ до імені об'єкта метаданих. Інший спосіб отримати те ж значення - через метадані властивостей глобального контексту.</v8:content>
 								</v8:item>
 							</ToolTip>
 							<MarkNegatives>false</MarkNegatives>
@@ -1204,6 +1277,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Операция</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Операція</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
