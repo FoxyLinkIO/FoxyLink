@@ -246,30 +246,20 @@ EndProcedure // CopyDataCompositionSchema()
 Procedure InitSettingsComposer(SettingsComposer, DataCompositionSchemaURL, 
     DataCompositionSettingsURL = Undefined) Export
 
-    If IsTempStorageURL(DataCompositionSchemaURL) Then
-        DataCompositionSchema = GetFromTempStorage(DataCompositionSchemaURL);
-    Else
-        DataCompositionSchema = DataCompositionSchemaURL; 
-    EndIf;
-
-    If ValueIsFilled(DataCompositionSettingsURL) Then
-        If IsTempStorageURL(DataCompositionSettingsURL) Then
-            DataCompositionSettings = GetFromTempStorage(DataCompositionSettingsURL);
-        Else
-            DataCompositionSettings = DataCompositionSettingsURL;
-        EndIf;
-    EndIf;
-
+    DataCompositionSchema = DataCompositionSchema(DataCompositionSchemaURL);
+    DataCompositionSettings = DataCompositionSettings(DataCompositionSettingsURL);
+    
     Try
         SettingsComposer.Initialize( // Do not change, else composer won't be connected with data composition schema.
             New DataCompositionAvailableSettingsSource(DataCompositionSchemaURL));
     Except
         
-        ErrorMessage = StrTemplate(NStr("en='Error: Failed to initialize data composition settings composer. %1.';
-            |ru='Ошибка: Не удалось инициализировать компоновщик настроек компоновки данных. %1.';
-            |en_CA='Error: Failed to initialize data composition settings composer. %1.'"),
-            ErrorDescription());
-            
+        ErrorMessage = StrTemplate(
+            NStr("en='Error: Failed to initialize data composition settings composer. %1.';
+                |ru='Ошибка: Не удалось инициализировать компоновщик настроек компоновки данных. %1.';
+                |uk='Помилка: Не вдалось ініціалізувати компонувальник налаштувань компоновки даних. %1.';
+                |en_CA='Error: Failed to initialize data composition settings composer. %1.'"),
+            ErrorDescription());  
         Raise ErrorMessage;
              
     EndTry;
@@ -284,31 +274,14 @@ Procedure InitSettingsComposer(SettingsComposer, DataCompositionSchemaURL,
         
         // Platform bug is here. We have to copy DefaultSettings.Selection.Items 
         // titles from DataCompositionSchema to SettingsComposer.Settings.Selection.Items.
-        Items = SettingsComposer.Settings.Selection.Items;
-        DefaultItems = DataCompositionSchema.DefaultSettings.Selection.Items;
-        
-        MapSelection = New Map;
-        For Each Item In Items Do
-            MapSelection.Insert(Item.Field, Item);                
-        EndDo;
-        
-        For Each Item In DefaultItems Do 
-            If NOT IsBlankString(Item.Title) Then
-                
-                Value = MapSelection[Item.Field]; 
-                If Value <> Undefined Then
-                    Value.Title = Item.Title;     
-                EndIf;
-                
-            EndIf; 
-        EndDo;
+        CopyTitlesFromSchemaToComposer(DataCompositionSchema, SettingsComposer);
         
     Else
         
         ErrorMessage = NStr("en='Error: Failed to find data composition settings';
             |ru='Ошибка: Не удалось найти настроки компоновки данных.';
-            |en_CA='Error: Failed to find data composition settings'");
-            
+            |uk='Помилка: Не вдалось знайти налаштування компонувальника даних.';
+            |en_CA='Error: Failed to find data composition settings'");   
         Raise ErrorMessage;
         
     EndIf;
@@ -739,6 +712,64 @@ EndFunction // NewMessageSettings()
 
 #Region ServiceProceduresAndFunctions
 
+#Region SettingsComposer
+
+// Only for internal use.
+//
+Procedure CopyTitlesFromSchemaToComposer(DataCompositionSchema, 
+    SettingsComposer)
+    
+    Items = SettingsComposer.Settings.Selection.Items;
+    DefaultItems = DataCompositionSchema.DefaultSettings.Selection.Items;
+    
+    MapSelection = New Map;
+    For Each Item In Items Do
+        MapSelection.Insert(Item.Field, Item);                
+    EndDo;
+    
+    For Each Item In DefaultItems Do 
+        If NOT IsBlankString(Item.Title) Then
+            
+            Value = MapSelection[Item.Field]; 
+            If Value <> Undefined Then
+                Value.Title = Item.Title;     
+            EndIf;
+            
+        EndIf; 
+    EndDo;
+    
+EndProcedure // CopyTitlesFromSchemaToComposer()
+
+// Only for internal use.
+//
+Function DataCompositionSchema(DataCompositionSchemaURL)
+
+    If IsTempStorageURL(DataCompositionSchemaURL) Then
+        Return GetFromTempStorage(DataCompositionSchemaURL);
+    Else
+        Return DataCompositionSchemaURL; 
+    EndIf;
+    
+EndFunction // DataCompositionSchema()
+
+// Only for internal use.
+//
+Function DataCompositionSettings(DataCompositionSettingsURL) 
+    
+    If ValueIsFilled(DataCompositionSettingsURL) Then
+        If IsTempStorageURL(DataCompositionSettingsURL) Then
+            Return GetFromTempStorage(DataCompositionSettingsURL);
+        Else
+            Return DataCompositionSettingsURL;
+        EndIf;
+    EndIf;
+
+    Return Undefined;
+    
+EndFunction // DataCompositionSettings()
+
+#EndRegion // SettingsComposer
+
 // Recursively fills the report structure from nested data composition 
 // layouts in main data composition template. 
 //
@@ -1144,44 +1175,52 @@ Function NewColumnsCache(DataCompositionTemplate)
             Continue;
         EndIf;
         
-        TemplateColumnCache = New Structure; 
-        Cells = Template.Template.Cells;
-        For Index = 0 To Cells.Count() - 1 Do
-            
-            Cell = Cells[Index];
-            If Cell.Value = Undefined Then
-                // Field isn't used by current template, skip.
-                Continue;
-            EndIf;
-            
-            // Go through types and decide what is the type.
-            // Primitive (String, Number, Boolean, Undefined, Null)
-            // Reference
-            // Date
-            
-            //CellFromMain.ValueType.ContainsType(Type("String"))
-            //CellFromMain.ValueType.ContainsType(Type("Number"))
-            
-            CellFromMain = MainTemplateCells[Index];
-            If NOT IsBlankString(CellFromMain.Title) Then
-                Value = NormalizeColumnName(CellFromMain.Title);    
-            ElsIf NOT IsBlankString(Cell.Column) Then
-                Value = NormalizeColumnName(Cell.Column);    
-            Else
-                Value = NormalizeColumnName(CellFromMain.Name);    
-            EndIf;
-            
-            TemplateColumnCache.Insert(String(Cell.Value), Value); 
-            
-        EndDo;
-        
-        ColumnsCache.Insert(Template.Name, TemplateColumnCache);
+        ColumnsCache.Insert(Template.Name, NewTemplateColumnsCache(Template, 
+            MainTemplateCells));
     
     EndDo;
     
     Return ColumnsCache; 
     
 EndFunction // NewColumnsCache() 
+
+// Only for internal use.
+//
+Function NewTemplateColumnsCache(Template, MainTemplateCells)
+    
+    TemplateColumnCache = New Structure; 
+    Cells = Template.Template.Cells;
+    For Index = 0 To Cells.Count() - 1 Do
+        
+        Cell = Cells[Index];
+        If Cell.Value = Undefined Then
+            // Field isn't used by current template, skip.
+            Continue;
+        EndIf;
+        
+        // Go through types and decide what is the type.
+        // Primitive (String, Number, Boolean, Undefined, Null)
+        // Reference
+        // Date
+        // CellFromMain.ValueType.ContainsType(Type("String"))
+        // CellFromMain.ValueType.ContainsType(Type("Number"))
+        
+        CellFromMain = MainTemplateCells[Index];
+        If NOT IsBlankString(CellFromMain.Title) Then
+            Value = NormalizeColumnName(CellFromMain.Title);    
+        ElsIf NOT IsBlankString(Cell.Column) Then
+            Value = NormalizeColumnName(Cell.Column);    
+        Else
+            Value = NormalizeColumnName(CellFromMain.Name);    
+        EndIf;
+        
+        TemplateColumnCache.Insert(String(Cell.Value), Value); 
+        
+    EndDo;
+    
+    Return TemplateColumnCache;
+    
+EndFunction // NewTemplateColumnsCache()
 
 // Recursively creates a new strucutre with resources cache from data composition settings.
 //
