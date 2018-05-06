@@ -28,7 +28,6 @@
 			<Picture/>
 			<Content>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Exchanges</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">b351ea2c-83c3-4881-a586-de5907af6553</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>
