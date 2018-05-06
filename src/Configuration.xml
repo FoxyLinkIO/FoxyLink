@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.204</Version>
+			<Version>0.9.9.207</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -340,6 +340,7 @@
 			<DataProcessor>FL_AdministrationPanel</DataProcessor>
 			<DataProcessor>FL_DataProcessorCSV</DataProcessor>
 			<DataProcessor>FL_DataProcessorJSON</DataProcessor>
+			<DataProcessor>FL_ElasticSearch</DataProcessor>
 			<DataProcessor>FL_RabbitMQ</DataProcessor>
 			<DataProcessor>FL_SelfFiles</DataProcessor>
 			<InformationRegister>FL_JobContinuations</InformationRegister>
