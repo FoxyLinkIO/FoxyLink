@@ -72,22 +72,23 @@ EndFunction // JobServer()
 
 // Returns the server state - active or non-active.
 // 
+// Parameters:
+//  ScheduledJob - ScheduledJob - scheduled job to get state. 
+//
 // Returns:
 //  Boolean - True if the server state is active.
 //
-Function JobServerWatchDog() Export
-    
-    JobServer = JobServer();
+Function ServerWatchDog(ScheduledJob) Export
     
     BackgroundJobsFilter = NewBackgroundJobsFilter();
     BackgroundJobsFilter.State = BackgroundJobState.Active;
-    FillPropertyValues(BackgroundJobsFilter, JobServer, , "Description, UUID");
+    FillPropertyValues(BackgroundJobsFilter, ScheduledJob, , "Description, UUID");
     FL_CommonUseClientServer.RemoveValueFromStructure(BackgroundJobsFilter);
         
     BackgroundJobsByFilter = BackgroundJobsByFilter(BackgroundJobsFilter);
     Return BackgroundJobsByFilter.Count() > 0; 
     
-EndFunction // JobServerWatchDog()
+EndFunction // ServerWatchDog()
 
 #EndRegion // ProgramInterface
 
@@ -144,6 +145,64 @@ Function ScheduledJob(Val ID) Export
     Return ScheduledJob;
 
 EndFunction // ScheduledJob()
+
+// Returns BackgroundJob by UUID.
+//
+// Parameters:
+//  UUID - UUID - background job ID.
+//
+// Returns:
+//  BackgroundJob, Undefined - if job is not found for the specified identifier, 
+//                             then returns Undefined.  
+//
+Function BackgroundJobByUUID(UUID) Export
+    
+    Return BackgroundJobs.FindByUUID(UUID);    
+    
+EndFunction // BackgroundJobByUUID()
+
+// Returns array of BackgroundJob objects by specified filter.
+//
+// Parameters:
+//  Filter - Structure - see fucntion FL_JobServer.NewBackgroundJobsFilter.
+//
+// Returns:
+//  Array - array of BackgroundJob objects.
+//
+Function BackgroundJobsByFilter(Filter) Export
+    
+    Return BackgroundJobs.GetBackgroundJobs(Filter);    
+    
+EndFunction // BackgroundJobsByFilter()
+
+// Returns a new background jobs filter.
+//
+// Returns:
+//  Structure - with keys:
+//      * UUID         - UUID               - unique ID of job.
+//      * Key          - String             - applicable unique ID. 
+//      * State        - BackgroundJobState - job state.
+//      * Begin        - Date               - job launch date.
+//      * End          - Date               - date of job completion.
+//      * Description  - String             - job description.
+//      * MethodName   - String             - name of non-global common module method. 
+//      * ScheduledJob - ScheduledJob       - sheduled job linked to background job.
+//
+Function NewBackgroundJobsFilter() Export
+    
+    BackgroundJobsFilter = New Structure; 
+    BackgroundJobsFilter.Insert("UUID");
+    BackgroundJobsFilter.Insert("Key");
+    BackgroundJobsFilter.Insert("State");
+    BackgroundJobsFilter.Insert("Begin");
+    BackgroundJobsFilter.Insert("End");
+    BackgroundJobsFilter.Insert("Description");
+    BackgroundJobsFilter.Insert("MethodName");
+    BackgroundJobsFilter.Insert("ScheduledJob");
+        
+    Return BackgroundJobsFilter;
+    
+EndFunction // NewBackgroundJobsFilter()
 
 #Region Actions
 
@@ -512,40 +571,6 @@ Function NewScheduledJobsFilter()
     Return ScheduledJobsFilter;
     
 EndFunction // NewScheduledJobsFilter()
-
-// Only for internal use.
-//
-Function NewBackgroundJobsFilter()
-    
-    BackgroundJobsFilter = New Structure; 
-    BackgroundJobsFilter.Insert("UUID");
-    BackgroundJobsFilter.Insert("Key");
-    BackgroundJobsFilter.Insert("State");
-    BackgroundJobsFilter.Insert("Begin");
-    BackgroundJobsFilter.Insert("End");
-    BackgroundJobsFilter.Insert("Description");
-    BackgroundJobsFilter.Insert("MethodName");
-    BackgroundJobsFilter.Insert("ScheduledJob");
-        
-    Return BackgroundJobsFilter;
-    
-EndFunction // NewBackgroundJobsFilter()
-
-// Only for internal use.
-//
-Function BackgroundJobByUUID(UUID)
-    
-    Return BackgroundJobs.FindByUUID(UUID);    
-    
-EndFunction // BackgroundJobByUUID()
-
-// Only for internal use.
-//
-Function BackgroundJobsByFilter(Filter)
-    
-    Return BackgroundJobs.GetBackgroundJobs(Filter);    
-    
-EndFunction // BackgroundJobsByFilter()
 
 // Only for internal use.
 //

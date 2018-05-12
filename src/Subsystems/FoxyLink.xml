@@ -92,12 +92,14 @@
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsBeforeWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsOnWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Route</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Corezoid</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>
 			<Subsystem>GeneralSettings</Subsystem>
 			<Subsystem>Integration</Subsystem>
 			<Subsystem>Plugins</Subsystem>
+			<Subsystem>SocialNetworks</Subsystem>
 			<Subsystem>Tasks</Subsystem>
 		</ChildObjects>
 	</Subsystem>

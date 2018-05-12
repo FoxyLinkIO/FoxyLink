@@ -175,6 +175,38 @@ Function LuhnAlgorithm(Val Number) Export
     
 EndFunction // LuhnAlgorithm() 
 
+// Generates a random string number of a given length.  
+//
+// Parameters:
+//  Length - Number - needed length of string number. 
+//
+// Returns:
+//  String - random string number of a given length. 
+//
+Function GenerateRandomNumber(Val Length = 6) Export
+    
+    UUID = String(New UUID);
+    UUID = StrReplace(UUID, "-", "");
+    Value = "";
+    For Index = 1 To StrLen(UUID) Do
+        Symbol = Mid(UUID, Index, 1);
+        Value = Value + Right(CharCode(Symbol), 1);
+    EndDo;
+    
+    MinValue = 1;
+    MaxValue = 9;
+    For Index = 2 To Length Do
+        MinValue = MinValue * 10;
+        MaxValue = MaxValue + MinValue * 9;
+    EndDo;
+
+    RNG = New RandomNumberGenerator(Number(Value));
+    RandomNumber = Format(RNG.RandomNumber(MinValue, MaxValue), "NG=0");
+
+    Return RandomNumber;      
+    
+EndFunction // GenerateRandomNumber()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface

@@ -17,6 +17,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#If Server Or ThickClientOrdinaryApplication Or ExternalConnection Then
+    
 #Region ChannelDescription
 
 // The name of the standard API used in this channel.
@@ -78,15 +80,29 @@ EndFunction // ChannelFullName()
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
     
-    HTTPRequest = ElasticsearchRequest();
+    Headers = New Map;
+    Headers.Insert("Accept", "application/json"); 
+    Headers.Insert("Content-Type", "application/json");
+    ResourceAddress = FL_EncryptionClientServer.FieldValue(ChannelResources, 
+        "Resource");
+    
+    // Getting HTTP method.
     HTTPMethod = FL_EncryptionClientServer.FieldValue(ChannelResources, 
         "HTTPMethod");
+    
+    // Getting HTTP request.
+    HTTPRequest = FL_InteriorUse.NewHTTPRequest(ResourceAddress, Headers, 
+        Payload);
+        
+    // Getting HTTP connection.
+    HTTPConnection = FL_InteriorUse.NewHTTPConnection(
+        FL_EncryptionClientServer.FieldValue(ChannelData, "StringURI"));
     
     If Log Then
         JobResult.LogAttribute = "";     
     EndIf;
     
-    FL_InteriorUse.CallHTTPMethod(NewHTTPConnection(), HTTPRequest, HTTPMethod, 
+    FL_InteriorUse.CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, 
         JobResult);
             
 EndProcedure // DeliverMessage() 
@@ -139,41 +155,6 @@ EndFunction // SuppliedIntegration()
 
 #EndRegion // ProgramInterface
 
-#Region ServiceProceduresAndFunctions
-
-// Only for internal use.
-//
-Function ElasticsearchRequest()
-    
-    ResourceAddress = FL_EncryptionClientServer.FieldValue(ChannelResources, 
-        "Resource");
-    Return FL_InteriorUse.NewHTTPRequest(ResourceAddress, 
-        NewHTTPRequestHeaders());
-    
-EndFunction // ElasticsearchRequest()
-
-// Only for internal use.
-//
-Function NewHTTPConnection()
-                                     
-    Return FL_InteriorUse.NewHTTPConnection(
-        FL_EncryptionClientServer.FieldValue(ChannelData, "StringURI"));
-        
-EndFunction // NewHTTPConnection()
-
-// Only for internal use.
-//
-Function NewHTTPRequestHeaders()
-    
-    Headers = New Map;
-    Headers.Insert("Accept", "application/json"); 
-    Headers.Insert("Content-Type", "application/json");
-    Return Headers;
-    
-EndFunction // NewHTTPRequestHeaders()
-
-#EndRegion // ServiceProceduresAndFunctions
-
 #Region ExternalDataProcessorInfo
 
 // Returns object version.
@@ -217,3 +198,5 @@ Function LibraryGuid() Export
 EndFunction // LibraryGuid()
 
 #EndRegion // ExternalDataProcessorInfo
+
+#EndIf

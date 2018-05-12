@@ -63,7 +63,7 @@ Procedure TriggerMessages(Command)
     
 EndProcedure // TriggerMessages()
 
-// See procedure FL_JobServer.JobServerActivator.
+// See procedure FL_JobServer.RunJobServer.
 //
 &AtClient
 Procedure StartJobServer(Command)
@@ -72,19 +72,22 @@ Procedure StartJobServer(Command)
     
 EndProcedure // StartJobServer()
 
-// See procedure FL_JobServer.JobServerDeactivator.
+// See procedure FL_JobServer.StopJobServer.
 //
 &AtClient
 Procedure StopJobServer(Command)
     
     StopJobServerAtServer();
         
-    ShowUserNotification(NStr("en='Job server (FoxyLink)';
+    ShowUserNotification(
+        NStr("en='Job server (FoxyLink)';
             |ru='Сервер заданий (FoxyLink)';
+            |uk='Сервер завдань (FoxyLink)';
             |en_CA='Job server (FoxyLink)'"),
         ,
         NStr("en='Job server is stopped, but the stopped status will be set by the server just in a few seconds.';
             |ru='Сервер заданий остановлен, но состояние остановки будет установлено сервером через несколько секунд.';
+            |uk='Сервер завдань зупинено, але стан зупинки буде встановлено сервером через декілька секунд.';
             |en_CA='Job server is stopped, but the stopped status will be set by the server just in a few seconds.'"),
         PictureLib.FL_Logotype64
         );
@@ -109,7 +112,7 @@ EndProcedure // UpdateJobServerState()
 &AtServer
 Procedure UpdateJobServerStateAtServer()
      
-    If FL_JobServer.JobServerWatchDog() Then
+    If FL_JobServer.ServerWatchDog(FL_JobServer.JobServer()) Then
         Items.GroupJobServerPages.CurrentPage = Items.GroupJobServerRunning;
     Else
         Items.GroupJobServerPages.CurrentPage = Items.GroupJobServerStopped; 
@@ -152,7 +155,7 @@ Procedure TriggerMessagesAtServer()
   
 EndProcedure // TriggerMessagesAtServer() 
 
-// See procedure FL_JobServer.JobServerActivator.
+// See procedure FL_JobServer.RunJobServer.
 // 
 &AtServer
 Procedure StartJobServerAtServer()
@@ -162,7 +165,7 @@ Procedure StartJobServerAtServer()
     
 EndProcedure // StartJobServerAtServer()
 
-// See procedure FL_JobServer.JobServerDeactivator.
+// See procedure FL_JobServer.StopJobServer.
 //
 &AtServer
 Procedure StopJobServerAtServer()

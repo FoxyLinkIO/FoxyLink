@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.207</Version>
+			<Version>0.9.9.278</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -244,6 +244,7 @@
 			<CommonPicture>FL_CodeFile</CommonPicture>
 			<CommonPicture>FL_Connected</CommonPicture>
 			<CommonPicture>FL_Copy</CommonPicture>
+			<CommonPicture>FL_Corezoid</CommonPicture>
 			<CommonPicture>FL_Delete</CommonPicture>
 			<CommonPicture>FL_DeleteFile</CommonPicture>
 			<CommonPicture>FL_DeleteLink</CommonPicture>
@@ -306,6 +307,8 @@
 			<CommonModule>FL_RecurringJob</CommonModule>
 			<CommonModule>FL_RunInSafeMode</CommonModule>
 			<CommonModule>FL_Tasks</CommonModule>
+			<CommonModule>SocialNetworks_Events</CommonModule>
+			<CommonModule>SocialNetworks_ExchangeServer</CommonModule>
 			<HTTPService>FL_AppEndpoint</HTTPService>
 			<EventSubscription>FL_CatalogsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
@@ -319,6 +322,7 @@
 			<ScheduledJob>FL_JobExpiration</ScheduledJob>
 			<ScheduledJob>FL_JobServer</ScheduledJob>
 			<ScheduledJob>FL_RecurringServer</ScheduledJob>
+			<ScheduledJob>SocialNetworks_ExchangeServer</ScheduledJob>
 			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
 			<FunctionalOption>FL_UseFoxyLink</FunctionalOption>
 			<Constant>FL_AppIdentifier</Constant>
@@ -329,25 +333,36 @@
 			<Constant>FL_UseFoxyLink</Constant>
 			<Constant>FL_WorkerCount</Constant>
 			<Constant>FL_WorkerJobsLimit</Constant>
+			<Constant>SocialNetworks_LastDate</Constant>
+			<Constant>SocialNetworks_UserIdentifier</Constant>
 			<Catalog>FL_Channels</Catalog>
 			<Catalog>FL_Exchanges</Catalog>
 			<Catalog>FL_Jobs</Catalog>
 			<Catalog>FL_Messages</Catalog>
 			<Catalog>FL_Operations</Catalog>
 			<Catalog>FL_States</Catalog>
+			<Catalog>SocialNetworks_Conversations</Catalog>
+			<Catalog>SocialNetworks_Users</Catalog>
 			<Enum>FL_CRUDMethods</Enum>
 			<Enum>FL_RESTMethods</Enum>
+			<Enum>SocialNetworks</Enum>
 			<DataProcessor>FL_AdministrationPanel</DataProcessor>
+			<DataProcessor>FL_Corezoid</DataProcessor>
 			<DataProcessor>FL_DataProcessorCSV</DataProcessor>
 			<DataProcessor>FL_DataProcessorJSON</DataProcessor>
 			<DataProcessor>FL_ElasticSearch</DataProcessor>
+			<DataProcessor>FL_GMSWorldwide</DataProcessor>
 			<DataProcessor>FL_RabbitMQ</DataProcessor>
 			<DataProcessor>FL_SelfFiles</DataProcessor>
+			<DataProcessor>SocialNetworks_AdministrationPanel</DataProcessor>
 			<InformationRegister>FL_JobContinuations</InformationRegister>
 			<InformationRegister>FL_JobState</InformationRegister>
 			<InformationRegister>FL_MessagePayload</InformationRegister>
 			<InformationRegister>FL_MessagePublishers</InformationRegister>
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
+			<InformationRegister>SocialNetworks_Messages</InformationRegister>
+			<InformationRegister>SocialNetworks_Participants</InformationRegister>
+			<InformationRegister>SocialNetworks_MessageMatches</InformationRegister>
 		</ChildObjects>
 	</Configuration>
 </MetaDataObject>

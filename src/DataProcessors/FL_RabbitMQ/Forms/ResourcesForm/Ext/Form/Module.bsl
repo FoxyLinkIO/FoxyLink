@@ -66,46 +66,36 @@ Procedure SaveAndClose(Command)
         Return;  
     EndIf;
     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "Path";
-    ResourceRow.FieldValue = "PublishToExchange";
+    FL_EncryptionClientServer.AddFieldValue(Object.ChannelResources, 
+        "Path", "PublishToExchange");
     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "Exchange";
-    ResourceRow.FieldValue = Exchange;
-    
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "VirtualHost";
-    ResourceRow.FieldValue = VirtualHost;
-    
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "RoutingKey";
-    ResourceRow.FieldValue = RoutingKey;
-     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "PayloadEncoding";
-    ResourceRow.FieldValue = PayloadEncoding;
+    FL_EncryptionClientServer.AddFieldValue(Object.ChannelResources, 
+        "Exchange", Exchange);
 
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "PropDeliveryMode";
-    ResourceRow.FieldValue = PropDeliveryMode;
+    FL_EncryptionClientServer.AddFieldValue(Object.ChannelResources, 
+        "VirtualHost", VirtualHost);
     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "PropExpiration";
-    ResourceRow.FieldValue = PropExpiration;
+    FL_EncryptionClientServer.AddFieldValue(Object.ChannelResources, 
+        "RoutingKey", RoutingKey);
     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "PropPriority";
-    ResourceRow.FieldValue = PropPriority;
+    FL_EncryptionClientServer.AddFieldValue(Object.ChannelResources, 
+        "PayloadEncoding", PayloadEncoding);
+
+    FL_EncryptionClientServer.AddFieldValue(Object.ChannelResources, 
+        "PropDeliveryMode", PropDeliveryMode);
+     
+    FL_EncryptionClientServer.AddFieldValue(Object.ChannelResources, 
+        "PropExpiration", PropExpiration);
     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "PropType";
-    ResourceRow.FieldValue = PropType;
+    FL_EncryptionClientServer.AddFieldValue(Object.ChannelResources, 
+        "PropPriority", PropPriority);
     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "PropUserId";
-    ResourceRow.FieldValue = PropUserId;
+    FL_EncryptionClientServer.AddFieldValue(Object.ChannelResources, 
+        "PropType", PropType);
     
+    FL_EncryptionClientServer.AddFieldValue(Object.ChannelResources, 
+        "PropUserId", PropUserId);
+        
     Close(Object);
     
 EndProcedure // SaveAndClose()

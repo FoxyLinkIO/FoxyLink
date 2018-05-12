@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -29,6 +29,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
 
     Raise NStr("en='Data processor is not intended for direct usage.';
         |ru='Обработка не предназначена для непосредственного использования.';
+        |uk='Обробка не призначена для безпосереднього використання.';
         |en_CA='Data processor is not intended for direct usage.'");
 
 EndProcedure // OnCreateAtServer()
