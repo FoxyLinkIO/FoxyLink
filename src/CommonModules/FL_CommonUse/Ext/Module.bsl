@@ -1489,6 +1489,8 @@ Function ConvertValueIntoPlatformObject(Val Value, SupportedTypes) Export
             ConvertValueIntoString(Value, ConversionResult);
         ElsIf Type = Type("Number") Then
             ConvertValueIntoNumber(Value, ConversionResult);
+        ElsIf Type = Type("UUID") Then
+            ConvertValueIntoUUID(Value, ConversionResult);
         ElsIf Type = Type("Date") Then
             ConvertValueIntoDate(Value, ConversionResult);
         ElsIf Type = Type("StandardPeriod") Then
@@ -2019,6 +2021,22 @@ Procedure ConvertValueIntoNumber(Value, ConversionResult)
     EndIf;
                         
 EndProcedure // ConvertValueIntoNumber()
+
+// Converts value into {UUID} type.
+//
+// Parameters:
+//  Value            - Arbitrary - value to be converted into {UUID} type.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure ConvertValueIntoUUID(Value, ConversionResult)
+
+    TypeMatch = ValueMatchUniqueIdentifier(Value, ConversionResult);    
+    If TypeMatch Then
+        ConversionResult.TypeConverted = True;
+        ConversionResult.ConvertedValue = New UUID(Value);
+    EndIf;
+                        
+EndProcedure // ConvertValueIntoUUID()
 
 // Converts value into {Date} type.
 //

@@ -121,14 +121,16 @@ Procedure FillOverviewPage(MainObject)
         
     Temp = Response["message_stats"];
     If TypeOf(Temp) = Type("Map") Then 
-        PublishRate           = Temp["publish_details"]["rate"]; 
-        ConfirmRate           = Temp["confirm_details"]["rate"];
-        Deliver_rate           = Temp["deliver_details"]["rate"];
-        RedeliverRate         = Temp["redeliver_details"]["rate"];
-        AckRate               = Temp["ack_details"]["rate"];
-        GetRate               = Temp["get_details"]["rate"];
-        DeliverNoAckRate    = Temp["deliver_no_ack_details"]["rate"];
-        GetNoAckRate        = Temp["get_no_ack_details"]["rate"];
+        PublishRate      = Temp["publish_details"]["rate"]; 
+        ConfirmRate      = Temp["confirm_details"]["rate"];
+        Deliver_rate     = Temp["deliver_details"]["rate"];
+        RedeliverRate    = Temp["redeliver_details"]["rate"];
+        AckRate          = Temp["ack_details"]["rate"];
+        GetRate          = Temp["get_details"]["rate"];
+        DeliverNoAckRate = Temp["deliver_no_ack_details"]["rate"];
+        If Temp.Get("get_no_ack_details") <> Undefined Then
+            GetNoAckRate = Temp["get_no_ack_details"]["rate"];
+        EndIf;
         ReturnUnroutableRate = Temp["return_unroutable_details"]["rate"];
     EndIf;
     

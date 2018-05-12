@@ -25,6 +25,7 @@
 			<Content>
 				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_DataProcessorCSV</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_DataProcessorJSON</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">2ddddde5-848d-49eb-9073-c12f9bd0176e</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

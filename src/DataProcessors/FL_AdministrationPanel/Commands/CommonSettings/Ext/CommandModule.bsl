@@ -22,7 +22,6 @@
 &AtClient
 Procedure CommandProcessing(CommandParameter, CommandExecuteParameters)
     
-    FormParameters = New Structure("", );
     FormName = "DataProcessor.FL_AdministrationPanel.Form.CommonSettings";
     Uniqueness = FormName + ?(CommandExecuteParameters.Window = Undefined, 
         ".SingleWindow", "");
