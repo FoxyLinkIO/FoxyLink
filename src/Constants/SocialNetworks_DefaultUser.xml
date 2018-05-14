@@ -2,42 +2,38 @@
 <MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
 	<Constant uuid="ed4f19c6-cba5-4cdb-819e-aaed7ef3d3fb">
 		<InternalInfo>
-			<xr:GeneratedType name="ConstantManager.SocialNetworks_UserIdentifier" category="Manager">
+			<xr:GeneratedType name="ConstantManager.SocialNetworks_DefaultUser" category="Manager">
 				<xr:TypeId>ed2cbe17-9c92-4b5c-9212-9aa26b204e79</xr:TypeId>
 				<xr:ValueId>e487d81d-4c50-4987-b137-ae54f51c3454</xr:ValueId>
 			</xr:GeneratedType>
-			<xr:GeneratedType name="ConstantValueManager.SocialNetworks_UserIdentifier" category="ValueManager">
+			<xr:GeneratedType name="ConstantValueManager.SocialNetworks_DefaultUser" category="ValueManager">
 				<xr:TypeId>6bba7f7e-0049-4093-bd48-352a125624e0</xr:TypeId>
 				<xr:ValueId>177349b5-0a76-4291-a58d-324abc72a8c0</xr:ValueId>
 			</xr:GeneratedType>
 		</InternalInfo>
 		<Properties>
-			<Name>SocialNetworks_UserIdentifier</Name>
+			<Name>SocialNetworks_DefaultUser</Name>
 			<Synonym>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Subsystem default user identifier</v8:content>
+					<v8:content>Subsystem default user</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Subsystem default user identifier</v8:content>
+					<v8:content>Subsystem default user</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Идентификатор пользователя по умолчанию подсистемы</v8:content>
+					<v8:content>Пользователь подсистемы по умолчанию </v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Идентификатор пользователя по умолчанию подсистемы</v8:content>
+					<v8:content>Користувач підсистеми по замовчуванню</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
 			<Type>
-				<v8:Type>xs:string</v8:Type>
-				<v8:StringQualifiers>
-					<v8:Length>36</v8:Length>
-					<v8:AllowedLength>Variable</v8:AllowedLength>
-				</v8:StringQualifiers>
+				<v8:TypeSet>cfg:CatalogRef</v8:TypeSet>
 			</Type>
 			<UseStandardCommands>false</UseStandardCommands>
 			<DefaultForm/>
@@ -49,19 +45,19 @@
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Default user identifier for incoming messages for social networks subsystem.</v8:content>
+					<v8:content>Default user for incoming messages for social networks subsystem.</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Default user identifier for incoming messages for social networks subsystem.</v8:content>
+					<v8:content>Default user for incoming messages for social networks subsystem.</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Идентификатор пользователя по умолчанию для входящих сообщений для подсистемы социальных сетей.</v8:content>
+					<v8:content>Пользователь по умолчанию для входящих сообщений для подсистемы социальных сетей.</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Ідентифікатор користувача за замовчуванням для вхідних повідомлень для підсистеми соціальних мереж.</v8:content>
+					<v8:content>Користувач за замовчуванням для вхідних повідомлень для підсистеми соціальних мереж.</v8:content>
 				</v8:item>
 			</ToolTip>
 			<MarkNegatives>false</MarkNegatives>

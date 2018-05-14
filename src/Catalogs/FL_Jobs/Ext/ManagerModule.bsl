@@ -177,6 +177,43 @@ EndFunction // ChangeState()
 
 #Region ServiceInterface
 
+// Writes an event in the event log and updates job result state if passed. 
+//
+// Parameters:
+//  EventName      - String         - event is indicated by string. Can contain points  
+//                              for signifying event hierarchy.
+//  Level          - EventLogLevel  - level of event importance. 
+//  MetadataObject - MetadataObject - the object that is associated with the event.
+//  Commentaries   - String         - arbitrary string of commentary for the event.
+//                 - Array          - commentaries list.
+//  JobResult      - Structure      - see function Catalogs.FL_Jobs.NewJobResult.
+//                          Default value: Undefined.
+//
+Procedure WriteLog(EventName, Level, MetadataObject, Commentaries, 
+    JobResult = Undefined) Export
+    
+    Var Commentary;
+     
+    If TypeOf(Commentaries) = Type("Array") Then
+        Commentary = StrConcat(Commentaries, Chars.CR + Chars.LF);
+    Else 
+        Commentary = Commentaries;
+    EndIf;
+    
+    If TypeOf(JobResult) = Type("Structure") Then
+        
+        JobResult.LogAttribute = Commentary;
+        If Level = EventLogLevel.Error Then
+            JobResult.StatusCode = FL_InteriorUseReUse
+                .InternalServerErrorStatusCode();                
+        EndIf;
+
+    EndIf;
+    
+    WriteLogEvent(EventName, Level, MetadataObject, , Commentary);
+    
+EndProcedure // WriteLog()
+
 // Adds result to the output parameters table.
 //
 // Parameters:

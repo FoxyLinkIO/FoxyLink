@@ -44,56 +44,15 @@ EndProcedure // OnCreateAtServer()
 #Region FormItemsEventHandlers
 
 &AtClient
-Procedure SocialNetworks_UserIdentifierOnChange(Item)
+Procedure SocialNetworks_DefaultUserOnChange(Item)
     
     Attachable_OnAttributeChange(Item, False);
     
-EndProcedure // SocialNetworks_UserIdentifierOnChange()
-
-&AtClient
-Procedure SocialNetworks_UserIdentifierStartChoice(Item, ChoiceData, 
-    StandardProcessing)
-    
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseUser",
-        ThisObject), AvailableUsers(), Items.SocialNetworks_UserIdentifier);
-    
-EndProcedure // SocialNetworks_UserIdentifierStartChoice()
+EndProcedure // SocialNetworks_DefaultUserOnChange()
 
 #EndRegion // FormItemsEventHandlers
 
 #Region ServiceProceduresAndFunctions
-
-// Sets a new user to the constant SocialNetworks_UserIdentifier.
-//
-// Parameters:
-//  SelectedElement      - ValueListItem - the selected list item or Undefined 
-//                                          if the user has not selected anything. 
-//  AdditionalParameters - Arbitrary     - the value specified when the 
-//                                          NotifyDescription object was created.  
-//
-&AtClient
-Procedure DoAfterChooseUser(SelectedElement, 
-    AdditionalParameters) Export
-    
-    If SelectedElement <> Undefined Then
-        
-        FillCollaborationSystemUserID(SelectedElement.Value);
-        ConstantsSet.SocialNetworks_UserIdentifier = SelectedElement.Value; 
-        SocialNetworks_UserIdentifierOnChange(
-            Items.SocialNetworks_UserIdentifier);
-            
-    EndIf;
-    
-EndProcedure // DoAfterChooseUser()
-
-// Only for internal use.
-//
-&AtServer
-Procedure FillCollaborationSystemUserID(Value)
-    
-    Catalogs.SocialNetworks_Users.CollaborationSystemUserID(Value);
-    
-EndProcedure // FillCollaborationSystemUserID()
 
 // Only for internal use.
 //
@@ -183,21 +142,5 @@ Procedure SaveAttributeValue(AttributePathToData, Result)
     EndIf;
     
 EndProcedure // SaveAttributeValue()
-
-// Only for internal use.
-//
-&AtServer
-Function AvailableUsers()
-    
-    AvailableUsers = New ValueList;
-    
-    Users = InfoBaseUsers.GetUsers();
-    For Each User In Users Do
-        AvailableUsers.Add(User.UUID, User.FullName);   
-    EndDo;
-    
-    Return AvailableUsers;
-    
-EndFunction // AvailableUsers()
 
 #EndRegion // ServiceProceduresAndFunctions

@@ -23,11 +23,11 @@
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
 		<ChildItems>
-			<Button name="ConnectToCorezoid" id="10">
+			<Button name="ConnectToGMSWorldwide" id="10">
 				<Type>CommandBarButton</Type>
 				<DefaultButton>true</DefaultButton>
 				<CommandName>Form.Command.ConnectToGMSWorldwide</CommandName>
-				<ExtendedTooltip name="ConnectToCorezoidExtendedTooltip" id="11"/>
+				<ExtendedTooltip name="ConnectToGMSWorldwideExtendedTooltip" id="11"/>
 			</Button>
 		</ChildItems>
 	</AutoCommandBar>

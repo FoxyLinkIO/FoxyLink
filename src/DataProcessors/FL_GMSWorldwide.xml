@@ -698,6 +698,7 @@
 			</TabularSection>
 			<Form>ChannelForm</Form>
 			<Form>ConnectionForm</Form>
+			<Template>GMS_Worldwide</Template>
 		</ChildObjects>
 	</DataProcessor>
 </MetaDataObject>

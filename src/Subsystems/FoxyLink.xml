@@ -93,6 +93,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsOnWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Route</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Corezoid</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_CollaborationSystem</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

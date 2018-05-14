@@ -60,13 +60,13 @@
 				<xr:Object>Catalog.SocialNetworks_Conversations</xr:Object>
 				<xr:Object>Catalog.SocialNetworks_Users</xr:Object>
 				<xr:Object>Constant.SocialNetworks_LastDate</xr:Object>
-				<xr:Object>Constant.SocialNetworks_UserIdentifier</xr:Object>
+				<xr:Object>Constant.SocialNetworks_DefaultUser</xr:Object>
 				<xr:Object>Enum.SocialNetworks</xr:Object>
 				<xr:Object>InformationRegister.SocialNetworks_Messages</xr:Object>
 				<xr:Object>InformationRegister.SocialNetworks_Participants</xr:Object>
-				<xr:Object>InformationRegister.SocialNetworks_MessageMatches</xr:Object>
 				<xr:Object>Subsystem.FoxyLink.Subsystem.SocialNetworks</xr:Object>
 				<xr:Object>DataProcessor.FL_GMSWorldwide</xr:Object>
+				<xr:Object>DataProcessor.FL_CollaborationSystem</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

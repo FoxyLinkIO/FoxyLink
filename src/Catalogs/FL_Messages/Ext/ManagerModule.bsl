@@ -375,6 +375,7 @@ Function DeserializeContext(Message) Export
         Return Undefined;
     EndIf;
     
+    // #110 https://github.com/FoxyLinkIO/FoxyLink/issues/110
     JSONReader = New JSONReader;
     JSONReader.OpenStream(Payload.OpenStreamForRead(), 
         QueryResult.ContentEncoding);

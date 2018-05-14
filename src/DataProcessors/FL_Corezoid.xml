@@ -699,8 +699,8 @@
 			<Form>ChannelForm</Form>
 			<Form>ConnectionForm</Form>
 			<Form>ResourcesForm</Form>
-			<Template>SocialNetworks_ReceiveAndSendMessages</Template>
-			<Template>SocialNetworks_Users</Template>
+			<Template>SocialNetworkMessage</Template>
+			<Template>SocialNetworkUsers</Template>
 		</ChildObjects>
 	</DataProcessor>
 </MetaDataObject>

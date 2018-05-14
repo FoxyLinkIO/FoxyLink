@@ -82,16 +82,14 @@ Procedure ExchangeServerAction() Export
     
     LastDate = GetLastDate();
     
-    ConversationsFilter = New CollaborationSystemConversationsFilter;
-    ConversationsFilter.StartDate = LastDate;
-    ConversationsFilter.SortDirection = SortDirection.Asc;
-    ConversationsFilter.CurrentUserIsMember = False;
+    Filter = New CollaborationSystemConversationsFilter;
+    Filter.StartDate = LastDate;
+    Filter.SortDirection = SortDirection.Asc;
+    Filter.CurrentUserIsMember = False;
     
-    SetPrivilegedMode(True);
-    Conversations = CollaborationSystem.GetConversations(ConversationsFilter);
-    SetPrivilegedMode(False);
-    
-    For Each Conversation In Conversations Do
+    CollaborationConversations = DataProcessors.FL_CollaborationSystem
+        .CollaborationSystemConversations(Filter);    
+    For Each Conversation In CollaborationConversations Do
         
         SocialConversation = Catalogs.SocialNetworks_Conversations
             .SocialNetworkConversationByConversationId(
@@ -143,27 +141,26 @@ Procedure ProcessCollaborationMessages(SocialConversation, Conversation,
     MessagePointer = FL_CommonUse.ObjectAttributeValue(SocialConversation, 
         "MessagePointer");
     
-    MessagesFilter = New CollaborationSystemMessagesFilter;
-    MessagesFilter.Conversation = Conversation.ID;
-    MessagesFilter.SortDirection = SortDirection.Asc;
+    Filter = New CollaborationSystemMessagesFilter;
+    Filter.Conversation = Conversation.ID;
+    Filter.SortDirection = SortDirection.Asc;
     If ValueIsFilled(MessagePointer) Then
-        MessagesFilter.After = New CollaborationSystemMessageID(
+        Filter.After = New CollaborationSystemMessageID(
             MessagePointer);   
     EndIf;
-    
-    SetPrivilegedMode(True);
-    CollaborationMessages = CollaborationSystem.GetMessages(MessagesFilter);
-    SetPrivilegedMode(False);
-    
+        
+    CollaborationMessages = DataProcessors.FL_CollaborationSystem
+        .CollaborationSystemMessages(Filter);
     If CollaborationMessages.Count() = 0 Then
         Return;
     EndIf;
     
-    ValueTable = InformationRegisters.SocialNetworks_MessageMatches
+    ValueTable = InformationRegisters.SocialNetworks_Messages
         .NewMessageMatchesValueTable();
     For Each CollaborationMessage In CollaborationMessages Do
-        NewRow = ValueTable.Add();    
-        NewRow.CSMessageID = String(CollaborationMessage.ID);
+        NewRow = ValueTable.Add();
+        NewRow.SocialConversation = SocialConversation;
+        NewRow.CollaborationMessageId = String(CollaborationMessage.ID);
         NewRow.Date = CollaborationMessage.Date;
     EndDo; 
     
@@ -193,28 +190,28 @@ Procedure SendMessageReplies(SocialConversation, CollaborationMessages,
     Invocation.Operation = Catalogs.FL_Operations.Send;
     
     Exchange = FL_CommonUse.ReferenceByDescription(
-        Metadata.Catalogs.FL_Exchanges, "SocialNetwork_NewMessage");
+        Metadata.Catalogs.FL_Exchanges, "SocialNetworkMessage");
     
-    MessagesToSend.Indexes.Add("CSMessageID");
+    MessagesToSend.Indexes.Add("CollaborationMessageId");
     For Each CollaborationMessage In CollaborationMessages Do
         
-        CSMessageID = String(CollaborationMessage.ID);
-        SearchResult = MessagesToSend.Find(CSMessageID, "CSMessageID");
+        CollaborationMessageId = String(CollaborationMessage.ID);
+        SearchResult = MessagesToSend.Find(CollaborationMessageId, 
+            "CollaborationMessageId");
         If SearchResult <> Undefined Then
             
             Catalogs.FL_Messages.AddToContext(Invocation.Context, "Ref", 
                 SocialConversation, True);
-            Catalogs.FL_Messages.AddToContext(Invocation.Context, "CSMessageID", 
-                CSMessageID);
+            Catalogs.FL_Messages.AddToContext(Invocation.Context, 
+                "CollaborationMessageId", CollaborationMessageId);
             Catalogs.FL_Messages.AddToContext(Invocation.Context, "Date", 
                 SearchResult.Date);
             Catalogs.FL_Messages.AddToContext(Invocation.Context, "Text", 
                 String(CollaborationMessage.Text));
+            Catalogs.FL_Messages.AddToContext(Invocation.Context, "User", 
+                String(CollaborationMessage.Author));
                 
             Catalogs.FL_Messages.Route(Invocation, Exchange);
-            
-            InformationRegisters.SocialNetworks_MessageMatches
-                .WriteMessageMatch(CSMessageID);
             
             Invocation.Context.Clear();
             
@@ -230,34 +227,37 @@ Function QueryTextMessagesWithoutMatches()
     
     QueryText = "
         |SELECT
-        |   ValueTable.CSMessageID AS CSMessageID,
+        |   ValueTable.SocialConversation AS SocialConversation,
+        |   ValueTable.CollaborationMessageId AS CollaborationMessageId,
         |   ValueTable.Date AS Date
-        |INTO ValueTable
+        |INTO CollaborationMessages
         |FROM
         |   &ValueTable AS ValueTable
         |INDEX BY
-        |   ValueTable.CSMessageID
+        |   ValueTable.SocialConversation
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
-        |   ValueTable.CSMessageID AS CSMessageID,
-        |   ValueTable.Date AS Date 
+        |   CollaborationMessages.SocialConversation AS SocialConversation,
+        |   CollaborationMessages.CollaborationMessageId AS CollaborationMessageId,
+        |   CollaborationMessages.Date AS Date 
         |FROM
-        |   ValueTable AS ValueTable
+        |   CollaborationMessages AS CollaborationMessages
         |
-        |LEFT JOIN InformationRegister.SocialNetworks_MessageMatches AS MessageMatches
-        |ON MessageMatches.CSMessageID = ValueTable.CSMessageID
+        |LEFT JOIN InformationRegister.SocialNetworks_Messages AS SocialMessages
+        |ON SocialMessages.SocialConversation = CollaborationMessages.SocialConversation 
+        |AND SocialMessages.CollaborationMessageId = CollaborationMessages.CollaborationMessageId
         |
         |WHERE
-        |   MessageMatches.SNMessageID IS NULL
+        |   SocialMessages.MessageId IS NULL
         |
         |ORDER BY
         |   Date ASC
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////
-        |DROP ValueTable
+        |DROP CollaborationMessages
         |;
         |
         |";

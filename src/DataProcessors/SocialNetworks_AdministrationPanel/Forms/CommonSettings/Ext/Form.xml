@@ -83,22 +83,23 @@
 							<ShowTitle>false</ShowTitle>
 							<ExtendedTooltip name="GroupAppSettingsExtendedTooltip" id="77"/>
 							<ChildItems>
-								<InputField name="SocialNetworks_UserIdentifier" id="70">
-									<DataPath>ConstantsSet.SocialNetworks_UserIdentifier</DataPath>
+								<InputField name="SocialNetworks_DefaultUser" id="70">
+									<DataPath>ConstantsSet.SocialNetworks_DefaultUser</DataPath>
 									<TitleLocation>None</TitleLocation>
 									<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
 									<HorizontalStretch>false</HorizontalStretch>
-									<ChoiceButton>true</ChoiceButton>
+									<DropListButton>false</DropListButton>
+									<ChoiceButtonRepresentation>ShowInDropListAndInInputField</ChoiceButtonRepresentation>
 									<CreateButton>false</CreateButton>
-									<TextEdit>false</TextEdit>
+									<QuickChoice>false</QuickChoice>
+									<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
 									<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
-									<ContextMenu name="SocialNetworks_UserIdentifierContextMenu" id="71"/>
-									<ExtendedTooltip name="SocialNetworks_UserIdentifierExtendedTooltip" id="72">
+									<ContextMenu name="SocialNetworks_DefaultUserContextMenu" id="71"/>
+									<ExtendedTooltip name="SocialNetworks_DefaultUserExtendedTooltip" id="72">
 										<TextColor>style:FieldSelectionBackColor</TextColor>
 									</ExtendedTooltip>
 									<Events>
-										<Event name="OnChange">SocialNetworks_UserIdentifierOnChange</Event>
-										<Event name="StartChoice">SocialNetworks_UserIdentifierStartChoice</Event>
+										<Event name="OnChange">SocialNetworks_DefaultUserOnChange</Event>
 									</Events>
 								</InputField>
 							</ChildItems>
@@ -192,7 +193,7 @@
 			</Type>
 			<MainAttribute>true</MainAttribute>
 			<UseAlways>
-				<Field>ConstantsSet.SocialNetworks_UserIdentifier</Field>
+				<Field>ConstantsSet.SocialNetworks_DefaultUser</Field>
 			</UseAlways>
 		</Attribute>
 	</Attributes>

@@ -948,9 +948,8 @@ Procedure FillParameterValueCollectionFromStructure(DataParameters, Settings)
         Else
             
             CriticalError = True;
-            For Each ErrorMessage In ConversionResult.ErrorMessages Do
-                ErrorMessages.Add(StrTemplate(ErrorMessage, Setting.Key));    
-            EndDo;
+            FL_ErrorsClientServer.PersonalizeErrorsWithKey(
+                ConversionResult.ErrorMessages, ErrorMessages, Setting.Key);
             
         EndIf;
         

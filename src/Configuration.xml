@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.278</Version>
+			<Version>0.9.9.281</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -242,6 +242,7 @@
 			<CommonPicture>FL_AddPrivateKey</CommonPicture>
 			<CommonPicture>FL_AddRow</CommonPicture>
 			<CommonPicture>FL_CodeFile</CommonPicture>
+			<CommonPicture>FL_CollaborationSystem</CommonPicture>
 			<CommonPicture>FL_Connected</CommonPicture>
 			<CommonPicture>FL_Copy</CommonPicture>
 			<CommonPicture>FL_Corezoid</CommonPicture>
@@ -333,8 +334,8 @@
 			<Constant>FL_UseFoxyLink</Constant>
 			<Constant>FL_WorkerCount</Constant>
 			<Constant>FL_WorkerJobsLimit</Constant>
+			<Constant>SocialNetworks_DefaultUser</Constant>
 			<Constant>SocialNetworks_LastDate</Constant>
-			<Constant>SocialNetworks_UserIdentifier</Constant>
 			<Catalog>FL_Channels</Catalog>
 			<Catalog>FL_Exchanges</Catalog>
 			<Catalog>FL_Jobs</Catalog>
@@ -347,6 +348,7 @@
 			<Enum>FL_RESTMethods</Enum>
 			<Enum>SocialNetworks</Enum>
 			<DataProcessor>FL_AdministrationPanel</DataProcessor>
+			<DataProcessor>FL_CollaborationSystem</DataProcessor>
 			<DataProcessor>FL_Corezoid</DataProcessor>
 			<DataProcessor>FL_DataProcessorCSV</DataProcessor>
 			<DataProcessor>FL_DataProcessorJSON</DataProcessor>
@@ -362,7 +364,6 @@
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>
 			<InformationRegister>SocialNetworks_Messages</InformationRegister>
 			<InformationRegister>SocialNetworks_Participants</InformationRegister>
-			<InformationRegister>SocialNetworks_MessageMatches</InformationRegister>
 		</ChildObjects>
 	</Configuration>
 </MetaDataObject>

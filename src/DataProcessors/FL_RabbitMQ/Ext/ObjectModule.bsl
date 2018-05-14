@@ -74,8 +74,8 @@ EndFunction // ChannelFullName()
 //
 // Parameters:
 //  Payload    - Arbitrary - the data that can be read successively and 
-//                               delivered to RabbitMQ.
-//  Properties - Structure - RabbitMQ resources and message parameters.
+//                               delivered to the app endpoint.
+//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export

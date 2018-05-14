@@ -11,7 +11,7 @@
 				<xr:Common>false</xr:Common>
 			</Visibility>
 		</Command>
-		<Command name="InformationRegister.SocialNetworks_MessageMatches.StandardCommand.OpenList">
+		<Command name="0:50d1a8c6-d903-40da-ac08-7c53cf1d2bf5">
 			<Visibility>
 				<xr:Common>false</xr:Common>
 			</Visibility>
@@ -49,7 +49,7 @@
 		<Command name="InformationRegister.SocialNetworks_Messages.StandardCommand.OpenList">
 			<CommandGroup>NavigationPanelOrdinary</CommandGroup>
 		</Command>
-		<Command name="InformationRegister.SocialNetworks_MessageMatches.StandardCommand.OpenList">
+		<Command name="0:50d1a8c6-d903-40da-ac08-7c53cf1d2bf5">
 			<CommandGroup>NavigationPanelOrdinary</CommandGroup>
 		</Command>
 		<Command name="InformationRegister.SocialNetworks_Participants.StandardCommand.OpenList">

@@ -74,8 +74,8 @@ EndFunction // ChannelFullName()
 //
 // Parameters:
 //  Payload    - Arbitrary - the data that can be read successively and 
-//                               delivered to RabbitMQ.
-//  Properties - Structure - RabbitMQ resources and message parameters.
+//                               delivered to the app endpoint.
+//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
@@ -156,7 +156,23 @@ EndFunction // ResourcesRequired()
 //
 Function SuppliedIntegrations() Export
     
-    SuppliedIntegrations = New Array;     
+    SuppliedIntegrations = New Array;
+    
+    PluggableSettings = FL_InteriorUse.NewPluggableSettings();   
+    PluggableSettings.Name = 
+        NStr("en='GMS-Worldwide: Viber\SMS integration';
+            |ru='GMS-Worldwide: интеграция Viber\SMS';
+            |uk='GMS-Worldwide: інтеграція Viber\SMS';
+            |en_CA='GMS-Worldwide: Viber\SMS integration'");
+    PluggableSettings.Template = "GMS_Worldwide";
+    PluggableSettings.ToolTip = 
+        NStr("en='This settings helps to send messages through Viber.';
+            |ru='Эти настройки позволяют отправлять сообщения через Viber.';
+            |uk='Ці налаштування допомагають надсилати повідомлення через Viber.';
+            |en_CA='This settings helps to send messages through Viber.'");
+    PluggableSettings.Version = "1.0.0";
+    SuppliedIntegrations.Add(PluggableSettings);
+    
     Return SuppliedIntegrations;
           
 EndFunction // SuppliedIntegration()
