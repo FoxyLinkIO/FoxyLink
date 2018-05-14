@@ -81,7 +81,7 @@ EndFunction // EventHandlerInfo()
 
 // Only for internal use.
 //
-Procedure RecordSocialMessage(SocialUser, SocialConversation, Context)
+Procedure CreateSocialMessage(SocialUser, SocialConversation, Context)
     
     SocialMessage = InformationRegisters.SocialNetworks_Messages
         .NewSocialMessage();
@@ -90,10 +90,21 @@ Procedure RecordSocialMessage(SocialUser, SocialConversation, Context)
     SocialMessage.SocialUser = SocialUser;
     SocialMessage.ChatId = TrimAll(Context.ChatId);
     SocialMessage.MessageID = TrimAll(Context.MessageId);
-    SocialMessage.Incoming = NOT Context.Property("CSMessageID");
-    SocialMessage.Outgoing = Context.Property("CSMessageID");
     SocialMessage.Text = TrimAll(Context.Text);
-    Context.Property("CSMessageID", SocialMessage.CSMessageID);
+    If Context.Property("CollaborationMessageId", SocialMessage.CollaborationMessageId) Then
+        SocialMessage.Incoming = False;
+        SocialMessage.Outgoing = True;
+    Else
+        SocialMessage.Incoming = True;
+        SocialMessage.Outgoing = False;    
+    EndIf;
+    
+    If Context.Property("User") Then
+        SocialMessage.User = DataProcessors.FL_CollaborationSystem
+            .UserByCollaborationSystemUserID(Context.User);
+    Else
+        SocialMessage.User = Constants.SocialNetworks_DefaultUser.Get();
+    EndIf;
     
     SupportedTypes = New Array;
     SupportedTypes.Add(Type("Date"));
@@ -101,12 +112,14 @@ Procedure RecordSocialMessage(SocialUser, SocialConversation, Context)
         Context.Date, SupportedTypes);
     If ConversionResult.TypeConverted Then
         SocialMessage.Date = ConversionResult.ConvertedValue;
+    Else
+        SocialMessage.Date = CurrentSessionDate();   
     EndIf;
     
     InformationRegisters.SocialNetworks_Messages.CreateSocialMessage(
         SocialMessage);        
     
-EndProcedure // RecordSocialMessage()
+EndProcedure // CreateSocialMessage()
 
 // Only for internal use.
 //
@@ -120,33 +133,25 @@ Function CreateSocial(Exchange, Message)
         
         SocialNetwork = Enums.SocialNetworks[Context.ChannelName];
         SocialUser = Catalogs.SocialNetworks_Users.SocialNetworkUser(
-            TrimAll(Context.UserId), SocialNetwork, Context.Description);
-            
+            TrimAll(Context.UserId), SocialNetwork, Context.Description);   
         SocialConversation = Catalogs.SocialNetworks_Conversations
-            .SocialNetworkConversation(SocialUser, TrimAll(Context.ChatId));
-            
-        RecordSocialMessage(SocialUser, SocialConversation, Context);
+            .SocialNetworkConversation(SocialUser, TrimAll(Context.ChatId));  
+        CreateSocialMessage(SocialUser, SocialConversation, Context);
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
-        JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-            JobResult.StatusCode);
             
     Except
 
-        JobResult.LogAttribute = ErrorDescription();
-        JobResult.StatusCode = FL_InteriorUseReUse
-            .InternalServerErrorStatusCode();
-        JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-            JobResult.StatusCode);
-        
-        WriteLogEvent("SocialNetworks_Events.ProcessMessage", 
-            EventLogLevel.Error,
-            Metadata.Catalogs.FL_Exchanges,
-            ,
-            JobResult.LogAttribute);
+        Catalogs.FL_Jobs.WriteLog("SocialNetworks_Events.ProcessMessage", 
+            EventLogLevel.Error, 
+            Metadata.CommonModules.SocialNetworks_Events,
+            ErrorDescription(), 
+            JobResult);
         
     EndTry;
-                
+    
+    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        JobResult.StatusCode);
     Return JobResult;
     
 EndFunction // CreateSocial()

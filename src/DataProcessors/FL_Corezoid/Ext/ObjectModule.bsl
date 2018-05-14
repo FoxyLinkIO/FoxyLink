@@ -74,8 +74,8 @@ EndFunction // ChannelFullName()
 //
 // Parameters:
 //  Payload    - Arbitrary - the data that can be read successively and 
-//                               delivered to RabbitMQ.
-//  Properties - Structure - RabbitMQ resources and message parameters.
+//                               delivered to the app endpoint.
+//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
@@ -165,7 +165,7 @@ Function SuppliedIntegrations() Export
             |ru='Социальные сети: получение и отсылка сообщений';
             |uk='Соціальні мережі: отримання та відправка повідомлень';
             |en_CA='Social networks: receive and send messages'");
-    PluggableSettings.Template = "SocialNetworks_ReceiveAndSendMessages";
+    PluggableSettings.Template = "SocialNetworkMessage";
     PluggableSettings.ToolTip = 
         NStr("en='This settings helps to receive and send messages from\to social networks.';
             |ru='Настройки обмена для получения и отправки сообщений социальных сетей.';
@@ -180,7 +180,7 @@ Function SuppliedIntegrations() Export
             |ru='Социальные сети: пользователи';
             |uk='Соціальні мережі: користувачі';
             |en_CA='Social networks: users'");
-    PluggableSettings.Template = "SocialNetworks_Users";
+    PluggableSettings.Template = "SocialNetworkUsers";
     PluggableSettings.ToolTip = 
         NStr("en='This settings helps to create and update users.';
             |ru='Настройки создания и обновления пользователей.';

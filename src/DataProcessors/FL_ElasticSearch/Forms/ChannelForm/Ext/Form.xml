@@ -97,34 +97,4 @@
 			</dcsset:item>
 		</ConditionalAppearance>
 	</Attributes>
-	<Commands>
-		<Command name="ExecuteQuery" id="1">
-			<Title>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Execute query</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Execute query</v8:content>
-				</v8:item>
-			</Title>
-			<ToolTip>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Execute query</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Execute query</v8:content>
-				</v8:item>
-			</ToolTip>
-			<Picture>
-				<xr:Ref>CommonPicture.FL_Generate</xr:Ref>
-				<xr:LoadTransparent>true</xr:LoadTransparent>
-			</Picture>
-			<Action>ExecuteQuery</Action>
-			<Representation>TextPicture</Representation>
-		</Command>
-	</Commands>
 </Form>

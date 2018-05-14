@@ -107,14 +107,25 @@ EndProcedure // UpdateExchangeServerStateAtServer()
 &AtServer
 Procedure ConnectConversationAtServer(SocialConversation)
     
-    SetPrivilegedMode(True);
-    
     CurrentUser = InfoBaseUsers.CurrentUser();
-    CollaborationSystemUserID = Catalogs.SocialNetworks_Users
-        .CollaborationSystemUserID(CurrentUser.UUID);
-    Catalogs.SocialNetworks_Conversations.AddUserToSocialNetworkConversation(
-        SocialConversation, CollaborationSystemUserID);    
+    TextTemplate = NStr("en='%1 connected to conversation...';
+        |ru='%1 подключился к обсуждению...';
+        |uk='%1 підключився до обговорення...';
+        |en_CA='%1 connected to conversation...'");
     
+    SocialMessage = InformationRegisters.SocialNetworks_Messages
+        .NewSocialMessage();
+    SocialMessage.SocialConversation = SocialConversation;
+    SocialMessage.MessageId = String(New UUID);
+    SocialMessage.Date = CurrentSessionDate();
+    SocialMessage.Text = StrTemplate(TextTemplate, CurrentUser.FullName);
+    
+    ConversationId = FL_CommonUse.ObjectAttributeValue(SocialConversation, 
+        "ConversationId");
+    DataProcessors.FL_CollaborationSystem
+        .CollaborationSystemConversationAddMember(ConversationId, 
+            CurrentUser.UUID, SocialMessage); 
+   
 EndProcedure // ConnectConversationAtServer()
 
 // See procedure SocialNetworks_ExchangeServer.RunExchangeServer.

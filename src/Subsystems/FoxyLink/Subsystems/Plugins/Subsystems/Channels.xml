@@ -28,6 +28,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_SelfFiles</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_Corezoid</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_GMSWorldwide</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.FL_CollaborationSystem</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

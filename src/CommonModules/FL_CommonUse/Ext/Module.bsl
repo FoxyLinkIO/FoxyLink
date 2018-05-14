@@ -2278,7 +2278,8 @@ Procedure ConvertValueIntoReferenceUsingGUID(Value, Type, ConversionResult)
          If ValueMatchUniqueIdentifier(KeyValue, ConversionResult) Then
             
             ConvertedValue = XMLValue(Type, KeyValue);
-            If RefExists(ConvertedValue) Then
+            If RefExists(ConvertedValue) 
+                OR KeyValue = "00000000-0000-0000-0000-000000000000" Then
                 
                 ConversionResult.TypeConverted = True;
                 ConversionResult.ConvertedValue = ConvertedValue;

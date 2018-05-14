@@ -32,11 +32,11 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Enum.SocialNetworks</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.SocialNetworks_Participants</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.SocialNetworks_Messages</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.SocialNetworks_MessageMatches</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">50d1a8c6-d903-40da-ac08-7c53cf1d2bf5</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.SocialNetworks_LastDate</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.SocialNetworks_ExchangeServer</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.SocialNetworks_ExchangeServer</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">Constant.SocialNetworks_UserIdentifier</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Constant.SocialNetworks_DefaultUser</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">DataProcessor.SocialNetworks_AdministrationPanel</xr:Item>
 			</Content>
 		</Properties>

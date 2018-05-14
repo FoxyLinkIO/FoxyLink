@@ -19,6 +19,22 @@
 
 #Region ProgramInterface
 
+// Personalizes anonymous errors by the provided key name.
+//
+// Parameters:
+//  AnonymousErrors    - Array  - a list of anonymous errors. 
+//  PersonalizedErrors - Array  - a list of personalized errors.
+//  KeyName            - String - the key name connected with errors.
+//
+Procedure PersonalizeErrorsWithKey(AnonymousErrors, PersonalizedErrors, 
+    KeyName) Export
+    
+    For Each ErrorMessage In AnonymousErrors Do
+        PersonalizedErrors.Add(StrTemplate(ErrorMessage, KeyName));    
+    EndDo;
+    
+EndProcedure // PersonalizeErrorsWithKey()
+
 // Returns {failed to process parameter template} error description.
 //
 // Returns:
@@ -44,7 +60,8 @@ EndFunction // ErrorFailedToProcessParameterTemplate()
 // Returns:
 //  String - error description message.
 //
-Function ErrorTypeIsDifferentFromExpected(VarName, VarValue, ExpectedType) Export
+Function ErrorTypeIsDifferentFromExpected(VarName, VarValue, 
+    ExpectedType) Export
     
     ErrorMessage = NStr("en='Error: Failed to process parameter {%1}. Expected type {%2} and received type is {%3}.';
         |ru='Ошибка: Не удалось обработать параметр {%1}. Ожидался тип {%2}, а получили тип {%3}.';
@@ -86,7 +103,8 @@ EndFunction // ErrorKeyIsMissingInObject()
 // Returns:
 //  String - error description message.
 //
-Function ErrorColumnCollectionsAreDifferent(CollectionName1, CollectionName2) Export
+Function ErrorColumnCollectionsAreDifferent(CollectionName1, 
+    CollectionName2) Export
     
     ErrorMessage = NStr("en='Error: The column collection {%1} differ from the column collection {%2}.';
         |ru='Ошибка: Коллекция колонок {%1} отличается от коллекции колонок {%2}.';

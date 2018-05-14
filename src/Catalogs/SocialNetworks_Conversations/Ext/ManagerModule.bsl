@@ -21,32 +21,6 @@
     
 #Region ProgramInterface
 
-// Adds user to the social network conversation.
-//
-// Parameters:
-//  SocialConversation        - CatalogRef.SocialNetworks_Conversations - reference to the social conversation. 
-//  CollaborationSystemUserID - CollaborationSystemUserID               - a CollaborationSystemUserID object.
-//
-Procedure AddUserToSocialNetworkConversation(SocialConversation, 
-    CollaborationSystemUserID) Export
-    
-    SetPrivilegedMode(True);
-    
-    Conversation = CollaborationSystemConversation(SocialConversation); 
-    Conversation.Members.Add(CollaborationSystemUserID);
-    Conversation.Write();
-    
-    SocialMessage = InformationRegisters.SocialNetworks_Messages
-        .NewSocialMessage();
-    SocialMessage.MessageId = String(New UUID);
-    SocialMessage.Date = CurrentSessionDate();
-    SocialMessage.SocialConversation = SocialConversation;
-    SocialMessage.Text = "...";
-    InformationRegisters.SocialNetworks_Messages.CreateSocialMessage(
-        SocialMessage);
-    
-EndProcedure // AddUserToSocialNetworkConversation()
-
 // Returns social network conversation.
 //
 // Parameters:
@@ -109,7 +83,15 @@ Function SocialNetworkConversation(SocialUser, ChatId) Export
             
             TransferMessages(SocialConversation, SocialConversationUR);
             
-            SocialConversationObject = SocialConversation.GetObject(); 
+            SocialConversationObject = SocialConversation.GetObject();
+            
+            Try
+                DataProcessors.FL_CollaborationSystem
+                    .DeleteCollaborationSystemConversation(
+                        SocialConversationObject.ConversationId);
+            Except
+            EndTry; 
+            
             SocialConversationObject.Delete();
             
             SocialConversation = SocialConversationUR;
@@ -144,24 +126,6 @@ Function SocialNetworkConversationByConversationId(ConversationId) Export
     
 EndFunction // SocialNetworkConversationByConversationId()
     
-// Returns a conversation by social conversation.
-//
-// Parameters:
-//  SocialConversation - CatalogRef.SocialNetworks_Conversation - reference to the social conversation.
-//
-// Returns:
-//  CollaborationSystemConversation, Undefined - colaboration system conversation.
-//
-Function CollaborationSystemConversation(SocialConversation) Export
-    
-    SetPrivilegedMode(True);
-    ConversationId = FL_CommonUse.ObjectAttributeValue(SocialConversation, 
-        "ConversationId");
-    Return CollaborationSystem.GetConversation(
-        New CollaborationSystemConversationID(ConversationId)); 
-    
-EndFunction // CollaborationSystemConversation()
-
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
@@ -197,7 +161,7 @@ Procedure TransferMessages(Source, Receiver)
         
         InformationRegisters.SocialNetworks_Messages.DeleteSocialMessage(Row);
         Row.SocialConversation = Receiver;
-        Row.CSMessageID = Undefined;
+        Row.CollaborationMessageId = Undefined;
         InformationRegisters.SocialNetworks_Messages.CreateSocialMessage(Row);
         
     EndDo;
@@ -224,10 +188,9 @@ Procedure UpdateSocialNetworkConversation(SocialConversation, SocialUser,
     
     ConversationObject.Write();
     
-    SetPrivilegedMode(True);
-    Conversation = CollaborationSystemConversation(SocialConversation);
-    Conversation.Title = Description;
-    Conversation.Write();
+    DataProcessors.FL_CollaborationSystem
+        .CollaborationSystemConversationUpdateTitle(
+            ConversationObject.ConversationId, Description);
     
 EndProcedure // UpdateSocialNetworkConversation()
 
@@ -332,17 +295,15 @@ Function QueryTextSocialNetworkConversationMessages()
         |   Messages.SocialUser AS SocialUser,
         |   Messages.ChatId AS ChatId,
         |   Messages.MessageId AS MessageId,
+        |   """" AS CollaborationMessageId,
         |   Messages.Date AS Date,
         |   Messages.Incoming AS Incoming,
+        |   Messages.Outgoing AS Outgoing,
         |   Messages.Text AS Text,
-        |   Messages.User AS User,
-        |   IsNull(MessageMatches.CSMessageID, Undefined) AS CSMessageID
+        |   Messages.User AS User
         |
         |FROM
         |   InformationRegister.SocialNetworks_Messages AS Messages
-        |
-        |LEFT JOIN InformationRegister.SocialNetworks_MessageMatches AS MessageMatches
-        |ON MessageMatches.SNMessageID = Messages.MessageId 
         |
         |WHERE
         |   Messages.SocialConversation = &SocialConversation

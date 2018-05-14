@@ -21,59 +21,6 @@
     
 #Region ProgramInterface
 
-// Returns a CollaborationSystemUserID object.
-// 
-// Parameters:
-//  ID - UUID      - unique ID of the infobase user.
-//     - String    - unique ID of the infobase user in string presentation.
-//     - Undefined - default unique ID of the infobase user.
-// 
-// Returns:
-//  CollaborationSystemUserID - a CollaborationSystemUserID object.
-//
-Function CollaborationSystemUserID(Val ID = Undefined) Export
-    
-    If ID = Undefined Then
-        ID = Constants.SocialNetworks_UserIdentifier.Get();    
-    EndIf;
-    
-    If TypeOf(ID) = Type("String") Then
-        
-        SupportedTypes = New Array;
-        SupportedTypes.Add(Type("UUID"));
-        ConversionResult = FL_CommonUse.ConvertValueIntoPlatformObject(ID, 
-            SupportedTypes);
-        If NOT ConversionResult.TypeConverted Then       
-            Return Undefined;
-        EndIf;
-        
-        ID = ConversionResult.ConvertedValue; 
-            
-    EndIf;
-    
-    InfoBaseUser = Undefined;
-    If TypeOf(ID) = Type("UUID") Then
-        InfoBaseUser = InfoBaseUsers.FindByUUID(ID);    
-    EndIf;
-    
-    If InfoBaseUser = Undefined Then
-        Return Undefined;
-    EndIf;
-    
-    // This method requires privileged mode.
-    SetPrivilegedMode(True);
-    Try
-        CollaborationSystemUserID = CollaborationSystem.GetUserID(ID);
-    Except
-        CollaborationSystemUser = CollaborationSystem.CreateUser(InfoBaseUser);
-        CollaborationSystemUser.Write();
-        CollaborationSystemUserID = CollaborationSystemUser.ID;
-    EndTry;
-    
-    Return CollaborationSystemUserID;
-    
-EndFunction // CollaborationSystemUserID()
-
 // Returns social network user by user id.
 //
 // Parameters:
