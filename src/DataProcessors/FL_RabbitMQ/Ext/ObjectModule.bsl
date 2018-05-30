@@ -80,37 +80,25 @@ EndFunction // ChannelFullName()
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
     
+    If Log Then
+        JobResult.LogAttribute = "";        
+    EndIf;
+    
     Path = FL_EncryptionClientServer.FieldValueNoException(ChannelResources, 
         "Path");
     
-    HTTPMethod = "GET";
-    If Path = "PublishToExchange" OR Path = Undefined Then
-        
-        HTTPMethod = "POST";
-        HTTPRequest = ExchangePublish(NewPublishToExchangePayload(Payload, 
-            Properties));
-            
-    ElsIf Path = "Overview" Then
-        HTTPRequest = Overview();
-    ElsIf Path = "Connections" Then
-        HTTPRequest = Connections();
-    ElsIf Path = "Channels" Then
-        HTTPRequest = Channels();
-    ElsIf Path = "Exchanges" Then
-        HTTPRequest = Exchanges();
-    ElsIf Path = "Queues" Then
-        HTTPRequest = Queues();
-    ElsIf Path = "Aliveness" Then
-        HTTPRequest = Aliveness();
-    EndIf;
-        
-    If Log Then
-        JobResult.LogAttribute = "";     
+    If Path = "Aliveness" Then
+        AMQPNetAliveness(JobResult);
+        HTTPManagementAPIAliveness(JobResult);       
+    ElsIf Path = "PublishToExchange" OR Path = Undefined Then
+        PublishMessage(Payload, Properties, JobResult);    
+    Else
+        HTTPManagementAPI(Path, JobResult);
     EndIf;
     
-    FL_InteriorUse.CallHTTPMethod(NewHTTPConnection(), HTTPRequest, HTTPMethod, 
-        JobResult);
-            
+    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        JobResult.StatusCode);
+                
 EndProcedure // DeliverMessage() 
 
 // Invalidates the channel data. 
@@ -185,50 +173,130 @@ EndFunction // ConvertResponseToMap()
 
 #Region ServiceProceduresAndFunctions
 
-#Region Overview
+#Region HTTPManagementAPI
 
 // Only for internal use.
 //
-Function Overview()
+Procedure HTTPManagementAPIAliveness(JobResult)
     
-    Return FL_InteriorUse.NewHTTPRequest("/api/overview", 
+    StringURI = FL_EncryptionClientServer.FieldValueNoException(ChannelData, 
+        "StringURI");
+    If StringURI = Undefined Then
+        Return;
+    EndIf;
+    
+    VirtualHost = FL_EncryptionClientServer.FieldValue(ChannelResources, 
+        "VirtualHost");
+    If NOT ValueIsFilled(VirtualHost) Then
+        VirtualHost = "%2F";
+    EndIf;
+    
+    ResourceAddress = StrTemplate("/api/aliveness-test/%1", VirtualHost);
+    HTTPRequest = FL_InteriorUse.NewHTTPRequest(ResourceAddress, 
         NewHTTPRequestHeaders());
-     
-EndFunction // Overview()
-
-#EndRegion // Overview
-
-#Region Connections
+    
+    If JobResult.StatusCode = Undefined 
+        OR FL_InteriorUseReUse.IsSuccessHTTPStatusCode(JobResult.StatusCode) Then
+    
+        FL_InteriorUse.CallHTTPMethod(FL_InteriorUse.NewHTTPConnection(
+                StringURI), HTTPRequest, "GET", JobResult);
+                
+        BinaryData = JobResult.Output[0].Value;
+        Response = ConvertResponseToMap(BinaryData.OpenStreamForRead());
+        If TypeOf(Response) <> Type("Map")
+            OR TypeOf(Response.Get("status")) <> Type("String")
+            OR Upper(Response.Get("status")) <> "OK" Then
+            
+            JobResult.StatusCode = FL_InteriorUseReUse
+                .InternalServerErrorStatusCode();
+                
+        EndIf;
+                
+    EndIf;        
+ 
+EndProcedure // HTTPManagementAPIAliveness()
 
 // Only for internal use.
 //
-Function Connections()
+Procedure HTTPManagementAPI(Path, JobResult)
     
-    Return FL_InteriorUse.NewHTTPRequest("/api/connections", 
+    StringURI = FL_EncryptionClientServer.FieldValueNoException(ChannelData, 
+        "StringURI");
+    If StringURI = Undefined Then
+        
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+        JobResult.LogAttribute = NStr(
+            "en='App endpoint is not connected to HTTP management API.';
+            |ru='Конечная точка приложения не подключена к HTTP management API.';
+            |uk='Кінцева точка додатку не підключена до HTTP management API.';
+            |en_CA='App endpoint is not connected to HTTP management API.'");
+        Return;
+        
+    EndIf;
+    
+    If Path = "Overview" Then
+        ResourceAddress = "/api/overview";  
+    ElsIf Path = "Connections" Then
+        ResourceAddress = "/api/connections";
+    ElsIf Path = "Channels" Then
+        ResourceAddress = "/api/channels";
+    ElsIf Path = "Exchanges" Then
+        ResourceAddress = "/api/exchanges";
+    ElsIf Path = "Queues" Then
+        ResourceAddress = "/api/queues";
+    Else
+        
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+        JobResult.LogAttribute = StrTemplate(
+            NStr("en='HTTP management API: unknown path {%1}.';
+                |ru='HTTP management API: неизвестный путь {%1}.';
+                |uk='HTTP management API: невідомий шлях {%1}.';
+                |en_CA='HTTP management API: unknown path {%1}'"), 
+            String(Path));
+        Return;
+        
+    EndIf;
+    
+    HTTPRequest = FL_InteriorUse.NewHTTPRequest(ResourceAddress, 
         NewHTTPRequestHeaders());
-     
-EndFunction // Connections()
-    
-#EndRegion // Connections 
-
-#Region Channels
+    FL_InteriorUse.CallHTTPMethod(FL_InteriorUse.NewHTTPConnection(StringURI), 
+        HTTPRequest, "GET", JobResult);
+ 
+EndProcedure // HTTPManagementAPI()
 
 // Only for internal use.
 //
-Function Channels()
+Procedure HTTPManagementAPIPublish(Payload, Properties, StringURI, JobResult)
     
-    Return FL_InteriorUse.NewHTTPRequest("/api/channels", 
-        NewHTTPRequestHeaders());
-     
-EndFunction // Channels()
-
-#EndRegion // Channels
-
-#Region Exchanges
+    PreparedPayload = NewPublishToExchangePayload(Payload, Properties); 
+    
+    Exchange = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "Exchange");
+    If NOT ValueIsFilled(Exchange) Then
+        Exchange = "amq.default";
+    EndIf;
+    
+    VirtualHost = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "VirtualHost");
+    If NOT ValueIsFilled(VirtualHost) Then
+        VirtualHost = "%2F";
+    EndIf;
+    
+    ResourceAddress = StrTemplate("/api/exchanges/%1/%2/publish", VirtualHost, 
+        Exchange);
+    
+    HTTPRequest = FL_InteriorUse.NewHTTPRequest(ResourceAddress, 
+        NewHTTPRequestHeaders(), PreparedPayload);
+    FL_InteriorUse.CallHTTPMethod(FL_InteriorUse.NewHTTPConnection(StringURI), 
+        HTTPRequest, "POST", JobResult);
+    
+EndProcedure // HTTPManagementAPIPublish() 
 
 // Only for internal use.
 //
-Procedure ProcessMessageProperties(JSONWriter, Properties)
+Procedure HTTPManagementAPIProcessProps(JSONWriter, Properties)
     
     // Properties
     JSONWriter.WritePropertyName("properties");
@@ -321,40 +389,7 @@ Procedure ProcessMessageProperties(JSONWriter, Properties)
     
     JSONWriter.WriteEndObject();   
     
-EndProcedure // ProcessMessageProperties()
-
-// Only for internal use.
-//
-Function ExchangePublish(Payload)
-    
-    Exchange = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "Exchange");
-    If NOT ValueIsFilled(Exchange) Then
-        Exchange = "amq.default";
-    EndIf;
-    
-    VirtualHost = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "VirtualHost");
-    If NOT ValueIsFilled(VirtualHost) Then
-        VirtualHost = "%2F";
-    EndIf;
-    
-    ResourceAddress = StrTemplate("/api/exchanges/%1/%2/publish", VirtualHost, 
-        Exchange);
-    
-    Return FL_InteriorUse.NewHTTPRequest(ResourceAddress, 
-        NewHTTPRequestHeaders(), Payload);    
-    
-EndFunction // ExchangePublish()
-
-// Only for internal use.
-//
-Function Exchanges()
-    
-    Return FL_InteriorUse.NewHTTPRequest("/api/exchanges", 
-        NewHTTPRequestHeaders());
-    
-EndFunction // Exchanges()
+EndProcedure // HTTPManagementAPIProcessProps()
 
 // Only for internal use.
 //
@@ -370,7 +405,7 @@ Function NewPublishToExchangePayload(Payload, Properties)
     PayloadEncoding = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "PayloadEncoding");
     If NOT ValueIsFilled(PayloadEncoding) Then
-        PayloadEncoding = "base64";
+        PayloadEncoding = "string";
     EndIf;
     
     JSONWriter = New JSONWriter;
@@ -394,7 +429,7 @@ Function NewPublishToExchangePayload(Payload, Properties)
         JSONWriter.WriteValue(Base64String(Payload));
     EndIf;
         
-    ProcessMessageProperties(JSONWriter, Properties);
+    HTTPManagementAPIProcessProps(JSONWriter, Properties);
     
     JSONWriter.WriteEndObject();
     JSONWriter.Close();
@@ -402,52 +437,219 @@ Function NewPublishToExchangePayload(Payload, Properties)
     Return MemoryStream.CloseAndGetBinaryData();
     
 EndFunction // NewPublishToExchangePayload()
+   
+#EndRegion // HTTPManagementAPI 
 
-#EndRegion // Exchanges    
-
-#Region Queues
-
-// Only for internal use.
-//
-Function Queues()
-    
-    Return FL_InteriorUse.NewHTTPRequest("/api/queues", 
-        NewHTTPRequestHeaders());
-    
-EndFunction // Queues()
-
-#EndRegion // Queues
-
-#Region Aliveness
+#Region AMQPNet
 
 // Only for internal use.
 //
-Function Aliveness()
+Procedure AMQPNetAliveness(JobResult)
     
-    VirtualHost = FL_EncryptionClientServer.FieldValue(ChannelResources, 
-        "VirtualHost");
-    
-    If NOT ValueIsFilled(VirtualHost) Then
-        VirtualHost = "%2F";
+    AMQPURI = FL_EncryptionClientServer.FieldValueNoException(ChannelData, 
+        "AMQPURI");
+    If AMQPURI = Undefined Then
+        Return;        
     EndIf;
     
-    ResourceAddress = StrTemplate("/api/aliveness-test/%1", VirtualHost);
+    V8Publisher = NewV8Publisher(AMQPURI, JobResult);
+    If V8Publisher <> Undefined Then
+        V8Publisher.Dispose();
+    EndIf;
     
-    Return FL_InteriorUse.NewHTTPRequest(ResourceAddress, 
-        NewHTTPRequestHeaders());
-    
-EndFunction // Aliveness()
-
-#EndRegion // Aliveness 
+EndProcedure // AMQPNetAliveness()    
 
 // Only for internal use.
 //
-Function NewHTTPConnection()
-                                     
-    Return FL_InteriorUse.NewHTTPConnection(
-        FL_EncryptionClientServer.FieldValue(ChannelData, "StringURI"));
+Procedure AMQPNetPublish(Payload, Properties, AMQPURI, JobResult)
+    
+    V8Publisher = NewV8Publisher(AMQPURI, JobResult);
+    If V8Publisher = Undefined Then
+        Return;
+    EndIf;
         
-EndFunction // NewHTTPConnection()
+    Exchange = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "Exchange");
+    If NOT ValueIsFilled(Exchange) Then
+        Exchange = "";
+    EndIf;
+
+    If ValueIsFilled(Properties.ReplyTo) Then
+        Exchange = "";
+        RoutingKey = Properties.ReplyTo;
+    Else
+        RoutingKey = FL_EncryptionClientServer.FieldValue(ChannelResources, 
+            "RoutingKey");
+    EndIf;
+    
+    AMQPNetProcessProps(V8Publisher, Properties);
+    
+    Result = V8Publisher.SendMessage(Payload, Exchange, RoutingKey);
+    If Result = "Delivered successfully." Then
+        
+        JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
+        If Log Then
+            JobResult.LogAttribute = Result;        
+        EndIf;
+        
+    Else
+        
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+        JobResult.LogAttribute = Result;
+        
+    EndIf;
+        
+    V8Publisher.Dispose();
+    
+EndProcedure // AMQPNetPublish()
+
+// Only for internal use.
+//
+Procedure AMQPNetProcessProps(V8Publisher, Properties)
+    
+    // Identifier of the application that produced the message.
+    V8Publisher.AppId = Properties.AppId;
+    
+    // Non-persistent (1) or persistent (2).
+    PropDeliveryMode = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "PropDeliveryMode");
+    If ValueIsFilled(PropDeliveryMode) Then    
+        V8Publisher.DeliveryMode = ?(PropDeliveryMode = "non-persistent", 1, 2);
+    EndIf;
+    
+    // MIME content type.
+    V8Publisher.ContentType = Properties.ContentType;
+
+    // MIME content encoding.
+    V8Publisher.ContentEncoding = Properties.ContentEncoding;
+            
+    // Message correlated to this one, e.g. what request this message is a reply to.
+    If ValueIsFilled(Properties.CorrelationId) Then
+        V8Publisher.CorrelationId = Properties.CorrelationId;
+    EndIf;
+    
+    // Expiration time after which the message will be deleted.
+    PropExpiration = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "PropExpiration");
+    If ValueIsFilled(PropExpiration) Then
+        V8Publisher.Expiration = PropExpiration;
+    EndIf;
+    
+    // Application message identifier.
+    V8Publisher.MessageId = Properties.MessageId;
+    
+    // Message priority.
+    PropPriority = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "PropPriority");
+    If ValueIsFilled(PropPriority) Then
+        V8Publisher.Priority = Number(PropPriority);
+    EndIf;
+    
+    // Message type.
+    PropType = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "PropType");
+    If ValueIsFilled(PropType) Then
+        V8Publisher.Type = PropType;
+    EndIf;
+    
+    // Message timestamp.
+    V8Publisher.Timestamp = Format(Properties.Timestamp, "NG=0");
+    
+    // Optional user ID.
+    PropUserId = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "PropUserId");
+    If ValueIsFilled(PropUserId) Then
+        V8Publisher.UserId = PropUserId;
+    EndIf;
+    
+    V8Publisher.AddHeader("EventSource", Properties.EventSource);
+    V8Publisher.AddHeader("FileExtension", Properties.FileExtension);
+    V8Publisher.AddHeader("Operation", String(Properties.Operation));
+    V8Publisher.AddHeader("UserId", Properties.UserId);
+    
+EndProcedure // AMQPNetProcessProps() 
+
+// Only for internal use.
+//
+Function NewV8Publisher(AMQPURI, JobResult) 
+    
+    V8LoaderTemplate = GetTemplate("V8Loader");
+    V8LoaderAddress = PutToTempStorage(V8LoaderTemplate);
+    
+    Try
+        
+        Attached = AttachAddIn(V8LoaderAddress, "V8", AddInType.Native); 
+        If NOT Attached Then
+            Raise NStr("en='Failed to attach AddIn {V8Loader}.';
+                |ru='Не удалось подключить внешнюю компоненту {V8Loader}.';
+                |uk='Не вдалось підключити зовнішню компоненту {V8Loader}.';
+                |en_CA='Failed to attach AddIn {V8Loader}.'");
+        EndIf;
+        
+        V8Publisher = New("AddIn.V8.V8Loader");
+        V8Publisher.CreateObject(GetTemplate("V8Publisher"), 
+            "_1CV8Publisher.V8Publisher");
+        
+        AddInMessage = V8Publisher.Initialize(AMQPURI);
+        If AddInMessage <> "Connected successfully." Then
+            Raise AddInMessage;  
+        EndIf;
+        
+        JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
+        
+    Except
+        
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+            
+        If V8Publisher <> Undefined Then
+            JobResult.LogAttribute = V8Publisher.GetLastError();
+            V8Publisher = Undefined;
+        EndIf;
+        
+        If IsBlankString(JobResult.LogAttribute) Then
+            JobResult.LogAttribute = ErrorDescription();
+        EndIf;
+        
+    EndTry;
+    
+    Return V8Publisher;
+    
+EndFunction // NewV8Publisher()
+
+#EndRegion // AMQPNet
+
+// Only for internal use.
+//
+Procedure PublishMessage(Payload, Properties, JobResult)
+    
+    Mib = 1048576;
+    Mib300 = 314572800;
+    Size = PayloadSize(Payload);
+    
+    AMQPURI = FL_EncryptionClientServer.FieldValueNoException(ChannelData, 
+        "AMQPURI");
+    StringURI = FL_EncryptionClientServer.FieldValueNoException(ChannelData, 
+        "StringURI");
+    
+    If Size <= Mib AND ValueIsFilled(StringURI) Then
+        HTTPManagementAPIPublish(Payload, Properties, StringURI, JobResult);   
+    ElsIf Size <= Mib300 AND ValueIsFilled(AMQPURI) Then
+        AMQPNetPublish(Payload, Properties, AMQPURI, JobResult);
+    Else
+        
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+        JobResult.LogAttribute = NStr(
+            "en='App endpoint is not connected or payload size exceeded the maximum.';
+            |ru='Конечная точка приложения не подключена или размер сообщения превышает максимальный допустимый.';
+            |uk='Кінцева точка додатку не підключена або розмір повідомлення перевищує максимально допустимий.';
+            |en_CA='App endpoint is not connected or payload size exceeded the maximum.'");
+    
+    EndIf;
+    
+EndProcedure // PublishMessage()
 
 // Only for internal use.
 //
@@ -460,6 +662,18 @@ Function NewHTTPRequestHeaders()
     
 EndFunction // NewHTTPRequestHeaders()
 
+// Only for internal use.
+//
+Function PayloadSize(Payload)
+    
+    If TypeOf(Payload) = Type("BinaryData") Then
+        Return Payload.Size();
+    EndIf;
+    
+    Return 0;
+    
+EndFunction // PayloadSize()
+
 #EndRegion // ServiceProceduresAndFunctions
 
 #Region ExternalDataProcessorInfo
@@ -471,7 +685,7 @@ EndFunction // NewHTTPRequestHeaders()
 //
 Function Version() Export
     
-    Return "1.1.37";
+    Return "1.3.14";
     
 EndFunction // Version()
 

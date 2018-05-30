@@ -23,34 +23,75 @@
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
     Object.Log = True;
+
+    V8Loader = False;
+    V8Publisher = False;
+    
+    Templates = Metadata.DataProcessors.FL_RabbitMQ.Templates;
+    For Each Template In Templates Do
+        
+        If Upper(Template.Name) = Upper("V8Loader") Then
+            V8Loader = True;
+        ElsIf Upper(Template.Name) = Upper("V8Publisher") Then
+            V8Publisher = True;    
+        EndIf;
+        
+    EndDo;
+    
+    Items.UseAMQPNET.ReadOnly = NOT (V8Loader AND V8Publisher);    
     
 EndProcedure // OnCreateAtServer()
 
 #EndRegion // FormEventHandlers
+
+#Region FormItemsEventHandlers
+
+&AtClient
+Procedure UseHTTPOnChange(Item)
+    
+    Items.GroupConnectionPath.Visible = UseManagementHTTPAPI;
+    
+EndProcedure // UseHTTPOnChange()
+
+&AtClient
+Procedure UseAMQPNETOnChange(Item)
+    
+    Items.GroupConnectionPathAMQPNET.Visible = UseAMQPNET;
+    
+EndProcedure // UseAMQPNETOnChange()
+
+#EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
 
 &AtClient
 Procedure ConnectToRabbitMQ(Command)
     
-    If IsBlankString(ConnectionPath) Then
-        
-        FL_CommonUseClientServer.NotifyUser(NStr("
-                |en='Fill the connection path.';
-                |ru='Заполните путь для подключения.';
-                |uk='Заповніть шлях для підключення.';
-                |en_CA='Fill the connection path.'"),
-            ,
-            "ConnectionPath");
-        Return;
-        
+    If UseManagementHTTPAPI AND NOT ConnectionPathIsFilled("ConnectionPath") Then
+        Return;         
     EndIf;
     
+    If UseAMQPNET AND NOT ConnectionPathIsFilled("AMQPConnectionPath") Then
+        Return;         
+    EndIf;
+        
     ConnectToRabbitMQAtServer();
     
-    FilterParameters = New Structure("FieldName", "StringURI");
-    FilterResult = Object.ChannelData.FindRows(FilterParameters);
-    If FilterResult.Count() = 1 Then
+    ManagementHTTPSuccess = True;
+    If UseManagementHTTPAPI Then
+        FilterParameters = New Structure("FieldName", "StringURI");
+        FilterResult = Object.ChannelData.FindRows(FilterParameters);
+        ManagementHTTPSuccess = FilterResult.Count() = 1;
+    EndIf;
+    
+    AMQPNETSuccess = True;
+    If UseAMQPNET Then
+        FilterParameters = New Structure("FieldName", "AMQPURI");
+        FilterResult = Object.ChannelData.FindRows(FilterParameters);
+        AMQPNETSuccess = FilterResult.Count() = 1;
+    EndIf;
+    
+    If ManagementHTTPSuccess AND AMQPNETSuccess Then
         Close(Object); 
     Else
         Explanation = NStr("
@@ -67,45 +108,66 @@ EndProcedure // ConnectToRabbitMQ()
 
 #Region ServiceProceduresAndFunctions
 
+&AtClient
+Function ConnectionPathIsFilled(FieldName)
+                 
+    If IsBlankString(ThisObject[FieldName]) Then
+    
+        FL_CommonUseClientServer.NotifyUser(NStr("
+                |en='Fill the connection path.';
+                |ru='Заполните путь для подключения.';
+                |uk='Заповніть шлях для підключення.';
+                |en_CA='Fill the connection path.'"),
+            ,
+            FieldName);
+            
+        Return False;
+        
+    EndIf;
+    
+    Return True;
+    
+EndFunction // ConnectionPathIsFilled()
+
 &AtServer
 Procedure ConnectToRabbitMQAtServer()
 
-    URIStructure = FL_CommonUseClientServer.URIStructure(ConnectionPath);
-    URIStructure.Login = Login;
-    URIStructure.Password = Password;
-    
-    If IsBlankString(VirtualHost) Then
-        VirtualHost = "%2F";    
-    EndIf;
-    
     MainObject = FormAttributeToValue("Object");
     MainObject.ChannelData.Clear();
     MainObject.ChannelResources.Clear();
+
+    If UseManagementHTTPAPI Then 
+        
+        URIStructure = FL_CommonUseClientServer.URIStructure(ConnectionPath);
+        URIStructure.Login = Login;
+        URIStructure.Password = Password;
+        
+        If IsBlankString(VirtualHost) Then
+            VirtualHost = "%2F";    
+        EndIf;
+        
+        FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelData, 
+            "StringURI", FL_CommonUseClientServer.StringURI(URIStructure));
+        FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
+            "VirtualHost", VirtualHost);    
+        
+    EndIf;
     
-    FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelData, 
-        "StringURI", FL_CommonUseClientServer.StringURI(URIStructure));
+    If UseAMQPNET Then
+        FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelData, 
+            "AMQPURI", AMQPConnectionPath);
+    EndIf;
+    
     FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
         "Path", "Aliveness");
-    FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
-        "VirtualHost", VirtualHost);    
-    
+        
     JobResult = Catalogs.FL_Jobs.NewJobResult();
     MainObject.DeliverMessage(Undefined, Undefined, JobResult);
     
     LogAttribute = LogAttribute + JobResult.LogAttribute;
     
     If JobResult.Success Then
-        
-        BinaryData = JobResult.Output[0].Value;
-        Response = MainObject.ConvertResponseToMap(
-            BinaryData.OpenStreamForRead());
-        If TypeOf(Response) = Type("Map")
-            AND TypeOf(Response.Get("status")) = Type("String")
-            AND Upper(Response.Get("status")) = "OK" Then
-            
-            ValueToFormAttribute(MainObject.ChannelData, "Object.ChannelData");
-            
-        EndIf;
+        ValueToFormAttribute(MainObject.ChannelData, "Object.ChannelData");
     EndIf;
         
 EndProcedure // ConnectToRabbitMQAtServer()
