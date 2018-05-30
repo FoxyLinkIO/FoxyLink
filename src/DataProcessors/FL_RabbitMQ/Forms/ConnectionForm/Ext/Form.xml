@@ -39,185 +39,357 @@
 		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
 	</Events>
 	<ChildItems>
-		<UsualGroup name="GroupConnectionPath" id="12">
-			<Title>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Connection path</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Connection path</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Путь для подключения</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>uk</v8:lang>
-					<v8:content>Шлях для підключення</v8:content>
-				</v8:item>
-			</Title>
-			<ToolTip>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Group connection path</v8:content>
-				</v8:item>
-			</ToolTip>
-			<Group>Vertical</Group>
+		<UsualGroup name="GroupProtocols" id="40">
+			<EnableContentChange>true</EnableContentChange>
+			<Group>Horizontal</Group>
 			<Representation>None</Representation>
-			<ExtendedTooltip name="GroupConnectionPathExtendedTooltip" id="13"/>
+			<ShowTitle>false</ShowTitle>
+			<ExtendedTooltip name="GroupProtocolsExtendedTooltip" id="41"/>
 			<ChildItems>
-				<InputField name="ConnectionPath" id="7">
-					<DataPath>ConnectionPath</DataPath>
-					<TitleLocation>None</TitleLocation>
-					<AutoMarkIncomplete>true</AutoMarkIncomplete>
-					<ContextMenu name="ConnectionPathContextMenu" id="8"/>
-					<ExtendedTooltip name="ConnectionPathExtendedTooltip" id="9"/>
-				</InputField>
-				<UsualGroup name="GroupVirtualHost" id="29">
-					<Title>
-						<v8:item>
-							<v8:lang>en</v8:lang>
-							<v8:content>vhost</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>en_CA</v8:lang>
-							<v8:content>vhost</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>vhost</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>uk</v8:lang>
-							<v8:content>vhost</v8:content>
-						</v8:item>
-					</Title>
-					<ToolTip>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Виртуальный хост</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>en</v8:lang>
-							<v8:content>Virtual host</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>en_CA</v8:lang>
-							<v8:content>Virtual host</v8:content>
-						</v8:item>
-					</ToolTip>
-					<Behavior>Collapsible</Behavior>
-					<Collapsed>true</Collapsed>
+				<UsualGroup name="GroupHTTP" id="45">
+					<Group>Vertical</Group>
 					<Representation>None</Representation>
-					<ExtendedTooltip name="GroupVirtualHostExtendedTooltip" id="30"/>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="GroupHTTPExtendedTooltip" id="46"/>
 					<ChildItems>
-						<InputField name="VirtualHost" id="26">
-							<DataPath>VirtualHost</DataPath>
-							<TitleFont ref="style:NormalTextFont" bold="false" italic="true" underline="false" strikeout="false" kind="StyleItem"/>
-							<TitleLocation>None</TitleLocation>
-							<InputHint>
+						<CheckBoxField name="UseHTTP" id="34">
+							<DataPath>UseManagementHTTPAPI</DataPath>
+							<TitleLocation>Right</TitleLocation>
+							<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+							<CheckBoxType>Auto</CheckBoxType>
+							<ContextMenu name="UseHTTPContextMenu" id="35"/>
+							<ExtendedTooltip name="UseHTTPExtendedTooltip" id="36">
+								<TextColor>style:FieldSelectionBackColor</TextColor>
+								<Title formatted="false">
+									<v8:item>
+										<v8:lang>en</v8:lang>
+										<v8:content>The management plugin supports a simple HTTP API to send and receive messages. This is primarily intended for diagnostic purposes but can be used for low volume messaging without reliable delivery.
+Maximum message size is 1Mib.</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>en_CA</v8:lang>
+										<v8:content>The management plugin supports a simple HTTP API to send and receive messages. This is primarily intended for diagnostic purposes but can be used for low volume messaging without reliable delivery.
+Maximum message size is 1Mib.</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>ru</v8:lang>
+										<v8:content>Плагин управления поддерживает простой HTTP API для отправки и получения сообщений. Это, в первую очередь, предназначено для диагностических целей, но может использоваться для обмена сообщениями с низким объемом без надежной доставки.
+Максимальный размер сообщения — 1Mib.</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>uk</v8:lang>
+										<v8:content>Плагін керування підтримує простий HTTP API для надсилання та отримання повідомлень. Це, насамперед, призначене для діагностичних цілей, але його можна використовувати для обміну повідомленнями без надійної доставки.
+Максимальний розмір повідомлення — 1Міб.</v8:content>
+									</v8:item>
+								</Title>
+							</ExtendedTooltip>
+							<Events>
+								<Event name="OnChange">UseHTTPOnChange</Event>
+							</Events>
+						</CheckBoxField>
+						<UsualGroup name="GroupConnectionPath" id="12">
+							<Visible>false</Visible>
+							<Title>
 								<v8:item>
 									<v8:lang>en</v8:lang>
-									<v8:content>Default value = '%2F'</v8:content>
+									<v8:content>Connection path</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>en_CA</v8:lang>
-									<v8:content>Default value = '%2F'</v8:content>
+									<v8:content>Connection path</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>ru</v8:lang>
-									<v8:content>Значение по умолчанию= '%2F'</v8:content>
+									<v8:content>Путь для подключения</v8:content>
 								</v8:item>
 								<v8:item>
 									<v8:lang>uk</v8:lang>
-									<v8:content>Значення по замовчуванню= '%2F'</v8:content>
+									<v8:content>Шлях для підключення</v8:content>
 								</v8:item>
-							</InputHint>
-							<ContextMenu name="VirtualHostContextMenu" id="27"/>
-							<ExtendedTooltip name="VirtualHostExtendedTooltip" id="28"/>
-						</InputField>
+							</Title>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Group connection path</v8:content>
+								</v8:item>
+							</ToolTip>
+							<Group>Vertical</Group>
+							<Representation>None</Representation>
+							<ExtendedTooltip name="GroupConnectionPathExtendedTooltip" id="13"/>
+							<ChildItems>
+								<InputField name="ConnectionPath" id="7">
+									<DataPath>ConnectionPath</DataPath>
+									<TitleLocation>None</TitleLocation>
+									<AutoMarkIncomplete>true</AutoMarkIncomplete>
+									<ContextMenu name="ConnectionPathContextMenu" id="8"/>
+									<ExtendedTooltip name="ConnectionPathExtendedTooltip" id="9"/>
+								</InputField>
+								<UsualGroup name="GroupVirtualHost" id="29">
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>vhost</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>en_CA</v8:lang>
+											<v8:content>vhost</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>vhost</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>uk</v8:lang>
+											<v8:content>vhost</v8:content>
+										</v8:item>
+									</Title>
+									<ToolTip>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Виртуальный хост</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Virtual host</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>en_CA</v8:lang>
+											<v8:content>Virtual host</v8:content>
+										</v8:item>
+									</ToolTip>
+									<Behavior>Collapsible</Behavior>
+									<Collapsed>true</Collapsed>
+									<Representation>None</Representation>
+									<ExtendedTooltip name="GroupVirtualHostExtendedTooltip" id="30"/>
+									<ChildItems>
+										<InputField name="VirtualHost" id="26">
+											<DataPath>VirtualHost</DataPath>
+											<TitleFont ref="style:NormalTextFont" bold="false" italic="true" underline="false" strikeout="false" kind="StyleItem"/>
+											<TitleLocation>None</TitleLocation>
+											<InputHint>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Default value = '%2F'</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Default value = '%2F'</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Значение по умолчанию= '%2F'</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Значення по замовчуванню= '%2F'</v8:content>
+												</v8:item>
+											</InputHint>
+											<ContextMenu name="VirtualHostContextMenu" id="27"/>
+											<ExtendedTooltip name="VirtualHostExtendedTooltip" id="28"/>
+										</InputField>
+									</ChildItems>
+								</UsualGroup>
+								<UsualGroup name="GroupLoginPassword" id="24">
+									<Representation>None</Representation>
+									<ShowTitle>false</ShowTitle>
+									<ExtendedTooltip name="GroupLoginPasswordExtendedTooltip" id="25"/>
+									<ChildItems>
+										<UsualGroup name="GroupLogin" id="20">
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Login</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Login</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Логин</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Логін</v8:content>
+												</v8:item>
+											</Title>
+											<ToolTip>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Group login</v8:content>
+												</v8:item>
+											</ToolTip>
+											<Representation>None</Representation>
+											<ExtendedTooltip name="GroupLoginExtendedTooltip" id="21"/>
+											<ChildItems>
+												<InputField name="Login" id="14">
+													<DataPath>Login</DataPath>
+													<TitleLocation>None</TitleLocation>
+													<ContextMenu name="LoginContextMenu" id="15"/>
+													<ExtendedTooltip name="LoginExtendedTooltip" id="16"/>
+												</InputField>
+											</ChildItems>
+										</UsualGroup>
+										<UsualGroup name="GroupPassword" id="22">
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Password</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Password</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Пароль</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Пароль</v8:content>
+												</v8:item>
+											</Title>
+											<ToolTip>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Group password</v8:content>
+												</v8:item>
+											</ToolTip>
+											<Representation>None</Representation>
+											<ExtendedTooltip name="GroupPasswordExtendedTooltip" id="23"/>
+											<ChildItems>
+												<InputField name="Password" id="17">
+													<DataPath>Password</DataPath>
+													<TitleLocation>None</TitleLocation>
+													<PasswordMode>true</PasswordMode>
+													<ContextMenu name="PasswordContextMenu" id="18"/>
+													<ExtendedTooltip name="PasswordExtendedTooltip" id="19"/>
+												</InputField>
+											</ChildItems>
+										</UsualGroup>
+									</ChildItems>
+								</UsualGroup>
+							</ChildItems>
+						</UsualGroup>
 					</ChildItems>
 				</UsualGroup>
-			</ChildItems>
-		</UsualGroup>
-		<UsualGroup name="GroupLoginPassword" id="24">
-			<Representation>None</Representation>
-			<ShowTitle>false</ShowTitle>
-			<ExtendedTooltip name="GroupLoginPasswordExtendedTooltip" id="25"/>
-			<ChildItems>
-				<UsualGroup name="GroupLogin" id="20">
-					<Title>
-						<v8:item>
-							<v8:lang>en</v8:lang>
-							<v8:content>Login</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>en_CA</v8:lang>
-							<v8:content>Login</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Логин</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>uk</v8:lang>
-							<v8:content>Логін</v8:content>
-						</v8:item>
-					</Title>
-					<ToolTip>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Group login</v8:content>
-						</v8:item>
-					</ToolTip>
+				<UsualGroup name="GroupAMQPNET" id="47">
+					<Group>Vertical</Group>
 					<Representation>None</Representation>
-					<ExtendedTooltip name="GroupLoginExtendedTooltip" id="21"/>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="GroupAMQPNETExtendedTooltip" id="48"/>
 					<ChildItems>
-						<InputField name="Login" id="14">
-							<DataPath>Login</DataPath>
-							<TitleLocation>None</TitleLocation>
-							<ContextMenu name="LoginContextMenu" id="15"/>
-							<ExtendedTooltip name="LoginExtendedTooltip" id="16"/>
-						</InputField>
+						<CheckBoxField name="UseAMQPNET" id="37">
+							<DataPath>UseAMQPNET</DataPath>
+							<ReadOnly>true</ReadOnly>
+							<TitleLocation>Right</TitleLocation>
+							<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+							<CheckBoxType>Auto</CheckBoxType>
+							<ContextMenu name="UseAMQPNETContextMenu" id="38"/>
+							<ExtendedTooltip name="UseAMQPNETExtendedTooltip" id="39">
+								<TextColor>style:FieldSelectionBackColor</TextColor>
+								<Title formatted="false">
+									<v8:item>
+										<v8:lang>en</v8:lang>
+										<v8:content>RabbitMQ was originally developed to support AMQP. As such this protocol is the "core" protocol supported by the broker. All of these variants are fairly similar to each other, with later versions tidying up unclear or unhelpful parts of earlier versions. 
+Maximum message size is 300Mib.</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>en_CA</v8:lang>
+										<v8:content>RabbitMQ was originally developed to support AMQP. As such this protocol is the "core" protocol supported by the broker. All of these variants are fairly similar to each other, with later versions tidying up unclear or unhelpful parts of earlier versions. 
+Maximum message size is 300Mib.</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>ru</v8:lang>
+										<v8:content>Первоначально RabbitMQ был разработан для поддержки AMQP. Таким образом, этот протокол является «основным» протоколом, поддерживаемым брокером. Все эти варианты довольно похожи друг на друга, с более поздними версиями, убирающими неясные или бесполезные части более ранних версий.
+Максимальный размер сообщения — 300Mib.</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>uk</v8:lang>
+										<v8:content>RabbitMQ був спочатку розроблений для підтримки AMQP. Таким чином, цей протокол є "основним" протоколом, який підтримується брокером. Всі ці варіанти досить схожі один на одного, причому пізніші версії, виправляють незрозумілі або непотрібні частини попередніх версій.
+Максимальний розмір повідомлення — 300Mib.</v8:content>
+									</v8:item>
+								</Title>
+							</ExtendedTooltip>
+							<Events>
+								<Event name="OnChange">UseAMQPNETOnChange</Event>
+							</Events>
+						</CheckBoxField>
+						<UsualGroup name="GroupConnectionPathAMQPNET" id="51">
+							<Visible>false</Visible>
+							<Title>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Connection path</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Connection path</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Путь для подключения</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Шлях для підключення</v8:content>
+								</v8:item>
+							</Title>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Group connection path</v8:content>
+								</v8:item>
+							</ToolTip>
+							<Group>Vertical</Group>
+							<Representation>None</Representation>
+							<ExtendedTooltip name="GroupConnectionPathAMQPNETExtendedTooltip" id="52"/>
+							<ChildItems>
+								<InputField name="ConnectionPathAMQPNET" id="53">
+									<DataPath>AMQPConnectionPath</DataPath>
+									<TitleLocation>None</TitleLocation>
+									<AutoMarkIncomplete>true</AutoMarkIncomplete>
+									<ContextMenu name="ConnectionPathAMQPNETContextMenu" id="54"/>
+									<ExtendedTooltip name="ConnectionPathAMQPNETExtendedTooltip" id="55"/>
+								</InputField>
+							</ChildItems>
+						</UsualGroup>
 					</ChildItems>
 				</UsualGroup>
-				<UsualGroup name="GroupPassword" id="22">
-					<Title>
-						<v8:item>
-							<v8:lang>en</v8:lang>
-							<v8:content>Password</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>en_CA</v8:lang>
-							<v8:content>Password</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Пароль</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>uk</v8:lang>
-							<v8:content>Пароль</v8:content>
-						</v8:item>
-					</Title>
-					<ToolTip>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Group password</v8:content>
-						</v8:item>
-					</ToolTip>
+				<UsualGroup name="GroupAMQPNativeAPI" id="49">
+					<ReadOnly>true</ReadOnly>
 					<Representation>None</Representation>
-					<ExtendedTooltip name="GroupPasswordExtendedTooltip" id="23"/>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="GroupAMQPNativeAPIExtendedTooltip" id="50"/>
 					<ChildItems>
-						<InputField name="Password" id="17">
-							<DataPath>Password</DataPath>
-							<TitleLocation>None</TitleLocation>
-							<PasswordMode>true</PasswordMode>
-							<ContextMenu name="PasswordContextMenu" id="18"/>
-							<ExtendedTooltip name="PasswordExtendedTooltip" id="19"/>
-						</InputField>
+						<CheckBoxField name="UseAMQPNativeAPI" id="42">
+							<DataPath>UseAMQPNativeAPI</DataPath>
+							<TitleLocation>Right</TitleLocation>
+							<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+							<CheckBoxType>Auto</CheckBoxType>
+							<ContextMenu name="UseAMQPNativeAPIContextMenu" id="43"/>
+							<ExtendedTooltip name="UseAMQPNativeAPIExtendedTooltip" id="44">
+								<TextColor>style:FieldSelectionBackColor</TextColor>
+								<Title formatted="false">
+									<v8:item>
+										<v8:lang>en</v8:lang>
+										<v8:content>RabbitMQ was originally developed to support AMQP. As such this protocol is the "core" protocol supported by the broker. All of these variants are fairly similar to each other, with later versions tidying up unclear or unhelpful parts of earlier versions. </v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>en_CA</v8:lang>
+										<v8:content>RabbitMQ was originally developed to support AMQP. As such this protocol is the "core" protocol supported by the broker. All of these variants are fairly similar to each other, with later versions tidying up unclear or unhelpful parts of earlier versions. </v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>ru</v8:lang>
+										<v8:content>Первоначально RabbitMQ был разработан для поддержки AMQP. Таким образом, этот протокол является «основным» протоколом, поддерживаемым брокером. Все эти варианты довольно похожи друг на друга, с более поздними версиями, убирающими неясные или бесполезные части более ранних версий.</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>uk</v8:lang>
+										<v8:content>RabbitMQ був спочатку розроблений для підтримки AMQP. Таким чином, цей протокол є "основним" протоколом, який підтримується брокером. Всі ці варіанти досить схожі один на одного, причому пізніші версії, виправляють незрозумілі або непотрібні частини попередніх версій.</v8:content>
+									</v8:item>
+								</Title>
+							</ExtendedTooltip>
+						</CheckBoxField>
 					</ChildItems>
 				</UsualGroup>
 			</ChildItems>
@@ -240,6 +412,7 @@
 					<v8:content>Connection log</v8:content>
 				</v8:item>
 			</ToolTip>
+			<AutoMaxWidth>false</AutoMaxWidth>
 			<Height>10</Height>
 			<MultiLine>true</MultiLine>
 			<ContextMenu name="OperationLogContextMenu" id="32"/>
@@ -386,6 +559,102 @@
 					<v8:Length>0</v8:Length>
 					<v8:AllowedLength>Variable</v8:AllowedLength>
 				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="AMQPConnectionPath" id="10">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Connection path (amqp)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Connection path (amqp)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Путь для подключения (amqp)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Шлях для підключення (amqp)</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="UseManagementHTTPAPI" id="11">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Use management HTTP API</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Use management HTTP API</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Использовать management HTTP API</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Використовувати management HTTP API</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:boolean</v8:Type>
+			</Type>
+		</Attribute>
+		<Attribute name="UseAMQPNET" id="12">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Use AMQP 0-9-1 (.NET)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Use AMQP 0-9-1 (.NET)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Использовать AMQP 0-9-1 (.NET)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Використовувати AMQP 0-9-1 (.NET)</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:boolean</v8:Type>
+			</Type>
+		</Attribute>
+		<Attribute name="UseAMQPNativeAPI" id="13">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Use AMQP 0-9-1 (NativeAPI)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Use AMQP 0-9-1 (NativeAPI)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Использовать AMQP 0-9-1 (NativeAPI)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Використовувати AMQP 0-9-1 (NativeAPI)</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:boolean</v8:Type>
 			</Type>
 		</Attribute>
 	</Attributes>

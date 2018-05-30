@@ -107,6 +107,7 @@
 				</InputField>
 				<RadioButtonField name="PayloadEncoding" id="18">
 					<DataPath>PayloadEncoding</DataPath>
+					<ToolTipRepresentation>ShowRight</ToolTipRepresentation>
 					<RadioButtonType>RadioButtons</RadioButtonType>
 					<ChoiceList>
 						<xr:Item>
@@ -161,7 +162,27 @@
 						</xr:Item>
 					</ChoiceList>
 					<ContextMenu name="PayloadEncodingContextMenu" id="19"/>
-					<ExtendedTooltip name="PayloadEncodingExtendedTooltip" id="20"/>
+					<ExtendedTooltip name="PayloadEncodingExtendedTooltip" id="20">
+						<TextColor>style:FieldSelectionBackColor</TextColor>
+						<Title formatted="false">
+							<v8:item>
+								<v8:lang>en</v8:lang>
+								<v8:content>It is used only for HTTP management API</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>It is used only for HTTP management API</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>ru</v8:lang>
+								<v8:content>Используется только для HTTP management API</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Використовується тільки для HTTP management API</v8:content>
+							</v8:item>
+						</Title>
+					</ExtendedTooltip>
 				</RadioButtonField>
 			</ChildItems>
 		</UsualGroup>

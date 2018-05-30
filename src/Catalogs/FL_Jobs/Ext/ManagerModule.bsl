@@ -408,7 +408,9 @@ Function QueryTextParentJobsOutputTable()
         |ON Outputs.Ref = Jobs.Ref
         |
         |ORDER BY
-        |   Jobs.CreatedAt, Jobs.Priority ASC   
+        |   Jobs.CreatedAt, 
+        |   Jobs.Priority, 
+        |   Outputs.LineNumber ASC   
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////
