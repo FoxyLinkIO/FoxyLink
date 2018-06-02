@@ -207,6 +207,30 @@ Function GenerateRandomNumber(Val Length = 6) Export
     
 EndFunction // GenerateRandomNumber()
 
+// Returns the result of logical bitwise AND operator for two numeric values.
+//
+// Parameters:
+//  Number1 - Number - the first operand, an integer in range 0 – 2^32-1.
+//  Number2 - Number - the second operand, an integer in range 0 – 2^32-1.
+//
+// Returns:
+//  Number - the result of logical bitwise AND operator for two numeric values. 
+//
+Function _BitwiseAnd(Number1, Number2) Export
+    
+    SizeOfInt32 = 4;
+    
+    Buffer1 = New BinaryDataBuffer(SizeOfInt32);
+    Buffer1.WriteInt32(0, Number1);
+    
+    Buffer2 = New BinaryDataBuffer(SizeOfInt32);
+    Buffer2.WriteInt32(0, Number2);
+    
+    Buffer1.WriteBitwiseAnd(0, Buffer2, Buffer2.Size);
+    Return Buffer1.ReadInt32(0);
+    
+EndFunction // _BitwiseAnd()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
