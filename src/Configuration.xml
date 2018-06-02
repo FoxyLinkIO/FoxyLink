@@ -298,7 +298,6 @@
 			<CommonModule>FL_DataComposition</CommonModule>
 			<CommonModule>FL_Encryption</CommonModule>
 			<CommonModule>FL_EncryptionClientServer</CommonModule>
-			<CommonModule>FL_EncryptionKeys</CommonModule>
 			<CommonModule>FL_ErrorsClientServer</CommonModule>
 			<CommonModule>FL_Events</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
