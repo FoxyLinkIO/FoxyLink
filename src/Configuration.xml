@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.292</Version>
+			<Version>0.9.9.295</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -305,7 +305,6 @@
 			<CommonModule>FL_InteriorUseClientServer</CommonModule>
 			<CommonModule>FL_InteriorUseReUse</CommonModule>
 			<CommonModule>FL_JobServer</CommonModule>
-			<CommonModule>FL_RecurringJob</CommonModule>
 			<CommonModule>FL_RunInSafeMode</CommonModule>
 			<CommonModule>FL_Tasks</CommonModule>
 			<CommonModule>SocialNetworks_Events</CommonModule>
@@ -321,8 +320,9 @@
 			<EventSubscription>FL_RegistersBeforeWrite</EventSubscription>
 			<EventSubscription>FL_RegistersOnWrite</EventSubscription>
 			<ScheduledJob>FL_JobExpiration</ScheduledJob>
+			<ScheduledJob>FL_JobRecurring</ScheduledJob>
+			<ScheduledJob>FL_JobRouting</ScheduledJob>
 			<ScheduledJob>FL_JobServer</ScheduledJob>
-			<ScheduledJob>FL_RecurringServer</ScheduledJob>
 			<ScheduledJob>SocialNetworks_ExchangeServer</ScheduledJob>
 			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
 			<FunctionalOption>FL_UseFoxyLink</FunctionalOption>

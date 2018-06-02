@@ -19,36 +19,36 @@
 
 #Region ProgramInterface
 
-// Runs the job server in this infobase immediately.
+// Runs the specified scheduled job in this infobase immediately.
 //
 // Parameters:
-//  SafeMode   - Boolean - executes the method with pre-establishing 
+//  ScheduledJob - ScheduledJob - sheduled job linked to background job.
+//  SafeMode     - Boolean      - executes the method with pre-establishing 
 //              a safe mode of code execution.
 //                  Default value: True.
 //
-Procedure RunJobServer(SafeMode = True) Export
-    
-    JobServer = JobServer();
+Procedure RunScheduledJob(ScheduledJob, SafeMode = True) Export
     
     Task = FL_Tasks.NewTask();
-    Task.Description = JobServer.Description;
-    Task.Key = JobServer.Key;
-    Task.MethodName = JobServer.Metadata.MethodName; 
+    Task.Description = ScheduledJob.Description;
+    Task.Key = ScheduledJob.Key;
+    Task.MethodName = ScheduledJob.Metadata.MethodName; 
     Task.SafeMode = SafeMode;
     
     FL_Tasks.Run(Task); 
     
-EndProcedure // RunJobServer()
+EndProcedure // RunScheduledJob()
 
-// Stops the specified job server immediately.
+// Stops the specified scheduled job in this infobase immediately.
 //
-Procedure StopJobServer() Export
-    
-    JobServer = JobServer();
-    
+// Parameters:
+//  ScheduledJob - ScheduledJob - sheduled job linked to background job.
+//
+Procedure StopScheduledJob(ScheduledJob) Export
+        
     BackgroundJobsFilter = NewBackgroundJobsFilter();
     BackgroundJobsFilter.State = BackgroundJobState.Active;
-    FillPropertyValues(BackgroundJobsFilter, JobServer, , "Description, UUID");
+    FillPropertyValues(BackgroundJobsFilter, ScheduledJob, , "Description, UUID");
     FL_CommonUseClientServer.RemoveValueFromStructure(BackgroundJobsFilter);
         
     BackgroundJobsByFilter = BackgroundJobsByFilter(BackgroundJobsFilter);
@@ -56,7 +56,7 @@ Procedure StopJobServer() Export
         BackgroundJob.Cancel();        
     EndDo;
             
-EndProcedure // StopJobServer()
+EndProcedure // StopScheduledJob()
 
 // Returns registered or register the job server in the current infobase.
 // 
@@ -69,6 +69,18 @@ Function JobServer() Export
     Return JobServer;
 
 EndFunction // JobServer()
+
+// Returns registered or register the job routing in the current infobase.
+// 
+// Returns:
+//  ScheduledJob - job routing.
+//
+Function JobRouting() Export
+
+    JobRouting = ScheduledJob(Metadata.ScheduledJobs.FL_JobRouting);
+    Return JobRouting;
+
+EndFunction // JobRouting()
 
 // Returns the server state - active or non-active.
 // 
@@ -206,23 +218,6 @@ EndFunction // NewBackgroundJobsFilter()
 
 #Region Actions
 
-// Default JobServer action.
-//
-Procedure JobServerAction() Export
-    
-    Catalogs.FL_Messages.Route();
-    
-    RetryJobs = NewRetryTable();
-    ProcessingJobs = NewProcessingTable();
-    
-    WorkerCount = GetWorkerCount();
-    
-    PopJobServerState(WorkerCount, ProcessingJobs, RetryJobs);
-    ClearJobServerState();
-    PushJobServerState(WorkerCount, ProcessingJobs, RetryJobs);
-        
-EndProcedure // JobServerAction()
-
 // Default ExpirationManager action. 
 //
 Procedure JobExpirationAction() Export
@@ -254,6 +249,37 @@ Procedure JobExpirationAction() Export
     EndIf;
     
 EndProcedure // JobExpirationAction()
+
+// Default JobRecurring action.
+//
+Procedure JobRecurringAction() Export
+    
+    Return;
+    
+EndProcedure // JobRecurringAction()
+
+// Default JobRouting action.
+//
+Procedure JobRoutingAction() Export
+    
+    Catalogs.FL_Messages.Route();    
+    
+EndProcedure // JobRoutingAction()
+
+// Default JobServer action.
+//
+Procedure JobServerAction() Export
+    
+    RetryJobs = NewRetryTable();
+    ProcessingJobs = NewProcessingTable();
+    
+    WorkerCount = GetWorkerCount();
+    
+    PopJobServerState(WorkerCount, ProcessingJobs, RetryJobs);
+    ClearJobServerState();
+    PushJobServerState(WorkerCount, ProcessingJobs, RetryJobs);
+        
+EndProcedure // JobServerAction()
 
 #EndRegion // Actions
 

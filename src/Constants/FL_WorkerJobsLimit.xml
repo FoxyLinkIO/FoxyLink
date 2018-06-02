@@ -19,12 +19,16 @@
 					<v8:content>Jobs limit</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Jobs limit</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Предел заданий</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Jobs limit</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Межа завдань</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
@@ -49,12 +53,16 @@
 					<v8:content>The maximum number of jobs that can be processed by a single background job from an available pool of background jobs.</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>The maximum number of jobs that can be processed by a single background job from an available pool of background jobs.</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Максимальное количество заданий, которое может обработать одно фоновое задание из доступного пула фоновых заданий.</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>The maximum number of jobs that can be processed by a single background job from an available pool of background jobs.</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Максимальна кількість завдань, яке може обробити одне фонове завдання з доступного пулу фонових завдань.</v8:content>
 				</v8:item>
 			</ToolTip>
 			<MarkNegatives>false</MarkNegatives>

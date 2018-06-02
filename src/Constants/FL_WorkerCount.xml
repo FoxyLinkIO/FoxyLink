@@ -19,12 +19,16 @@
 					<v8:content>Max worker count</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Max worker count</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Максимальное количество фоновых заданий</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Max worker count</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Максимальна кількість фонових завдань</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment>The max size of a workers pool that can be used to execute tasks, post work items, process asynchronous I/O, wait on behalf of other workers, and process timers.</Comment>
@@ -45,16 +49,20 @@
 			<EditFormat/>
 			<ToolTip>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Максимальный размер пула фоновых заданий, который может использоваться для выполнения задач, создания объектов, обработки асинхронных операций ввода-вывода, ожидания других фоновых заданий и обработки таймеров.</v8:content>
-				</v8:item>
-				<v8:item>
 					<v8:lang>en</v8:lang>
 					<v8:content>The max size of a workers pool that can be used to execute tasks, post work items, process asynchronous I/O, wait on behalf of other workers, and process timers.</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
 					<v8:content>The max size of a workers pool that can be used to execute tasks, post work items, process asynchronous I/O, wait on behalf of other workers, and process timers.</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Максимальный размер пула фоновых заданий, который может использоваться для выполнения задач, создания объектов, обработки асинхронных операций ввода-вывода, ожидания других фоновых заданий и обработки таймеров.</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Максимальний розмір пулу фонових завдань, який може використовуватися для виконання завдань, створення об'єктів, обробки асинхронних операцій введення-виведення, очікування інших фонових завдань і обробки таймерів.</v8:content>
 				</v8:item>
 			</ToolTip>
 			<MarkNegatives>false</MarkNegatives>

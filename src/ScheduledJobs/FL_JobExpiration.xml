@@ -23,7 +23,7 @@
 			</Synonym>
 			<Comment>Represents a background process responsible for job expiration.</Comment>
 			<MethodName>CommonModule.FL_JobServer.JobExpirationAction</MethodName>
-			<Description>Expiration server</Description>
+			<Description>Job expiration</Description>
 			<Key>910eb490-468b-48d4-8876-35813fd8d0b6</Key>
 			<Use>false</Use>
 			<Predefined>true</Predefined>

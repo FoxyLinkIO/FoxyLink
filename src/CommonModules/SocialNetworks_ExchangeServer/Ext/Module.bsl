@@ -19,46 +19,6 @@
 
 #Region ProgramInterface
 
-// Runs the exchange server in this infobase immediately.
-//
-// Parameters:
-//  SafeMode   - Boolean - executes the method with pre-establishing 
-//              a safe mode of code execution.
-//                  Default value: False.
-//
-Procedure RunExchangeServer(SafeMode = False) Export
-    
-    ExchangeServer = ExchangeServer();
-    
-    Task = FL_Tasks.NewTask();
-    Task.Description = ExchangeServer.Description;
-    Task.Key = ExchangeServer.Key;
-    Task.MethodName = ExchangeServer.Metadata.MethodName; 
-    Task.SafeMode = SafeMode;
-    
-    FL_Tasks.Run(Task); 
-    
-EndProcedure // RunExchangeServer()
-
-// Stops the specified exchange server immediately.
-//
-Procedure StopExchangeServer() Export
-    
-    ExchangeServer = ExchangeServer();
-    
-    BackgroundJobsFilter = FL_JobServer.NewBackgroundJobsFilter();
-    BackgroundJobsFilter.State = BackgroundJobState.Active;
-    FillPropertyValues(BackgroundJobsFilter, ExchangeServer, , 
-        "Description, UUID");
-    FL_CommonUseClientServer.RemoveValueFromStructure(BackgroundJobsFilter);
-        
-    BackgroundJobsByFilter = FL_JobServer.BackgroundJobsByFilter(BackgroundJobsFilter);
-    For Each BackgroundJob In BackgroundJobsByFilter Do
-        BackgroundJob.Cancel();        
-    EndDo;
-            
-EndProcedure // StopExchangeServer()
-
 // Returns registered the exchange server in the current infobase.
 // 
 // Returns:

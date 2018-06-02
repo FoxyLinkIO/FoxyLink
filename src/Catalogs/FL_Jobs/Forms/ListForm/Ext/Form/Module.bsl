@@ -30,7 +30,7 @@ EndProcedure // OnCreateAtServer()
 &AtClient
 Procedure OnOpen(Cancel)
     
-    AttachIdleHandler("UpdateJobServerState", 5, False);
+    AttachIdleHandler("UpdateJobServerState", 10, False);
     
 EndProcedure // OnOpen()
 
@@ -63,7 +63,7 @@ Procedure TriggerMessages(Command)
     
 EndProcedure // TriggerMessages()
 
-// See procedure FL_JobServer.RunJobServer.
+// See procedure FL_JobServer.RunScheduledJob.
 //
 &AtClient
 Procedure StartJobServer(Command)
@@ -72,7 +72,7 @@ Procedure StartJobServer(Command)
     
 EndProcedure // StartJobServer()
 
-// See procedure FL_JobServer.StopJobServer.
+// See procedure FL_JobServer.StopScheduledJob.
 //
 &AtClient
 Procedure StopJobServer(Command)
@@ -155,22 +155,22 @@ Procedure TriggerMessagesAtServer()
   
 EndProcedure // TriggerMessagesAtServer() 
 
-// See procedure FL_JobServer.RunJobServer.
+// See procedure FL_JobServer.RunScheduledJob.
 // 
 &AtServer
 Procedure StartJobServerAtServer()
     
-    FL_JobServer.RunJobServer(SafeMode); 
+    FL_JobServer.RunScheduledJob(FL_JobServer.JobServer(), SafeMode); 
     UpdateJobServerStateAtServer();
     
 EndProcedure // StartJobServerAtServer()
 
-// See procedure FL_JobServer.StopJobServer.
+// See procedure FL_JobServer.StopScheduledJob.
 //
 &AtServer
 Procedure StopJobServerAtServer()
     
-    FL_JobServer.StopJobServer();
+    FL_JobServer.StopScheduledJob(FL_JobServer.JobServer());
     
 EndProcedure // StopJobServerAtServer() 
 

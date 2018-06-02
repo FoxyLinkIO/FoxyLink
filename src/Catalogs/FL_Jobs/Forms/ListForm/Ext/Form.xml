@@ -94,110 +94,203 @@
 				</Pages>
 			</ChildItems>
 		</UsualGroup>
-		<Table name="List" id="3">
-			<Representation>List</Representation>
-			<CommandBarLocation>None</CommandBarLocation>
-			<DefaultItem>true</DefaultItem>
-			<MultipleChoice>true</MultipleChoice>
-			<UseAlternationRowColor>true</UseAlternationRowColor>
-			<InitialTreeView>ExpandTopLevel</InitialTreeView>
-			<EnableStartDrag>true</EnableStartDrag>
-			<DataPath>List</DataPath>
-			<RowPictureDataPath>List.DefaultPicture</RowPictureDataPath>
-			<SearchStringLocation>None</SearchStringLocation>
-			<SearchControlLocation>None</SearchControlLocation>
-			<AutoRefresh>false</AutoRefresh>
-			<AutoRefreshPeriod>60</AutoRefreshPeriod>
-			<Period>
-				<v8:variant xsi:type="v8:StandardPeriodVariant">Custom</v8:variant>
-				<v8:startDate>0001-01-01T00:00:00</v8:startDate>
-				<v8:endDate>0001-01-01T00:00:00</v8:endDate>
-			</Period>
-			<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
-			<RestoreCurrentRow>false</RestoreCurrentRow>
-			<TopLevelParent xsi:nil="true"/>
-			<ShowRoot>true</ShowRoot>
-			<AllowRootChoice>false</AllowRootChoice>
-			<UpdateOnDataChange>Auto</UpdateOnDataChange>
-			<UserSettingsGroup>1:02023637-7868-4a5f-8576-835a76e0c9ba</UserSettingsGroup>
-			<ContextMenu name="ListContextMenu" id="4">
-				<Autofill>false</Autofill>
-				<ChildItems>
-					<Button name="UpdateList" id="79">
-						<Type>CommandBarButton</Type>
-						<CommandName>Form.Item.List.StandardCommand.Refresh</CommandName>
-						<ExtendedTooltip name="UpdateListExtendedTooltip" id="80"/>
-					</Button>
-					<Button name="TriggerSelectedMessages" id="67">
-						<Type>CommandBarButton</Type>
-						<CommandName>Form.Command.TriggerSelectedMessages</CommandName>
-						<ExtendedTooltip name="TriggerSelectedMessagesExtendedTooltip" id="68"/>
-					</Button>
-					<ButtonGroup name="ListContextMenuGroup1" id="71">
-						<ExtendedTooltip name="ListContextMenuGroup1ExtendedTooltip" id="72"/>
-						<ChildItems>
-							<Button name="TriggerMessages" id="69">
-								<Type>CommandBarButton</Type>
-								<CommandName>Form.Command.TriggerMessages</CommandName>
-								<ExtendedTooltip name="TriggerMessagesExtendedTooltip" id="70"/>
-							</Button>
-						</ChildItems>
-					</ButtonGroup>
-				</ChildItems>
-			</ContextMenu>
-			<AutoCommandBar name="ListCommandBar" id="5">
-				<Autofill>false</Autofill>
-			</AutoCommandBar>
-			<ExtendedTooltip name="ListExtendedTooltip" id="6"/>
-			<SearchStringAddition name="ListSearchString" id="7">
-				<AdditionSource>
-					<Item>List</Item>
-					<Type>SearchStringRepresentation</Type>
-				</AdditionSource>
-				<ContextMenu name="ListSearchStringContextMenu" id="8"/>
-				<ExtendedTooltip name="ListSearchStringExtendedTooltip" id="9"/>
-			</SearchStringAddition>
-			<ViewStatusAddition name="ListViewStatus" id="10">
-				<AdditionSource>
-					<Item>List</Item>
-					<Type>ViewStatusRepresentation</Type>
-				</AdditionSource>
-				<ContextMenu name="ListViewStatusContextMenu" id="11"/>
-				<ExtendedTooltip name="ListViewStatusExtendedTooltip" id="12"/>
-			</ViewStatusAddition>
-			<SearchControlAddition name="ListSearchControl" id="13">
-				<AdditionSource>
-					<Item>List</Item>
-					<Type>SearchControl</Type>
-				</AdditionSource>
-				<ContextMenu name="ListSearchControlContextMenu" id="14"/>
-				<ExtendedTooltip name="ListSearchControlExtendedTooltip" id="15"/>
-			</SearchControlAddition>
+		<UsualGroup name="GroupBody" id="103">
+			<Group>Horizontal</Group>
+			<Representation>None</Representation>
+			<ShowTitle>false</ShowTitle>
+			<ExtendedTooltip name="GroupBodyExtendedTooltip" id="104"/>
 			<ChildItems>
-				<LabelField name="Code" id="16">
-					<DataPath>List.Code</DataPath>
-					<DefaultItem>true</DefaultItem>
-					<Width>5</Width>
-					<ContextMenu name="CodeContextMenu" id="17"/>
-					<ExtendedTooltip name="CodeExtendedTooltip" id="18"/>
-				</LabelField>
-				<LabelField name="MethodName" id="86">
-					<DataPath>List.MethodName</DataPath>
-					<ContextMenu name="MethodNameContextMenu" id="87"/>
-					<ExtendedTooltip name="MethodNameExtendedTooltip" id="88"/>
-				</LabelField>
-				<LabelField name="Priority" id="89">
-					<DataPath>List.Priority</DataPath>
-					<ContextMenu name="PriorityContextMenu" id="90"/>
-					<ExtendedTooltip name="PriorityExtendedTooltip" id="91"/>
-				</LabelField>
-				<LabelField name="State" id="76">
-					<DataPath>List.State</DataPath>
-					<ContextMenu name="StateContextMenu" id="77"/>
-					<ExtendedTooltip name="StateExtendedTooltip" id="78"/>
-				</LabelField>
+				<UsualGroup name="GroupJobsSidebar" id="92">
+					<Group>Vertical</Group>
+					<Representation>NormalSeparation</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="GroupJobsSidebarExtendedTooltip" id="93"/>
+					<ChildItems>
+						<Button name="EnqueuedJobs" id="101">
+							<Type>UsualButton</Type>
+							<CommandName>Form.Command.EnqueuedJobs</CommandName>
+							<ExtendedTooltip name="EnqueuedJobsExtendedTooltip" id="102"/>
+						</Button>
+						<Button name="ScheduledJobs" id="105">
+							<Type>UsualButton</Type>
+							<CommandName>Form.Command.ScheduledJobs</CommandName>
+							<ExtendedTooltip name="ScheduledJobsExtendedTooltip" id="106"/>
+						</Button>
+						<Button name="ProcessingJobs" id="107">
+							<Type>UsualButton</Type>
+							<CommandName>Form.Command.ProcessingJobs</CommandName>
+							<ExtendedTooltip name="ProcessingJobsExtendedTooltip" id="108"/>
+						</Button>
+						<Button name="SucceededJobs" id="109">
+							<Type>UsualButton</Type>
+							<CommandName>Form.Command.SucceededJobs</CommandName>
+							<ExtendedTooltip name="SucceededJobsExtendedTooltip" id="110"/>
+						</Button>
+						<Button name="FailedJobs" id="111">
+							<Type>UsualButton</Type>
+							<CommandName>Form.Command.FailedJobs</CommandName>
+							<ExtendedTooltip name="FailedJobsExtendedTooltip" id="112"/>
+						</Button>
+						<Button name="DeletedJobs" id="113">
+							<Type>UsualButton</Type>
+							<CommandName>Form.Command.DeletedJobs</CommandName>
+							<ExtendedTooltip name="DeletedJobsExtendedTooltip" id="114"/>
+						</Button>
+						<Button name="AwaitingJobs" id="115">
+							<Type>UsualButton</Type>
+							<CommandName>Form.Command.AwaitingJobs</CommandName>
+							<ExtendedTooltip name="AwaitingJobsExtendedTooltip" id="116"/>
+						</Button>
+					</ChildItems>
+				</UsualGroup>
+				<UsualGroup name="GroupJobsEnqueued" id="94">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Enqueued</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Enqueued</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>В очереди</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>В черзі</v8:content>
+						</v8:item>
+					</Title>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Enqueued</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Enqueued</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>В очереди</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>В черзі</v8:content>
+						</v8:item>
+					</ToolTip>
+					<Group>Vertical</Group>
+					<Representation>StrongSeparation</Representation>
+					<ExtendedTooltip name="GroupJobsEnqueuedExtendedTooltip" id="95"/>
+					<ChildItems>
+						<Table name="List" id="3">
+							<Representation>List</Representation>
+							<CommandBarLocation>None</CommandBarLocation>
+							<MultipleChoice>true</MultipleChoice>
+							<UseAlternationRowColor>true</UseAlternationRowColor>
+							<InitialTreeView>ExpandTopLevel</InitialTreeView>
+							<EnableStartDrag>true</EnableStartDrag>
+							<DataPath>List</DataPath>
+							<RowPictureDataPath>List.DefaultPicture</RowPictureDataPath>
+							<SearchStringLocation>None</SearchStringLocation>
+							<SearchControlLocation>None</SearchControlLocation>
+							<AutoRefresh>false</AutoRefresh>
+							<AutoRefreshPeriod>60</AutoRefreshPeriod>
+							<Period>
+								<v8:variant xsi:type="v8:StandardPeriodVariant">Custom</v8:variant>
+								<v8:startDate>0001-01-01T00:00:00</v8:startDate>
+								<v8:endDate>0001-01-01T00:00:00</v8:endDate>
+							</Period>
+							<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
+							<RestoreCurrentRow>false</RestoreCurrentRow>
+							<TopLevelParent xsi:nil="true"/>
+							<ShowRoot>true</ShowRoot>
+							<AllowRootChoice>false</AllowRootChoice>
+							<UpdateOnDataChange>Auto</UpdateOnDataChange>
+							<UserSettingsGroup>1:02023637-7868-4a5f-8576-835a76e0c9ba</UserSettingsGroup>
+							<ContextMenu name="ListContextMenu" id="4">
+								<Autofill>false</Autofill>
+								<ChildItems>
+									<Button name="UpdateList" id="79">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Item.List.StandardCommand.Refresh</CommandName>
+										<ExtendedTooltip name="UpdateListExtendedTooltip" id="80"/>
+									</Button>
+									<Button name="TriggerSelectedMessages" id="67">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.TriggerSelectedMessages</CommandName>
+										<ExtendedTooltip name="TriggerSelectedMessagesExtendedTooltip" id="68"/>
+									</Button>
+									<ButtonGroup name="ListContextMenuGroup1" id="71">
+										<ExtendedTooltip name="ListContextMenuGroup1ExtendedTooltip" id="72"/>
+										<ChildItems>
+											<Button name="TriggerMessages" id="69">
+												<Type>CommandBarButton</Type>
+												<CommandName>Form.Command.TriggerMessages</CommandName>
+												<ExtendedTooltip name="TriggerMessagesExtendedTooltip" id="70"/>
+											</Button>
+										</ChildItems>
+									</ButtonGroup>
+								</ChildItems>
+							</ContextMenu>
+							<AutoCommandBar name="ListCommandBar" id="5">
+								<Autofill>false</Autofill>
+							</AutoCommandBar>
+							<ExtendedTooltip name="ListExtendedTooltip" id="6"/>
+							<SearchStringAddition name="ListSearchString" id="7">
+								<AdditionSource>
+									<Item>List</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ListSearchStringContextMenu" id="8"/>
+								<ExtendedTooltip name="ListSearchStringExtendedTooltip" id="9"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="ListViewStatus" id="10">
+								<AdditionSource>
+									<Item>List</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ListViewStatusContextMenu" id="11"/>
+								<ExtendedTooltip name="ListViewStatusExtendedTooltip" id="12"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="ListSearchControl" id="13">
+								<AdditionSource>
+									<Item>List</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="ListSearchControlContextMenu" id="14"/>
+								<ExtendedTooltip name="ListSearchControlExtendedTooltip" id="15"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<LabelField name="Code" id="16">
+									<DataPath>List.Code</DataPath>
+									<DefaultItem>true</DefaultItem>
+									<Width>5</Width>
+									<ContextMenu name="CodeContextMenu" id="17"/>
+									<ExtendedTooltip name="CodeExtendedTooltip" id="18"/>
+								</LabelField>
+								<LabelField name="MethodName" id="86">
+									<DataPath>List.MethodName</DataPath>
+									<ContextMenu name="MethodNameContextMenu" id="87"/>
+									<ExtendedTooltip name="MethodNameExtendedTooltip" id="88"/>
+								</LabelField>
+								<LabelField name="Priority" id="89">
+									<DataPath>List.Priority</DataPath>
+									<ContextMenu name="PriorityContextMenu" id="90"/>
+									<ExtendedTooltip name="PriorityExtendedTooltip" id="91"/>
+								</LabelField>
+								<LabelField name="State" id="76">
+									<DataPath>List.State</DataPath>
+									<ContextMenu name="StateContextMenu" id="77"/>
+									<ExtendedTooltip name="StateExtendedTooltip" id="78"/>
+								</LabelField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</UsualGroup>
 			</ChildItems>
-		</Table>
+		</UsualGroup>
 	</ChildItems>
 	<Attributes>
 		<Attribute name="List" id="1">
@@ -441,6 +534,272 @@
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
 					<v8:content>Configure job server</v8:content>
+				</v8:item>
+			</ToolTip>
+		</Command>
+		<Command name="EnqueuedJobs" id="6">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Enqueued</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Enqueued</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>В очереди</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>В черзі</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Enqueued jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Enqueued jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Задания в очереди</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Завдання в черзі</v8:content>
+				</v8:item>
+			</ToolTip>
+		</Command>
+		<Command name="ScheduledJobs" id="7">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Scheduled</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Scheduled</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Запланированные</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Заплановані</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Scheduled jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Scheduled jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Запланированные задания</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Заплановані завдання</v8:content>
+				</v8:item>
+			</ToolTip>
+		</Command>
+		<Command name="ProcessingJobs" id="8">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Processing</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Processing</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>В процессе обработки</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>В процесі обробки</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Processing jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Processing jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Задания в процессе обработки</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Завдання в процесі обробки</v8:content>
+				</v8:item>
+			</ToolTip>
+		</Command>
+		<Command name="SucceededJobs" id="9">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Succeeded</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Succeeded</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Успешные</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Успішні</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Succeeded jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Succeeded jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Успешные задания</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Успішні завдання</v8:content>
+				</v8:item>
+			</ToolTip>
+		</Command>
+		<Command name="FailedJobs" id="10">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Failed</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Failed</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Неудачные</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Невдалі</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Failed jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Failed jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Неудачные задания</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Невдалі завдання</v8:content>
+				</v8:item>
+			</ToolTip>
+		</Command>
+		<Command name="DeletedJobs" id="11">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Deleted</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Deleted</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Удаленные</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Видалені</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Deleted jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Deleted jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Удаленные задания</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Видалені завдання</v8:content>
+				</v8:item>
+			</ToolTip>
+		</Command>
+		<Command name="AwaitingJobs" id="12">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Awaiting</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Awaiting</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>В ожидании</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>В очікуванні</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Awaiting jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Awaiting jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Задания в ожидании</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Завдання в очікуванні</v8:content>
 				</v8:item>
 			</ToolTip>
 		</Command>
