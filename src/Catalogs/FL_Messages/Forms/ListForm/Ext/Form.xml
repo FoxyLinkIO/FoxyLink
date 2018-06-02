@@ -2,26 +2,60 @@
 <Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
-		<ChildItems>
-			<Button name="EditMessagePublishers" id="27">
-				<Type>CommandBarButton</Type>
-				<CommandName>InformationRegister.FL_MessagePublishers.Command.EditMessagePublishers</CommandName>
-				<ExtendedTooltip name="EditMessagePublishersExtendedTooltip" id="28"/>
-			</Button>
-		</ChildItems>
 	</AutoCommandBar>
+	<Events>
+		<Event name="OnOpen">OnOpen</Event>
+		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
+	</Events>
 	<ChildItems>
-		<UsualGroup name="ListSettingsComposerUserSettings" id="1">
-			<Title>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>User-defined settings group</v8:content>
-				</v8:item>
-			</Title>
-			<VerticalStretch>false</VerticalStretch>
-			<Group>Vertical</Group>
+		<UsualGroup name="GroupJobRouting" id="38">
+			<EnableContentChange>true</EnableContentChange>
+			<Group>Horizontal</Group>
+			<Representation>None</Representation>
 			<ShowTitle>false</ShowTitle>
-			<ExtendedTooltip name="ListSettingsComposerUserSettingsExtendedTooltip" id="2"/>
+			<ExtendedTooltip name="GroupJobRoutingExtendedTooltip" id="39"/>
+			<ChildItems>
+				<Button name="ConfigureJobRoutingStartUp" id="36">
+					<Type>UsualButton</Type>
+					<Representation>Picture</Representation>
+					<Width>3</Width>
+					<CommandName>Catalog.FL_Messages.Command.ConfigureJobRoutingStartUp</CommandName>
+					<ExtendedTooltip name="ConfigureJobRoutingStartUpExtendedTooltip" id="37"/>
+				</Button>
+				<Pages name="GroupJobRoutingPages" id="42">
+					<PagesRepresentation>None</PagesRepresentation>
+					<ExtendedTooltip name="GroupJobRoutingPagesExtendedTooltip" id="43"/>
+					<ChildItems>
+						<Page name="GroupJobRoutingStopped" id="44">
+							<Group>Horizontal</Group>
+							<ExtendedTooltip name="GroupJobRoutingStoppedExtendedTooltip" id="45"/>
+							<ChildItems>
+								<Button name="StartJobRouting" id="52">
+									<Type>UsualButton</Type>
+									<CommandName>Form.Command.StartJobRouting</CommandName>
+									<ExtendedTooltip name="StartJobRoutingExtendedTooltip" id="53"/>
+								</Button>
+							</ChildItems>
+						</Page>
+						<Page name="GroupJobRoutingRunning" id="48">
+							<Group>HorizontalIfPossible</Group>
+							<ExtendedTooltip name="GroupJobRoutingRunningExtendedTooltip" id="49"/>
+							<ChildItems>
+								<Button name="StopJobRouting" id="54">
+									<Type>UsualButton</Type>
+									<CommandName>Form.Command.StopJobRouting</CommandName>
+									<ExtendedTooltip name="StopJobRoutingExtendedTooltip" id="55"/>
+								</Button>
+							</ChildItems>
+						</Page>
+					</ChildItems>
+				</Pages>
+				<Button name="EditMessagePublishers" id="27">
+					<Type>UsualButton</Type>
+					<CommandName>InformationRegister.FL_MessagePublishers.Command.EditMessagePublishers</CommandName>
+					<ExtendedTooltip name="EditMessagePublishersExtendedTooltip" id="28"/>
+				</Button>
+			</ChildItems>
 		</UsualGroup>
 		<Table name="List" id="3">
 			<Representation>List</Representation>
@@ -48,7 +82,7 @@
 			<ShowRoot>true</ShowRoot>
 			<AllowRootChoice>false</AllowRootChoice>
 			<UpdateOnDataChange>Auto</UpdateOnDataChange>
-			<UserSettingsGroup>ListSettingsComposerUserSettings</UserSettingsGroup>
+			<UserSettingsGroup>1:02023637-7868-4a5f-8576-835a76e0c9ba</UserSettingsGroup>
 			<ContextMenu name="ListContextMenu" id="4">
 				<Autofill>false</Autofill>
 				<ChildItems>
@@ -212,6 +246,94 @@
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
 			<Action>ManualRouting</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="StartJobRouting" id="2">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Start job routing (immediately)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Start job routing (immediately)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Запустить маршрутизацию заданий (немедленно)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Запустити маршрутизацію завдань (негайно)</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Start job routing (immediately)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Start job routing (immediately)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Запустить маршрутизацию заданий (немедленно)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Запустити маршрутизацію завдань (негайно)</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Generate</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>StartJobRouting</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="StopJobRouting" id="3">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Stop job routing (immediately)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Stop job routing (immediately)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Остановить маршрутизацию заданий (немедленно)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Зупинити маршрутизацію завдань (негайно)</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Stop job routing (immediately)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Stop job routing (immediately)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Остановить маршрутизацию заданий (немедленно)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Зупинити маршрутизацію завдань (негайно)</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Processing</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>StopJobRouting</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>

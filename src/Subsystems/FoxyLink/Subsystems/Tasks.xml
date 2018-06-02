@@ -28,19 +28,20 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_RunInSafeMode</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Tasks</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_JobServer</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_RecurringJob</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">ac1744d5-82eb-42a3-b19a-20e9e83872da</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobServer</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_RetryAttempts</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_WorkerCount</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Jobs</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_TasksHeartbeat</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_States</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_RecurringServer</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobRecurring</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_WorkerJobsLimit</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_JobState</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_JobContinuations</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_JobExpirationTimeout</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobExpiration</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobRouting</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>
