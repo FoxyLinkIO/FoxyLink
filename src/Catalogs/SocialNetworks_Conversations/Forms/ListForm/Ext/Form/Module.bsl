@@ -47,7 +47,7 @@ Procedure ConnectConversation(Command)
     
 EndProcedure // ConnectConversation()
 
-// See procedure SocialNetworks_ExchangeServer.RunExchangeServer.
+// See procedure FL_JobServer.RunScheduledJob.
 //
 &AtClient
 Procedure StartExchangeServer(Command)
@@ -56,7 +56,7 @@ Procedure StartExchangeServer(Command)
     
 EndProcedure // StartExchangeServer()
 
-// See procedure SocialNetworks_ExchangeServer.StopExchangeServer.
+// See procedure FL_JobServer.StopScheduledJob.
 //
 &AtClient
 Procedure StopExchangeServer(Command)
@@ -128,22 +128,24 @@ Procedure ConnectConversationAtServer(SocialConversation)
    
 EndProcedure // ConnectConversationAtServer()
 
-// See procedure SocialNetworks_ExchangeServer.RunExchangeServer.
+// See procedure FL_JobServer.RunScheduledJob.
 // 
 &AtServer
 Procedure StartExchangeServerAtServer()
     
-    SocialNetworks_ExchangeServer.RunExchangeServer(); 
+    FL_JobServer.RunScheduledJob(
+        SocialNetworks_ExchangeServer.ExchangeServer(), False);
     UpdateExchangeServerStateAtServer();
     
 EndProcedure // StartExchangeServerAtServer()
 
-// See procedure SocialNetworks_ExchangeServer.StopExchangeServer.
+// See procedure FL_JobServer.StopScheduledJob.
 //
 &AtServer
 Procedure StopExchangeServerAtServer()
     
-    SocialNetworks_ExchangeServer.StopExchangeServer();
+    FL_JobServer.StopScheduledJob(
+        SocialNetworks_ExchangeServer.ExchangeServer());
     
 EndProcedure // StopExchangeServerAtServer() 
 

@@ -19,12 +19,16 @@
 					<v8:content>Automatic retry attempts</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Automatic retry attempts</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Автоматическое количество повторных попыток</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Automatic retry attempts</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Автоматична кількість повторних спроб</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment>Represents the number of automatic retry attempts.</Comment>
@@ -49,12 +53,16 @@
 					<v8:content>Determines the default number of retry attempts.</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Determines the default number of retry attempts.</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Определяет количество попыток повтора по умолчанию.</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Determines the default number of retry attempts.</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Визначає кількість спроб повтору за замовчуванням.</v8:content>
 				</v8:item>
 			</ToolTip>
 			<MarkNegatives>false</MarkNegatives>

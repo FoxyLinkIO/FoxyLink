@@ -28,6 +28,10 @@
 							<v8:lang>en_CA</v8:lang>
 							<v8:content>FoxyLink subsystem administration and settings management.</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Адміністрування підсистеми FoxyLink та керування налаштуваннями</v8:content>
+						</v8:item>
 					</Title>
 					<ContextMenu name="SectionDescriptionContextMenu" id="4"/>
 					<ExtendedTooltip name="SectionDescriptionExtendedTooltip" id="5"/>
@@ -41,12 +45,16 @@
 					<v8:content>Common settings</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Common settings</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Общие настройки</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Common settings</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Загальні налаштування</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
@@ -55,12 +63,16 @@
 					<v8:content>Common settings</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Common settings</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Общие настройки</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Common settings</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Загальні налаштування</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Group>Vertical</Group>
@@ -145,15 +157,19 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Job server</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Сервер заданий</v8:content>
+							<v8:content>Job routing, server and expiration</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Job server</v8:content>
+							<v8:content>Job routing, server and expiration</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Маршрутизация, сервер и устаревание заданий</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Маршрутизація, сервер та застарівання завдань</v8:content>
 						</v8:item>
 					</Title>
 					<ToolTip>
@@ -185,6 +201,11 @@
 									<ShowTitle>false</ShowTitle>
 									<ExtendedTooltip name="GroupJobScheduleExtendedTooltip" id="96"/>
 									<ChildItems>
+										<Button name="ConfigureJobRoutingStartUp" id="99">
+											<Type>UsualButton</Type>
+											<CommandName>Catalog.FL_Messages.Command.ConfigureJobRoutingStartUp</CommandName>
+											<ExtendedTooltip name="ConfigureJobRoutingStartUpExtendedTooltip" id="100"/>
+										</Button>
 										<Button name="ConfigureJobServerStartUp" id="61">
 											<Type>UsualButton</Type>
 											<CommandName>Catalog.FL_Jobs.Command.ConfigureJobServerStartUp</CommandName>
@@ -482,12 +503,16 @@
 					<v8:content>Supplied integrations</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Supplied integrations</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Поставляемые интеграции</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Supplied integrations</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Поставляємі інтеграції</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -501,15 +526,19 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Channel guid</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Уникальный идентификатор канала </v8:content>
+							<v8:content>App endpoint guid</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Channel guid</v8:content>
+							<v8:content>App endpoint guid</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Уникальный идентификатор конечной точки приложения</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Унікальний ідентифікатор кінцевої точки додатку</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -524,15 +553,19 @@
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Channel name</v8:content>
-						</v8:item>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Название канала</v8:content>
+							<v8:content>App endpoint</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Channel name</v8:content>
+							<v8:content>App endpoint</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Конечная точка приложения</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Кінцева точка додатку</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -550,12 +583,16 @@
 							<v8:content>Integration name</v8:content>
 						</v8:item>
 						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Integration name</v8:content>
+						</v8:item>
+						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Название интеграции</v8:content>
 						</v8:item>
 						<v8:item>
-							<v8:lang>en_CA</v8:lang>
-							<v8:content>Integration name</v8:content>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Назва інтеграції</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -573,12 +610,16 @@
 							<v8:content>Template</v8:content>
 						</v8:item>
 						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Template</v8:content>
+						</v8:item>
+						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Шаблон</v8:content>
 						</v8:item>
 						<v8:item>
-							<v8:lang>en_CA</v8:lang>
-							<v8:content>Template</v8:content>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Шаблон</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -596,12 +637,16 @@
 							<v8:content>Tooltip</v8:content>
 						</v8:item>
 						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Tooltip</v8:content>
+						</v8:item>
+						<v8:item>
 							<v8:lang>ru</v8:lang>
 							<v8:content>Подсказка</v8:content>
 						</v8:item>
 						<v8:item>
-							<v8:lang>en_CA</v8:lang>
-							<v8:content>Tooltip</v8:content>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Підсказка</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -621,6 +666,14 @@
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
 							<v8:content>Version</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Версия</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Версія</v8:content>
 						</v8:item>
 					</Title>
 					<Type>
@@ -706,12 +759,16 @@
 					<v8:content>Install integration</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Install integration</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить интеграцию</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Install integration</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Встановити інтеграцію</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
@@ -720,12 +777,16 @@
 					<v8:content>Install integration</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Install integration</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Установить интеграцию</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Install integration</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Встановити інтеграцію</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
