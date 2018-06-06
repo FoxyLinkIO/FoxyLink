@@ -87,6 +87,7 @@ Function ErrorKeyIsMissingInObject(VarName, VarValue, KeyName) Export
     
     ErrorMessage = NStr("en='Error: Key {%1} is missing in {%2} {%3}.';
         |ru='Ошибка: Ключ {%1} отсутствует в %2 {%3}.';
+        |uk='Помилка: Ключ {%1} відсутній в %2 {%3}.';
         |en_CA='Error: Key {%1} is missing in %2 {%3}.'");
     ErrorMessage = StrTemplate(ErrorMessage, KeyName, String(TypeOf(VarValue)), 
         VarName);
@@ -108,10 +109,168 @@ Function ErrorColumnCollectionsAreDifferent(CollectionName1,
     
     ErrorMessage = NStr("en='Error: The column collection {%1} differ from the column collection {%2}.';
         |ru='Ошибка: Коллекция колонок {%1} отличается от коллекции колонок {%2}.';
+        |uk='Помилка: Колекція колонок {%1} відрізняється від колекції колонок {%2}.';
         |en_CA='Error: The column collection {%1} differ from the column collection {%2}.'");
     ErrorMessage = StrTemplate(ErrorMessage, CollectionName1, CollectionName2);
     Return ErrorMessage;   
     
 EndFunction // ErrorColumnCollectionsAreDifferent()
+
+#Region ValueConversion
+
+// Adds an error message to the provided conversion result and set propery 
+// {TypeConverted} to False value.
+//
+// Parameters:
+//  VarName          - String    - attribute name.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure RequiredAttributeMissingInObject(VarName, ConversionResult) Export
+    
+    ErrorMessage = NStr(
+        "en='Error: Required attribute {%1} could not be found.'; 
+        |ru='Ошибка: Обязательный реквизит {%1} не удалось найти.'; 
+        |uk='Помилка: Необхідний реквізит {%1} не вдалося знайти.';
+        |en_CA='Error: Required attribute {%1} could not be found.'");
+    
+    ConversionResult.TypeConverted = False;
+    ConversionResult.ErrorMessages.Add(StrTemplate(ErrorMessage, VarName));
+    
+EndProcedure // RequiredAttributeMissingInObject()
+
+// Adds an error message to the provided conversion result and set propery 
+// {TypeConverted} to False value.
+//
+// Parameters:
+//  VarName          - String    - tabular section name.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure RequiredTabularSectionMissingInObject(VarName, ConversionResult) Export
+    
+    ErrorMessage = NStr(
+        "en='Error: Required tabular section {%1} could not be found.'; 
+        |ru='Ошибка: Обязательную табличную часть {%1} не удалось найти.'; 
+        |uk='Помилка: Необхідну табличну частину {%1} не вдалося знайти.';
+        |en_CA='Error: Required tabular section {%1} could not be found.'");
+    
+    ConversionResult.TypeConverted = False;
+    ConversionResult.ErrorMessages.Add(StrTemplate(ErrorMessage, VarName));
+    
+EndProcedure // RequiredTabularSectionMissingInObject()
+
+// Adds an error message to the provided conversion result and set propery 
+// {TypeConverted} to False value.
+//
+// Parameters:
+//  VarName          - String    - attribute name.
+//  TabularName      - String    - tabular section name.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure RequiredTabularColumnMissingInObject(VarName, TabularName, 
+    ConversionResult) Export
+
+    ErrorMessage = NStr(
+        "en='Error: Required attribute {%1} in tabular section {%2} could not be found.'; 
+        |ru='Ошибка: Обязательный реквизит {%1} в табличной части {%2} не удалось найти.'; 
+        |uk='Помилка: Необхідний реквізит {%1} в табличній частині {%2} не вдалося знайти.';
+        |en_CA='Error: Required attribute {%1} in tabular section {%2} could not be found.'");
+    
+    ConversionResult.TypeConverted = False;
+    ConversionResult.ErrorMessages.Add(StrTemplate(ErrorMessage, VarName, 
+        TabularName));
+    
+EndProcedure // RequiredTabularColumnMissingInObject()
+
+// Adds an error message to the provided conversion result and set propery 
+// {TypeConverted} to False value.
+//
+// Parameters:
+//  VarName          - String    - attribute name.
+//  TabularName      - String    - tabular section name.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure RequiredTabularAttributeNotFilled(VarName, TabularName, 
+    ConversionResult) Export
+
+    ErrorMessage = NStr(
+        "en='Error: Required attribute {%1} in tabular section {%2} not filled.'; 
+        |ru='Ошибка: Обязательный реквизит {%1} в табличной части {%2} не заполнен.'; 
+        |uk='Помилка: Необхідний реквізит {%1} в табличній частині {%2} не заповнений.';
+        |en_CA='Error: Required attribute {%1} in tabular section {%2} not filled.'");
+    
+    ConversionResult.TypeConverted = False;
+    ConversionResult.ErrorMessages.Add(StrTemplate(ErrorMessage, VarName, 
+        TabularName));
+    
+EndProcedure // RequiredTabularAttributeNotFilled()
+
+// Adds an error message to the provided conversion result and set propery 
+// {TypeConverted} to False value.
+//
+// Parameters:
+//  TabularName      - String    - tabular section name.
+//  TabularValue     - Arbitrary - tabular section value.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure RequiredTabularTypeDifferentFromExpected(TabularName, TabularValue,
+    ConversionResult) Export
+    
+    ErrorMessage = NStr(
+        "en='Error: Required tabular section {%1}. Expected type {%2} and received type is {%3}.'; 
+        |ru='Ошибка: Обязательная табличная часть {%1}. Ожидался тип {%2}, а получили тип {%3}.'; 
+        |uk='Помилка: Необхідна таблична частина {%1}. Очікувався тип {%2}, а отримали тип {%3}.';
+        |en_CA='Error: Required tabular section {%1}. Expected type {%2} and received type is {%3}.'");
+    
+    ConversionResult.TypeConverted = False;
+    ConversionResult.ErrorMessages.Add(StrTemplate(ErrorMessage, TabularName, 
+        String(Type("FixedArray")), String(TypeOf(TabularValue)))); 
+    
+EndProcedure // RequiredTabularTypeDifferentFromExpected()
+
+// Adds an error message to the provided conversion result and set propery 
+// {TypeConverted} to False value.
+//
+// Parameters:
+//  VarName          - String    - value table name.
+//  VarValue         - Arbitrary - value table value.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure ObjectValueTableTypeDifferentFromExpected(VarName, VarValue,
+    ConversionResult) Export
+    
+    ErrorMessage = NStr(
+        "en='Error: Object value table {%1}. Expected type {%2} and received type is {%3}.'; 
+        |ru='Ошибка: Таблица значений объекта {%1}. Ожидался тип {%2}, а получили тип {%3}.'; 
+        |uk='Помилка: Таблиця значень об''єкту {%1}. Очікувався тип {%2}, а отримали тип {%3}.';
+        |en_CA='Error: Object value table {%1}. Expected type {%2} and received type is {%3}.'");
+    
+    ConversionResult.TypeConverted = False;
+    ConversionResult.ErrorMessages.Add(StrTemplate(ErrorMessage, VarName, 
+        String(Type("ValueTable")), String(TypeOf(VarValue)))); 
+    
+EndProcedure // RequiredTabularTypeDifferentFromExpected()
+
+// Adds an error message to the provided conversion result and set propery 
+// {TypeConverted} to False value.
+//
+// Parameters:
+//  VarValue         - Arbitrary - attribute value.
+//  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
+//
+Procedure RequiredAttributeTypeNotSupported(VarValue, ConversionResult) Export
+    
+    ErrorMessage = NStr(
+        "en='Error: Type {%1} of required attribute not supported.'; 
+        |ru='Ошибка: Тип {%1} проверяемого реквизита не поддерживается.'; 
+        |uk='Помилка: Тип {%1} перевіряємого реквізиту не підтримується.';
+        |en_CA='Error: Type {%1} of required attribute not supported.'");
+    
+    ConversionResult.TypeConverted = False;
+    ConversionResult.ErrorMessages.Add(StrTemplate(ErrorMessage, 
+        String(TypeOf(VarValue))));
+    
+EndProcedure // RequiredAttributeTypeNotSupported()
+
+#EndRegion // ValueConversion
 
 #EndRegion // ProgramInterface
