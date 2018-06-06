@@ -28,8 +28,7 @@
 //                          this message relates or the record key.
 //  Field    - String  - form attribute name.
 //  DataPath - String  - path to data (path to form attribute).
-//  Cancel   - Boolean - Output parameter.
-//                          Always set to True value.
+//  Cancel   - Boolean - output parameter. Always set to True value.
 //
 // Cases of incorrect usage:
 //  1. Simultaneously pass the DataKey and DataPath parameters.

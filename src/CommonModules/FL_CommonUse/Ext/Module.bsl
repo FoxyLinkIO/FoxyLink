@@ -1394,6 +1394,40 @@ Procedure SerializeArrayOfRefsToJSON(JSONWriter, Source) Export
     
 EndProcedure // SerializeArrayOfRefsToJSON()
 
+// Checks the filling of the conversion result for a given array of mandatory requisites.
+//
+// Parameters:
+//  ConversionResult - Structure  - see function FL_CommonUse.NewConversionResult.
+//  CheckAttributes  - FixedArray - list of attribute names to be checked.
+//
+Procedure CheckAttributesFilling(ConversionResult, CheckAttributes) Export
+
+    ConvertedValue = ConversionResult.ConvertedValue;
+    
+    TypeMatch = ValueTypeMatchExpected(ConvertedValue, Type("Structure"), 
+        ConversionResult);
+    If NOT TypeMatch Then
+        ConvertedValue.TypeConverted = False;
+        Return;
+    EndIf;
+    
+    For Each Attribute In CheckAttributes Do
+        
+        If TypeOf(Attribute) = Type("String") Then
+            CheckAttribute(Attribute, ConvertedValue, ConversionResult);            
+        ElsIf TypeOf(Attribute) = Type("FixedStructure") Then
+            For Each Property In Attribute Do
+                CheckTabularSection(Property, ConvertedValue, ConversionResult);
+            EndDo;
+        Else
+            FL_ErrorsClientServer.RequiredAttributeTypeNotSupported(
+                Attribute, ConversionResult);
+        EndIf;
+        
+    EndDo;
+
+EndProcedure // CheckAttributesFilling()
+
 // Serializes the value into JSON string representation.
 //
 // Parameters:
@@ -1508,6 +1542,71 @@ Function ConvertValueIntoPlatformObject(Val Value, SupportedTypes) Export
     Return ConversionResult;
         
 EndFunction // ConvertValueIntoPlatformObject()
+
+// Returns conversion result.
+//
+// Parameters:
+//  Value           - Structure      - value to be converted.
+//  MetadataObject  - MetadataObject - the metadata object to which it is required to convert the value.
+//  CheckAttributes - FixedArray     - list of attribute names to be checked.
+//                          Default value: Undefined.
+//
+// Returns:
+//  Structure - see function FL_CommonUse.NewConversionResult.
+//
+Function ConvertValueIntoMetadataObject(Val Value, MetadataObject, 
+    CheckAttributes = Undefined) Export
+    
+    ConversionResult = NewConversionResult();
+    
+    TypeMatch = ValueTypeMatchExpected(Value, Type("Structure"), 
+        ConversionResult);
+    If NOT TypeMatch Then
+        Return ConversionResult;
+    EndIf;
+          
+    CriticalError = False;
+    ConvertedValue = New Structure;
+    MockObject = NewMockOfMetadataObjectAttributes(MetadataObject).Columns;
+    For Each Item In Value Do
+        
+        If TypeOf(Item.Value) <> Type("Array") Then
+            
+            ConvertValueIntoAttribute(Item.Key, 
+                Item.Value, 
+                MockObject, 
+                MetadataObject, 
+                ConvertedValue, 
+                ConversionResult.ErrorMessages, 
+                CriticalError);
+                
+        Else
+            
+            ConvertArrayValueIntoAttribute(Item.Key, 
+                Item.Value, 
+                MetadataObject,  
+                ConvertedValue, 
+                ConversionResult.ErrorMessages, 
+                CriticalError);
+            
+        EndIf;
+        
+    EndDo;
+    
+    If NOT CriticalError Then
+        
+        ConversionResult.TypeConverted = True;
+        ConversionResult.ConvertedValue = ConvertedValue;
+        
+        If CheckAttributes <> Undefined Then
+            CheckAttributesFilling(ConversionResult, CheckAttributes);
+        EndIf;
+        
+    EndIf;
+    
+    Return ConversionResult;
+    
+EndFunction // ConvertValueIntoMetadataObject()
 
 #EndRegion // ValueConversion
 
@@ -2252,7 +2351,8 @@ Procedure ConvertValueIntoReference(Value, Type, ConversionResult)
         ErrorMessage = StrTemplate(
             NStr("en='%1 Unable to find {%2}.'; 
                 |ru='%1 Не удалось найти {%2}.'; 
-                |uk='%1 Не вдалось знайти {%2}.'"),
+                |uk='%1 Не вдалось знайти {%2}.';
+                |en_CA='%1 Unable to find {%2}.'"),
             FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),        
             String(Type));
         ConversionResult.ErrorMessages.Add(ErrorMessage);
@@ -2387,9 +2487,7 @@ Procedure ConvertValueIntoReferenceUsingEnumValueName(Value, Type,
         Return;
     EndIf;
     
-    TypeMatch = ValueTypeMatchExpected(TypeOf(Value), 
-        Type("String"), ConversionResult);
-        
+    TypeMatch = ValueTypeMatchExpected(Value, Type("String"), ConversionResult);   
     If TypeMatch Then
         
         Try
@@ -2425,9 +2523,7 @@ Procedure ConvertValueIntoReferenceUsingEnumValueIndex(Value, Type,
         Return;
     EndIf;
     
-    TypeMatch = ValueTypeMatchExpected(TypeOf(Value), 
-        Type("Number"), ConversionResult);
-        
+    TypeMatch = ValueTypeMatchExpected(Value, Type("Number"), ConversionResult);    
     If TypeMatch Then
         
         If Value >= 0 AND Value < ObjectManager.Count() Then
@@ -2507,6 +2603,181 @@ Procedure ConvertValueIntoReferenceUsingDescription(Value, Type, ObjectManager,
     EndIf;
     
 EndProcedure // ConvertValueIntoReferenceUsingDescription()
+
+// Only for internal use.
+//
+Procedure ConvertValueIntoAttribute(AttributeName, AttributeValue, Object, 
+    MetadataObject, ConvertedValue, ErrorMessages, CriticalError)
+    
+    // Fixed map with standard attribute synonym names in russian. 
+    SynonymsRU = FL_CommonUseReUse.StandardAttributeSynonymsRU();
+    
+    Attribute = AttributeDescription(Object, AttributeName, SynonymsRU);
+    If Attribute = Undefined Then
+        
+        CriticalError = True;
+        ErrorMessage = StrTemplate(
+            NStr("en='Error: Attribute {%1} in the the object metadata {%2} could not be found.'; 
+                |ru='Ошибка: Реквизит {%1} в объекте метаданных {%2} не удалось найти.'; 
+                |uk='Помилка: Реквізит {%1} в об''єкті метаданих {%2} не вдалося знайти.';
+                |en_CA='Error: Attribute {%1} in the the object metadata {%2} could not be found.'"),
+            AttributeName, MetadataObject.FullName());
+        ErrorMessages.Add(ErrorMessage);
+        
+        Return;
+        
+    EndIf;
+                
+    // Perform the conversion to the platform object
+    ConvertionResult = ConvertValueIntoPlatformObject(AttributeValue, 
+        Attribute.ValueType.Types());   
+    If ConvertionResult.TypeConverted Then
+        ConvertedValue.Insert(AttributeName, ConvertionResult.ConvertedValue);   
+    Else
+        CriticalError = True;
+        FL_ErrorsClientServer.PersonalizeErrorsWithKey(
+            ConvertionResult.ErrorMessages, ErrorMessages, AttributeName);   
+    EndIf;
+    
+EndProcedure // ConvertValueIntoAttribute()
+
+// Only for internal use.
+//
+Procedure ConvertArrayValueIntoAttribute(AttributeName, AttributeValue, 
+    MetadataObject, ConvertedValue, ErrorMessages, CriticalError)
+    
+    TabularSection = MetadataObject.TabularSections.Find(AttributeName);
+    If TabularSection = Undefined Then
+        
+        CriticalError = True;
+        ErrorMessage = StrTemplate(
+            NStr("en='Error: Tabular section {%1} in the the object metadata {%2} could not be found.'; 
+                |ru='Ошибка: Табличную часть {%1} в объекте метаданных {%2} не удалось найти.'; 
+                |uk='Помилка: Табличну частину {%1} в об''єкті метаданих {%2} не вдалося знайти.';
+                |en_CA='Error: Tabular section {%1} in the the object metadata {%2} could not be found.'"),
+            AttributeName, MetadataObject.FullName());
+        ErrorMessages.Add(ErrorMessage);
+        
+        Return;
+                        
+    EndIf;
+    
+    MockTable = NewMockOfMetadataObjectAttributes(TabularSection);
+    MockObject = MockTable.Columns;
+    ConvertedValue.Insert(AttributeName, MockTable);
+ 
+    For Index = 0 To AttributeValue.Count() - 1 Do
+    
+        InnerCriticalError = False;
+        InnerConvertedValue = New Structure;
+        InnerConversionResult = NewConversionResult();
+        For Each Item In AttributeValue[Index] Do
+            
+            ConvertValueIntoAttribute(Item.Key, 
+                Item.Value, 
+                MockObject, 
+                TabularSection, 
+                InnerConvertedValue, 
+                InnerConversionResult.ErrorMessages, 
+                InnerCriticalError);
+                
+        EndDo;        
+        
+        If NOT InnerCriticalError Then
+            FillPropertyValues(MockTable.Add(), InnerConvertedValue);                  
+        Else
+            
+            CriticalError = True;
+            ErrorTemplate = NStr("en='Tabular section {%1[%2]}, %3'; 
+                |ru='Табличная часть {%1[%2]}, %3'; 
+                |uk='Таблична частина {%1[%2]}, %3';
+                |en_CA='Tabular section {%1[%2]}, %3'");
+            
+            For Each ICRErrorMessage In InnerConversionResult.ErrorMessages Do
+                ErrorMessage = StrTemplate(ErrorTemplate, AttributeName, 
+                    Format(Index, "NZ=; NG="), ICRErrorMessage);
+                ErrorMessages.Add(ErrorMessage);   
+            EndDo;
+            
+            Continue;
+            
+        EndIf;
+        
+    EndDo;
+
+EndProcedure // ConvertArrayValueIntoAttribute()
+
+// Only for internal use.
+//
+Procedure CheckAttribute(Attribute, ConvertedValue, ConversionResult)
+    
+    If NOT ConvertedValue.Property(Attribute) Then
+        FL_ErrorsClientServer.RequiredAttributeMissingInObject(
+            Attribute, ConversionResult);
+    EndIf;
+    
+EndProcedure // CheckAttribute()
+
+// Only for internal use.
+//
+Procedure CheckTabularSection(Property, ConvertedValue, ConversionResult)
+    
+    TabularName = Property.Key;
+    TabularAttributes = Property.Value;
+    
+    ValueTable = Undefined;
+    If NOT ConvertedValue.Property(TabularName, ValueTable) Then
+        FL_ErrorsClientServer.RequiredTabularSectionMissingInObject(TabularName,
+            ConversionResult);
+        Return;
+    EndIf;
+     
+    If NOT TypeOf(ValueTable) = Type("ValueTable") Then
+        FL_ErrorsClientServer.ObjectValueTableTypeDifferentFromExpected(
+            TabularName, ValueTable, ConversionResult);
+        Return;
+    EndIf;
+    
+    If NOT TypeOf(TabularAttributes) = Type("FixedArray") Then
+        FL_ErrorsClientServer.RequiredTabularTypeDifferentFromExpected(
+            TabularName, TabularAttributes, ConversionResult);    
+    EndIf;      
+    
+    For Each TabularAttribute In TabularAttributes Do
+
+        SearchResult = ValueTable.Columns.Find(TabularAttribute);
+        If SearchResult = Undefined Then
+            FL_ErrorsClientServer.RequiredTabularColumnMissingInObject(
+                TabularAttribute, TabularName, ConversionResult);
+            Continue;
+        EndIf;
+        
+        For Each VTRow In ValueTable Do
+            
+            If NOT ValueIsFilled(VTRow[TabularAttribute]) Then
+                FL_ErrorsClientServer.RequiredTabularAttributeNotFilled(
+                    TabularAttribute, TabularName, ConversionResult);    
+            EndIf;
+            
+        EndDo;
+        
+    EndDo;
+                                        
+EndProcedure // CheckTabularSection()
+    
+// Only for internal use.
+//
+Function AttributeDescription(Object, AttributeName, SynonymsRU)
+    
+    AttributeDescription = Object.Find(AttributeName);
+    If AttributeDescription = Undefined Then
+        AttributeNameRU = SynonymsRU.Get(Upper(AttributeName)); 
+        AttributeDescription = Object.Find(AttributeNameRU);
+    EndIf;
+    
+    Return AttributeDescription;
+    
+EndFunction // AttributeDescription()
 
 // Returns base convertion result structure.
 //
