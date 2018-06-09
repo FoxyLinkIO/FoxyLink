@@ -274,7 +274,8 @@ Procedure HTTPManagementAPIPublish(Payload, Properties, StringURI, JobResult)
     
     Exchange = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "Exchange");
-    If NOT ValueIsFilled(Exchange) Then
+    If ValueIsFilled(Properties.ReplyTo)
+        OR NOT ValueIsFilled(Exchange) Then
         Exchange = "amq.default";
     EndIf;
     
