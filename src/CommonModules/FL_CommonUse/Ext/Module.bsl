@@ -124,7 +124,7 @@ Function ObjectAttributeValue(Ref, AttributeName) Export
 
 EndFunction // ObjectAttributeValue()
 
-// Returns reference by a description.
+// Returns reference by the specified description.
 //
 // Parameters:
 //  MetadataObject - MetadataObject - metadata object from which it is required 
@@ -146,7 +146,29 @@ Function ReferenceByDescription(MetadataObject, Description) Export
     
 EndFunction // ReferenceByDescription()
 
-// Returns reference by a predefined data name.
+// Returns reference by the specified code.
+//
+// Parameters:
+//  MetadataObject - MetadataObject - metadata object from which it is required 
+//                                      to receive reference by description. 
+//  Code           - String, Number - the code of reference. 
+//
+// Returns:
+//  AnyRef, Undefined - reference by the description. 
+//
+Function ReferenceByCode(MetadataObject, Code) Export
+    
+    Query = New Query;
+    Query.Text = StrTemplate(QueryTextReferenceByCode(), 
+        MetadataObject.FullName());
+    Query.SetParameter("Code", Code);
+    QueryResultSelection = Query.Execute().Select();
+    
+    Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
+    
+EndFunction // ReferenceByCode()
+
+// Returns reference by the specified predefined data name.
 //
 // Parameters:
 //  MetadataObject - MetadataObject - metadata object from which it is required 
@@ -3123,6 +3145,22 @@ Function QueryTextReferenceByDescription()
     Return QueryText;
 
 EndFunction // QueryTextReferenceByDescription() 
+
+// Only for internal use.
+//
+Function QueryTextReferenceByCode()
+
+    QueryText = "
+        |SELECT
+        |   MetadataObject.Ref AS Ref   
+        |FROM
+        |   %1 AS MetadataObject
+        |WHERE
+        |   MetadataObject.Code = &Code
+        |";
+    Return QueryText;
+
+EndFunction // QueryTextReferenceByCode()
 
 // Only for internal use.
 //
