@@ -139,39 +139,38 @@ Function RouteOnlyToExchangeAndRun(Source, Exchange) Export
     
     OutputCopy = Catalogs.FL_Jobs.NewJobResult().Output;
     
-    Try
-        
-        BeginTransaction();
-        
-        MsgRef = GetMessage(Source);
-        
-        ExchangeJob = RouteToExchange(MsgRef, Exchange);
-        MsgObject = MsgRef.GetObject();
-        MsgObject.Routed = True;
-            NewRow = MsgObject.Exchanges.Add();
-            NewRow.Exchange = Exchange;
-            NewRow.Job = ExchangeJob;
-        MsgObject.Write();
-        
-        Catalogs.FL_Jobs.Trigger(ExchangeJob, True, OutputCopy); 
-         
-        CommitTransaction();
-    
-    Except
-        
-        RollbackTransaction();
-        
-        ErrorMessage = ErrorDescription();
-        WriteLogEvent("FoxyLink.Integration.RouteOnlyToExchangeAndRun", 
-            EventLogLevel.Error,
-            Metadata.Catalogs.FL_Messages,
-            ,
-            ErrorMessage);
+    If TransactionActive() Then
             
-        // Move message up in stack 
-        Raise ErrorMessage;
+        // Helps to avoid hierarchical transaction errors.
+        TriggerMessage(Source, Exchange, OutputCopy);
         
-    EndTry;
+    Else
+    
+        Try
+            
+            BeginTransaction();
+            
+            TriggerMessage(Source, Exchange, OutputCopy); 
+             
+            CommitTransaction();
+        
+        Except
+            
+            RollbackTransaction();
+            
+            ErrorMessage = ErrorDescription();
+            WriteLogEvent("FoxyLink.Integration.RouteOnlyToExchangeAndRun", 
+                EventLogLevel.Error,
+                Metadata.Catalogs.FL_Messages,
+                ,
+                ErrorMessage);
+                
+            // Move message up in stack 
+            Raise ErrorMessage;
+            
+        EndTry;
+    
+    EndIf;
     
     Return OutputCopy;
     
@@ -328,12 +327,18 @@ EndProcedure // FillRegisterContext()
 //
 // Parameters:
 //  Message - CatalogRef.FL_Messages - reference to the message.
+//          - String                 - message id.
 //
 // Returns:
 //  Arbitrary - deserialized context.
 //  Undefined - context is absent.
 //
-Function DeserializeContext(Message) Export
+Function DeserializeContext(Val Message) Export
+    
+    If TypeOf(Message) = TypeOf("String") Then
+        Message = FL_CommonUse.ReferenceByCode(Metadata.Catalogs.FL_Messages, 
+            Message);     
+    EndIf;
     
     Query = New Query;
     Query.Text = QueryTextMessageContext();
@@ -494,6 +499,24 @@ EndFunction // NewInvocation()
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Procedure TriggerMessage(Source, Exchange, OutputCopy)
+    
+    Message = GetMessage(Source);
+    MessageObject = Message.GetObject();
+    MessageObject.Routed = True;
+    
+    ExchangeJob = RouteToExchange(Message, Exchange);
+        NewRow = MessageObject.Exchanges.Add();
+        NewRow.Exchange = Exchange;
+        NewRow.Job = ExchangeJob;
+    MessageObject.Write();
+    
+    Catalogs.FL_Jobs.Trigger(ExchangeJob, True, OutputCopy);
+    
+EndProcedure // TriggerMessage()
 
 // Only for internal use.
 //
