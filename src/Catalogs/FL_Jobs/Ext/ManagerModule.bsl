@@ -28,16 +28,16 @@
 // the following Wednesday.
 //
 // Parameters:
-//  Jobs              - Array              - array of references to the jobs to be triggered.
-//                    - CatalogRef.FL_Jobs - reference to the job to be triggered.
-//  InvokeSubordinate - Boolean            - if True triggers all subordinate jobs during this call.
+//  Jobs   - Array              - array of references to the jobs to be triggered.
+//         - CatalogRef.FL_Jobs - reference to the job to be triggered.
+//  Invoke - Boolean            - if True triggers all subordinate jobs during this call.
 //                          Default value: False.
 //  OutputCopy        - ValueTable         - helps to make copy of output parameters.
 //      ** Name  - String    - parameter name.
 //      ** Value - Arbitrary - parameter value.
 //                          Default value: Undefined.
 //
-Procedure Trigger(Jobs, InvokeSubordinate = False, OutputCopy = Undefined) Export
+Procedure Trigger(Jobs, Invoke = False, OutputCopy = Undefined) Export
        
     ValidJobs = New Array;
     ValidateJobType(ValidJobs, Jobs);
@@ -47,7 +47,7 @@ Procedure Trigger(Jobs, InvokeSubordinate = False, OutputCopy = Undefined) Expor
         If TransactionActive() Then
             
             // Helps to avoid hierarchical transaction errors.
-            ProcessJob(Job, InvokeSubordinate, , OutputCopy);
+            ProcessJob(Job, Invoke, , OutputCopy);
             
         Else
             
@@ -57,7 +57,7 @@ Procedure Trigger(Jobs, InvokeSubordinate = False, OutputCopy = Undefined) Expor
                 
                 BeginTransaction();
 
-                ProcessJob(Job, InvokeSubordinate, , OutputCopy);
+                ProcessJob(Job, Invoke, , OutputCopy);
                 
                 CommitTransaction();
                 
@@ -156,8 +156,9 @@ EndFunction // Create()
 //
 Function ChangeState(Job, State, ExpectedState = Undefined, Duration = 0) Export
     
+    CurrentState = FL_CommonUse.ObjectAttributeValue(Job, "State");
     If ExpectedState <> Undefined 
-        AND Upper(String(ExpectedState)) <> Upper(String(Job.State)) Then
+        AND Upper(String(ExpectedState)) <> Upper(String(CurrentState)) Then
         Return False;             
     EndIf;
     
@@ -425,8 +426,7 @@ EndFunction // QueryTextParentJobsOutputTable()
 
 // Only for internal use.
 //
-Procedure ProcessJob(Job, InvokeSubordinate, Output = Undefined, 
-    OutputCopy = Undefined)
+Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
        
     Var BasicResult;
     
@@ -439,11 +439,17 @@ Procedure ProcessJob(Job, InvokeSubordinate, Output = Undefined,
     Execute Algorithm;
     
     If TypeOf(BasicResult) = Type("Structure") Then
-        FinalResult = BasicResult; 
+        
+        FinalResult = BasicResult;
+        
     Else
+        
         FinalResult = NewJobResult();
         FinalResult.Success = True;
-        AddToJobResult(FinalResult, "Payload", BasicResult);    
+        
+        // Add to JobResult output table Payload value. 
+        AddToJobResult(FinalResult, "Payload", BasicResult);
+        
     EndIf;
         
     NewLogRow = JobObject.Log.Add();
@@ -461,6 +467,8 @@ Procedure ProcessJob(Job, InvokeSubordinate, Output = Undefined,
             OutputCopy);    
     EndIf;
     
+    // If message size exceeded the maximum we have to process 
+    // parent job output in the place. 
     SizeExceeded = MessageSizeExceeded(FinalResult);
     If NOT SizeExceeded Then
         CopyToInputOutputTable(JobObject.Output, FinalResult.Output);    
@@ -470,16 +478,16 @@ Procedure ProcessJob(Job, InvokeSubordinate, Output = Undefined,
 
     Duration = CurrentUniversalDateInMilliseconds() - StartTime;
     ChangeState(Job, State, , Duration);
-    
-    Invoke = InvokeSubordinate Or SizeExceeded; 
-    ProcessSubordinateJobs(Job, FinalResult.Output, OutputCopy, State, Invoke);
+     
+    ProcessSubordinateJobs(Job, FinalResult.Output, OutputCopy, State, Invoke, 
+        SizeExceeded);
         
 EndProcedure // ProcessJob()
 
 // Only for internal use.
 //
-Procedure ProcessSubordinateJobs(ParentJob, Output, OutputCopy, State, 
-    InvokeSubordinate)
+Procedure ProcessSubordinateJobs(ParentJob, Output, OutputCopy, State, Invoke,
+    SizeExceeded)
     
     If State <> Catalogs.FL_States.Succeeded Then
         Return;
@@ -488,15 +496,36 @@ Procedure ProcessSubordinateJobs(ParentJob, Output, OutputCopy, State,
     SubordinateJobs = SubordinateJobs(ParentJob);
     For Each SubordinateJob In SubordinateJobs Do
         
-        ChangeState(SubordinateJob, Catalogs.FL_States.Enqueued);
-        If InvokeSubordinate Then
-            ChangeState(SubordinateJob, Catalogs.FL_States.Processing);
-            ProcessJob(SubordinateJob, InvokeSubordinate, Output, OutputCopy);
+        If Invoke OR SizeExceeded Then
+            
+            // It is not needed to change state here because transaction is active
+            // ChangeState(SubordinateJob, Catalogs.FL_States.Processing);.
+            ProcessJob(SubordinateJob, Invoke, Output, OutputCopy);
+            
+            // If the message size of parent job is exceeded the maximum, 
+            // it is needed to check child job state. If child job is failed,
+            // it is needed to mark parent job as failed too.
+            If SizeExceeded Then
+                
+                CurrentState = FL_CommonUse.ObjectAttributeValue(
+                    SubordinateJob, "State");   
+                If CurrentState <> Catalogs.FL_States.Succeeded Then   
+                    ChangeState(ParentJob, Catalogs.FL_States.Failed);    
+                EndIf;    
+                    
+            EndIf;
+            
+        Else
+            
+            // It is needed to change state here because the child job 
+            // will be processed in a different background thread.
+            ChangeState(SubordinateJob, Catalogs.FL_States.Enqueued);   
+            
         EndIf;
-                               
+                              
     EndDo;
     
-EndProcedure // ProcessSubordinateJob()
+EndProcedure // ProcessSubordinateJobs()
 
 // Only for internal use.
 //
@@ -628,8 +657,16 @@ Function QueryTextSubordinateJobs()
         |   Continuations.Job AS Job
         |FROM
         |   InformationRegister.FL_JobContinuations AS Continuations
+        |
+        |INNER JOIN Catalog.FL_Jobs AS Jobs
+        |ON Jobs.Ref = Continuations.Job
+        |
+        |INNER JOIN Catalog.FL_States AS States
+        |ON States.Ref = Jobs.State
+        |
         |WHERE
-        |   Continuations.ParentJob = &ParentJob   
+        |   Continuations.ParentJob = &ParentJob 
+        |AND NOT States.IsFinal
         |";  
     Return QueryText;
 
