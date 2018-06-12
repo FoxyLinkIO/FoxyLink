@@ -86,21 +86,17 @@ Function ProcessMessage(AppProperties, Payload, Properties) Export
         AppEndpointProcessor.DeliverMessage(Payload, Properties, JobResult);      
             
     Except
-        
-        JobResult.LogAttribute = ErrorDescription();
-        JobResult.StatusCode = FL_InteriorUseReUse
-            .InternalServerErrorStatusCode();
-        JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-            JobResult.StatusCode);    
-            
-        WriteLogEvent("FoxyLink.Integration.ProcessMessage", 
+                    
+        FL_InteriorUse.WriteLog("FoxyLink.Integration.ProcessMessage", 
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Channels,
-            ,
-            JobResult.LogAttribute);
+            ErrorDescription(), 
+            JobResult);
     
     EndTry;
-    
+
+    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        JobResult.StatusCode);
     Return JobResult;
    
 EndFunction // ProcessMessage()

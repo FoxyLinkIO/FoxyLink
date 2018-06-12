@@ -775,6 +775,14 @@
 															<ContextMenu name="EventsDescriptionContextMenu" id="374"/>
 															<ExtendedTooltip name="EventsDescriptionExtendedTooltip" id="375"/>
 														</InputField>
+														<CheckBoxField name="EventsTransactional" id="379">
+															<DataPath>Object.Events.Transactional</DataPath>
+															<ReadOnly>true</ReadOnly>
+															<EditMode>EnterOnInput</EditMode>
+															<CheckBoxType>Auto</CheckBoxType>
+															<ContextMenu name="EventsTransactionalContextMenu" id="380"/>
+															<ExtendedTooltip name="EventsTransactionalExtendedTooltip" id="381"/>
+														</CheckBoxField>
 														<InputField name="EventsVersion" id="376">
 															<DataPath>Object.Events.Version</DataPath>
 															<ReadOnly>true</ReadOnly>

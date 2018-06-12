@@ -371,6 +371,47 @@ EndFunction // NewFormField()
 
 #Endregion // FormInteraction
 
+#Region LogInteraction
+
+// Writes an event in the event log and updates job result state if passed. 
+//
+// Parameters:
+//  EventName      - String         - event is indicated by string. Can contain points  
+//                              for signifying event hierarchy.
+//  Level          - EventLogLevel  - level of event importance. 
+//  MetadataObject - MetadataObject - the object that is associated with the event.
+//  Commentaries   - String         - arbitrary string of commentary for the event.
+//                 - Array          - commentaries list.
+//  JobResult      - Structure      - see function Catalogs.FL_Jobs.NewJobResult.
+//                          Default value: Undefined.
+//
+Procedure WriteLog(EventName, Level, MetadataObject, Commentaries, 
+    JobResult = Undefined) Export
+    
+    Var Commentary;
+     
+    If TypeOf(Commentaries) = Type("Array") Then
+        Commentary = StrConcat(Commentaries, Chars.CR + Chars.LF);
+    Else 
+        Commentary = Commentaries;
+    EndIf;
+    
+    If TypeOf(JobResult) = Type("Structure") Then
+        
+        JobResult.LogAttribute = Commentary;
+        If Level = EventLogLevel.Error Then
+            JobResult.StatusCode = FL_InteriorUseReUse
+                .InternalServerErrorStatusCode();                
+        EndIf;
+
+    EndIf;
+    
+    WriteLogEvent(EventName, Level, MetadataObject, , Commentary);
+    
+EndProcedure // WriteLog()
+
+#EndRegion // LogInteraction
+
 #Region SubsystemInteraction
 
 // Performs initial filling of the subsystem.
@@ -563,14 +604,16 @@ EndFunction // NewFormatProcessor()
 //
 // Returns:
 //  Structure - with keys:
-//      * EventHandler - String  - event handler module.
-//      * Default      - Boolean - True if it's default handler.
+//      * EventHandler  - String  - event handler module.
+//      * Default       - Boolean - True if it's default handler.
 //                          Default value: False.
-//      * Description  - String  - event handler description.
-//      * Publishers   - Map     - publishers map.
+//      * Description   - String  - event handler description.
+//      * Publishers    - Map     - publishers map.
 //          ** Key   - CatalogRef.FL_Operations - publisher operation.
 //          ** Value - Array                    - event source objects.
-//      * Version      - String  - event handler version.
+//      * Transactional - Boolean - True if method creates implicit transactions.
+//                          Default value: False.
+//      * Version       - String  - event handler version.
 //
 Function NewExternalEventHandlerInfo() Export
     
@@ -579,6 +622,7 @@ Function NewExternalEventHandlerInfo() Export
     EventHandlerInfo.Insert("Default", False);
     EventHandlerInfo.Insert("Description");
     EventHandlerInfo.Insert("Publishers", New Map);
+    EventHandlerInfo.Insert("Transactional", False);
     EventHandlerInfo.Insert("Version");
     
     Return EventHandlerInfo;
@@ -820,10 +864,10 @@ Procedure InitializeChannels()
         
     Except
         
-        WriteLogEvent("FoxyLink.InitializeSubsystem.InitializeChannels", 
+        FL_InteriorUse.WriteLog(
+            "FoxyLink.InitializeSubsystem.InitializeChannels", 
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Channels,
-            ,
             ErrorDescription());
         
     EndTry;

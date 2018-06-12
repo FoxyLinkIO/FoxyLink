@@ -45,10 +45,9 @@ Procedure RegisterContinuation(ParentJob, Job) Export
         
     Except
         
-         WriteLogEvent("FoxyLink.Tasks.RegisterContinuation", 
+         FL_InteriorUse.WriteLog("FoxyLink.Tasks.RegisterContinuation", 
             EventLogLevel.Error,
             Metadata.InformationRegisters.FL_JobContinuations,
-            ,
             ErrorDescription());
         
     EndTry;

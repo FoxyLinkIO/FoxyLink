@@ -41,19 +41,18 @@ Procedure Route(Source = Undefined, Exchange = Undefined,
     Messages = Messages(Source);
     For Each Message In Messages Do
         
-        Try
-            
-            If NOT ReRoute Then
-                If FL_CommonUse.ObjectAttributeValue(Message, "Routed") Then
-                    Continue;
-                EndIf;
+        If NOT ReRoute Then
+            If FL_CommonUse.ObjectAttributeValue(Message, "Routed") Then
+                Continue;
             EndIf;
+        EndIf;
+        
+        Try
             
             BeginTransaction();
             
             MessageObject = Message.GetObject();
             MessageObject.Routed = True;
-            
             RouteToEndpoints(MessageObject, Exchange, AppEndpoint);
             
             MessageObject.Write();
@@ -64,11 +63,10 @@ Procedure Route(Source = Undefined, Exchange = Undefined,
             
             RollbackTransaction();
             
-            WriteLogEvent("FoxyLink.Integration.Route", 
+            FL_InteriorUse.WriteLog("FoxyLink.Integration.Route",
                 EventLogLevel.Error,
                 Metadata.Catalogs.FL_Messages,
-                ,
-                ErrorDescription());
+                ErrorDescription());        
             
         EndTry;
                 
@@ -89,39 +87,17 @@ EndProcedure // Route()
 Procedure RouteAndRun(Source, Exchange = Undefined, 
     AppEndpoint = Undefined) Export
 
-    Try
-        
-        BeginTransaction();
-        
-        Message = GetMessage(Source);
-        MessageObject = Message.GetObject();
-        MessageObject.Routed = True;
-        
-        RouteToEndpoints(MessageObject, Exchange, AppEndpoint);
-        
-        For Each Row In MessageObject.Exchanges Do
-            Catalogs.FL_Jobs.Trigger(Row.Job, True);    
-        EndDo;
-        
-        MessageObject.Write();
-        
-        CommitTransaction();
-        
-    Except
-        
-        RollbackTransaction();
-        
-        ErrorMessage = ErrorDescription();
-        WriteLogEvent("FoxyLink.Integration.RouteAndRun", 
-            EventLogLevel.Error,
-            Metadata.Catalogs.FL_Messages,
-            ,
-            ErrorMessage);
-            
-        // Move message up in stack 
-        Raise ErrorMessage;
-        
-    EndTry;
+    Message = GetMessage(Source);
+    
+    MessageObject = Message.GetObject();
+    MessageObject.Routed = True;
+    RouteToEndpoints(MessageObject, Exchange, AppEndpoint, True);
+    
+    For Each Row In MessageObject.Exchanges Do
+        Catalogs.FL_Jobs.Trigger(Row.Job, True);    
+    EndDo;
+    
+    MessageObject.Write();   
     
 EndProcedure // RouteAndRun()    
     
@@ -159,10 +135,10 @@ Function RouteOnlyToExchangeAndRun(Source, Exchange) Export
             RollbackTransaction();
             
             ErrorMessage = ErrorDescription();
-            WriteLogEvent("FoxyLink.Integration.RouteOnlyToExchangeAndRun", 
+            FL_InteriorUse.WriteLog(
+                "FoxyLink.Integration.RouteOnlyToExchangeAndRun", 
                 EventLogLevel.Error,
                 Metadata.Catalogs.FL_Messages,
-                ,
                 ErrorMessage);
                 
             // Move message up in stack 
@@ -186,50 +162,36 @@ EndFunction // RouteOnlyToExchangeAndRun()
 //
 Function Create(Invocation) Export
     
-    Var Context, SessionContext;
+    If TransactionActive() Then
         
-    MessageObject = Catalogs.FL_Messages.CreateItem();
-    MessageObject.SetNewCode();
-    FillPropertyValues(MessageObject, Invocation);
-    
-    If Invocation.Property("Context", Context) 
-        AND TypeOf(Context) = Type("ValueTable") Then
-        MessageObject.Context.Load(Context);
-    EndIf;
-    
-    If Invocation.Property("SessionContext", SessionContext) 
-        AND TypeOf(SessionContext) = Type("ValueTable") Then
-        MessageObject.SessionContext.Load(SessionContext);
-    EndIf;
-    
-    Try
+        // Creates a message
+        Message = CreateMessage(Invocation);
         
-        MessageObject.Write();
+    Else
         
-        If Invocation.Payload <> Undefined Then
+        Try
+        
+            BeginTransaction();
             
-            MaxDeflation = 9;
-            RecordManager = InformationRegisters.FL_MessagePayload
-                .CreateRecordManager();
-            RecordManager.Message = MessageObject.Ref;
-            RecordManager.Payload = New ValueStorage(Invocation.Payload, 
-                New Deflation(MaxDeflation));
-            RecordManager.Write();
+            // Creates a message in transaction
+            Message = CreateMessage(Invocation);
             
-        EndIf;
+            CommitTransaction();
         
-    Except
+        Except
+            
+            RollbackTransaction();
+            
+            FL_InteriorUse.WriteLog("FoxyLink.Integration.Create",
+                EventLogLevel.Error,
+                Metadata.Catalogs.FL_Messages,
+                ErrorDescription());
+            
+        EndTry;
         
-        WriteLogEvent("FoxyLink.Integration.Create", 
-            EventLogLevel.Error,
-            Metadata.Catalogs.FL_Messages,
-            ,
-            ErrorDescription());
-        Return Undefined;
+    EndIf;
         
-    EndTry;
-    
-    Return MessageObject.Ref;  
+    Return Message;  
     
 EndFunction // Create()
 
@@ -520,6 +482,44 @@ EndProcedure // TriggerMessage()
 
 // Only for internal use.
 //
+Function CreateMessage(Invocation)
+    
+    Var Context, SessionContext;
+        
+    MessageObject = Catalogs.FL_Messages.CreateItem();
+    MessageObject.SetNewCode();
+    FillPropertyValues(MessageObject, Invocation);
+    
+    If Invocation.Property("Context", Context) 
+        AND TypeOf(Context) = Type("ValueTable") Then
+        MessageObject.Context.Load(Context);
+    EndIf;
+    
+    If Invocation.Property("SessionContext", SessionContext) 
+        AND TypeOf(SessionContext) = Type("ValueTable") Then
+        MessageObject.SessionContext.Load(SessionContext);
+    EndIf;
+    
+    MessageObject.Write();
+        
+    If Invocation.Payload <> Undefined Then
+        
+        MaxDeflation = 9;
+        RecordManager = InformationRegisters.FL_MessagePayload
+            .CreateRecordManager();
+        RecordManager.Message = MessageObject.Ref;
+        RecordManager.Payload = New ValueStorage(Invocation.Payload, 
+            New Deflation(MaxDeflation));
+        RecordManager.Write();
+        
+    EndIf;
+    
+    Return MessageObject.Ref;
+    
+EndFunction // CreateMessage()
+
+// Only for internal use.
+//
 Function RouteToExchange(MsgRef, Exchange)
     
     JobData = FL_BackgroundJob.NewJobData();
@@ -539,13 +539,17 @@ EndFunction // RouteToExchange()
 
 // Only for internal use.
 //
-Procedure RouteToEndpoints(Source, Exchange, AppEndpoint)
+Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
     
     ExchangeEndpoints = ExchangeEndpoints(Source, Exchange);  
     For Each Endpoint In ExchangeEndpoints Do
         
         JobData = FL_BackgroundJob.NewJobData();
         JobData.MethodName = Endpoint.EventHandler;
+        JobData.Transactional = Endpoint.Transactional;
+        If RouteAndRun Then
+            JobData.State = Catalogs.FL_States.Processing;    
+        EndIf;
         
         InputParameter = JobData.Input.Add();
         InputParameter.Name = "Exchange";
@@ -560,7 +564,8 @@ Procedure RouteToEndpoints(Source, Exchange, AppEndpoint)
         NewRow.Exchange = Endpoint.Exchange;
         NewRow.Job = ExchangeJob;
         
-        RouteToAppEndpoints(Source, Endpoint.Exchange, AppEndpoint, ExchangeJob);
+        RouteToAppEndpoints(Source, Endpoint.Exchange, AppEndpoint, 
+            ExchangeJob);
         
     EndDo;
     
@@ -638,10 +643,9 @@ Procedure FillAppResources(Source, AppProperties, AppResources)
                 
             Except
 
-                WriteLogEvent("FoxyLink.Integration.FillAppResources", 
+                FL_InteriorUse.WriteLog("FoxyLink.Integration.FillAppResources", 
                     EventLogLevel.Error,
                     Metadata.Catalogs.FL_Messages,
-                    ,
                     ErrorDescription());
                      
             EndTry;
@@ -810,7 +814,8 @@ Function QueryTextExchangeEndpoint()
     QueryText = "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
-        |   IsNull(EventTable.EventHandler, &EventHandler) AS EventHandler
+        |   IsNull(EventTable.EventHandler, &EventHandler) AS EventHandler,
+        |   IsNull(EventTable.Transactional, False) AS Transactional
         |FROM
         |   Catalog.FL_Exchanges AS Exchanges 
         |
@@ -841,7 +846,8 @@ Function QueryTextExchangeEndpoints()
     QueryText = "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
-        |   EventTable.EventHandler AS EventHandler
+        |   EventTable.EventHandler AS EventHandler,
+        |   EventTable.Transactional AS Transactional
         |FROM
         |   Catalog.FL_Exchanges AS Exchanges 
         |

@@ -236,10 +236,9 @@ Procedure JobExpirationAction() Export
                 JobObject.Delete();
             Except
                
-                WriteLogEvent("FoxyLink.Tasks.JobExpirationAction", 
+                FL_InteriorUse.WriteLog("FoxyLink.Tasks.JobExpirationAction", 
                     EventLogLevel.Error,
                     Metadata.ScheduledJobs.FL_JobExpiration,
-                    ,
                     ErrorDescription());
                 
             EndTry;

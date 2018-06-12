@@ -142,7 +142,7 @@ Function CreateSocial(Exchange, Message)
             
     Except
 
-        Catalogs.FL_Jobs.WriteLog("SocialNetworks_Events.ProcessMessage", 
+        FL_InteriorUse.WriteLog("SocialNetworks_Events.ProcessMessage", 
             EventLogLevel.Error, 
             Metadata.CommonModules.SocialNetworks_Events,
             ErrorDescription(), 
@@ -217,27 +217,22 @@ Function MergeSocial(Exchange, Message)
         Payload = Stream.CloseAndGetBinaryData();
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
-        JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-            JobResult.StatusCode);
+        
         Catalogs.FL_Jobs.AddToJobResult(JobResult, "Payload", Payload);     
         Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", Properties); 
             
     Except
-
-        JobResult.LogAttribute = ErrorDescription();
-        JobResult.StatusCode = FL_InteriorUseReUse
-            .InternalServerErrorStatusCode();
-        JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-            JobResult.StatusCode);
         
-        WriteLogEvent("SocialNetworks_Events.ProcessMessage", 
+        FL_InteriorUse.WriteLog("SocialNetworks_Events.ProcessMessage", 
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Exchanges,
-            ,
-            JobResult.LogAttribute);
+            ErrorDescription(),
+            JobResult);
         
     EndTry;
-                
+    
+    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        JobResult.StatusCode);
     Return JobResult;
     
 EndFunction // MergeSocial()

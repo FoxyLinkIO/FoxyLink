@@ -182,7 +182,7 @@ Procedure ProcessSocialAttribute(SocialMessage, Attribute, JobResult)
             FL_ErrorsClientServer.PersonalizeErrorsWithKey(
                 ConversionResult.ErrorMessages, ErrorMessages, Attribute.Name);
             
-            Catalogs.FL_Jobs.WriteLog(
+            FL_InteriorUse.WriteLog(
                 "InformationRegisters.SocialNetworks_Messages.DeserializeSocialMessage",
                 EventLogLevel.Error,
                 Metadata.InformationRegisters.SocialNetworks_Messages,

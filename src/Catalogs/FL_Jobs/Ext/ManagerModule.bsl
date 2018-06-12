@@ -44,7 +44,8 @@ Procedure Trigger(Jobs, Invoke = False, OutputCopy = Undefined) Export
     
     For Each Job In ValidJobs Do
         
-        If TransactionActive() Then
+        If TransactionActive() 
+            OR FL_CommonUse.ObjectAttributeValue(Job, "Transactional") Then
             
             // Helps to avoid hierarchical transaction errors.
             ProcessJob(Job, Invoke, , OutputCopy);
@@ -65,12 +66,11 @@ Procedure Trigger(Jobs, Invoke = False, OutputCopy = Undefined) Export
                 
                 RollbackTransaction();
                 
-                WriteLogEvent("FoxyLink.Tasks.Trigger", 
+                FL_InteriorUse.WriteLog("FoxyLink.Tasks.Trigger", 
                     EventLogLevel.Error,
                     Metadata.Catalogs.FL_Jobs,
-                    ,
                     ErrorDescription());
-                    
+                                    
                 Duration = CurrentUniversalDateInMilliseconds() - StartTime;
                 ChangeState(Job, Catalogs.FL_States.Failed, , Duration);  
                 
@@ -95,7 +95,12 @@ Function Create(JobData) Export
             
     JobObject = Catalogs.FL_Jobs.CreateItem();
     
-    ListOfProperties = "CreatedAt, ExpireAt, MethodName, Priority, State";
+    ListOfProperties = "CreatedAt, 
+        |ExpireAt, 
+        |MethodName, 
+        |Priority, 
+        |State, 
+        |Transactional";
     FillPropertyValues(JobObject, JobData, ListOfProperties); 
     CopyToInputOutputTable(JobObject.Input, JobData.Input);
     CopyToInputOutputTable(JobObject.Output, JobData.Output);
@@ -119,22 +124,20 @@ Function Create(JobData) Export
         
     Except
         
-        WriteLogEvent("FoxyLink.Tasks.Create", 
+        RollbackTransaction();
+        
+        FL_InteriorUse.WriteLog("FoxyLink.Tasks.Create", 
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Jobs,
-            ,
             ErrorDescription());
-            
-        RollbackTransaction();
-            
+               
         Return Undefined;
         
     EndTry; 
         
-    // End measuring.
-    Duration = CurrentUniversalDateInMilliseconds() - JobObject.CreatedAt;
-    RecordJobPerformanceMetrics(JobObject.Ref, JobObject.State, Duration);
-        
+    // End measuring and recording performance metrics.
+    RecordJobObjectPerformanceMetrics(JobObject); 
+      
     Return JobObject.Ref;
 
 EndFunction // Create()
@@ -163,9 +166,8 @@ Function ChangeState(Job, State, ExpectedState = Undefined, Duration = 0) Export
     EndIf;
     
     JobObject = Job.GetObject();
+    SetExpirationDate(JobObject.ExpireAt);
     JobObject.State = State;
-    JobObject.ExpireAt = CurrentUniversalDateInMilliseconds() 
-        + FL_InteriorUseReUse.JobExpirationTimeout();
     JobObject.Write();
     
     RecordJobPerformanceMetrics(Job, State, Duration);
@@ -177,43 +179,6 @@ EndFunction // ChangeState()
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
-
-// Writes an event in the event log and updates job result state if passed. 
-//
-// Parameters:
-//  EventName      - String         - event is indicated by string. Can contain points  
-//                              for signifying event hierarchy.
-//  Level          - EventLogLevel  - level of event importance. 
-//  MetadataObject - MetadataObject - the object that is associated with the event.
-//  Commentaries   - String         - arbitrary string of commentary for the event.
-//                 - Array          - commentaries list.
-//  JobResult      - Structure      - see function Catalogs.FL_Jobs.NewJobResult.
-//                          Default value: Undefined.
-//
-Procedure WriteLog(EventName, Level, MetadataObject, Commentaries, 
-    JobResult = Undefined) Export
-    
-    Var Commentary;
-     
-    If TypeOf(Commentaries) = Type("Array") Then
-        Commentary = StrConcat(Commentaries, Chars.CR + Chars.LF);
-    Else 
-        Commentary = Commentaries;
-    EndIf;
-    
-    If TypeOf(JobResult) = Type("Structure") Then
-        
-        JobResult.LogAttribute = Commentary;
-        If Level = EventLogLevel.Error Then
-            JobResult.StatusCode = FL_InteriorUseReUse
-                .InternalServerErrorStatusCode();                
-        EndIf;
-
-    EndIf;
-    
-    WriteLogEvent(EventName, Level, MetadataObject, , Commentary);
-    
-EndProcedure // WriteLog()
 
 // Adds result to the output parameters table.
 //
@@ -245,6 +210,8 @@ EndProcedure // AddToJobResult()
 //                                  Default value: 5.
 //      * State         - CatalogRef.FL_States - new state for a background job.
 //                                  Default value: Catalogs.FL_States.Enqueued.
+//      * Transactional - Boolean              - method creates implicit transactions.
+//                                  Default value: False.
 //      * Input         - ValueTable           - input parameters.
 //          ** Name  - String    - parameter name.
 //          ** Value - Arbitrary - parameter value.
@@ -264,6 +231,7 @@ Function NewJobData() Export
     JobData.Insert("MethodName");
     JobData.Insert("Priority", NormalPriority);
     JobData.Insert("State", Catalogs.FL_States.Enqueued);
+    JobData.Insert("Transactional", False);
     
     // Tabular section
     JobData.Insert("Input", NewInputOutputTable());
@@ -439,9 +407,7 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
     Execute Algorithm;
     
     If TypeOf(BasicResult) = Type("Structure") Then
-        
         FinalResult = BasicResult;
-        
     Else
         
         FinalResult = NewJobResult();
@@ -457,9 +423,9 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
     FinalResult.Property("StatusCode", NewLogRow.StatusCode);
     FinalResult.Property("Success", NewLogRow.Success);
     
-    State = Catalogs.FL_States.Succeeded;
+    JobObject.State = Catalogs.FL_States.Succeeded;
     If NOT FinalResult.Success Then
-        State = Catalogs.FL_States.Failed;       
+        JobObject.State = Catalogs.FL_States.Failed;       
     EndIf;
 
     If TypeOf(OutputCopy) = Type("ValueTable") Then
@@ -474,13 +440,17 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
         CopyToInputOutputTable(JobObject.Output, FinalResult.Output);    
     EndIf;
     
+    // Setting an expiration date for this job.
+    SetExpirationDate(JobObject.ExpireAt);
+    
+    // Writing this job object into database.
     JobObject.Write();
 
-    Duration = CurrentUniversalDateInMilliseconds() - StartTime;
-    ChangeState(Job, State, , Duration);
-     
-    ProcessSubordinateJobs(Job, FinalResult.Output, OutputCopy, State, Invoke, 
-        SizeExceeded);
+    // End measuring and recording performance metrics.
+    RecordJobObjectPerformanceMetrics(JobObject, StartTime); 
+    
+    ProcessSubordinateJobs(Job, FinalResult.Output, OutputCopy, 
+        JobObject.State, Invoke, SizeExceeded);
         
 EndProcedure // ProcessJob()
 
@@ -542,6 +512,28 @@ EndProcedure // RecordJobPerformanceMetrics()
 
 // Only for internal use.
 //
+Procedure RecordJobObjectPerformanceMetrics(JobObject, StartTime = Undefined)
+
+    If StartTime = Undefined Then
+        StartTime = JobObject.CreatedAt;     
+    EndIf;
+    
+    Duration = CurrentUniversalDateInMilliseconds() - StartTime;
+    RecordJobPerformanceMetrics(JobObject.Ref, JobObject.State, Duration);
+    
+EndProcedure // RecordJobObjectPerformanceMetrics()
+
+// Only for internal use.
+//
+Procedure SetExpirationDate(ExpirationDate)
+    
+    ExpirationDate = CurrentUniversalDateInMilliseconds() 
+        + FL_InteriorUseReUse.JobExpirationTimeout();  
+    
+EndProcedure // SetExpirationDate()
+
+// Only for internal use.
+//
 Procedure ValidateJobType(ValidJobs, Job)
     
     If TypeOf(Job) = Type("CatalogRef.FL_Jobs") Then
@@ -563,17 +555,6 @@ Procedure ValidateJobType(ValidJobs, Job)
     EndIf;    
     
 EndProcedure // ValidateJobType()
-
-// Only for internal use.
-//
-Function SubordinateJobs(ParentJob)
-    
-    Query = New Query;
-    Query.Text = QueryTextSubordinateJobs();
-    Query.SetParameter("ParentJob", ParentJob);
-    Return Query.Execute().Unload().UnloadColumn("Job");
-    
-EndFunction // SubordinateJobs()
 
 // Only for internal use.
 //
@@ -647,6 +628,17 @@ Function MessageSizeExceeded(JobResult)
     Return False;
     
 EndFunction // MessageSizeExceeded()
+
+// Only for internal use.
+//
+Function SubordinateJobs(ParentJob)
+    
+    Query = New Query;
+    Query.Text = QueryTextSubordinateJobs();
+    Query.SetParameter("ParentJob", ParentJob);
+    Return Query.Execute().Unload().UnloadColumn("Job");
+    
+EndFunction // SubordinateJobs()
 
 // Only for internal use.
 //
