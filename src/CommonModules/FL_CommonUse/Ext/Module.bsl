@@ -1509,10 +1509,9 @@ Function ValueFromXMLTypeAndValue(XMLValue, TypeName, NamespaceURI) Export
         
     Except
         
-        WriteLogEvent("FoxyLink", 
+        FL_InteriorUse.WriteLog("FoxyLink", 
             EventLogLevel.Error,
             Metadata.CommonModules.FL_CommonUse,
-            ,
             ErrorDescription());
         
     EndTry;

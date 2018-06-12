@@ -253,20 +253,13 @@ Procedure EnqueueReferenceEvents(Events)
         //  Catalogs.FL_Messages.AddToContext(Invocation.Context, 
         //      BaseAttributeName, Event[AttributeName], True);
         //    
-        //  Try 
-        //      BeginTransaction();
-        //      Catalogs.FL_Messages.Route(Invocation, Exchange);
-        //      CommitTransaction();
-        //  Except
-        //      RollbackTransaction();
-        //      Raise ErrorDescription();
-        //  EndTry;
-        //          
+        //  Catalogs.FL_Messages.Route(Invocation, Exchange);
+        //           
         //  Invocation.Context.Clear();
         //
         //EndDo;
         
-        For Each Event In Events Do Catalogs.FL_Messages.AddToContext(Invocation.Context, BaseAttributeName, Event[AttributeName], True); Try BeginTransaction(); Catalogs.FL_Messages.Route(Invocation, Exchange); CommitTransaction(); Except RollbackTransaction(); Raise ErrorDescription(); EndTry; Invocation.Context.Clear(); EndDo;
+        For Each Event In Events Do Catalogs.FL_Messages.AddToContext(Invocation.Context, BaseAttributeName, Event[AttributeName], True); Catalogs.FL_Messages.Route(Invocation, Exchange); Invocation.Context.Clear(); EndDo;
               
     EndIf;
       
@@ -293,20 +286,13 @@ Procedure EnqueueRegisterEvents(Events)
     //            Column.Name, Event[Column.Name], True);
     //    EndDo;
     //
-    //    Try 
-    //        BeginTransaction();
-    //        Catalogs.FL_Messages.Route(Invocation, Exchange);
-    //        CommitTransaction();
-    //    Except
-    //        RollbackTransaction();
-    //        Raise ErrorDescription();
-    //    EndTry;
+    //    Catalogs.FL_Messages.Route(Invocation, Exchange);
     //              
     //    Invocation.Context.Clear();
     //    
     //EndDo;
     
-    For Each Event In Events Do For Each Column In Events.Columns Do Catalogs.FL_Messages.AddToContext(Invocation.Context, Column.Name, Event[Column.Name], True); EndDo; Try BeginTransaction(); Catalogs.FL_Messages.Route(Invocation, Exchange); CommitTransaction(); Except RollbackTransaction(); Raise ErrorDescription(); EndTry; Invocation.Context.Clear(); EndDo;
+    For Each Event In Events Do For Each Column In Events.Columns Do Catalogs.FL_Messages.AddToContext(Invocation.Context, Column.Name, Event[Column.Name], True); EndDo; Catalogs.FL_Messages.Route(Invocation, Exchange); Invocation.Context.Clear(); EndDo;
       
 EndProcedure // EnqueueRegisterEvents()
 

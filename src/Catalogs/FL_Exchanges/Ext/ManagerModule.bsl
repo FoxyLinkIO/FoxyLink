@@ -197,27 +197,22 @@ Function ProcessMessage(Exchange, Message) Export
         Payload = Stream.CloseAndGetBinaryData();
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
-        JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-            JobResult.StatusCode);
+        
         Catalogs.FL_Jobs.AddToJobResult(JobResult, "Payload", Payload);     
         Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", Properties); 
 
     Except
         
-        JobResult.LogAttribute = ErrorDescription();
-        JobResult.StatusCode = FL_InteriorUseReUse
-            .InternalServerErrorStatusCode();
-        JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-            JobResult.StatusCode);
-        
-        WriteLogEvent("FoxyLink.Integration.ProcessMessage", 
+        FL_InteriorUse.WriteLog("FoxyLink.Integration.ProcessMessage", 
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Exchanges,
-            ,
-            JobResult.LogAttribute);
+            ErrorDescription(),
+            JobResult);
             
     EndTry;
     
+    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        JobResult.StatusCode);
     Return JobResult;
   
 EndFunction // ProcessMessage()

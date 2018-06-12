@@ -1175,8 +1175,9 @@ Procedure DoAfterChooseEventHandlerToSet(SelectedElement,
             
             SelectedValue = SelectedElement.Value;
             CurrentData.Description = SelectedValue.Description;
-            CurrentData.EventHandler = SelectedValue.EventHandler;   
+            CurrentData.EventHandler = SelectedValue.EventHandler;
             CurrentData.Version = SelectedValue.Version;
+            CurrentData.Transactional = SelectedValue.Transactional;
             
         EndIf;
         
@@ -1275,14 +1276,7 @@ Procedure EnqueueEventAtServer()
     
     Invocation = Catalogs.FL_Messages.NewInvocation();
     Invocation.Operation = CurrentData.Operation;
-    Try 
-        BeginTransaction();
-        Catalogs.FL_Messages.Route(Invocation, Object.Ref);
-        CommitTransaction();
-    Except
-        RollbackTransaction();
-        Raise ErrorDescription();
-    EndTry;
+    Catalogs.FL_Messages.Route(Invocation, Object.Ref);
     
 EndProcedure // EnqueueEventAtServer()
 
