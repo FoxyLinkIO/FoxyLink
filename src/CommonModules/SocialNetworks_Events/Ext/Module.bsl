@@ -51,16 +51,16 @@ EndFunction // ProcessMessage()
 Function EventHandlerInfo() Export
     
     EventHandlerInfo = FL_InteriorUse.NewExternalEventHandlerInfo();
-    EventHandlerInfo.EventHandler = "SocialNetworks_Events.ProcessMessage";
-    EventHandlerInfo.Default = True;
-    EventHandlerInfo.Version = "1.0.4";
     EventHandlerInfo.Description = StrTemplate(NStr("
             |en='Social networks event handler, ver. %1.';
             |ru='Обработчик событий социальных сетей, вер. %1.';
             |uk='Обробник подій соціальних мереж, вер. %1.';
             |en_CA='Social networks handler, ver. %1.'"), 
         EventHandlerInfo.Version);
-        
+    EventHandlerInfo.EventHandler = "SocialNetworks_Events.ProcessMessage";
+    EventHandlerInfo.Version = "1.0.4";
+    EventHandlerInfo.Transactional = True;
+       
     EventSources = New Array;
     EventSources.Add(Upper("HTTPService.FL_AppEndpoint"));
     EventSources.Add(Upper("HTTPСервис.FL_AppEndpoint"));

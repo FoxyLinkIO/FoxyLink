@@ -204,7 +204,7 @@ Function SuppliedIntegrations() Export
         |en_CA='Exchange description service'");
     PluggableSettings.Template = "Self";
     PluggableSettings.ToolTip = StrConcat(BasicPhrases);
-    PluggableSettings.Version = "1.2.5";
+    PluggableSettings.Version = "1.2.7";
     SuppliedIntegrations.Add(PluggableSettings);
     
     Return SuppliedIntegrations;
