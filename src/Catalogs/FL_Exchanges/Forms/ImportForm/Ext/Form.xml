@@ -480,6 +480,31 @@
 									<ContextMenu name="EventsVersionContextMenu" id="206"/>
 									<ExtendedTooltip name="EventsVersionExtendedTooltip" id="207"/>
 								</InputField>
+								<CheckBoxField name="EventsTransactional" id="208">
+									<DataPath>Events.Transactional</DataPath>
+									<ToolTip>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Method creates implicit transactions.</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>en_CA</v8:lang>
+											<v8:content>Method creates implicit transactions.</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Метод создает неявные транзакции.</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>uk</v8:lang>
+											<v8:content>Метод створює неявні транзакції.</v8:content>
+										</v8:item>
+									</ToolTip>
+									<EditMode>EnterOnInput</EditMode>
+									<CheckBoxType>Auto</CheckBoxType>
+									<ContextMenu name="EventsTransactionalContextMenu" id="209"/>
+									<ExtendedTooltip name="EventsTransactionalExtendedTooltip" id="210"/>
+								</CheckBoxField>
 							</ChildItems>
 						</Table>
 					</ChildItems>
@@ -1161,6 +1186,29 @@
 							<v8:Length>16</v8:Length>
 							<v8:AllowedLength>Variable</v8:AllowedLength>
 						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="Transactional" id="8">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Transactional method</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Transactional method</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Транзакционный метод</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Транзакційний метод</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
 					</Type>
 				</Column>
 			</Columns>
