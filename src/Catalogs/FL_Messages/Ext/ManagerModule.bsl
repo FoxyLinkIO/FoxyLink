@@ -545,7 +545,9 @@ Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
     For Each Endpoint In ExchangeEndpoints Do
         
         JobData = FL_BackgroundJob.NewJobData();
+        JobData.Isolated = Endpoint.Isolated;
         JobData.MethodName = Endpoint.EventHandler;
+        JobData.Priority = Endpoint.Priority;
         JobData.Transactional = Endpoint.Transactional;
         If RouteAndRun Then
             JobData.State = Catalogs.FL_States.Processing;    
@@ -592,6 +594,7 @@ Procedure RouteToAppEndpoints(Source, Exchange, AppEndpoint, ExchangeJob)
         FillAppResources(Source, AppProperties, AppResources.FindRows(Filter));
         
         JobData = FL_BackgroundJob.NewJobData();
+        JobData.Isolated = TableRow.Isolated;
         JobData.MethodName = "Catalogs.FL_Channels.ProcessMessage";
         JobData.Priority = TableRow.Priority;
         JobData.State = Catalogs.FL_States.Awaiting;
@@ -814,6 +817,8 @@ Function QueryTextExchangeEndpoint()
     QueryText = "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
+        |   IsNull(OperationTable.Isolated, False) AS Isolated,
+        |   IsNull(OperationTable.Priority, 5) AS Priority, 
         |   IsNull(EventTable.EventHandler, &EventHandler) AS EventHandler,
         |   IsNull(EventTable.Transactional, False) AS Transactional
         |FROM
@@ -846,6 +851,8 @@ Function QueryTextExchangeEndpoints()
     QueryText = "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
+        |   IsNull(OperationTable.Isolated, False) AS Isolated, 
+        |   IsNull(OperationTable.Priority, 5) AS Priority, 
         |   EventTable.EventHandler AS EventHandler,
         |   EventTable.Transactional AS Transactional
         |FROM
@@ -889,6 +896,7 @@ Function QueryTextAppEndpoint()
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
         |   AppEndpoints.AppEndpoint AS AppEndpoint,
+        |   IsNull(Operations.Isolated, False) AS Isolated,
         |   IsNull(Operations.Priority, 5) AS Priority
         |FROM
         |   AppEndpointsCache AS AppEndpoints
@@ -945,6 +953,7 @@ Function QueryTextAppEndpoints()
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
         |   AppEndpoints.AppEndpoint AS AppEndpoint,
+        |   Operations.Isolated AS Isolated,
         |   Operations.Priority AS Priority
         |FROM
         |   AppEndpointsCache AS AppEndpoints

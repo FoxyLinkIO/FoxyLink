@@ -22,6 +22,12 @@
 			<ContextMenu name="ExpireAtContextMenu" id="14"/>
 			<ExtendedTooltip name="ExpireAtExtendedTooltip" id="15"/>
 		</InputField>
+		<CheckBoxField name="Isolated" id="118">
+			<DataPath>Object.Isolated</DataPath>
+			<CheckBoxType>Auto</CheckBoxType>
+			<ContextMenu name="IsolatedContextMenu" id="119"/>
+			<ExtendedTooltip name="IsolatedExtendedTooltip" id="120"/>
+		</CheckBoxField>
 		<InputField name="Priority" id="25">
 			<DataPath>Object.Priority</DataPath>
 			<EditMode>EnterOnInput</EditMode>

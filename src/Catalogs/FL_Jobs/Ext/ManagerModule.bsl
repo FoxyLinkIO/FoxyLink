@@ -96,7 +96,8 @@ Function Create(JobData) Export
     JobObject = Catalogs.FL_Jobs.CreateItem();
     
     ListOfProperties = "CreatedAt, 
-        |ExpireAt, 
+        |ExpireAt,
+        |Isolated,
         |MethodName, 
         |Priority, 
         |State, 
@@ -204,6 +205,8 @@ EndProcedure // AddToJobResult()
 //                                  Default value: Undefined.
 //      * CreatedAt     - Number               - job data creation time.
 //      * ExpireAt      - Number               - job data expiration time.
+//      * Isolated      - Boolean              - selps to protect each job from other jobs.
+//                                  Default value: False.      
 //      * MethodName    - String               - name of non-global common 
 //                              module method having the ModuleName.MethodName form.
 //      * Priority      - Number(1,0)          - job priority.
@@ -228,6 +231,7 @@ Function NewJobData() Export
     JobData.Insert("Continuations");
     JobData.Insert("CreatedAt", CurrentUniversalDateInMilliseconds());
     JobData.Insert("ExpireAt");
+    JobData.Insert("Isolated", False);
     JobData.Insert("MethodName");
     JobData.Insert("Priority", NormalPriority);
     JobData.Insert("State", Catalogs.FL_States.Enqueued);

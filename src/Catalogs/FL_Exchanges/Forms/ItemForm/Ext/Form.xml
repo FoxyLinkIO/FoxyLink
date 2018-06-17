@@ -352,12 +352,16 @@
 											<v8:content>Settings</v8:content>
 										</v8:item>
 										<v8:item>
+											<v8:lang>en_CA</v8:lang>
+											<v8:content>Settings</v8:content>
+										</v8:item>
+										<v8:item>
 											<v8:lang>ru</v8:lang>
 											<v8:content>Настройки</v8:content>
 										</v8:item>
 										<v8:item>
-											<v8:lang>en_CA</v8:lang>
-											<v8:content>Settings</v8:content>
+											<v8:lang>uk</v8:lang>
+											<v8:content>Налаштування</v8:content>
 										</v8:item>
 									</Title>
 									<ToolTip>
@@ -366,12 +370,16 @@
 											<v8:content>Settings</v8:content>
 										</v8:item>
 										<v8:item>
+											<v8:lang>en_CA</v8:lang>
+											<v8:content>Settings</v8:content>
+										</v8:item>
+										<v8:item>
 											<v8:lang>ru</v8:lang>
 											<v8:content>Настройки</v8:content>
 										</v8:item>
 										<v8:item>
-											<v8:lang>en_CA</v8:lang>
-											<v8:content>Settings</v8:content>
+											<v8:lang>uk</v8:lang>
+											<v8:content>Налаштування</v8:content>
 										</v8:item>
 									</ToolTip>
 									<Picture>
@@ -393,12 +401,16 @@
 															<v8:content>Data composition schema description</v8:content>
 														</v8:item>
 														<v8:item>
+															<v8:lang>en_CA</v8:lang>
+															<v8:content>Data composition schema description</v8:content>
+														</v8:item>
+														<v8:item>
 															<v8:lang>ru</v8:lang>
 															<v8:content>Описание схемы компоновки данных</v8:content>
 														</v8:item>
 														<v8:item>
-															<v8:lang>en_CA</v8:lang>
-															<v8:content>Data composition schema description</v8:content>
+															<v8:lang>uk</v8:lang>
+															<v8:content>Опис схеми компоновки даних</v8:content>
 														</v8:item>
 													</Title>
 													<ToolTip>
@@ -407,46 +419,64 @@
 															<v8:content>Data composition schema description</v8:content>
 														</v8:item>
 														<v8:item>
+															<v8:lang>en_CA</v8:lang>
+															<v8:content>Data composition schema description</v8:content>
+														</v8:item>
+														<v8:item>
 															<v8:lang>ru</v8:lang>
 															<v8:content>Описание схемы компоновки данных</v8:content>
 														</v8:item>
 														<v8:item>
-															<v8:lang>en_CA</v8:lang>
-															<v8:content>Data composition schema description</v8:content>
+															<v8:lang>uk</v8:lang>
+															<v8:content>Опис схеми компоновки даних</v8:content>
 														</v8:item>
 													</ToolTip>
-													<Group>Horizontal</Group>
+													<Group>Vertical</Group>
 													<Representation>None</Representation>
 													<ExtendedTooltip name="HiddenGroupBasicExtendedTooltip" id="331"/>
 													<ChildItems>
-														<Button name="EditDataCompositionSchema" id="197">
-															<Type>UsualButton</Type>
-															<CommandName>Form.Command.EditDataCompositionSchema</CommandName>
-															<ExtendedTooltip name="EditDataCompositionSchemaExtendedTooltip" id="198"/>
-														</Button>
-														<Button name="CopyDataCompositionSchema" id="368">
-															<Type>UsualButton</Type>
-															<CommandName>Form.Command.CopyDataCompositionSchema</CommandName>
-															<ExtendedTooltip name="CopyDataCompositionSchemaExtendedTooltip" id="369"/>
-														</Button>
+														<UsualGroup name="HiddenGroupBasicCommands" id="382">
+															<EnableContentChange>true</EnableContentChange>
+															<Group>Horizontal</Group>
+															<ShowTitle>false</ShowTitle>
+															<ExtendedTooltip name="HiddenGroupBasicCommandsExtendedTooltip" id="383"/>
+															<ChildItems>
+																<Button name="EditDataCompositionSchema" id="197">
+																	<Type>UsualButton</Type>
+																	<CommandName>Form.Command.EditDataCompositionSchema</CommandName>
+																	<ExtendedTooltip name="EditDataCompositionSchemaExtendedTooltip" id="198"/>
+																</Button>
+																<Button name="CopyDataCompositionSchema" id="368">
+																	<Type>UsualButton</Type>
+																	<CommandName>Form.Command.CopyDataCompositionSchema</CommandName>
+																	<ExtendedTooltip name="CopyDataCompositionSchemaExtendedTooltip" id="369"/>
+																</Button>
+															</ChildItems>
+														</UsualGroup>
 														<CheckBoxField name="RowUseExternalFunctions" id="327">
 															<DataPath>RowCanUseExternalFunctions</DataPath>
-															<ToolTipRepresentation>Button</ToolTipRepresentation>
+															<TitleLocation>Right</TitleLocation>
+															<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
 															<CheckBoxType>Auto</CheckBoxType>
 															<ContextMenu name="RowUseExternalFunctionsContextMenu" id="328"/>
 															<ExtendedTooltip name="RowUseExternalFunctionsExtendedTooltip" id="329">
-																<Title formatted="true">
+																<TextColor>style:FieldSelectionBackColor</TextColor>
+																<Title formatted="false">
 																	<v8:item>
 																		<v8:lang>ru</v8:lang>
-																		<v8:content>&lt;color #455185&gt;Указывает возможность использования функции общих модулей конфигурации в выражениях компоновки данных.&lt;/&gt;</v8:content>
+																		<v8:content>Указывает возможность использования функции общих модулей конфигурации в выражениях компоновки данных.</v8:content>
 																	</v8:item>
 																	<v8:item>
 																		<v8:lang>en</v8:lang>
-																		<v8:content>&lt;color #45518b&gt;Indicates the possibility to use the function of common configuration modules in expressions of data composition.&lt;/&gt;</v8:content>
+																		<v8:content>Indicates the possibility to use the function of common configuration modules in expressions of data composition.</v8:content>
 																	</v8:item>
 																	<v8:item>
 																		<v8:lang>en_CA</v8:lang>
-																		<v8:content>&lt;color #45518b&gt;Indicates the possibility to use the function of common configuration modules in expressions of data composition.&lt;/&gt;</v8:content>
+																		<v8:content>Indicates the possibility to use the function of common configuration modules in expressions of data composition.</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>uk</v8:lang>
+																		<v8:content>Вказує можливість використання функції загальних модулів конфігурації в виразах компонування даних.</v8:content>
 																	</v8:item>
 																</Title>
 															</ExtendedTooltip>
@@ -457,29 +487,37 @@
 													<Title>
 														<v8:item>
 															<v8:lang>en</v8:lang>
-															<v8:content>API schema description</v8:content>
-														</v8:item>
-														<v8:item>
-															<v8:lang>ru</v8:lang>
-															<v8:content>Описание схемы API</v8:content>
+															<v8:content>API format schema description</v8:content>
 														</v8:item>
 														<v8:item>
 															<v8:lang>en_CA</v8:lang>
-															<v8:content>API schema description</v8:content>
+															<v8:content>API format schema description</v8:content>
+														</v8:item>
+														<v8:item>
+															<v8:lang>ru</v8:lang>
+															<v8:content>Описание схемы формата API</v8:content>
+														</v8:item>
+														<v8:item>
+															<v8:lang>uk</v8:lang>
+															<v8:content>Опис схеми формату API</v8:content>
 														</v8:item>
 													</Title>
 													<ToolTip>
 														<v8:item>
 															<v8:lang>en</v8:lang>
-															<v8:content>API schema description</v8:content>
-														</v8:item>
-														<v8:item>
-															<v8:lang>ru</v8:lang>
-															<v8:content>Описание схемы API</v8:content>
+															<v8:content>API format schema description</v8:content>
 														</v8:item>
 														<v8:item>
 															<v8:lang>en_CA</v8:lang>
-															<v8:content>API schema description</v8:content>
+															<v8:content>API format schema description</v8:content>
+														</v8:item>
+														<v8:item>
+															<v8:lang>ru</v8:lang>
+															<v8:content>Описание схемы формата API</v8:content>
+														</v8:item>
+														<v8:item>
+															<v8:lang>uk</v8:lang>
+															<v8:content>Опис схеми формату API</v8:content>
 														</v8:item>
 													</ToolTip>
 													<Group>Horizontal</Group>
@@ -515,22 +553,34 @@
 													<v8:content>Events</v8:content>
 												</v8:item>
 												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Events</v8:content>
+												</v8:item>
+												<v8:item>
 													<v8:lang>ru</v8:lang>
 													<v8:content>События</v8:content>
 												</v8:item>
 												<v8:item>
-													<v8:lang>en_CA</v8:lang>
-													<v8:content>Events</v8:content>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Події</v8:content>
 												</v8:item>
 											</Title>
 											<ToolTip>
 												<v8:item>
 													<v8:lang>en</v8:lang>
-													<v8:content>Hidden group events</v8:content>
+													<v8:content>Events</v8:content>
 												</v8:item>
 												<v8:item>
 													<v8:lang>en_CA</v8:lang>
-													<v8:content>Hidden group events</v8:content>
+													<v8:content>Events</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>События</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Події</v8:content>
 												</v8:item>
 											</ToolTip>
 											<Group>Vertical</Group>
@@ -551,135 +601,6 @@
 															<CommandName>Form.Command.AddEvent</CommandName>
 															<ExtendedTooltip name="AddEventExtendedTooltip" id="351"/>
 														</Button>
-														<RadioButtonField name="RowPriority" id="365">
-															<DataPath>RowPriority</DataPath>
-															<ToolTipRepresentation>Button</ToolTipRepresentation>
-															<RadioButtonType>Tumbler</RadioButtonType>
-															<ChoiceList>
-																<xr:Item>
-																	<xr:Presentation/>
-																	<xr:CheckState>0</xr:CheckState>
-																	<xr:Value xsi:type="FormChoiceListDesTimeValue">
-																		<Presentation>
-																			<v8:item>
-																				<v8:lang>en</v8:lang>
-																				<v8:content>Lowest</v8:content>
-																			</v8:item>
-																			<v8:item>
-																				<v8:lang>ru</v8:lang>
-																				<v8:content>Самый низкий</v8:content>
-																			</v8:item>
-																			<v8:item>
-																				<v8:lang>en_CA</v8:lang>
-																				<v8:content>Lowest</v8:content>
-																			</v8:item>
-																		</Presentation>
-																		<Value xsi:type="xs:decimal">9</Value>
-																	</xr:Value>
-																</xr:Item>
-																<xr:Item>
-																	<xr:Presentation/>
-																	<xr:CheckState>0</xr:CheckState>
-																	<xr:Value xsi:type="FormChoiceListDesTimeValue">
-																		<Presentation>
-																			<v8:item>
-																				<v8:lang>en</v8:lang>
-																				<v8:content>Low</v8:content>
-																			</v8:item>
-																			<v8:item>
-																				<v8:lang>ru</v8:lang>
-																				<v8:content>Низкий</v8:content>
-																			</v8:item>
-																			<v8:item>
-																				<v8:lang>en_CA</v8:lang>
-																				<v8:content>Low</v8:content>
-																			</v8:item>
-																		</Presentation>
-																		<Value xsi:type="xs:decimal">7</Value>
-																	</xr:Value>
-																</xr:Item>
-																<xr:Item>
-																	<xr:Presentation/>
-																	<xr:CheckState>0</xr:CheckState>
-																	<xr:Value xsi:type="FormChoiceListDesTimeValue">
-																		<Presentation>
-																			<v8:item>
-																				<v8:lang>en</v8:lang>
-																				<v8:content>Normal</v8:content>
-																			</v8:item>
-																			<v8:item>
-																				<v8:lang>ru</v8:lang>
-																				<v8:content>Обычный</v8:content>
-																			</v8:item>
-																			<v8:item>
-																				<v8:lang>en_CA</v8:lang>
-																				<v8:content>Normal</v8:content>
-																			</v8:item>
-																		</Presentation>
-																		<Value xsi:type="xs:decimal">5</Value>
-																	</xr:Value>
-																</xr:Item>
-																<xr:Item>
-																	<xr:Presentation/>
-																	<xr:CheckState>0</xr:CheckState>
-																	<xr:Value xsi:type="FormChoiceListDesTimeValue">
-																		<Presentation>
-																			<v8:item>
-																				<v8:lang>en</v8:lang>
-																				<v8:content>High</v8:content>
-																			</v8:item>
-																			<v8:item>
-																				<v8:lang>ru</v8:lang>
-																				<v8:content>Высокий</v8:content>
-																			</v8:item>
-																			<v8:item>
-																				<v8:lang>en_CA</v8:lang>
-																				<v8:content>High</v8:content>
-																			</v8:item>
-																		</Presentation>
-																		<Value xsi:type="xs:decimal">3</Value>
-																	</xr:Value>
-																</xr:Item>
-																<xr:Item>
-																	<xr:Presentation/>
-																	<xr:CheckState>0</xr:CheckState>
-																	<xr:Value xsi:type="FormChoiceListDesTimeValue">
-																		<Presentation>
-																			<v8:item>
-																				<v8:lang>en</v8:lang>
-																				<v8:content>Highest</v8:content>
-																			</v8:item>
-																			<v8:item>
-																				<v8:lang>ru</v8:lang>
-																				<v8:content>Самый высокий</v8:content>
-																			</v8:item>
-																			<v8:item>
-																				<v8:lang>en_CA</v8:lang>
-																				<v8:content>Highest</v8:content>
-																			</v8:item>
-																		</Presentation>
-																		<Value xsi:type="xs:decimal">1</Value>
-																	</xr:Value>
-																</xr:Item>
-															</ChoiceList>
-															<ContextMenu name="RowPriorityContextMenu" id="366"/>
-															<ExtendedTooltip name="RowPriorityExtendedTooltip" id="367">
-																<Title formatted="true">
-																	<v8:item>
-																		<v8:lang>en</v8:lang>
-																		<v8:content>&lt;color #45518b&gt;FoxyLink can handle several jobs. All jobs are placed in a queue, from which they are fetched as resources are freed and are executed. Each job has a priority, denoted by a positive integer. The lower the number, the higher priority. If priority is not specified explicitly when creating a job, it is automatically assigned.&lt;/&gt;</v8:content>
-																	</v8:item>
-																	<v8:item>
-																		<v8:lang>ru</v8:lang>
-																		<v8:content>&lt;color #45518b&gt;FoxyLink может обрабатывать несколько заданий. Все задания помещаются в очередь, откуда они ивзлекаются по мере освобождения ресурсов и выполняются. У каждого задания есть приоритет, обозначаемый положительным целым числом. Чем меньше это число, тем выше приоритет. Если приоритет не указан явно при создании задания, он назначается автоматически.&lt;/&gt;</v8:content>
-																	</v8:item>
-																	<v8:item>
-																		<v8:lang>en_CA</v8:lang>
-																		<v8:content>&lt;color #45518b&gt;FoxyLink can handle several jobs. All jobs are placed in a queue, from which they are fetched as resources are freed and are executed. Each job has a priority, denoted by a positive integer. The lower the number, the higher priority. If priority is not specified explicitly when creating a job, it is automatically assigned.&lt;/&gt;</v8:content>
-																	</v8:item>
-																</Title>
-															</ExtendedTooltip>
-														</RadioButtonField>
 													</ChildItems>
 												</UsualGroup>
 												<Table name="Events" id="297">
@@ -793,33 +714,269 @@
 												</Table>
 											</ChildItems>
 										</UsualGroup>
-										<UsualGroup name="HiddenGroupChannels" id="253">
+										<UsualGroup name="HiddenGroupJobs" id="384">
 											<Title>
 												<v8:item>
 													<v8:lang>en</v8:lang>
-													<v8:content>Channels</v8:content>
-												</v8:item>
-												<v8:item>
-													<v8:lang>ru</v8:lang>
-													<v8:content>Каналы</v8:content>
+													<v8:content>Job settings</v8:content>
 												</v8:item>
 												<v8:item>
 													<v8:lang>en_CA</v8:lang>
-													<v8:content>Channels</v8:content>
+													<v8:content>Job settings</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Настройки заданий</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Налаштування завдань</v8:content>
 												</v8:item>
 											</Title>
 											<ToolTip>
 												<v8:item>
 													<v8:lang>en</v8:lang>
-													<v8:content>Exchange channels</v8:content>
-												</v8:item>
-												<v8:item>
-													<v8:lang>ru</v8:lang>
-													<v8:content>Каналы обмена</v8:content>
+													<v8:content>Job settings</v8:content>
 												</v8:item>
 												<v8:item>
 													<v8:lang>en_CA</v8:lang>
-													<v8:content>Exchange channels</v8:content>
+													<v8:content>Job settings</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Настройки заданий</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Налаштування завдань</v8:content>
+												</v8:item>
+											</ToolTip>
+											<Group>Horizontal</Group>
+											<Behavior>Collapsible</Behavior>
+											<Collapsed>true</Collapsed>
+											<ControlRepresentation>Picture</ControlRepresentation>
+											<Representation>None</Representation>
+											<ExtendedTooltip name="HiddenGroupJobsExtendedTooltip" id="385"/>
+											<ChildItems>
+												<RadioButtonField name="RowPriority" id="365">
+													<DataPath>RowPriority</DataPath>
+													<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+													<RadioButtonType>RadioButtons</RadioButtonType>
+													<ChoiceList>
+														<xr:Item>
+															<xr:Presentation/>
+															<xr:CheckState>0</xr:CheckState>
+															<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																<Presentation>
+																	<v8:item>
+																		<v8:lang>en</v8:lang>
+																		<v8:content>Lowest</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>en_CA</v8:lang>
+																		<v8:content>Lowest</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>ru</v8:lang>
+																		<v8:content>Низший</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>uk</v8:lang>
+																		<v8:content>Найнижчий</v8:content>
+																	</v8:item>
+																</Presentation>
+																<Value xsi:type="xs:decimal">9</Value>
+															</xr:Value>
+														</xr:Item>
+														<xr:Item>
+															<xr:Presentation/>
+															<xr:CheckState>0</xr:CheckState>
+															<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																<Presentation>
+																	<v8:item>
+																		<v8:lang>en</v8:lang>
+																		<v8:content>Low</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>en_CA</v8:lang>
+																		<v8:content>Low</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>ru</v8:lang>
+																		<v8:content>Низкий</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>uk</v8:lang>
+																		<v8:content>Низький</v8:content>
+																	</v8:item>
+																</Presentation>
+																<Value xsi:type="xs:decimal">7</Value>
+															</xr:Value>
+														</xr:Item>
+														<xr:Item>
+															<xr:Presentation/>
+															<xr:CheckState>0</xr:CheckState>
+															<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																<Presentation>
+																	<v8:item>
+																		<v8:lang>en</v8:lang>
+																		<v8:content>Normal</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>en_CA</v8:lang>
+																		<v8:content>Normal</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>ru</v8:lang>
+																		<v8:content>Обычный</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>uk</v8:lang>
+																		<v8:content>Звичайний</v8:content>
+																	</v8:item>
+																</Presentation>
+																<Value xsi:type="xs:decimal">5</Value>
+															</xr:Value>
+														</xr:Item>
+														<xr:Item>
+															<xr:Presentation/>
+															<xr:CheckState>0</xr:CheckState>
+															<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																<Presentation>
+																	<v8:item>
+																		<v8:lang>en</v8:lang>
+																		<v8:content>High</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>en_CA</v8:lang>
+																		<v8:content>High</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>ru</v8:lang>
+																		<v8:content>Высокий</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>uk</v8:lang>
+																		<v8:content>Високий</v8:content>
+																	</v8:item>
+																</Presentation>
+																<Value xsi:type="xs:decimal">3</Value>
+															</xr:Value>
+														</xr:Item>
+														<xr:Item>
+															<xr:Presentation/>
+															<xr:CheckState>0</xr:CheckState>
+															<xr:Value xsi:type="FormChoiceListDesTimeValue">
+																<Presentation>
+																	<v8:item>
+																		<v8:lang>en</v8:lang>
+																		<v8:content>Highest</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>en_CA</v8:lang>
+																		<v8:content>Highest</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>ru</v8:lang>
+																		<v8:content>Высший</v8:content>
+																	</v8:item>
+																	<v8:item>
+																		<v8:lang>uk</v8:lang>
+																		<v8:content>Найвищий</v8:content>
+																	</v8:item>
+																</Presentation>
+																<Value xsi:type="xs:decimal">1</Value>
+															</xr:Value>
+														</xr:Item>
+													</ChoiceList>
+													<ContextMenu name="RowPriorityContextMenu" id="366"/>
+													<ExtendedTooltip name="RowPriorityExtendedTooltip" id="367">
+														<TextColor>style:FieldSelectionBackColor</TextColor>
+														<Title formatted="false">
+															<v8:item>
+																<v8:lang>en</v8:lang>
+																<v8:content>FoxyLink can handle several jobs. All jobs are placed in a queue, from which they are fetched as resources are freed and are executed. Each job has a priority, denoted by a positive integer. The lower the number, the higher priority. If priority is not specified explicitly when creating a job, it is automatically assigned.</v8:content>
+															</v8:item>
+															<v8:item>
+																<v8:lang>ru</v8:lang>
+																<v8:content>FoxyLink может обрабатывать несколько заданий. Все задания помещаются в очередь, откуда они извлекаются по мере освобождения ресурсов и выполняются. У каждого задания есть приоритет, обозначаемый положительным целым числом. Чем меньше это число, тем выше приоритет. Если приоритет не указан явно при создании задания, он назначается автоматически.</v8:content>
+															</v8:item>
+															<v8:item>
+																<v8:lang>en_CA</v8:lang>
+																<v8:content>FoxyLink can handle several jobs. All jobs are placed in a queue, from which they are fetched as resources are freed and are executed. Each job has a priority, denoted by a positive integer. The lower the number, the higher priority. If priority is not specified explicitly when creating a job, it is automatically assigned.</v8:content>
+															</v8:item>
+															<v8:item>
+																<v8:lang>uk</v8:lang>
+																<v8:content>FoxyLink може обробляти кілька завдань. Всі завдання поміщаються в чергу, звідки вони беруться по мірі звільнення ресурсів і виконуються. У кожного завдання є пріоритет, що позначається позитивним цілим числом. Чим менше це число, тим вище пріоритет. Якщо пріоритет не вказано явно при створенні завдання, він призначається автоматично.</v8:content>
+															</v8:item>
+														</Title>
+													</ExtendedTooltip>
+												</RadioButtonField>
+												<CheckBoxField name="RowIsolated" id="386">
+													<DataPath>RowIsolated</DataPath>
+													<TitleLocation>Right</TitleLocation>
+													<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+													<CheckBoxType>Auto</CheckBoxType>
+													<ContextMenu name="RowIsolatedContextMenu" id="387"/>
+													<ExtendedTooltip name="RowIsolatedExtendedTooltip" id="388">
+														<TextColor>style:FieldSelectionBackColor</TextColor>
+														<Title formatted="false">
+															<v8:item>
+																<v8:lang>en</v8:lang>
+																<v8:content>Isolation helps to protect each job from other jobs on the FoxyLink subsystem. If item is checked jobs connected to this exchange will process in their own thread.</v8:content>
+															</v8:item>
+															<v8:item>
+																<v8:lang>en_CA</v8:lang>
+																<v8:content>Isolation helps to protect each job from other jobs on the FoxyLink subsystem. If item is checked jobs connected to this exchange will process in their own thread.</v8:content>
+															</v8:item>
+															<v8:item>
+																<v8:lang>ru</v8:lang>
+																<v8:content>Изоляция помогает защитить каждое задание от других заданий в подсистеме FoxyLink. Если элемент отмечен, задания, связанные с этим обменом, будут обрабатываться в их собственном потоке.</v8:content>
+															</v8:item>
+															<v8:item>
+																<v8:lang>uk</v8:lang>
+																<v8:content>Ізоляція допомагає захистити кожне завдання від інших завдань в підсистемі FoxyLink. Якщо елемент відзначений, завдання, пов'язані з цим обміном, будуть оброблятися в їх власному потоці.</v8:content>
+															</v8:item>
+														</Title>
+													</ExtendedTooltip>
+												</CheckBoxField>
+											</ChildItems>
+										</UsualGroup>
+										<UsualGroup name="HiddenGroupAppEndpoints" id="253">
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Application endpoints</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Application endpoints</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Конечные точки приложений</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Кінцеві точки додатків</v8:content>
+												</v8:item>
+											</Title>
+											<ToolTip>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Application endpoints</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Application endpoints</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Конечные точки приложений</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Кінцеві точки додатків</v8:content>
 												</v8:item>
 											</ToolTip>
 											<VerticalStretch>false</VerticalStretch>
@@ -828,23 +985,23 @@
 											<Collapsed>true</Collapsed>
 											<ControlRepresentation>Picture</ControlRepresentation>
 											<Representation>None</Representation>
-											<ExtendedTooltip name="HiddenGroupChannelsExtendedTooltip" id="254"/>
+											<ExtendedTooltip name="HiddenGroupAppEndpointsExtendedTooltip" id="254"/>
 											<ChildItems>
-												<UsualGroup name="HiddenGroupChannelCommands" id="346">
+												<UsualGroup name="HiddenGroupAppEndpointCommands" id="346">
 													<Group>Horizontal</Group>
 													<Representation>None</Representation>
 													<ShowTitle>false</ShowTitle>
-													<ExtendedTooltip name="HiddenGroupChannelCommandsExtendedTooltip" id="347"/>
+													<ExtendedTooltip name="HiddenGroupAppEndpointCommandsExtendedTooltip" id="347"/>
 													<ChildItems>
-														<Button name="AddChannel" id="251">
+														<Button name="AddAppEndpoint" id="251">
 															<Type>UsualButton</Type>
-															<CommandName>Form.Command.AddChannel</CommandName>
-															<ExtendedTooltip name="AddChannelExtendedTooltip" id="252"/>
+															<CommandName>Form.Command.AddAppEndpoint</CommandName>
+															<ExtendedTooltip name="AddAppEndpointExtendedTooltip" id="252"/>
 														</Button>
-														<Button name="EditChannelResources" id="344">
+														<Button name="EditAppEndpointResources" id="344">
 															<Type>UsualButton</Type>
-															<CommandName>Form.Command.EditChannelResources</CommandName>
-															<ExtendedTooltip name="EditChannelResourcesExtendedTooltip" id="345"/>
+															<CommandName>Form.Command.EditAppEndpointResources</CommandName>
+															<ExtendedTooltip name="EditAppEndpointResourcesExtendedTooltip" id="345"/>
 														</Button>
 													</ChildItems>
 												</UsualGroup>
@@ -1964,12 +2121,16 @@
 					<v8:content>Can use external functions</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Can use external functions</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Возможность использования внешних функций</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Can use external functions</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Можливість використання зовнішніх функцій</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -2094,12 +2255,16 @@
 					<v8:content>Priority</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Priority</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Приоритет</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Priority</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Пріорітет</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -2109,6 +2274,30 @@
 					<v8:FractionDigits>0</v8:FractionDigits>
 					<v8:AllowedSign>Nonnegative</v8:AllowedSign>
 				</v8:NumberQualifiers>
+			</Type>
+			<SavedData>true</SavedData>
+		</Attribute>
+		<Attribute name="RowIsolated" id="23">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Isolated</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Isolated</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Изолированное</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Ізольоване</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:boolean</v8:Type>
 			</Type>
 			<SavedData>true</SavedData>
 		</Attribute>
@@ -2370,40 +2559,48 @@
 			<Action>GenerateSpecificDocument</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
-		<Command name="AddChannel" id="8">
+		<Command name="AddAppEndpoint" id="8">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Add channel</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Добавить канал</v8:content>
+					<v8:content>Add application endpoint</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Add channel</v8:content>
+					<v8:content>Add application endpoint</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить конечную точку приложения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Додати кінцеву точку додатку</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Add channel</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Добавить канал обмена</v8:content>
+					<v8:content>Add application endpoint</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Add channel</v8:content>
+					<v8:content>Add application endpoint</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Добавить конечную точку приложения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Додати кінцеву точку додатку</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
 				<xr:Ref>CommonPicture.FL_Add</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>AddChannel</Action>
+			<Action>AddAppEndpoint</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 		<Command name="DeleteChannel" id="9">
@@ -2442,10 +2639,14 @@
 			<Action>DeleteChannel</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
-		<Command name="EditChannelResources" id="10">
+		<Command name="EditAppEndpointResources" id="10">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
+					<v8:content>Edit resources</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
 					<v8:content>Edit resources</v8:content>
 				</v8:item>
 				<v8:item>
@@ -2453,29 +2654,33 @@
 					<v8:content>Редактировать ресурсы</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Edit resources</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Редагувати ресурси</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Edit channel resources</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Редактировать ресурсы канала</v8:content>
+					<v8:content>Edit app endpoint resources</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Edit channel resources</v8:content>
+					<v8:content>Edit app endpoint resources</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Редактировать ресурсы конечной точки приложения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Редагувати ресурси кінцевої точки додатку</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
 				<xr:Ref>CommonPicture.FL_Edit</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>EditChannelResources</Action>
+			<Action>EditAppEndpointResources</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 		<Command name="AddEvent" id="11">
