@@ -455,7 +455,7 @@ Procedure PushJobServerState(WorkerCount, ProcessingJobs, RetryJobs)
     FL_CommonUseClientServer.ExtendValueTable(ProcessingJobs, HeartbeatTable);
     
     // Retries go without worker count control.
-    RunBackgroundJobs(RetryJobs, HeartbeatTable, Limit);
+    RunBackgroundJobs(RetryJobs, HeartbeatTable, WorkerCount, Limit);
     
     If WorkerCount > 0 Then
         
@@ -465,7 +465,7 @@ Procedure PushJobServerState(WorkerCount, ProcessingJobs, RetryJobs)
         Query.SetParameter("RetryJobs", RetryJobs);
         QueryResult = Query.Execute();
         EnqueuedJobs = QueryResult.Unload();    
-        RunBackgroundJobs(EnqueuedJobs, HeartbeatTable, Limit);
+        RunBackgroundJobs(EnqueuedJobs, HeartbeatTable, WorkerCount, Limit);
         
     EndIf;
     
@@ -500,28 +500,35 @@ EndProcedure // ReduceAvailableWorkerCount()
 
 // Only for internal use.
 //
-Procedure RunBackgroundJobs(JobTable, HeartbeatTable, Val Limit)
+Procedure RunBackgroundJobs(JobTable, HeartbeatTable, WorkerCount, Val Limit)
     
     BoostTable = NewHeartbeatTable();
     JobCount = JobTable.Count() - 1;
     For Index = 0 To JobCount Do
 
+        If WorkerCount <= 0 Then
+            Break;
+        EndIf;
+        
+        If JobTable[Index].Isolated Then
+            
+            BackgroundJob = TriggerJobs(JobTable[Index].Job, WorkerCount);
+            
+            NewItem = HeartbeatTable.Add();
+            FillPropertyValues(NewItem, JobTable[Index]);
+            NewItem.TaskId = BackgroundJob.UUID;
+            
+            Continue;
+            
+        EndIf;
+        
         FillPropertyValues(BoostTable.Add(), JobTable[Index]);
         
         If Limit = BoostTable.Count()
             OR Index = JobCount Then
-                   
-            For Each Item In BoostTable Do
-                Catalogs.FL_Jobs.ChangeState(Item.Job, 
-                    Catalogs.FL_States.Processing);
-            EndDo;
-
-            Task = FL_Tasks.NewTask();
-            Task.MethodName = "Catalogs.FL_Jobs.Trigger";
-            Task.Parameters.Add(BoostTable.UnloadColumn("Job"));
-            Task.Description = "Background job task (FoxyLink)";
-            Task.SafeMode = False;
-            BackgroundJob = FL_Tasks.Run(Task);
+            
+            BackgroundJob = TriggerJobs(BoostTable.UnloadColumn("Job"), 
+                WorkerCount);
             
             For Each Item In BoostTable Do
                 Item.TaskId = BackgroundJob.UUID;        
@@ -537,6 +544,30 @@ Procedure RunBackgroundJobs(JobTable, HeartbeatTable, Val Limit)
     EndDo;
     
 EndProcedure // RunBackgroundJobs()
+
+// Only for internal use.
+//
+Function TriggerJobs(Jobs, WorkerCount)
+    
+    // Reducing workers count
+    WorkerCount = WorkerCount - 1;
+    
+    If TypeOf(Jobs) = Type("CatalogRef.FL_Jobs") Then
+        Catalogs.FL_Jobs.ChangeState(Jobs, Catalogs.FL_States.Processing);
+    Else
+        For Each Job In Jobs Do
+            Catalogs.FL_Jobs.ChangeState(Job, Catalogs.FL_States.Processing);
+        EndDo;     
+    EndIf;
+    
+    Task = FL_Tasks.NewTask();
+    Task.MethodName = "Catalogs.FL_Jobs.Trigger";
+    Task.Parameters.Add(Jobs);
+    Task.Description = "Background job task (FoxyLink)";
+    Task.SafeMode = False;
+    Return FL_Tasks.Run(Task);
+        
+EndFunction // TriggerJobs()
 
 // Only for internal use.
 //
@@ -675,7 +706,8 @@ Function QueryTextEnqueuedJobs(WorkerCount)
         |
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT TOP %1
-        |   Jobs.Ref AS Job
+        |   Jobs.Ref AS Job,
+        |   Jobs.Isolated AS Isolated
         |FROM
         |   Catalog.FL_Jobs AS Jobs
         |WHERE

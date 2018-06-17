@@ -89,9 +89,10 @@ Procedure DeleteChannel(Command)
         
         ShowQueryBox(New NotifyDescription("DoAfterChooseChannelToDelete", 
             ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en='Permanently delete the selected channel?';
-                |ru='Удалить выбранный канал?';
-                |en_CA='Permanently delete the selected channel?'"),
+            NStr("en='Permanently delete the selected application endpoint?';
+                |ru='Удалить выбранную конечную точку приложения?';
+                |uk='Видалити вибрану кінцеву точку додатку?';
+                |en_CA='Permanently delete the selected application endpoint?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);     
         
     EndIf;   
@@ -108,9 +109,10 @@ Procedure InstallChannel(Command)
             InstallOrUpdateChannel(CurrentData);        
         Else
 
-            Explanation = NStr("en='Channel reference must be empty.';
-                |ru='Ссылка на канал должна быть не заполнена.';
-                |en_CA='Channel reference must be empty.'");    
+            Explanation = NStr("en='Application endpoint reference must be empty.';
+                |ru='Ссылка на конечную точку приложения должна быть не заполнена.';
+                |uk='Посилання на кінцеву точку додатку повино бути не заповнене.';
+                |en_CA='Application endpoint reference must be empty.'");    
             ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
             
         EndIf;
@@ -129,9 +131,10 @@ Procedure InstallChannelUpdate(Command)
             InstallOrUpdateChannel(CurrentData);       
         Else
 
-            Explanation = NStr("en='Channel reference must be filled.';
-                |ru='Ссылка на канал должна быть заполнена.';
-                |en_CA='Channel reference must be filled.'");    
+            Explanation = NStr("en='Application endpoint reference must be filled.';
+                |ru='Ссылка на конечную точку приложения должна быть заполнена.';
+                |uk='Посилання на кінцеву точку додатку повино бути заповнене.';
+                |en_CA='Application endpoint reference must be filled.'");    
             ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
             
         EndIf;
@@ -170,6 +173,7 @@ Procedure DeleteEvent(Command)
             ThisObject, New Structure("Identifier ", CurrentData.GetID())),
             NStr("en='Permanently delete the selected event?';
                 |ru='Удалить выбранное событие?';
+                |uk='Видалити обрану подію?';
                 |en_CA='Permanently delete the selected event?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);     
         
@@ -187,6 +191,7 @@ Procedure DeleteOperation(Command)
             ThisObject, New Structure("Identifier ", CurrentData.GetID())),
             NStr("en='Permanently delete the selected operation?';
                 |ru='Удалить выбранную операцию?';
+                |uk='Видалити обрану операцію?';
                 |en_CA='Permanently delete the selected operation?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);     
         
@@ -371,8 +376,8 @@ Procedure SetOperationMatches()
     For Each Item In Operations Do
         
         Item.OperationMatched = Item.Ref.Description = Item.Description;
-        Item.RESTMatched   = Item.Ref.RESTMethod  = Item.RESTMethod;
-        Item.CRUDResolved  = Item.Ref.CRUDMethod  = Item.CRUDMethod;
+        Item.RESTMatched = Item.Ref.RESTMethod = Item.RESTMethod;
+        Item.CRUDResolved = Item.Ref.CRUDMethod = Item.CRUDMethod;
         
         If NOT Item.OperationMatched
             OR NOT Item.RESTMatched 
@@ -386,10 +391,14 @@ Procedure SetOperationMatches()
         Items.OperationsPage.Picture = PictureLib.FL_ExplanationMark;
         Items.OperationsPage.Title = NStr("en='Operations (there are operations that require attention)';
             |ru='Операции (есть операции которые требуют внимания)';
+            |uk='Операції (є операції які потребують уваги)';
             |en_CA='Operations (there are operations that require attention)'");
     Else
         Items.OperationsPage.Picture = PictureLib.FL_Ok;
-        Items.OperationsPage.Title = NStr("en='Operations';ru='Операции';en_CA='Operations'");     
+        Items.OperationsPage.Title = NStr("en='Operations';
+            |ru='Операции';
+            |uk='Операції';
+            |en_CA='Operations'");     
     EndIf;
         
 EndProcedure // SetOperationMatches()
@@ -541,12 +550,16 @@ Procedure SetChannelMatches()
     
     If NOT Matched Then
         Items.ChannelsPage.Picture = PictureLib.FL_ExplanationMark;
-        Items.ChannelsPage.Title = NStr("en='Channels (there are channels that require attention)';
-            |ru='Каналы (есть каналы которые требуют внимания)';
-            |en_CA='Channels (there are channels that require attention)'");
+        Items.ChannelsPage.Title = NStr("en='Application endpoints (there are items that require attention)';
+            |ru='Конечные точки приложений (есть элементы которые требуют внимания)';
+            |uk='Кінцеві точки додатків (є елементи які потребують уваги)';
+            |en_CA='Application endpoints (there are items that require attention)'");
     Else
         Items.ChannelsPage.Picture = PictureLib.FL_Ok;
-        Items.ChannelsPage.Title = NStr("en='Channels';ru='Каналы';en_CA='Channels'");     
+        Items.ChannelsPage.Title = NStr("en='Application endpoints';
+            |ru='Конечные точки приложений';
+            |uk='Кінцеві точки додатків';
+            |en_CA='Application endpoints'");     
     EndIf;
     
 EndProcedure // SetChannelMatches()

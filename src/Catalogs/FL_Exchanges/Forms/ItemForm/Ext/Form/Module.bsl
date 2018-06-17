@@ -244,15 +244,15 @@ EndProcedure // RowComposerSettingsOrderOnChange()
 #Region FormCommandHandlers
 
 &AtClient
-Procedure AddChannel(Command)
+Procedure AddAppEndpoint(Command)
     
     // It is needed to clear resource cache.
     TransitionChannelResources.Clear();
     
     ShowChooseFromList(New NotifyDescription("DoAfterChooseChannelToAdd",
-        ThisObject), ExchangeChannels(), Items.AddChannel);
+        ThisObject), ExchangeChannels(), Items.AddAppEndpoint);
         
-EndProcedure // AddChannel()
+EndProcedure // AddAppEndpoint()
 
 &AtClient
 Procedure AddEvent(Command)
@@ -370,7 +370,7 @@ Procedure DescribeAPI(Command)
 EndProcedure // DescribeAPI()
 
 &AtClient
-Procedure EditChannelResources(Command)
+Procedure EditAppEndpointResources(Command)
    
     // It is needed to clear resource cache.
     TransitionChannelResources.Clear();
@@ -392,7 +392,7 @@ Procedure EditChannelResources(Command)
         EndIf;
     EndIf;
     
-EndProcedure // EditChannelResources()
+EndProcedure // EditAppEndpointResources()
 
 &AtClient
 Procedure EditDataCompositionSchema(Command)
@@ -943,6 +943,7 @@ Procedure LoadOperationSettings()
             "HiddenGroupSettings", RowOperation);
            
         CurrentData = CurrentOperationData(RowOperation);
+        RowIsolated = CurrentData.Isolated;
         RowPriority = CurrentData.Priority;
         RowCanUseExternalFunctions = CurrentData.CanUseExternalFunctions;
         
@@ -993,6 +994,7 @@ Procedure SaveOperationSettings()
         If Items.OperationPages.ChildItems.Find(RowOperation) <> Undefined Then
         
             ChangedData = CurrentOperationData(RowOperation);
+            ChangedData.Isolated = RowIsolated;
             ChangedData.Priority = RowPriority;
             ChangedData.CanUseExternalFunctions = RowCanUseExternalFunctions;
             
