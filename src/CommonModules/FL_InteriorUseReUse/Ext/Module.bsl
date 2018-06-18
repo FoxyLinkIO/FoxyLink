@@ -80,6 +80,8 @@ EndFunction // DayInMilliseconds()
 //
 Function AvailableEventHandlers(Operation, Val MetadataObject = Undefined) Export
     
+    ObjectTypeName = Undefined;
+    
     If ValueIsFilled(MetadataObject) Then
         MetadataObject = Upper(MetadataObject);
         ObjectTypeName = Left(MetadataObject, StrFind(MetadataObject, ".")) + "*";

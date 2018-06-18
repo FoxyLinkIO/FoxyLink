@@ -1260,6 +1260,9 @@ EndFunction // CommonModule()
 //
 Function ObjectManagerByFullName(FullName) Export
     
+    MetaObjectType = Undefined;
+    MetaObjectName = Undefined;
+    
     ManagerMap = New Map;
     If FL_CommonUseReUse.IsReferenceTypeObjectCached(FullName) Then
         
@@ -2831,7 +2834,7 @@ EndFunction // NewConversionResult()
 //
 Function ConvertStringIntoDate(StringDate)
     
-    Var ConvertedValue;
+    ConvertedValue = Undefined;
 
     If ConvertStringIntoDateByFormat(StringDate, JSONDateFormat.ISO, ConvertedValue) Then
         Return ConvertedValue;

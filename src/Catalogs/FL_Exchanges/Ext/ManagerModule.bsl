@@ -227,6 +227,9 @@ EndFunction // ProcessMessage()
 //
 Function ExportObject(Exchange) Export
     
+    PayloadRow = Undefined;
+    PropertiesRow = Undefined;
+    
     Invocation = Catalogs.FL_Messages.NewInvocation();
     Invocation.EventSource = "Catalogs.FL_Exchanges.Commands.ExportExchange";
     Invocation.Operation = Catalogs.FL_Operations.Read;
