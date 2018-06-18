@@ -36,15 +36,19 @@
 			<Synonym>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Heartbeat</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Состояние</v8:content>
+					<v8:content>Heartbeat of the job subsystem</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Heartbeat</v8:content>
+					<v8:content>Heartbeat of the job subsystem</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Состояние подсистемы заданий</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Стан підсистеми завдань</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
@@ -181,10 +185,6 @@
 					<Name>TaskId</Name>
 					<Synonym>
 						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Идентификатор задания</v8:content>
-						</v8:item>
-						<v8:item>
 							<v8:lang>en</v8:lang>
 							<v8:content>Task id</v8:content>
 						</v8:item>
@@ -192,15 +192,43 @@
 							<v8:lang>en_CA</v8:lang>
 							<v8:content>Task id</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Идентификатор задания</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Ідентифікатор завдання</v8:content>
+						</v8:item>
 					</Synonym>
-					<Comment/>
+					<Comment>Unique ID of job.</Comment>
 					<Type>
 						<v8:Type>v8:UUID</v8:Type>
 					</Type>
 					<PasswordMode>false</PasswordMode>
 					<Format/>
 					<EditFormat/>
-					<ToolTip/>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Unique ID of job. Unlike the key, the UUID is generated automatically and identifies specific launch of certain job. So there cannot be two jobs (in any state) with the same UUID.
+</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Unique ID of job. Unlike the key, the UUID is generated automatically and identifies specific launch of certain job. So there cannot be two jobs (in any state) with the same UUID.
+</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Уникальный идентификатор задания. Идентификатор, в отличие от ключа, генерируется автоматически и идентифицирует конкретный запуск определенного задания. Поэтому не может быть двух заданий (вне зависимости от состояния) с одинаковым идентификатором.
+</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Унікальний ідентифікатор завдання. Ідентифікатор, на відміну від ключа, генерується автоматично і ідентифікує конкретний запуск певного завдання. Тому не може бути двох завдань (незалежно від стану) з однаковим ідентифікатором.</v8:content>
+						</v8:item>
+					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
 					<Mask/>
 					<MultiLine>false</MultiLine>
@@ -223,36 +251,52 @@
 					<DataHistory>Use</DataHistory>
 				</Properties>
 			</Resource>
-			<Attribute uuid="2eb9c6c0-1e72-4a1f-9ff2-9534c8214722">
+			<Attribute uuid="22b0f45e-5e8a-4564-8aa2-b65d24195260">
 				<Properties>
-					<Name>RetryAttempts</Name>
+					<Name>Isolated</Name>
 					<Synonym>
 						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Повторные попытки</v8:content>
-						</v8:item>
-						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Retry attempts</v8:content>
+							<v8:content>Isolated job</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Retry attempts</v8:content>
+							<v8:content>Isolated job</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Изолированное задание</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Ізольоване завдання</v8:content>
 						</v8:item>
 					</Synonym>
-					<Comment/>
+					<Comment>Helps to protect each job from other jobs.</Comment>
 					<Type>
-						<v8:Type>xs:decimal</v8:Type>
-						<v8:NumberQualifiers>
-							<v8:Digits>5</v8:Digits>
-							<v8:FractionDigits>0</v8:FractionDigits>
-							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
-						</v8:NumberQualifiers>
+						<v8:Type>xs:boolean</v8:Type>
 					</Type>
 					<PasswordMode>false</PasswordMode>
 					<Format/>
 					<EditFormat/>
-					<ToolTip/>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Isolation is a set of different software technologies designed to protect each job from other jobs on the FoxyLink subsystem.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Isolation is a set of different software technologies designed to protect each job from other jobs on the FoxyLink subsystem.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Изоляция представляет собой набор различных программных технологий, предназначенных для защиты каждого задания от других заданий в подсистеме FoxyLink.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Ізоляція представляє собою сукупність різноманітних програмних технологій, призначених для захисту кожного завдання від інших завдань в підсистемі FoxyLink.</v8:content>
+						</v8:item>
+					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
 					<Mask/>
 					<MultiLine>false</MultiLine>
@@ -272,17 +316,159 @@
 					<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 					<Indexing>DontIndex</Indexing>
 					<FullTextSearch>DontUse</FullTextSearch>
-					<DataHistory>Use</DataHistory>
+					<DataHistory>DontUse</DataHistory>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="238c11fa-9f7d-4e0b-a652-706b42901972">
+				<Properties>
+					<Name>RetryAt</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Retry at</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Retry at</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Следующая попытка в</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Наступна спроба в</v8:content>
+						</v8:item>
+					</Synonym>
+					<Comment>Helps to handle transient failures.</Comment>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>15</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+					<PasswordMode>false</PasswordMode>
+					<Format/>
+					<EditFormat/>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Helps to handle transient failures when it tries to connect to a service or network resource, by transparently retrying a failed operation. This can improve the stability of the FoxyLink subsystem.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Helps to handle transient failures when it tries to connect to a service or network resource, by transparently retrying a failed operation. This can improve the stability of the FoxyLink subsystem.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Помогает обрабатывать переходные сбои при попытке подключиться к сервису или сетевому ресурсу путем прозрачной повторной попытки неудачной операции. Это может улучшить стабильность подсистемы FoxyLink.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Допомагає обробляти перехідні збої при спробі підключитися до сервісу або мережного ресурсу шляхом прозорої повторної спроби невдалої операції. Це може поліпшити стабільність підсистеми FoxyLink.</v8:content>
+						</v8:item>
+					</ToolTip>
+					<MarkNegatives>false</MarkNegatives>
+					<Mask/>
+					<MultiLine>false</MultiLine>
+					<ExtendedEdit>false</ExtendedEdit>
+					<MinValue xsi:nil="true"/>
+					<MaxValue xsi:nil="true"/>
+					<FillFromFillingValue>false</FillFromFillingValue>
+					<FillValue xsi:nil="true"/>
+					<FillChecking>DontCheck</FillChecking>
+					<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
+					<ChoiceParameterLinks/>
+					<ChoiceParameters/>
+					<QuickChoice>DontUse</QuickChoice>
+					<CreateOnInput>DontUse</CreateOnInput>
+					<ChoiceForm/>
+					<LinkByType/>
+					<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
+					<Indexing>DontIndex</Indexing>
+					<FullTextSearch>DontUse</FullTextSearch>
+					<DataHistory>DontUse</DataHistory>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="2eb9c6c0-1e72-4a1f-9ff2-9534c8214722">
+				<Properties>
+					<Name>RetryAttempt</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Retry attempt</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Retry attempt</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Повторная попытка</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Повторна спроба</v8:content>
+						</v8:item>
+					</Synonym>
+					<Comment> The number how many times FoxyLink subsystem tried to retry a failed job.</Comment>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>5</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+					<PasswordMode>false</PasswordMode>
+					<Format/>
+					<EditFormat/>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Shows the number how many times FoxyLink subsystem tried to retry a failed job.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Shows the number how many times FoxyLink subsystem tried to retry a failed job.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Показывает количество раз, сколько подсистема FoxyLink пыталась выполнить неудачное задание.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Показує кількість разів, скільки підсистема FoxyLink намагалася виконати невдале завдання.</v8:content>
+						</v8:item>
+					</ToolTip>
+					<MarkNegatives>false</MarkNegatives>
+					<Mask/>
+					<MultiLine>false</MultiLine>
+					<ExtendedEdit>false</ExtendedEdit>
+					<MinValue xsi:nil="true"/>
+					<MaxValue xsi:nil="true"/>
+					<FillFromFillingValue>false</FillFromFillingValue>
+					<FillValue xsi:nil="true"/>
+					<FillChecking>DontCheck</FillChecking>
+					<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
+					<ChoiceParameterLinks/>
+					<ChoiceParameters/>
+					<QuickChoice>DontUse</QuickChoice>
+					<CreateOnInput>DontUse</CreateOnInput>
+					<ChoiceForm/>
+					<LinkByType/>
+					<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
+					<Indexing>DontIndex</Indexing>
+					<FullTextSearch>DontUse</FullTextSearch>
+					<DataHistory>DontUse</DataHistory>
 				</Properties>
 			</Attribute>
 			<Dimension uuid="1b15bccd-c143-4fdd-8d9e-8df1faa42702">
 				<Properties>
 					<Name>Job</Name>
 					<Synonym>
-						<v8:item>
-							<v8:lang>ru</v8:lang>
-							<v8:content>Фоновое задание</v8:content>
-						</v8:item>
 						<v8:item>
 							<v8:lang>en</v8:lang>
 							<v8:content>Background job</v8:content>
@@ -291,15 +477,40 @@
 							<v8:lang>en_CA</v8:lang>
 							<v8:content>Background job</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Фоновое задание</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Фонове завдання</v8:content>
+						</v8:item>
 					</Synonym>
-					<Comment/>
+					<Comment>Background job for performing asynchronous operations.</Comment>
 					<Type>
 						<v8:Type>cfg:CatalogRef.FL_Jobs</v8:Type>
 					</Type>
 					<PasswordMode>false</PasswordMode>
 					<Format/>
 					<EditFormat/>
-					<ToolTip/>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Background job for performing asynchronous operations.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Background job for performing asynchronous operations.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Фоновое задание для выполнения асинхронных операций.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Фонове завдання для виконання асинхронних операцій.</v8:content>
+						</v8:item>
+					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
 					<Mask/>
 					<MultiLine>false</MultiLine>
@@ -317,9 +528,9 @@
 					<ChoiceForm/>
 					<LinkByType/>
 					<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
-					<Master>false</Master>
+					<Master>true</Master>
 					<MainFilter>true</MainFilter>
-					<DenyIncompleteValues>false</DenyIncompleteValues>
+					<DenyIncompleteValues>true</DenyIncompleteValues>
 					<Indexing>DontIndex</Indexing>
 					<FullTextSearch>DontUse</FullTextSearch>
 					<DataHistory>Use</DataHistory>
