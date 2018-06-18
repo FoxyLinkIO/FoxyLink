@@ -269,8 +269,8 @@ EndProcedure // JobRoutingAction()
 //
 Procedure JobServerAction() Export
     
-    RetryJobs = NewRetryTable();
-    ProcessingJobs = NewProcessingTable();
+    RetryJobs = NewHeartbeatTable();
+    ProcessingJobs = NewHeartbeatTable();
     
     WorkerCount = GetWorkerCount();
     
@@ -426,13 +426,14 @@ Procedure PopJobServerState(WorkerCount, ProcessingJobs, RetryJobs)
 
         CurrentState = FL_CommonUse.ObjectAttributeValue(Item.Job, "State");
         If FinalStates.FindByValue(CurrentState) <> Undefined Then
+            
+            // Final state: Succeeded or Deleted, skip and continue.
             Continue;
+            
         ElsIf BackgroundJobCache.Get(Item.TaskId) = BackgroundJobState.Active Then
             FillPropertyValues(ProcessingJobs.Add(), Item);
-        ElsIf Item.RetryAttempts < RetryAttempts Then
-            NewRetryJob = RetryJobs.Add();
-            NewRetryJob.Job = Item.Job;
-            NewRetryJob.RetryAttempts = Item.RetryAttempts + 1;
+        ElsIf Item.RetryAttempt < RetryAttempts Then
+            FillPropertyValues(RetryJobs.Add(), Item);            
         EndIf;
         
     EndDo;
@@ -455,6 +456,7 @@ Procedure PushJobServerState(WorkerCount, ProcessingJobs, RetryJobs)
     FL_CommonUseClientServer.ExtendValueTable(ProcessingJobs, HeartbeatTable);
     
     // Retries go without worker count control.
+    ProcessRetryJobsDelay(RetryJobs, HeartbeatTable);
     RunBackgroundJobs(RetryJobs, HeartbeatTable, WorkerCount, Limit);
     
     If WorkerCount > 0 Then
@@ -500,6 +502,42 @@ EndProcedure // ReduceAvailableWorkerCount()
 
 // Only for internal use.
 //
+Procedure ProcessRetryJobsDelay(RetryJobs, HeartbeatTable)
+    
+    CurrentDate = CurrentUniversalDateInMilliseconds();
+    RetryPeriod = 45000;   
+    
+    Index = RetryJobs.Count() - 1;
+    While Index >= 0 Do
+        
+        Item = RetryJobs[Index];
+        If Item.RetryAt = 0 Then
+            
+            Item.RetryAt = CurrentDate + RetryPeriod;
+            FillPropertyValues(HeartbeatTable.Add(), Item);
+            RetryJobs.Delete(Index);
+            
+        ElsIf CurrentDate > Item.RetryAt Then 
+            
+            Item.RetryAttempt = Item.RetryAttempt + 1;
+            NextRetry = Item.RetryAttempt + 1;
+            Item.RetryAt = CurrentDate + NextRetry * NextRetry * RetryPeriod;
+            
+        Else
+            
+            FillPropertyValues(HeartbeatTable.Add(), Item);
+            RetryJobs.Delete(Index);    
+            
+        EndIf;    
+        
+        Index = Index - 1;
+        
+    EndDo;
+    
+EndProcedure // ProcessRetryJobsDelay()
+
+// Only for internal use.
+//
 Procedure RunBackgroundJobs(JobTable, HeartbeatTable, WorkerCount, Val Limit)
     
     BoostTable = NewHeartbeatTable();
@@ -518,11 +556,11 @@ Procedure RunBackgroundJobs(JobTable, HeartbeatTable, WorkerCount, Val Limit)
             FillPropertyValues(NewItem, JobTable[Index]);
             NewItem.TaskId = BackgroundJob.UUID;
             
-            Continue;
+        Else
+            
+            FillPropertyValues(BoostTable.Add(), JobTable[Index]);
             
         EndIf;
-        
-        FillPropertyValues(BoostTable.Add(), JobTable[Index]);
         
         If Limit = BoostTable.Count()
             OR Index = JobCount Then
@@ -571,42 +609,19 @@ EndFunction // TriggerJobs()
 
 // Only for internal use.
 //
-Function NewRetryTable()
-    
-    RetryAttemptsCapacity = 5;
-    
-    RetryTable = New ValueTable;
-    RetryTable.Columns.Add("Job", New TypeDescription("CatalogRef.FL_Jobs"));
-    RetryTable.Columns.Add("RetryAttempts", FL_CommonUse.NumberTypeDescription(
-        RetryAttemptsCapacity, , AllowedSign.Nonnegative));
-    Return RetryTable;
-    
-EndFunction // NewRetryTable()
-
-// Only for internal use.
-//
-Function NewProcessingTable()
-    
-    ProcessingTable = New ValueTable;
-    ProcessingTable.Columns.Add("Job", New TypeDescription(
-        "CatalogRef.FL_Jobs"));
-    ProcessingTable.Columns.Add("TaskId", New TypeDescription("UUID"));
-    
-    Return ProcessingTable;
-    
-EndFunction // NewProcessingTable()
-
-// Only for internal use.
-//
 Function NewHeartbeatTable()
     
+    RetryAtCapacity = 15;
     RetryAttemptsCapacity = 5;
     
     HeartbeatTable = New ValueTable;
     HeartbeatTable.Columns.Add("Job", New TypeDescription(
         "CatalogRef.FL_Jobs"));
     HeartbeatTable.Columns.Add("TaskId", New TypeDescription("UUID"));
-    HeartbeatTable.Columns.Add("RetryAttempts", FL_CommonUse.NumberTypeDescription(
+    HeartbeatTable.Columns.Add("Isolated", New TypeDescription("Boolean"));
+    HeartbeatTable.Columns.Add("RetryAt", FL_CommonUse.NumberTypeDescription(
+        RetryAtCapacity, , AllowedSign.Nonnegative));
+    HeartbeatTable.Columns.Add("RetryAttempt", FL_CommonUse.NumberTypeDescription(
         RetryAttemptsCapacity, , AllowedSign.Nonnegative));
     Return HeartbeatTable;
     
@@ -634,9 +649,11 @@ Function QueryTextTasksHeartbeat()
     
     QueryText = "
         |SELECT
-        |   TasksHeartbeat.Job           AS Job,
-        |   TasksHeartbeat.TaskId        AS TaskId,
-        |   TasksHeartbeat.RetryAttempts AS RetryAttempts
+        |   TasksHeartbeat.Job          AS Job,
+        |   TasksHeartbeat.TaskId       AS TaskId,
+        |   TasksHeartbeat.Isolated     AS Isolated,
+        |   TasksHeartbeat.RetryAt      AS RetryAt,
+        |   TasksHeartbeat.RetryAttempt AS RetryAttempt
         |INTO TasksHeartbeat
         |FROM
         |   InformationRegister.FL_TasksHeartbeat AS TasksHeartbeat
@@ -644,11 +661,13 @@ Function QueryTextTasksHeartbeat()
         |
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
-        |   TasksHeartbeat.Job           AS Job,
-        |   TasksHeartbeat.TaskId        AS TaskId,
-        |   TasksHeartbeat.RetryAttempts AS RetryAttempts
+        |   TasksHeartbeat.Job          AS Job,            
+        |   TasksHeartbeat.TaskId       AS TaskId,
+        |   TasksHeartbeat.Isolated     AS Isolated,
+        |   TasksHeartbeat.RetryAt      AS RetryAt,
+        |   TasksHeartbeat.RetryAttempt AS RetryAttempt
         |FROM
-        |   TasksHeartbeat AS TasksHeartbeat  
+        |   TasksHeartbeat AS TasksHeartbeat
         |;
         |
         |////////////////////////////////////////////////////////////////////////////////

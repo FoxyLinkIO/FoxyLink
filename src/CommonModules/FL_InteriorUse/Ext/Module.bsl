@@ -58,7 +58,9 @@ EndFunction // SetOfConstants()
 //
 Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, 
     JobResult) Export
-        
+    
+    LogObject = Undefined;
+    
     If JobResult.LogAttribute <> Undefined Then
         LogObject = StartLogHTTPRequest(HTTPConnection, HTTPRequest, HTTPMethod);
     EndIf;
