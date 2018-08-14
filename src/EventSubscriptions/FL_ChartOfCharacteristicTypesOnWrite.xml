@@ -1,32 +1,32 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
-	<EventSubscription uuid="a5ecbb9a-0fac-4288-8db8-b085f5642abb">
+	<EventSubscription uuid="c1c595f2-c3cf-4ae6-88ae-5cf55b9ed808">
 		<Properties>
-			<Name>FL_DocumentsBeforeWrite</Name>
+			<Name>FL_ChartOfCharacteristicTypesOnWrite</Name>
 			<Synonym>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Documents before write</v8:content>
+					<v8:content>Chart of characteristic types on write</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Documents before write</v8:content>
+					<v8:content>Chart of characteristic types on write</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Документы перед записью</v8:content>
+					<v8:content>Планы видов характеристик при записи</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Документи перед записом</v8:content>
+					<v8:content>Плани видів характеристик при записі</v8:content>
 				</v8:item>
 			</Synonym>
-			<Comment>Occurs before document item recording is executed. A handler procedure is called after the recording transaction is begun but before the document item recording is begun.</Comment>
+			<Comment>Occurs when the object writing is executed. A handler procedure is called after the object is written in the database but before the writing transaction is completed.</Comment>
 			<Source>
-				<v8:TypeSet>cfg:DocumentObject</v8:TypeSet>
+				<v8:TypeSet>cfg:ChartOfCharacteristicTypesObject</v8:TypeSet>
 			</Source>
-			<Event>BeforeWrite</Event>
-			<Handler>CommonModule.FL_Events.DocumentBeforeWrite</Handler>
+			<Event>OnWrite</Event>
+			<Handler>CommonModule.FL_Events.ChartOfCharacteristicTypesOnWrite</Handler>
 		</Properties>
 	</EventSubscription>
 </MetaDataObject>

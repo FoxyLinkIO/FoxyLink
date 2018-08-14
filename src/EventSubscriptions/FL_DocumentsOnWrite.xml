@@ -9,15 +9,19 @@
 					<v8:content>Documents on write</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Documents on write</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Документы при записи</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Documents on write</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Документи при записі</v8:content>
 				</v8:item>
 			</Synonym>
-			<Comment/>
+			<Comment>Occurs when the object writing is executed. A handler procedure is called after the object is written in the database but before the writing transaction is completed.</Comment>
 			<Source>
 				<v8:TypeSet>cfg:DocumentObject</v8:TypeSet>
 			</Source>

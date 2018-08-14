@@ -29,6 +29,8 @@
 			<Content>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Exchanges</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.SocialNetworks_Events</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">d16bb6a4-e6fd-493b-9f77-5f8c5713c3ce</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">89df44ab-d021-4749-b1f2-4e93cfd056d9</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

@@ -41,8 +41,11 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Messages</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_MessagePublishers</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">HTTPService.FL_AppEndpoint</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">b351ea2c-83c3-4881-a586-de5907af6553</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_MessagePayload</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_LinkedObjects</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_ChartOfCharacteristicTypesBeforeWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_ChartOfCharacteristicTypesOnWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_ChartOfCharacteristicTypesBeforeDelete</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

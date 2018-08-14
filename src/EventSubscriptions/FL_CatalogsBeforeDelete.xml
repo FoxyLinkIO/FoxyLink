@@ -16,6 +16,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Справочники перед удалением</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Довідники перед видаленням</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment>Occurs prior to actual deletion of the object from the database.</Comment>
 			<Source>

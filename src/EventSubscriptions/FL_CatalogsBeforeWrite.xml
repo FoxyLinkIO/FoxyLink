@@ -9,12 +9,16 @@
 					<v8:content>Catalogs before write</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Catalogs before write</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Справчоники перед записью</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Catalogs before write</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Довідники перед записом</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment>Occurs before catalog item recording is executed. A handler procedure is called after the recording transaction is begun but before the catalog item recording is begun.</Comment>
