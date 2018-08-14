@@ -68,6 +68,7 @@
 				<xr:Object>DataProcessor.FL_GMSWorldwide</xr:Object>
 				<xr:Object>DataProcessor.FL_CollaborationSystem</xr:Object>
 				<xr:Object>Catalog.FL_Messages.Command.ConfigureJobRoutingStartUp</xr:Object>
+				<xr:Object>InformationRegister.FL_LinkedObjects</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>

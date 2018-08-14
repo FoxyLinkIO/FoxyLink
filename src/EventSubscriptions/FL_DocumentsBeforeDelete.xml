@@ -16,6 +16,10 @@
 					<v8:lang>ru</v8:lang>
 					<v8:content>Документы перед удалением</v8:content>
 				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Документи перед видаленням</v8:content>
+				</v8:item>
 			</Synonym>
 			<Comment>Occurs in the deleting transaction prior to actual deletion of the object from the database. </Comment>
 			<Source>

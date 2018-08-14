@@ -104,7 +104,9 @@ Procedure LoadBasicEventPublishers()
     PublishersArray.Add("Catalog.*");
     PublishersArray.Add("Справочник.*");
     PublishersArray.Add("Document.*");
-    PublishersArray.Add("Документ.*");
+    PublishersArray.Add("Документ.*");                               
+    PublishersArray.Add("ChartOfCharacteristicTypes.*");   
+    PublishersArray.Add("ПланВидовХарактеристик.*");
     PublishersArray.Add("InformationRegister.*");
     PublishersArray.Add("РегистрСведений.*");
     PublishersArray.Add("AccumulationRegister.*");

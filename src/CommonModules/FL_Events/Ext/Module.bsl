@@ -99,6 +99,61 @@ Procedure CatalogOnWrite(Source, Cancel) Export
     
 EndProcedure // CatalogOnWrite()
 
+// Handler of BeforeWrite chart of characteristic types event subscription.
+//
+// Parameters:
+//  Source - ChartOfCharacteristicTypesObject - chart of characteristic type object.
+//  Cancel - Boolean - write cancel flag. If this parameter is set to True in the body 
+//                  of the handler procedure, the write transaction will not be completed.
+//
+Procedure ChartOfCharacteristicTypesBeforeWrite(Source, Cancel) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+        
+    ApplyInvocation(Source, ?(Source.IsNew(), Catalogs.FL_Operations.Create, 
+        Catalogs.FL_Operations.Update));
+    
+EndProcedure // ChartOfCharacteristicTypesBeforeWrite()
+
+// Handler of BeforeDelete chart of characteristic types event subscription.
+//
+// Parameters:
+//  Source - ChartOfCharacteristicTypesObject - catalog object.
+//  Cancel - Boolean - object deletion cancellation flag. If the True value
+//                      parameter is included in the procedure-processing body, 
+//                      then deletion is not performed.
+//                  Default value: False. 
+//
+Procedure ChartOfCharacteristicTypesBeforeDelete(Source, Cancel) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+        
+    ApplyInvocation(Source, Catalogs.FL_Operations.Delete);
+    EnqueueEvent(Source);
+    
+EndProcedure // ChartOfCharacteristicTypesBeforeDelete()
+
+// Handler of OnWrite chart of characteristic types event subscription.
+//
+// Parameters:
+//  Source - ChartOfCharacteristicTypesObject - catalog object.
+//  Cancel - Boolean - write cancel flag. If this parameter is set to True in the body 
+//                  of the handler procedure, the write transaction will not be completed.
+//
+Procedure ChartOfCharacteristicTypesOnWrite(Source, Cancel) Export
+    
+    If Source.DataExchange.Load OR Cancel Then
+        Return;
+    EndIf;
+        
+    EnqueueEvent(Source);
+    
+EndProcedure // ChartOfCharacteristicTypesOnWrite()
+
 // Handler of BeforeWrite document event subscription.
 //
 // Parameters:

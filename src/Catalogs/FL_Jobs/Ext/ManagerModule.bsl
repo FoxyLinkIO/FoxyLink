@@ -249,6 +249,7 @@ EndFunction // NewJobData()
 //
 // Returns:
 //  Structure - the new job result with values:
+//      * AppEndpoint  - CatalogRef.FL_Channels - reference to the app endpoint.
 //      * LogAttribute - String     - detailed log of the job processing.
 //      * StatusCode   - Number     - state (reply) code returned by the service.
 //      * Success      - Boolean    - shows whether delivery was successful.
@@ -260,6 +261,7 @@ EndFunction // NewJobData()
 Function NewJobResult() Export
 
     JobResult = New Structure;
+    JobResult.Insert("AppEndpoint");
     JobResult.Insert("LogAttribute");
     JobResult.Insert("StatusCode");
     JobResult.Insert("Success", False);

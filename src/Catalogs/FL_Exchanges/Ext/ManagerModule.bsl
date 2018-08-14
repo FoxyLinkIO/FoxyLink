@@ -506,6 +506,8 @@ Function EventHandlerInfo() Export
     EventSources.Add(Upper("Справочник.*"));
     EventSources.Add(Upper("Document.*"));
     EventSources.Add(Upper("Документ.*"));
+    EventSources.Add(Upper("ChartOfCharacteristicTypes.*"));
+    EventSources.Add(Upper("ПланВидовХарактеристик.*"));
     EventSources.Add(Upper("InformationRegister.*"));
     EventSources.Add(Upper("РегистрСведений.*"));
     EventSources.Add(Upper("AccumulationRegister.*"));

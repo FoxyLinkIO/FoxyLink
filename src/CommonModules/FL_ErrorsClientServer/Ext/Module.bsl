@@ -35,6 +35,21 @@ Procedure PersonalizeErrorsWithKey(AnonymousErrors, PersonalizedErrors,
     
 EndProcedure // PersonalizeErrorsWithKey()
 
+// Returns {failed to process message context} error description.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorFailedToProcessMessageContext() Export
+    
+    ErrorMessage = NStr("en='Error: Failed to process message context {%1}.'; 
+        |ru='Ошибка: Не удалось обработать контекст сообщения {%1}.';
+        |uk='Помилка: Не вдалось опрацювати контекст повідомлення {%1}.';
+        |en_CA='Error: Failed to process message context {%1}.'");
+    Return ErrorMessage;
+    
+EndFunction // ErrorFailedToProcessMessageContext()
+
 // Returns {failed to process parameter template} error description.
 //
 // Returns:
@@ -86,14 +101,35 @@ EndFunction // ErrorTypeIsDifferentFromExpected()
 Function ErrorKeyIsMissingInObject(VarName, VarValue, KeyName) Export
     
     ErrorMessage = NStr("en='Error: Key {%1} is missing in {%2} {%3}.';
-        |ru='Ошибка: Ключ {%1} отсутствует в %2 {%3}.';
-        |uk='Помилка: Ключ {%1} відсутній в %2 {%3}.';
-        |en_CA='Error: Key {%1} is missing in %2 {%3}.'");
+        |ru='Ошибка: Ключ {%1} отсутствует в {%2} {%3}.';
+        |uk='Помилка: Ключ {%1} відсутній в {%2} {%3}.';
+        |en_CA='Error: Key {%1} is missing in {%2} {%3}.'");
     ErrorMessage = StrTemplate(ErrorMessage, KeyName, String(TypeOf(VarValue)), 
         VarName);
     Return ErrorMessage;   
     
 EndFunction // ErrorKeyIsMissingInObject()
+
+// Returns identifier missing in linked objects error description.
+//
+// Parameters:
+//  AppEndpoint - CatalogRef.FL_Channels - a reference to application endpoint.
+//  Object      - AnyRef                 - any valid reference in database.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorIdentifierIsMissingInLinkedObjects(AppEndpoint, Object) Export
+    
+    ErrorMessage = NStr("en='Error: Identifier is missing {AppEndpoint: %1} {Object: %2}.';
+        |ru='Ошибка: Идентификатор отсутствует {Конечная точка: %1} {Объект: %2}.';
+        |uk='Помилка: Ідентифікатор відсутній {Кінцева точка: %1} {Об''єкт: %2}.';
+        |en_CA='Error: Identifier is missing {AppEndpoint: %1} {Object: %2}.'");
+    ErrorMessage = StrTemplate(ErrorMessage, String(AppEndpoint), 
+        String(Object));
+    Return ErrorMessage;   
+    
+EndFunction // ErrorIdentifierIsMissingInLinkedObjects()
 
 // Returns collections are different error description.
 //

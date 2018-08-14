@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.307</Version>
+			<Version>0.9.9.310</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -289,6 +289,7 @@
 			<CommonPicture>FL_Untested</CommonPicture>
 			<CommonPicture>FL_Update</CommonPicture>
 			<CommonPicture>FL_ValidMethodSettings</CommonPicture>
+			<CommonPicture>FL_WooCommerce</CommonPicture>
 			<CommonTemplate>FL_LICENSE</CommonTemplate>
 			<CommonModule>FL_BackgroundJob</CommonModule>
 			<CommonModule>FL_BatchJob</CommonModule>
@@ -313,6 +314,9 @@
 			<EventSubscription>FL_CatalogsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
 			<EventSubscription>FL_CatalogsOnWrite</EventSubscription>
+			<EventSubscription>FL_ChartOfCharacteristicTypesBeforeDelete</EventSubscription>
+			<EventSubscription>FL_ChartOfCharacteristicTypesBeforeWrite</EventSubscription>
+			<EventSubscription>FL_ChartOfCharacteristicTypesOnWrite</EventSubscription>
 			<EventSubscription>FL_DocumentsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_DocumentsBeforeWrite</EventSubscription>
 			<EventSubscription>FL_DocumentsOnWrite</EventSubscription>
@@ -359,6 +363,7 @@
 			<DataProcessor>SocialNetworks_AdministrationPanel</DataProcessor>
 			<InformationRegister>FL_JobContinuations</InformationRegister>
 			<InformationRegister>FL_JobState</InformationRegister>
+			<InformationRegister>FL_LinkedObjects</InformationRegister>
 			<InformationRegister>FL_MessagePayload</InformationRegister>
 			<InformationRegister>FL_MessagePublishers</InformationRegister>
 			<InformationRegister>FL_TasksHeartbeat</InformationRegister>

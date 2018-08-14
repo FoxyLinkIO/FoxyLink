@@ -18,10 +18,10 @@
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Регістри при запису</v8:content>
+					<v8:content>Регістри при записі</v8:content>
 				</v8:item>
 			</Synonym>
-			<Comment/>
+			<Comment>Occurs when the object writing is executed. A handler procedure is called after the object is written in the database but before the writing transaction is completed.</Comment>
 			<Source>
 				<v8:TypeSet>cfg:InformationRegisterRecordSet</v8:TypeSet>
 				<v8:TypeSet>cfg:AccumulationRegisterRecordSet</v8:TypeSet>

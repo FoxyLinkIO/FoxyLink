@@ -34,13 +34,14 @@
 Function ProcessMessage(AppProperties, Payload, Properties) Export
     
     JobResult = Catalogs.FL_Jobs.NewJobResult();
+    JobResult.AppEndpoint = AppProperties.AppEndpoint;
                 
     Query = New Query;
     Query.Text = QueryTextAppEndpointSettings();
     Query.SetParameter("AppEndpoint", AppProperties.AppEndpoint);
     QueryResult = Query.Execute();
     If QueryResult.IsEmpty() Then
-    
+        
         JobResult.LogAttribute = NStr("
             |en='Failed to load application endpoint settings.';
             |ru='Не удалось загрузить настройки конечной точки приложения.';

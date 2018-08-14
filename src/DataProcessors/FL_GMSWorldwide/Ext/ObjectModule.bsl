@@ -70,7 +70,7 @@ EndFunction // ChannelFullName()
 
 #Region ProgramInterface
 
-// Delivers a data object to the Elasticsearch application.
+// Delivers a data object to the GMS application endpoint.
 //
 // Parameters:
 //  Payload    - Arbitrary - the data that can be read successively and 
@@ -79,7 +79,11 @@ EndFunction // ChannelFullName()
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
-   
+    
+    If Log Then
+        JobResult.LogAttribute = "";     
+    EndIf;
+    
     Headers = New Map;
     Headers.Insert("Accept", "application/json"); 
     Headers.Insert("Content-Type", "application/json");
@@ -101,12 +105,10 @@ Procedure DeliverMessage(Payload, Properties, JobResult) Export
     HTTPConnection = FL_InteriorUse.NewHTTPConnection(
         FL_EncryptionClientServer.FieldValue(ChannelData, "StringURI"));
     
-    If Log Then
-        JobResult.LogAttribute = "";     
-    EndIf;
-    
     FL_InteriorUse.CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, 
         JobResult);
+        
+    
         
     If HTTPMethod = "GET" 
         AND JobResult.StatusCode = 405 Then
