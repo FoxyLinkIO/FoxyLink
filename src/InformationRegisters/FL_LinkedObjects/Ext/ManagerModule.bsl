@@ -37,7 +37,11 @@ Procedure RegisterLinkedObject(AppEndpoint, Object, Identifier) Export
     If NOT RecordManager.Selected() Then
         RecordManager.AppEndpoint = AppEndpoint;
         RecordManager.Object = Object;
-        RecordManager.Identifier = Identifier;
+        If TypeOf(Identifier) = Type("Number") Then
+            RecordManager.Identifier = Format(Identifier, "NDS=.; NGS=''; NZ=; NG=");    
+        Else
+            RecordManager.Identifier = Identifier;
+        EndIf;  
     EndIf;
     
     RecordManager.Write();

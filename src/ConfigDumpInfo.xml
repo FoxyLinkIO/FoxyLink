@@ -324,7 +324,7 @@
 		<Metadata name="CommonPicture.FL_WooCommerce.Picture" id="eab08644-0079-4068-a89e-e1a07fa8ac56.0" configVersion="2a07dc2d7b27e547bf060257fd1abeef00000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE" id="4cc3426b-e953-4bd9-b838-2153998228de" configVersion="581927af0e4d7e44846e3a24740bdf6700000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE.Template" id="4cc3426b-e953-4bd9-b838-2153998228de.0" configVersion="a3107b1e2e297649811382e1f34ff0a400000000"/>
-		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="de7220e5019b734ab40cdcfb03f31eee00000000"/>
+		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="3f416adc4d0c454da7aa8232bbe1282200000000"/>
 		<Metadata name="Configuration.FoxyLink.ClientApplicationInterface" id="d93db53b-5a84-46dd-b01b-c5c745936a50.b" configVersion="11629064c93eff4886978d5b451f1c6800000000"/>
 		<Metadata name="Configuration.FoxyLink.Logo" id="d93db53b-5a84-46dd-b01b-c5c745936a50.1" configVersion="9659276839a8dc428c0d1192ab0a0d9b00000000"/>
 		<Metadata name="Configuration.FoxyLink.MainSectionPicture" id="d93db53b-5a84-46dd-b01b-c5c745936a50.c" configVersion="ff26138f08918640818c02536eca4d0000000000"/>
@@ -548,7 +548,7 @@
 		<Metadata name="EventSubscription.FL_RegistersBeforeWrite" id="2652a090-fcc9-4390-9579-ece5348bbf3d" configVersion="f26c2d4fc3912341aa6b9175b8a6acce00000000"/>
 		<Metadata name="EventSubscription.FL_RegistersOnWrite" id="fa00dcfc-8780-4a46-b11b-8b570b83c12a" configVersion="963b45f4b228f249a4319cf6d9fcb59300000000"/>
 		<Metadata name="FunctionalOption.FL_LicenseAccepted" id="6dac776b-7fc4-46c8-b56a-175150b8905a" configVersion="4edead29537e794590b8cd5a06a76e7100000000"/>
-		<Metadata name="FunctionalOption.FL_UseFoxyLink" id="051a868b-13e0-4fae-9405-c407f5906b7f" configVersion="a76db7b4a526f74aa3d2b66bf141a01b00000000"/>
+		<Metadata name="FunctionalOption.FL_UseFoxyLink" id="051a868b-13e0-4fae-9405-c407f5906b7f" configVersion="8f8372d7d2c67349832af1e2a0d67f9e00000000"/>
 		<Metadata name="HTTPService.FL_AppEndpoint" id="fd08f4ed-14f1-4765-82c8-f0c52e7164f3" configVersion="547174d174af1444845848820c960b4700000000">
 			<Metadata name="HTTPService.FL_AppEndpoint.URLTemplate.Message" id="25dc3394-6486-4467-91d6-03e26881ec67"/>
 			<Metadata name="HTTPService.FL_AppEndpoint.URLTemplate.Message.Method.POST" id="3a07cbad-c7be-4eb9-b7f6-da8c3cb35e59"/>
@@ -565,12 +565,12 @@
 			<Metadata name="InformationRegister.FL_JobState.Dimension.Job" id="cb195e37-2289-4378-8a3c-8246db6644e9"/>
 			<Metadata name="InformationRegister.FL_JobState.Dimension.State" id="fb4d1170-c6db-4eaa-9dc0-7f0e716828b4"/>
 		</Metadata>
-		<Metadata name="InformationRegister.FL_LinkedObjects" id="372c858e-b858-48fb-9100-e9d69d2d503f" configVersion="608ddf64d9316843b754b4485d30899b00000000">
+		<Metadata name="InformationRegister.FL_LinkedObjects" id="372c858e-b858-48fb-9100-e9d69d2d503f" configVersion="040fa34b2a0a1342b5483d492c30b42000000000">
 			<Metadata name="InformationRegister.FL_LinkedObjects.Dimension.Object" id="483b6d68-76cf-481b-b347-4f34fb7f2814"/>
 			<Metadata name="InformationRegister.FL_LinkedObjects.Resource.Identifier" id="628aed58-1c9e-4c96-aadf-dffb20d3be90"/>
 			<Metadata name="InformationRegister.FL_LinkedObjects.Dimension.AppEndpoint" id="f3260094-e0db-40b7-b009-a53679e4ea4e"/>
 		</Metadata>
-		<Metadata name="InformationRegister.FL_LinkedObjects.ManagerModule" id="372c858e-b858-48fb-9100-e9d69d2d503f.2" configVersion="01d1bbab3bcfe24fab1aef46314dd04700000000"/>
+		<Metadata name="InformationRegister.FL_LinkedObjects.ManagerModule" id="372c858e-b858-48fb-9100-e9d69d2d503f.2" configVersion="4585d3ce88402347bb4ac3341a10d73c00000000"/>
 		<Metadata name="InformationRegister.FL_MessagePayload" id="848260ee-09ad-46ee-86a0-d14fd6e0ff5e" configVersion="f3dbd92e1c0a754796c8eda0557e3d8000000000">
 			<Metadata name="InformationRegister.FL_MessagePayload.Resource.Payload" id="29da749b-2ab2-460c-a2e5-92ddaee1a225"/>
 			<Metadata name="InformationRegister.FL_MessagePayload.Dimension.Message" id="de59a85c-74f1-4c21-9618-d3d8dac8d72d"/>
@@ -623,12 +623,12 @@
 		<Metadata name="Subsystem.FoxyLink.CommandInterface" id="9966ecee-1ccc-493e-94d3-e780545214fc.1" configVersion="3f001c4fb5f7c94db8f485d60aba0a1800000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.GeneralSettings" id="3963fa99-5a8d-4df3-8bf6-22103e6c4417" configVersion="80d7193c810d0a4d929faea2db5bf5dd00000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.GeneralSettings.CommandInterface" id="3963fa99-5a8d-4df3-8bf6-22103e6c4417.1" configVersion="d9895f28052c4e46ab59bb269cfaa5d800000000"/>
-		<Metadata name="Subsystem.FoxyLink.Subsystem.Integration" id="f708e06a-a99f-4fb0-9ac9-e662d5b4a098" configVersion="1898c604372cbd4796f0b2d8adcf04c000000000"/>
+		<Metadata name="Subsystem.FoxyLink.Subsystem.Integration" id="f708e06a-a99f-4fb0-9ac9-e662d5b4a098" configVersion="99f3f0023744414e9ca0e07743e6e8d800000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Integration.CommandInterface" id="f708e06a-a99f-4fb0-9ac9-e662d5b4a098.1" configVersion="43d8e6fcda961b4f943fc1c74868f3bc00000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins" id="2c24fa32-a19d-44d4-a5a4-1e9daa2bb265" configVersion="7eb736879c1d9b40b90d678ddba0c0c800000000"/>
-		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="4cdaeeca617a8e42beff8340fb7a0ece00000000"/>
-		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.EventHandlers" id="a0fa363d-2d87-4432-a045-2b1143040330" configVersion="65c603eb3842cc4a97968bec4e34ee2f00000000"/>
-		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="849d664cefa4674e9425ecf4e68e58cb00000000"/>
+		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Channels" id="f9bfb0a4-9619-489e-8627-0ec198a69b5b" configVersion="22f539d5e72ce344977cdac46e059d6d00000000"/>
+		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.EventHandlers" id="a0fa363d-2d87-4432-a045-2b1143040330" configVersion="a422842e025df44bba0b03b5ac8a948200000000"/>
+		<Metadata name="Subsystem.FoxyLink.Subsystem.Plugins.Subsystem.Formats" id="6cb9a4b9-9a54-4a43-9fb2-d4721f360f90" configVersion="1f71d94f30ef3d419ad28332fb37d8ed00000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.SocialNetworks" id="3fa46e5f-875e-4a16-9bcb-af9b61f629dd" configVersion="e66b5611ffc6b14691ecdbc03f2f207f00000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.SocialNetworks.CommandInterface" id="3fa46e5f-875e-4a16-9bcb-af9b61f629dd.1" configVersion="9190d72bc58bc04080e7dc6e18f37c0e00000000"/>
 		<Metadata name="Subsystem.FoxyLink.Subsystem.Tasks" id="99d97624-ec69-4a4b-8804-4cc3a20b6a92" configVersion="fc37a901fdd3684abeda2c4f4929bb8000000000"/>
