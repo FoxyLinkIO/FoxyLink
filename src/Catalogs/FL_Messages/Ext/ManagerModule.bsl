@@ -215,7 +215,11 @@ Procedure AddToContext(Context, PrimaryKey, Value,
     NewContextItem.Filter = Filter;
     NewContextItem.PrimaryKey = Upper(PrimaryKey);
     NewContextItem.XMLValue = XMLString(Value);
-    FillPropertyValues(NewContextItem, XMLTypeOf(Value));
+   
+    XMLDataType = XMLTypeOf(Value);
+    If XMLDataType <> Undefined Then
+        FillPropertyValues(NewContextItem, XMLTypeOf(Value));
+    EndIf;
     
 EndProcedure // AddToContext()
 

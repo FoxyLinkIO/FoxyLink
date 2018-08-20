@@ -115,7 +115,7 @@ Procedure InitializeDataCompositionSchema(PrimaryKeys)
     DataSources.Add(DataSource);
            
     DataSet = FL_DataComposition.NewDataCompositionSchemaDataSetQuery();
-    DataSet.Query = StrTemplate("SELECT * FROM %1", EventSource);
+    DataSet.Query = GenerateQueryText(PrimaryKeys, EventSource);
     DataSets = New Array;
     DataSets.Add(DataSet);
      
@@ -211,64 +211,14 @@ Procedure EnqueueEventsAtServer()
     FL_DataComposition.OutputInValueCollection(EventsTable, 
         OutputParameters);
             
-    If FL_CommonUseReUse.IsReferenceTypeObjectCached(EventSource) Then
-        EnqueueReferenceEvents(EventsTable);    
-    ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(EventSource)
-        OR FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(EventSource) Then
-        EnqueueRegisterEvents(EventsTable);    
-    EndIf;
+    EnqueueEventsTable(EventsTable);    
             
 EndProcedure // EnqueueEventsAtServer()
 
 // Only for internal use.
 //
 &AtServer
-Procedure EnqueueReferenceEvents(Events)
-    
-    Var AttributeName;
-    
-    Synonyms = FL_CommonUseReUse.StandardAttributeSynonyms();
-    
-    BaseAttributeName = "REF";
-    SynonymAttributeName = Synonyms.Get(BaseAttributeName);
-    
-    If Events.Columns.Find(BaseAttributeName) <> Undefined Then
-        AttributeName = BaseAttributeName;
-    ElsIf Events.Columns.Find(SynonymAttributeName) <> Undefined Then
-        AttributeName = SynonymAttributeName;    
-    EndIf;
-    
-    // Invocation mock
-    Invocation = Catalogs.FL_Messages.NewInvocation();
-    Invocation.EventSource = EventSource;
-    Invocation.Operation = Operation;    
-    If ValueIsFilled(AttributeName) Then
-        
-        // The code in the comment written in one line is below this comment.
-        // To edit the code, remove the comment.
-        // For more information about the code in 1 line see http://infostart.ru/public/71130/.
-
-        //For Each Event In Events Do
-        //    
-        //  Catalogs.FL_Messages.AddToContext(Invocation.Context, 
-        //      BaseAttributeName, Event[AttributeName], True);
-        //    
-        //  Catalogs.FL_Messages.Route(Invocation, Exchange);
-        //           
-        //  Invocation.Context.Clear();
-        //
-        //EndDo;
-        
-        For Each Event In Events Do Catalogs.FL_Messages.AddToContext(Invocation.Context, BaseAttributeName, Event[AttributeName], True); Catalogs.FL_Messages.Route(Invocation, Exchange); Invocation.Context.Clear(); EndDo;
-              
-    EndIf;
-      
-EndProcedure // EnqueueReferenceEvents()
-
-// Only for internal use.
-//
-&AtServer
-Procedure EnqueueRegisterEvents(Events)
+Procedure EnqueueEventsTable(Events)
     
     // Invocation mock
     Invocation = Catalogs.FL_Messages.NewInvocation();
@@ -294,6 +244,41 @@ Procedure EnqueueRegisterEvents(Events)
     
     For Each Event In Events Do For Each Column In Events.Columns Do Catalogs.FL_Messages.AddToContext(Invocation.Context, Column.Name, Event[Column.Name], True); EndDo; Catalogs.FL_Messages.Route(Invocation, Exchange); Invocation.Context.Clear(); EndDo;
       
-EndProcedure // EnqueueRegisterEvents()
+EndProcedure // EnqueueEventsTable()
+
+// Only for internal use.
+//
+&AtServerNoContext
+Function GenerateQueryText(PrimaryKeys, EventSource)
+    
+    QuerySchema = New QuerySchema;
+    QueryBatch = QuerySchema.QueryBatch[0];
+    Operator = QueryBatch.Operators[0];
+    
+    // Adding query source 
+    Operator.Sources.Add(EventSource, "EventSource");
+    
+    // Selecting query fields
+    Index = 0;
+    For Each PrimaryKey In PrimaryKeys Do
+        Operator.SelectedFields.Add(PrimaryKey.Key);
+        QueryBatch.Columns[Index].Alias = PrimaryKey.Key;
+        Index = Index + 1;
+    EndDo;
+    
+    AvailableTable = QueryBatch.AvailableTables.Find(EventSource);
+    If AvailableTable <> Undefined Then
+        
+        For Each Field In AvailableTable.Fields Do
+            If Operator.SelectedFields.Find(Field.Name) = Undefined Then
+                Operator.SelectedFields.Add(Field);
+            EndIf;
+        EndDo;
+        
+    EndIf;
+    
+    Return QuerySchema.GetQueryText();
+    
+EndFunction // GenerateQueryText()
 
 #EndRegion // ServiceProceduresAndFunctions

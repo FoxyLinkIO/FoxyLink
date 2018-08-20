@@ -728,9 +728,22 @@ Procedure ImportEvents(Object, ImportedExchange, OperationTable, EventTable)
         OperationLines = FindOperationLines(Object.Operations, OperationTable, 
             EventFilter);
         For Each OperationLine In OperationLines Do
+            
             NewEvent = Object.Events.Add();
             FillPropertyValues(NewEvent, Event, , "Operation");
             FillPropertyValues(NewEvent, OperationLine, "Operation");
+            
+            RecordSet = InformationRegisters.FL_MessagePublishers.CreateRecordSet();
+            RecordSet.Filter.EventSource.Set(NewEvent.MetadataObject);
+            RecordSet.Filter.Operation.Set(NewEvent.Operation);
+            
+                NewRecord = RecordSet.Add();
+                NewRecord.EventSource = NewEvent.MetadataObject;
+                NewRecord.Operation = NewEvent.Operation;
+                NewRecord.InUse = True;
+                
+            RecordSet.Write();    
+            
         EndDo;
         
     EndDo;
