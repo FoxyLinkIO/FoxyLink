@@ -1507,8 +1507,13 @@ Function ValueFromXMLTypeAndValue(XMLValue, TypeName, NamespaceURI) Export
     
     Try
         
-        Type = FromXMLType(TypeName, NamespaceURI);
-        Return XMLValue(Type, XMLValue);
+        If NOT IsBlankString(TypeName) Then 
+            Type = FromXMLType(TypeName, NamespaceURI);
+        Else
+            Type = TypeOf(Undefined);    
+        EndIf;
+        
+        Return XMLValue(Type, XMLValue)
         
     Except
         
