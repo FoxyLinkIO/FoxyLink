@@ -1482,7 +1482,7 @@
 							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 							<Indexing>DontIndex</Indexing>
 							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
+							<DataHistory>DontUse</DataHistory>
 						</Properties>
 					</Attribute>
 					<Attribute uuid="dd520f04-a1fd-49fe-933e-f119b005f77c">
@@ -1527,7 +1527,7 @@
 							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 							<Indexing>DontIndex</Indexing>
 							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
+							<DataHistory>DontUse</DataHistory>
 						</Properties>
 					</Attribute>
 					<Attribute uuid="78490115-12f8-4b4b-95a7-ea790f44a536">
@@ -1572,7 +1572,7 @@
 							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 							<Indexing>DontIndex</Indexing>
 							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
+							<DataHistory>DontUse</DataHistory>
 						</Properties>
 					</Attribute>
 					<Attribute uuid="5d7b5982-5fbe-4b4b-81d6-6ec8b5074396">
@@ -1617,7 +1617,73 @@
 							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 							<Indexing>DontIndex</Indexing>
 							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
+							<DataHistory>DontUse</DataHistory>
+						</Properties>
+					</Attribute>
+					<Attribute uuid="a66c6583-3e62-4916-93da-8341b0681cdb">
+						<Properties>
+							<Name>Invoke</Name>
+							<Synonym>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Invoke</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Invoke</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Вызывать</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Викликати</v8:content>
+								</v8:item>
+							</Synonym>
+							<Comment>Helps to trigger all subordinate jobs during single call.</Comment>
+							<Type>
+								<v8:Type>xs:boolean</v8:Type>
+							</Type>
+							<PasswordMode>false</PasswordMode>
+							<Format/>
+							<EditFormat/>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Invoke subordinate helps to trigger all subordinate jobs during single call.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Invoke subordinate helps to trigger all subordinate jobs during single call.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Вызов подчиненных помогает запускать все подчиненные задания во время одного вызова.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Виклик підлеглих допомагає запускати всі підлеглі завдання під час одного виклику.</v8:content>
+								</v8:item>
+							</ToolTip>
+							<MarkNegatives>false</MarkNegatives>
+							<Mask/>
+							<MultiLine>false</MultiLine>
+							<ExtendedEdit>false</ExtendedEdit>
+							<MinValue xsi:nil="true"/>
+							<MaxValue xsi:nil="true"/>
+							<FillChecking>DontCheck</FillChecking>
+							<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
+							<ChoiceParameterLinks/>
+							<ChoiceParameters/>
+							<QuickChoice>DontUse</QuickChoice>
+							<CreateOnInput>DontUse</CreateOnInput>
+							<ChoiceForm/>
+							<LinkByType/>
+							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
+							<Indexing>DontIndex</Indexing>
+							<FullTextSearch>DontUse</FullTextSearch>
+							<DataHistory>DontUse</DataHistory>
 						</Properties>
 					</Attribute>
 					<Attribute uuid="0c0f774e-92a5-46fe-9ea5-3f5779b20840">
@@ -1777,7 +1843,7 @@
 							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 							<Indexing>DontIndex</Indexing>
 							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
+							<DataHistory>DontUse</DataHistory>
 						</Properties>
 					</Attribute>
 					<Attribute uuid="98d607b8-33da-41be-8765-9ad63809c65c">
@@ -1840,7 +1906,7 @@
 							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 							<Indexing>DontIndex</Indexing>
 							<FullTextSearch>DontUse</FullTextSearch>
-							<DataHistory>Use</DataHistory>
+							<DataHistory>DontUse</DataHistory>
 						</Properties>
 					</Attribute>
 				</ChildObjects>

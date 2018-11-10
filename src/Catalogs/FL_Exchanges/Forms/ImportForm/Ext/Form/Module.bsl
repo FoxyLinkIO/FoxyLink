@@ -733,7 +733,8 @@ Procedure ImportEvents(Object, ImportedExchange, OperationTable, EventTable)
             FillPropertyValues(NewEvent, Event, , "Operation");
             FillPropertyValues(NewEvent, OperationLine, "Operation");
             
-            RecordSet = InformationRegisters.FL_MessagePublishers.CreateRecordSet();
+            RecordSet = InformationRegisters.FL_MessagePublishers
+                .CreateRecordSet();
             RecordSet.Filter.EventSource.Set(NewEvent.MetadataObject);
             RecordSet.Filter.Operation.Set(NewEvent.Operation);
             
@@ -823,6 +824,18 @@ EndProcedure // ImportChannelResources()
 // Only for internal use.
 //
 &AtServerNoContext
+Procedure LegacyConvertionMethodIntoOperation(LegacyItem)
+    
+    For Each Item In LegacyItem Do
+        Item.Insert("Operation", Item.Method); 
+        Item.Delete("Method");
+    EndDo;
+    
+EndProcedure // LegacyConvertionMethodIntoOperation()
+
+// Only for internal use.
+//
+&AtServerNoContext
 Function FindOperationLines(VTOperations, FDCOperations, FilterParameters)
     
     FilterResult = FDCOperations.FindRows(New Structure("Operation", 
@@ -845,7 +858,23 @@ Function ImportedExchange()
     BinaryData = GetFromTempStorage(BinaryDataAddress);
     JSONReader = New JSONReader;
     JSONReader.OpenStream(BinaryData.OpenStreamForRead());
-    Return ReadJSON(JSONReader);
+    ImportedExchange = ReadJSON(JSONReader);
+    
+    // Support for older versions 0.9.7.1 and below.
+    If ImportedExchange.Property("Methods") Then
+        
+        ImportedExchange.Insert("Operations", FL_CommonUseClientServer
+            .CopyArray(ImportedExchange.Methods));
+        ImportedExchange.Delete("Methods");
+        
+        LegacyConvertionMethodIntoOperation(ImportedExchange.ChannelResources);
+        LegacyConvertionMethodIntoOperation(ImportedExchange.Channels);
+        LegacyConvertionMethodIntoOperation(ImportedExchange.Events);
+        LegacyConvertionMethodIntoOperation(ImportedExchange.Operations);
+            
+    EndIf;
+    
+    Return ImportedExchange;
     
 EndFunction // ImportedExchange()
 

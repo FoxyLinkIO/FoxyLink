@@ -549,6 +549,7 @@ Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
     For Each Endpoint In ExchangeEndpoints Do
         
         JobData = FL_BackgroundJob.NewJobData();
+        JobData.Invoke = Endpoint.Invoke;
         JobData.Isolated = Endpoint.Isolated;
         JobData.MethodName = Endpoint.EventHandler;
         JobData.Priority = Endpoint.Priority;
@@ -598,6 +599,7 @@ Procedure RouteToAppEndpoints(Source, Exchange, AppEndpoint, ExchangeJob)
         FillAppResources(Source, AppProperties, AppResources.FindRows(Filter));
         
         JobData = FL_BackgroundJob.NewJobData();
+        JobData.Invoke = TableRow.Invoke;
         JobData.Isolated = TableRow.Isolated;
         JobData.MethodName = "Catalogs.FL_Channels.ProcessMessage";
         JobData.Priority = TableRow.Priority;
@@ -821,6 +823,7 @@ Function QueryTextExchangeEndpoint()
     QueryText = "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
+        |   IsNull(OperationTable.Invoke, False) AS Invoke,
         |   IsNull(OperationTable.Isolated, False) AS Isolated,
         |   IsNull(OperationTable.Priority, 5) AS Priority, 
         |   IsNull(EventTable.EventHandler, &EventHandler) AS EventHandler,
@@ -855,6 +858,7 @@ Function QueryTextExchangeEndpoints()
     QueryText = "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
+        |   IsNull(OperationTable.Invoke, False) AS Invoke,
         |   IsNull(OperationTable.Isolated, False) AS Isolated, 
         |   IsNull(OperationTable.Priority, 5) AS Priority, 
         |   EventTable.EventHandler AS EventHandler,
@@ -900,6 +904,7 @@ Function QueryTextAppEndpoint()
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
         |   AppEndpoints.AppEndpoint AS AppEndpoint,
+        |   IsNull(Operations.Invoke, False) AS Invoke,
         |   IsNull(Operations.Isolated, False) AS Isolated,
         |   IsNull(Operations.Priority, 5) AS Priority
         |FROM
@@ -957,6 +962,7 @@ Function QueryTextAppEndpoints()
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
         |   AppEndpoints.AppEndpoint AS AppEndpoint,
+        |   Operations.Invoke AS Invoke,
         |   Operations.Isolated AS Isolated,
         |   Operations.Priority AS Priority
         |FROM

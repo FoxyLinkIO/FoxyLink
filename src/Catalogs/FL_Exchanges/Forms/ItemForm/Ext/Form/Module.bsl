@@ -943,6 +943,7 @@ Procedure LoadOperationSettings()
             "HiddenGroupSettings", RowOperation);
            
         CurrentData = CurrentOperationData(RowOperation);
+        RowInvoke = CurrentData.Invoke;
         RowIsolated = CurrentData.Isolated;
         RowPriority = CurrentData.Priority;
         RowCanUseExternalFunctions = CurrentData.CanUseExternalFunctions;
@@ -994,6 +995,7 @@ Procedure SaveOperationSettings()
         If Items.OperationPages.ChildItems.Find(RowOperation) <> Undefined Then
         
             ChangedData = CurrentOperationData(RowOperation);
+            ChangedData.Invoke = RowInvoke;
             ChangedData.Isolated = RowIsolated;
             ChangedData.Priority = RowPriority;
             ChangedData.CanUseExternalFunctions = RowCanUseExternalFunctions;

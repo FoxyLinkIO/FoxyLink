@@ -1513,7 +1513,7 @@ Function ValueFromXMLTypeAndValue(XMLValue, TypeName, NamespaceURI) Export
             Type = TypeOf(Undefined);    
         EndIf;
         
-        Return XMLValue(Type, XMLValue)
+        Return XMLValue(Type, XMLValue);
         
     Except
         
