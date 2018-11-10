@@ -97,6 +97,7 @@ Function Create(JobData) Export
     
     ListOfProperties = "CreatedAt, 
         |ExpireAt,
+        |Invoke,
         |Isolated,
         |MethodName, 
         |Priority, 
@@ -205,7 +206,9 @@ EndProcedure // AddToJobResult()
 //                                  Default value: Undefined.
 //      * CreatedAt     - Number               - job data creation time.
 //      * ExpireAt      - Number               - job data expiration time.
-//      * Isolated      - Boolean              - selps to protect each job from other jobs.
+//      * Invoke        - Boolean              - if True triggers all subordinate jobs during single call.
+//                                  Default value: False.
+//      * Isolated      - Boolean              - helps to protect each job from other jobs.
 //                                  Default value: False.      
 //      * MethodName    - String               - name of non-global common 
 //                              module method having the ModuleName.MethodName form.
@@ -231,6 +234,7 @@ Function NewJobData() Export
     JobData.Insert("Continuations");
     JobData.Insert("CreatedAt", CurrentUniversalDateInMilliseconds());
     JobData.Insert("ExpireAt");
+    JobData.Insert("Invoke", False);
     JobData.Insert("Isolated", False);
     JobData.Insert("MethodName");
     JobData.Insert("Priority", NormalPriority);
@@ -408,6 +412,9 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
     
     JobObject = Job.GetObject();
     JobObject.Output.Clear();
+    If JobObject.Invoke Then
+        Invoke = JobObject.Invoke;   
+    EndIf;
 
     Algorithm = BuildAlgorithm(JobObject, Output);
     Execute Algorithm;
@@ -478,18 +485,14 @@ Procedure ProcessSubordinateJobs(ParentJob, Output, OutputCopy, State, Invoke,
             // ChangeState(SubordinateJob, Catalogs.FL_States.Processing);.
             ProcessJob(SubordinateJob, Invoke, Output, OutputCopy);
             
-            // If the message size of parent job is exceeded the maximum, 
-            // it is needed to check child job state. If child job is failed,
-            // it is needed to mark parent job as failed too.
-            If SizeExceeded Then
-                
-                CurrentState = FL_CommonUse.ObjectAttributeValue(
-                    SubordinateJob, "State");   
-                If CurrentState <> Catalogs.FL_States.Succeeded Then   
-                    ChangeState(ParentJob, Catalogs.FL_States.Failed);    
-                EndIf;    
-                    
-            EndIf;
+            // If the message size of parent job is exceeded the maximum 
+            // or invoke is set, it is needed to check child job state. 
+            // If child job is failed, it is needed to mark parent job as failed too.
+            CurrentState = FL_CommonUse.ObjectAttributeValue(
+                SubordinateJob, "State");   
+            If CurrentState <> Catalogs.FL_States.Succeeded Then   
+                ChangeState(ParentJob, Catalogs.FL_States.Failed);    
+            EndIf;    
             
         Else
             

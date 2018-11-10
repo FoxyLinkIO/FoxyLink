@@ -570,7 +570,7 @@ Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
         ObjectRow = ObjectOperations.Find(FormRow.Operation, "Operation");
         
         FillPropertyValues(ObjectRow, FormRow, "CanUseExternalFunctions, 
-            |Isolated, Priority"); 
+            |Invoke, Isolated, Priority"); 
         
         If IsTempStorageURL(FormRow.DataCompositionSchemaAddress) Then
             ObjectRow.DataCompositionSchema = New ValueStorage(
