@@ -146,11 +146,12 @@ Procedure ChannelsSelection(Item, SelectedRow, Field, StandardProcessing)
     StandardProcessing = False;
     SelectedRow = Object.Channels.FindByID(SelectedRow);
     
-    ChannelParameters = ChannelParameters(SelectedRow.Channel, "ChannelForm");
-    ChannelParameters.Insert("ChannelRef", SelectedRow.Channel);
+    AppEndpointParameters = ChannelParameters(SelectedRow.Channel, 
+        "ChannelForm");
+    AppEndpointParameters.Insert("AppEndpoint", SelectedRow.Channel);
  
-    OpenForm(ChannelParameters.FormName, 
-        ChannelParameters, 
+    OpenForm(AppEndpointParameters.FormName, 
+        AppEndpointParameters, 
         ThisObject,
         New UUID, 
         , 

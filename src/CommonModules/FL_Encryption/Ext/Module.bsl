@@ -19,6 +19,32 @@
 
 #Region ProgramInterface
 
+// Adds basic authorization header.
+//
+// Parameters:
+//  Headers       - Map        - headers that will be sent to server as a correspondence.
+//  Login         - String     - connection login or name of the field in encrypted data.
+//  Password      - String     - connection password or name of the field in encrypted data.
+//  EncryptedData - ValueTable - collection with encrypted data.
+//                      Default value: Undefined.
+//
+Procedure AddBasicAuthorizationHeader(Headers, Val Login, Val Password, 
+    EncryptedData = Undefined) Export
+    
+    If EncryptedData <> Undefined Then
+        Login = EncryptedFiledValue(Login, EncryptedData);    
+        Password = EncryptedFiledValue(Password, EncryptedData);
+    EndIf;
+    
+    AuthCombination = StrTemplate("%1:%2", Login, Password);
+    Authorization = Base64String(GetBinaryDataFromString(AuthCombination));
+    Authorization = StrReplace(Authorization, Chars.CR, "");
+    Authorization = StrReplace(Authorization, Chars.LF, "");
+    Authorization = StrReplace(Authorization, Chars.CR + Chars.LF, "");
+    Headers.Insert("Authorization", StrTemplate("Basic %1", Authorization));
+    
+EndProcedure // AddBasicAuthorizationHeader()
+
 // Calculates OAuth signature. 
 //
 // Parameters:
@@ -302,24 +328,25 @@ EndProcedure // UpdateEncryptedData()
 // Returns field value by the passed field name.
 //
 // Parameters:
-//  FieldName     - String - field name.
-//  EncryptedData - FormDataCollection - collection with encrypted data.
+//  FieldName  - String - field name.
+//  Collection - FormDataCollection - collection with encrypted data.
+//             - ValueTable         - value table with encrypted data.
 //
 // Returns:
 //  String - field value.
 //
-Function FieldValue(FieldName, EncryptedData) Export
+Function FieldValue(FieldName, Collection) Export
     
-    SearchResult = EncryptedData.Find(FieldName, "FieldName");
-    If SearchResult <> Undefined 
-        AND IsBlankString(SearchResult.EncryptNumber) Then
-        
-        Return SearchResult.FieldValue;
-        
+    FilterParameters = New Structure("FieldName", FieldName);
+    FilterResult = Collection.FindRows(FilterParameters);
+    If FilterResult.Count() = 1 
+        AND IsBlankString(FilterResult[0].EncryptNumber) Then
+        Return FilterResult[0].FieldValue;
     EndIf;
-    
+        
     Raise NStr("en='Value not found or encrypted.';
         |ru='Значение не найдено или зашифровано.';
+        |uk='Значення не знайдено або зашифровано.';
         |en_CA='Value not found or encrypted.'");
     
 EndFunction // FieldValue()

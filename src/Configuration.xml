@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.320</Version>
+			<Version>0.9.9.322</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -251,6 +251,7 @@
 			<CommonPicture>FL_DeleteLink</CommonPicture>
 			<CommonPicture>FL_DeleteRow</CommonPicture>
 			<CommonPicture>FL_Disconnected</CommonPicture>
+			<CommonPicture>FL_DocuSign</CommonPicture>
 			<CommonPicture>FL_Download</CommonPicture>
 			<CommonPicture>FL_Edit</CommonPicture>
 			<CommonPicture>FL_Event</CommonPicture>

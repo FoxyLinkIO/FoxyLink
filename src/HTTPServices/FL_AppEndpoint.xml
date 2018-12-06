@@ -24,7 +24,7 @@
 			<Comment/>
 			<RootURL>AppEndpoint</RootURL>
 			<ReuseSessions>AutoUse</ReuseSessions>
-			<SessionMaxAge>60</SessionMaxAge>
+			<SessionMaxAge>300</SessionMaxAge>
 		</Properties>
 		<ChildObjects>
 			<URLTemplate uuid="25dc3394-6486-4467-91d6-03e26881ec67">

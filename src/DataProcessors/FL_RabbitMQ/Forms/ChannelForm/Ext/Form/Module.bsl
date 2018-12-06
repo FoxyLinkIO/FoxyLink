@@ -22,19 +22,19 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
-    Var ChannelRef;
-    
     If Parameters.Property("AutoTest") Then
         Return;
     EndIf;
     
-    If Parameters.Property("ChannelRef", ChannelRef) Then
+    If Parameters.Property("AppEndpoint", AppEndpoint)
+        AND NOT Parameters.Property("ChannelData") 
+        AND NOT Parameters.Property("EncryptedData") Then
         
-        For Each Item In ChannelRef.ChannelData Do
+        For Each Item In AppEndpoint.ChannelData Do
             FillPropertyValues(Object.ChannelData.Add(), Item);
         EndDo;
         
-        For Each Item In ChannelRef.EncryptedData Do
+        For Each Item In AppEndpoint.EncryptedData Do
             FillPropertyValues(Object.EncryptedData.Add(), Item);
         EndDo;
             

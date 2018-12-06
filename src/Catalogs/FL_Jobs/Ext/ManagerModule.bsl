@@ -28,16 +28,15 @@
 // the following Wednesday.
 //
 // Parameters:
-//  Jobs   - Array              - array of references to the jobs to be triggered.
-//         - CatalogRef.FL_Jobs - reference to the job to be triggered.
-//  Invoke - Boolean            - if True triggers all subordinate jobs during this call.
+//  Jobs          - Array              - array of references to the jobs to be triggered.
+//                - CatalogRef.FL_Jobs - reference to the job to be triggered.
+//  Invoke        - Boolean            - if True triggers all subordinate jobs during this call.
 //                          Default value: False.
-//  OutputCopy        - ValueTable         - helps to make copy of output parameters.
-//      ** Name  - String    - parameter name.
-//      ** Value - Arbitrary - parameter value.
+//  JobResultCopy - Structure          - returns the copy of last job result execution.
+//                                       See function Catalogs.FL_Jobs.NewJobResult.
 //                          Default value: Undefined.
 //
-Procedure Trigger(Jobs, Invoke = False, OutputCopy = Undefined) Export
+Procedure Trigger(Jobs, Invoke = False, JobResultCopy = Undefined) Export
        
     ValidJobs = New Array;
     ValidateJobType(ValidJobs, Jobs);
@@ -48,7 +47,7 @@ Procedure Trigger(Jobs, Invoke = False, OutputCopy = Undefined) Export
             OR FL_CommonUse.ObjectAttributeValue(Job, "Transactional") Then
             
             // Helps to avoid hierarchical transaction errors.
-            ProcessJob(Job, Invoke, , OutputCopy);
+            ProcessJob(Job, Invoke, , JobResultCopy);
             
         Else
             
@@ -58,7 +57,7 @@ Procedure Trigger(Jobs, Invoke = False, OutputCopy = Undefined) Export
                 
                 BeginTransaction();
 
-                ProcessJob(Job, Invoke, , OutputCopy);
+                ProcessJob(Job, Invoke, , JobResultCopy);
                 
                 CommitTransaction();
                 
@@ -404,7 +403,7 @@ EndFunction // QueryTextParentJobsOutputTable()
 
 // Only for internal use.
 //
-Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
+Procedure ProcessJob(Job, Invoke, Output = Undefined, JobResultCopy = Undefined)
        
     Var BasicResult;
     
@@ -441,9 +440,8 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
         JobObject.State = Catalogs.FL_States.Failed;       
     EndIf;
 
-    If TypeOf(OutputCopy) = Type("ValueTable") Then
-        FL_CommonUseClientServer.ExtendValueTable(FinalResult.Output, 
-            OutputCopy);    
+    If TypeOf(JobResultCopy) = Type("Structure") Then
+        JobResultCopy = FL_CommonUseClientServer.CopyStructure(FinalResult);   
     EndIf;
     
     // If message size exceeded the maximum we have to process 
@@ -462,15 +460,15 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
     // End measuring and recording performance metrics.
     RecordJobObjectPerformanceMetrics(JobObject, StartTime); 
     
-    ProcessSubordinateJobs(Job, FinalResult.Output, OutputCopy, 
+    ProcessSubordinateJobs(Job, FinalResult.Output, JobResultCopy, 
         JobObject.State, Invoke, SizeExceeded);
         
 EndProcedure // ProcessJob()
 
 // Only for internal use.
 //
-Procedure ProcessSubordinateJobs(ParentJob, Output, OutputCopy, State, Invoke,
-    SizeExceeded)
+Procedure ProcessSubordinateJobs(ParentJob, Output, JobResultCopy, State, 
+    Invoke, SizeExceeded)
     
     If State <> Catalogs.FL_States.Succeeded Then
         Return;
@@ -483,7 +481,7 @@ Procedure ProcessSubordinateJobs(ParentJob, Output, OutputCopy, State, Invoke,
             
             // It is not needed to change state here because transaction is active
             // ChangeState(SubordinateJob, Catalogs.FL_States.Processing);.
-            ProcessJob(SubordinateJob, Invoke, Output, OutputCopy);
+            ProcessJob(SubordinateJob, Invoke, Output, JobResultCopy);
             
             // If the message size of parent job is exceeded the maximum 
             // or invoke is set, it is needed to check child job state. 
