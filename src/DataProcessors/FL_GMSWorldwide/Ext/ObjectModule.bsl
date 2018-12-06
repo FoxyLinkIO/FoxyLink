@@ -107,9 +107,7 @@ Procedure DeliverMessage(Payload, Properties, JobResult) Export
     
     FL_InteriorUse.CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, 
         JobResult);
-        
-    
-        
+          
     If HTTPMethod = "GET" 
         AND JobResult.StatusCode = 405 Then
         JobResult.Success = True;

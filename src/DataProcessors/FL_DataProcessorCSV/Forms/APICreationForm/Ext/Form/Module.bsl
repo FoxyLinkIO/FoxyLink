@@ -60,9 +60,7 @@ EndProcedure // OnCreateAtServer()
 &AtClient
 Procedure FormatTypeOnChange(Item)
     
-    If FormatType = "CSV" Then
-        Delimiter = ",";
-    ElsIf FormatType = "TSV" Then
+    If FormatType = "TSV" Then
         Delimiter = Chars.Tab;
     Else 
         Delimiter = ",";

@@ -100,7 +100,66 @@ Procedure RouteAndRun(Source, Exchange = Undefined,
     MessageObject.Write();   
     
 EndProcedure // RouteAndRun()    
+
+// Returns an output result of message that is delivered into exchange and 
+// app endpoint if it's set.
+//
+// Parameters:
+//  Source      - Structure, FixedStructure - see function Catalogs.FL_Messages.NewInvocation.
+//              - CatalogRef.FL_Messages    - a single message to get result.
+//  Exchange    - CatalogRef.FL_Exchanges   - a routing exchange.
+//  AppEndpoint - CatalogRef.FL_Channels    - a receiver channel.
+//                      Default value: Null.
+//
+Function RouteAndRunOutputResult(Source, Exchange, AppEndpoint = Null) Export
     
+    If TransactionActive() Then
+        
+        Message = GetMessage(Source);
+        RouteAndRun(Message, Exchange, AppEndpoint);    
+        
+    Else
+        
+        Try
+        
+            BeginTransaction();
+            
+            Message = GetMessage(Source);
+            RouteAndRun(Message, Exchange, AppEndpoint); 
+            
+            CommitTransaction();
+        
+        Except
+            
+            RollbackTransaction();
+            
+            ErrorMessage = ErrorDescription();
+            FL_InteriorUse.WriteLog("FoxyLink.Integration.RouteAndRunResult",
+                EventLogLevel.Error,
+                Metadata.Catalogs.FL_Messages,
+                ErrorMessage);
+                
+            // Move message up in stack 
+            Raise ErrorMessage;
+            
+        EndTry;
+        
+    EndIf;
+    
+    If AppEndpoint <> Undefined Then
+        
+    Else
+        
+        
+        
+    EndIf;
+    
+    Return undefined;
+    
+EndFunction // RouteAndRunOutputResult()
+
+// Deprecated. Use function Catalogs.FL_Messages.RouteAndRunOutputResult.
+// 
 // Routes and runs message to exchange and returns outputs.
 //
 // Parameters:
@@ -466,6 +525,8 @@ EndFunction // NewInvocation()
 
 #Region ServiceProceduresAndFunctions
 
+// Deprecated. 
+//
 // Only for internal use.
 //
 Procedure TriggerMessage(Source, Exchange, OutputCopy)
@@ -571,8 +632,10 @@ Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
         NewRow.Exchange = Endpoint.Exchange;
         NewRow.Job = ExchangeJob;
         
-        RouteToAppEndpoints(Source, Endpoint.Exchange, AppEndpoint, 
-            ExchangeJob);
+        If AppEndpoint <> Null Then
+            RouteToAppEndpoints(Source, Endpoint.Exchange, AppEndpoint, 
+                ExchangeJob);
+        EndIf;
         
     EndDo;
     
@@ -743,7 +806,7 @@ EndFunction // ExchangeEndpoints()
 // Only for internal use.
 //
 Function AppEndpoints(Source, Exchange, AppEndpoint)
-    
+        
     Query = New Query;
     Query.Text = QueryTextAppEndpoints();
     Query.SetParameter("Exchange", Exchange);
