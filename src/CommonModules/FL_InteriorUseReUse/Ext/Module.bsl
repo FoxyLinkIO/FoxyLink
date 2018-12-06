@@ -101,12 +101,12 @@ Function AvailableEventHandlers(Operation, Val MetadataObject = Undefined) Expor
             
             If TypeOf(EventSources) = Type("FixedArray") Then
                 
-                If NOT ValueIsFilled(MetadataObject) Then
+                If NOT ValueIsFilled(MetadataObject) 
+                    OR EventSources.Find(MetadataObject) <> Undefined 
+                    OR EventSources.Find(ObjectTypeName) <> Undefined Then
+                    
                     PublishersArray.Add(EventHandlerInfo);
-                ElsIf EventSources.Find(MetadataObject) <> Undefined Then
-                    PublishersArray.Add(EventHandlerInfo);
-                ElsIf EventSources.Find(ObjectTypeName) <> Undefined Then
-                    PublishersArray.Add(EventHandlerInfo);
+                    
                 EndIf;
                 
             EndIf;

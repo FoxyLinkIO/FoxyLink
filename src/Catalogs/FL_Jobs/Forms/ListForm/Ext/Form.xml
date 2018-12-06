@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6">
 	<Title>
 		<v8:item>
 			<v8:lang>en</v8:lang>
@@ -402,6 +402,7 @@
 			</Picture>
 			<Action>TriggerSelectedMessages</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="TriggerMessages" id="2">
 			<Title>
@@ -438,6 +439,7 @@
 			</Picture>
 			<Action>TriggerMessages</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="StartJobServer" id="3">
 			<Title>
@@ -474,6 +476,7 @@
 			</Picture>
 			<Action>StartJobServer</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="StopJobServer" id="4">
 			<Title>
@@ -510,6 +513,7 @@
 			</Picture>
 			<Action>StopJobServer</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="ConfigureJobServer" id="5">
 			<Title>
@@ -536,6 +540,7 @@
 					<v8:content>Configure job server</v8:content>
 				</v8:item>
 			</ToolTip>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="EnqueuedJobs" id="6">
 			<Title>
@@ -574,6 +579,7 @@
 					<v8:content>Завдання в черзі</v8:content>
 				</v8:item>
 			</ToolTip>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="ScheduledJobs" id="7">
 			<Title>
@@ -612,6 +618,7 @@
 					<v8:content>Заплановані завдання</v8:content>
 				</v8:item>
 			</ToolTip>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="ProcessingJobs" id="8">
 			<Title>
@@ -650,6 +657,7 @@
 					<v8:content>Завдання в процесі обробки</v8:content>
 				</v8:item>
 			</ToolTip>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="SucceededJobs" id="9">
 			<Title>
@@ -688,6 +696,7 @@
 					<v8:content>Успішні завдання</v8:content>
 				</v8:item>
 			</ToolTip>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="FailedJobs" id="10">
 			<Title>
@@ -726,6 +735,7 @@
 					<v8:content>Невдалі завдання</v8:content>
 				</v8:item>
 			</ToolTip>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="DeletedJobs" id="11">
 			<Title>
@@ -764,6 +774,7 @@
 					<v8:content>Видалені завдання</v8:content>
 				</v8:item>
 			</ToolTip>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="AwaitingJobs" id="12">
 			<Title>
@@ -802,6 +813,7 @@
 					<v8:content>Завдання в очікуванні</v8:content>
 				</v8:item>
 			</ToolTip>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 	</Commands>
 </Form>
