@@ -44,10 +44,11 @@ EndProcedure // AddFieldValue()
 //  FieldValue - String             - field value.
 //
 Procedure SetFieldValue(Collection, FieldName, FieldValue) Export
-
-    CollectionRow = Collection.Find(FieldName, "FieldName");
-    If CollectionRow <> Undefined Then
-        CollectionRow.FieldValue = FieldValue;
+    
+    FilterParameters = New Structure("FieldName", FieldName);
+    FilterResult = Collection.FindRows(FilterParameters);
+    If FilterResult.Count() > 0 Then
+        FilterResult[0].FieldValue = FieldValue;
     Else
         AddFieldValue(Collection, FieldName, FieldValue);  
     EndIf;    

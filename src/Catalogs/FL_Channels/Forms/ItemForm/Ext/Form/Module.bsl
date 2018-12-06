@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2018 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -77,6 +77,7 @@ Procedure ChannelForm(Command)
     
     ChannelParameters = ChannelParameters(Object.BasicChannelGuid, 
         "ChannelForm");
+    ChannelParameters.Insert("AppEndpoint", Object.Ref);
     ChannelParameters.Insert("ChannelData", Object.ChannelData);
     ChannelParameters.Insert("EncryptedData", Object.EncryptedData);
     
@@ -114,16 +115,19 @@ Procedure Disconnect(Command)
     If NOT Modified Then
         
         ShowQueryBox(New NotifyDescription("DoAfterChannelDisconnect", ThisObject),
-            NStr("en='Invalidate channel connection?';
-                |ru='Отключить соединение с каналом?';
-                |en_CA='Invalidate channel connection?'"),
+            NStr("en='Invalidate app endpoint connection?';
+                |ru='Отключить соединение с конечной точкой?';
+                |uk='Відключити підключення до кінцевої точки?';
+                |en_CA='Invalidate app endpoint connection?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);
         
     Else
         
-        FL_CommonUseClientServer.NotifyUser(NStr("en='There are unsaved changes, they must be saved.';
-            |ru='Имеются несохраненные изменения, их необходимо сохранить.';
-            |en_CA='There are unsaved changes, they must be saved.'"));        
+        FL_CommonUseClientServer.NotifyUser(
+            NStr("en='There are unsaved changes, they must be saved.';
+                |ru='Имеются несохраненные изменения, их необходимо сохранить.';
+                |uk='Є незбережені зміни, їх необхідно зберегти.';
+                |en_CA='There are unsaved changes, they must be saved.'"));        
         
     EndIf;
     

@@ -83,9 +83,12 @@ EndProcedure // Route()
 //                      Default value: Undefined.
 //  AppEndpoint - CatalogRef.FL_Channels    - a receiver channel.
 //                      Default value: Undefined.
+//  JobResult   - Structure                 - returns the copy of last job result execution.
+//                                            See function Catalogs.FL_Jobs.NewJobResult.
+//                      Default value: Undefined.
 //
 Procedure RouteAndRun(Source, Exchange = Undefined, 
-    AppEndpoint = Undefined) Export
+    AppEndpoint = Undefined, JobResult = Undefined) Export
 
     Message = GetMessage(Source);
     
@@ -94,7 +97,7 @@ Procedure RouteAndRun(Source, Exchange = Undefined,
     RouteToEndpoints(MessageObject, Exchange, AppEndpoint, True);
     
     For Each Row In MessageObject.Exchanges Do
-        Catalogs.FL_Jobs.Trigger(Row.Job, True);    
+        Catalogs.FL_Jobs.Trigger(Row.Job, True, JobResult);    
     EndDo;
     
     MessageObject.Write();   
@@ -113,10 +116,13 @@ EndProcedure // RouteAndRun()
 //
 Function RouteAndRunOutputResult(Source, Exchange, AppEndpoint = Null) Export
     
+    // Copy of the job result, see function Catalogs.FL_Jobs.NewJobResult.
+    JobResult = Catalogs.FL_Jobs.NewJobResult();
+    
     If TransactionActive() Then
         
         Message = GetMessage(Source);
-        RouteAndRun(Message, Exchange, AppEndpoint);    
+        RouteAndRun(Message, Exchange, AppEndpoint, JobResult);    
         
     Else
         
@@ -125,7 +131,7 @@ Function RouteAndRunOutputResult(Source, Exchange, AppEndpoint = Null) Export
             BeginTransaction();
             
             Message = GetMessage(Source);
-            RouteAndRun(Message, Exchange, AppEndpoint); 
+            RouteAndRun(Message, Exchange, AppEndpoint, JobResult); 
             
             CommitTransaction();
         
@@ -146,70 +152,9 @@ Function RouteAndRunOutputResult(Source, Exchange, AppEndpoint = Null) Export
         
     EndIf;
     
-    If AppEndpoint <> Undefined Then
-        
-    Else
-        
-        
-        
-    EndIf;
-    
-    Return undefined;
+    Return JobResult;
     
 EndFunction // RouteAndRunOutputResult()
-
-// Deprecated. Use function Catalogs.FL_Messages.RouteAndRunOutputResult.
-// 
-// Routes and runs message to exchange and returns outputs.
-//
-// Parameters:
-//  Source      - Structure, FixedStructure - see function Catalogs.FL_Messages.NewInvocation.
-//              - CatalogRef.FL_Messages    - a single message to route.
-//  Exchange    - CatalogRef.FL_Exchanges   - a routing exchange.
-//
-// Returns:
-//  ValueTable - copy of output parameters, see function Catalogs.FL_Jobs.NewJobResult.  
-//
-Function RouteOnlyToExchangeAndRun(Source, Exchange) Export
-    
-    OutputCopy = Catalogs.FL_Jobs.NewJobResult().Output;
-    
-    If TransactionActive() Then
-            
-        // Helps to avoid hierarchical transaction errors.
-        TriggerMessage(Source, Exchange, OutputCopy);
-        
-    Else
-    
-        Try
-            
-            BeginTransaction();
-            
-            TriggerMessage(Source, Exchange, OutputCopy); 
-             
-            CommitTransaction();
-        
-        Except
-            
-            RollbackTransaction();
-            
-            ErrorMessage = ErrorDescription();
-            FL_InteriorUse.WriteLog(
-                "FoxyLink.Integration.RouteOnlyToExchangeAndRun", 
-                EventLogLevel.Error,
-                Metadata.Catalogs.FL_Messages,
-                ErrorMessage);
-                
-            // Move message up in stack 
-            Raise ErrorMessage;
-            
-        EndTry;
-    
-    EndIf;
-    
-    Return OutputCopy;
-    
-EndFunction // RouteOnlyToExchangeAndRun()
 
 // Creates a message based on a given event object call expression.
 //
@@ -524,26 +469,6 @@ EndFunction // NewInvocation()
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
-
-// Deprecated. 
-//
-// Only for internal use.
-//
-Procedure TriggerMessage(Source, Exchange, OutputCopy)
-    
-    Message = GetMessage(Source);
-    MessageObject = Message.GetObject();
-    MessageObject.Routed = True;
-    
-    ExchangeJob = RouteToExchange(Message, Exchange);
-        NewRow = MessageObject.Exchanges.Add();
-        NewRow.Exchange = Exchange;
-        NewRow.Job = ExchangeJob;
-    MessageObject.Write();
-    
-    Catalogs.FL_Jobs.Trigger(ExchangeJob, True, OutputCopy);
-    
-EndProcedure // TriggerMessage()
 
 // Only for internal use.
 //
@@ -1097,8 +1022,7 @@ Function QueryTextMessagePayload()
     Return QueryText;
     
 EndFunction // QueryTextMessagePayload()
-
+    
 #EndRegion // ServiceProceduresAndFunctions
 
 #EndIf
-

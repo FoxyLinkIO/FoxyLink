@@ -236,11 +236,13 @@ Function ExportObject(Exchange) Export
     Catalogs.FL_Messages.AddToContext(Invocation.Context, "Ref", Exchange, 
         True);
     
-    Output = Catalogs.FL_Messages.RouteOnlyToExchangeAndRun(Invocation, 
+    JobResult = Catalogs.FL_Messages.RouteAndRunOutputResult(Invocation, 
         Catalogs.FL_Exchanges.Self);    
-    If TypeOf(Output) = Type("ValueTable") Then
-        PayloadRow = Output.Find("Payload", "Name");
-        PropertiesRow = Output.Find("Properties", "Name");
+        
+    If JobResult.Success 
+        AND TypeOf(JobResult.Output) = Type("ValueTable") Then
+        PayloadRow = JobResult.Output.Find("Payload", "Name");
+        PropertiesRow = JobResult.Output.Find("Properties", "Name");
     EndIf;
         
     If PayloadRow <> Undefined 
