@@ -435,8 +435,8 @@ Procedure PopJobServerState(WorkerCount, ProcessingJobs, RetryJobs)
         
     EndDo;
     
-    WorkerTable = FL_CommonUse.RemoveDuplicatesFromValueTable(
-        JobTable.Copy(, "TaskId"));
+    WorkerTable = JobTable.Copy(, "TaskId");
+    FL_CommonUse.RemoveDuplicatesFromValueTable(WorkerTable);
     ReduceAvailableWorkerCount(WorkerCount, WorkerTable, BackgroundJobCache);
      
 EndProcedure // PopJobServerState()
