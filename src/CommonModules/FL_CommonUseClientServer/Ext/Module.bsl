@@ -389,6 +389,42 @@ Function IsObjectAttribute(Object, AttributeName) Export
 
 EndFunction // IsObjectAttribute()
 
+#Region FilterOperations
+
+// Sets a value to the dynamic list parameter with supplied name.
+//
+// Parameters:
+//  DynamicList - DynamicList - dynamic list to which it's required to set the parameter.
+//  Name        - String      - parameter name.
+//  Value       - Arbitrary   - a new parameter value.
+//  Use         - Boolean     - if True - the parameter is used, otherwise not.
+//                      Default value: Undefined.
+//
+Procedure SetDynamicListParameter(DynamicList, Name, Value, Use = True) Export
+
+    If TypeOf(DynamicList) <> Type("DynamicList") Then
+        Return;
+    EndIf;
+    
+    DataCompositionParameter = New DataCompositionParameter(Name);
+    DataCompositionParameterValue = DynamicList.Parameters.FindParameterValue(
+        DataCompositionParameter);
+    If DataCompositionParameterValue <> Undefined Then
+        
+        If Use AND DataCompositionParameterValue.Value <> Value Then
+            DataCompositionParameterValue.Value = Value;
+        EndIf;
+        
+        If DataCompositionParameterValue.Use <> Use Then
+            DataCompositionParameterValue.Use = Use;
+        EndIf;
+        
+    EndIf;
+
+EndProcedure // SetDynamicListParameter()
+
+#EndRegion // FilterOperations 
+
 #Region StringOperations
 
 // Removes insignificant characters to the left of the first significant 

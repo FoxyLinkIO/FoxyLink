@@ -282,47 +282,38 @@ EndProcedure // AddAndEncryptFieldValue()
 // Updates encrypted data table from string body.
 //
 // Parameters:
-//  Body                - String - body with values for update.
+//  Parameters          - Map    - body with values for update.
 //  StringFields        - String - list of fields to find in the body.
 //  StringEncryptFields - String - list of fields to be encrypted.
 //  EncryptedData       - FormDataCollection - collection to be filled from body.
 //
-Procedure UpdateEncryptedData(Body, StringFields, StringEncryptFields, 
+Procedure UpdateEncryptedData(Parameters, StringFields, StringEncryptFields, 
     EncryptedData) Export
     
     Fields = StrSplit(StringFields, ",");
     EncryptFields = StrSplit(StringEncryptFields, ","); 
     
-    BodyParts = StrSplit(Body, "&");
-    For Each BodyPart In BodyParts Do
+    For Each FieldName In Fields Do
         
-        Position = StrFind(BodyPart, "=");
-        If Position > 0 Then
+        FieldValue = Parameters.Get(FieldName);
+        If FieldValue = Undefined Then
+            Continue;    
+        EndIf;
+        
+        FL_EncryptionClientServer.SetFieldValue(EncryptedData, FieldName, 
+            FieldValue);
+                        
+        If EncryptFields.Find(FieldName) <> Undefined Then
             
-            FieldName  = Left(BodyPart, Position - 1);
-            FieldValue = Mid(BodyPart, Position + 1);
-            If Fields.Find(FieldName) <> Undefined Then
+            FilterParameters = New Structure("FieldName", FieldName);
+            FilterResult = EncryptedData.FindRows(FilterParameters);
+            FL_EncryptionKeys.EncryptString(FilterResult[0].FieldValue, 
+                FilterResult[0].EncryptNumber);
                 
-                FilterResult = EncryptedData.FindRows(New Structure("FieldName", FieldName));
-                If FilterResult.Count() = 0 Then
-                    RowResult = EncryptedData.Add();
-                Else
-                    RowResult = FilterResult[0];    
-                EndIf;
-                
-                RowResult.FieldName  = FieldName;
-                RowResult.FieldValue = FieldValue;
-                If EncryptFields.Find(RowResult.FieldName) <> Undefined Then
-                    FL_EncryptionKeys.EncryptString(RowResult.FieldValue, 
-                        RowResult.EncryptNumber);       
-                EndIf; 
-                
-            EndIf;
-            
         EndIf;
         
     EndDo;
-                
+                    
 EndProcedure // UpdateEncryptedData()
 
 // Returns field value by the passed field name.
@@ -350,21 +341,25 @@ Function FieldValue(FieldName, Collection) Export
         |en_CA='Value not found or encrypted.'");
     
 EndFunction // FieldValue()
-    
-#EndRegion // ServiceInterface
 
-#Region ServiceProceduresAndFunctions
-
-// Only for internal use.
+// Returns encrypted field value by the passed field name.
 //
-Function EncryptedFiledValue(FieldName, EncryptedData)
+// Parameters:
+//  FieldName  - String             - field name.
+//  Collection - FormDataCollection - collection with encrypted data.
+//             - ValueTable         - value table with encrypted data.
+//
+// Returns:
+//  String - field value.
+//
+Function EncryptedFiledValue(FieldName, Collection) Export
     
-    FieldValue = "";
-    SearchResult = EncryptedData.Find(FieldName, "FieldName");
-    If SearchResult <> Undefined Then
+    FilterParameters = New Structure("FieldName", FieldName);
+    FilterResult = Collection.FindRows(FilterParameters);
+    If FilterResult.Count() = 1 Then
         
-        FieldValue = SearchResult.FieldValue;
-        EncryptNumber = SearchResult.EncryptNumber;
+        FieldValue = FilterResult[0].FieldValue;
+        EncryptNumber = FilterResult[0].EncryptNumber;
         If NOT IsBlankString(EncryptNumber) Then
             FL_EncryptionKeys.DecryptString(FieldValue, EncryptNumber);
         EndIf;
@@ -374,6 +369,10 @@ Function EncryptedFiledValue(FieldName, EncryptedData)
     Return FieldValue;
   
 EndFunction // EncryptedFiledValue()
+
+#EndRegion // ServiceInterface
+
+#Region ServiceProceduresAndFunctions
 
 // Only for internal use.
 //

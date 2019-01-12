@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -882,15 +882,10 @@ Procedure FillParameterValueCollectionFromValueTable(DataParameters, Context)
                 
         ElsIf Parameters.Count() > 1 Then 
             
-            If NOT Item.ValueListAllowed Then
+            If NOT Item.ValueListAllowed Then   
                 
-                ErrorMessage = NStr("en='The invocation context has several primary key values.
-                    |Parameter property {ValueListAllowed} is set to value {False}.';
-                    |ru='Контекст вызова имеет несколько значений первичных ключей.
-                    |Свойству параметра {ДоступенСписокЗначений} установлено значение {Ложь}.';
-                    |en_CA='The invocation context has several primary key values.
-                    |Parameter property {ValueListAllowed} is set to value {False}.'");
-                        
+                ErrorMessage = FL_ErrorsClientServer
+                    .ErrorDataCompositionDataParameterValueListNotAllowed(PrimaryKey);
                 Raise ErrorMessage;
                 
             EndIf;
@@ -900,9 +895,9 @@ Procedure FillParameterValueCollectionFromValueTable(DataParameters, Context)
                 ValueList.Add(Parameter.Value);        
             EndDo;
             
-            SetDataCompositionDataParameterValue(DataParameters, PrimaryKey, 
+             SetDataCompositionDataParameterValue(DataParameters, PrimaryKey, 
                 ValueList);
-            
+                        
         EndIf;
                 
     EndDo;
@@ -926,33 +921,21 @@ Procedure FillParameterValueCollectionFromStructure(DataParameters, Settings)
         Parameter = New DataCompositionParameter(Setting.Key);   
         AvailableParameter = AvailableParameters.FindParameter(Parameter);
         If AvailableParameter = Undefined Then
-            
-            ErrorMessage = StrTemplate(
-                NStr("en='Warning: Available parameter not found for {%1}.'; 
-                    |ru='Предупреждение: Доступный параметр не найден для {%1}.'; 
-                    |uk='Попередження: Доступний параметр не знайдено для {%1}.';
-                    |en_CA='Warning: Available parameter not found for {%1}.';"),
-                Setting.Key);
-            ErrorMessages.Add(ErrorMessage);
+            ErrorMessages.Add(FL_ErrorsClientServer
+                .WarningDataCompositionAvailableParameterNotFound(Setting.Key));
             Continue;
-            
         EndIf;
         
-        ConversionResult = FL_CommonUse.ConvertValueIntoPlatformObject(
-            Setting.Value, AvailableParameter.Type.Types());
+        ConversionResult = ConvertDataTransferObject(AvailableParameter, Setting);
         If ConversionResult.TypeConverted Then
-            
             SetDataCompositionDataParameterValue(DataParameters, Setting.Key, 
                 ConversionResult.ConvertedValue);
-                
         Else
-            
             CriticalError = True;
             FL_ErrorsClientServer.PersonalizeErrorsWithKey(
                 ConversionResult.ErrorMessages, ErrorMessages, Setting.Key);
-            
         EndIf;
-        
+                
     EndDo;
     
     If CriticalError Then
@@ -982,15 +965,72 @@ Procedure SetDataCompositionDataParameterValue(DataParameters, ID, Value)
         // Research is needed whether we can add new parameters.        
         Raise StrTemplate(NStr("en='For field {%1} adding new elements into 
                 |{DataCompositionParameterValueCollection} not implemented.';
-            |ru='Для поля {%1} добавление новых элементов в 
+                |ru='Для поля {%1} добавление новых элементов в 
                 |{КоллекцияЗначенийПараметровКомпоновкиДанных} не реализовано.';
-            |en_CA='For field {%1} adding new elements into 
+                |uk='Для поля {%1} додавання нових елементів в 
+                |{КоллекцияЗначенийПараметровКомпоновкиДанных} не реалізовано.';
+                |en_CA='For field {%1} adding new elements into 
                 |{DataCompositionParameterValueCollection} not implemented.'"),
             ID);
         
     EndIf;
 
-EndProcedure // SetValueOfDataCompositionAvailableParameter()
+EndProcedure // SetDataCompositionDataParameterValue()
+
+// Convert data transfer object to 1C:Enterprise object.
+//
+// Parameters:
+//  Parameter - DataCompositionAvailableParameter - available parameter.
+//  DTObject  - Arbitrary                         - DTO object to be converted.
+//
+// Returns:
+//  Structure - convertion result structure. See function FL_CommonUse.NewConversionResult.
+//
+Function ConvertDataTransferObject(Parameter, DTObject)
+
+    ConversionResult = FL_CommonUse.NewConversionResult();
+    DTObjectType = TypeOf(DTObject.Value);
+    If NOT Parameter.Type.ContainsType(Type("ValueList")) 
+        AND DTObjectType = Type("Array") Then
+        
+        ConversionResult.ErrorMessages.Add(FL_ErrorsClientServer
+            .ErrorDataCompositionDataParameterValueListNotAllowed("%1"));
+        Return ConversionResult;
+        
+    EndIf;
+
+    SupportedTypes = Parameter.ValueType.Types();
+    If DTObjectType = Type("Array") Then
+        
+        // It's needed to check if any errors were during processing.
+        ConversionResult.TypeConverted = True;
+        ConversionResult.ConvertedValue = New ValueList();
+        For Each Item In DTObject.Value Do
+            
+            ConversionItemResult = FL_CommonUse.ConvertValueIntoPlatformObject(Item, 
+                SupportedTypes);
+                
+            ConversionResult.ConvertedValue.Add(ConversionItemResult.ConvertedValue);
+            
+            FL_CommonUseClientServer.ExtendArray(ConversionResult.ErrorMessages,
+                ConversionItemResult.ErrorMessages);
+                
+            If NOT ConversionItemResult.TypeConverted Then
+                ConversionResult.TypeConverted = False;
+            EndIf;
+                
+        EndDo;
+                    
+    Else
+        
+        ConversionResult = FL_CommonUse.ConvertValueIntoPlatformObject(
+            DTObject.Value, SupportedTypes);
+        
+    EndIf;
+
+    Return ConversionResult;
+        
+EndFunction // ConvertDataTransferObject()
 
 // Returns the structure with template columns which is needed for output processor. 
 //
@@ -1081,17 +1121,20 @@ Function TemplateColumns(DataCompositionSettings,
                 EndIf;    
                     
                 Result = GroupTemplateItem(ItemBody.Group, 
-                    DCExpression.Expression, Not SkipColumn);        
-                If Result = Undefined Then
-                    // If it is a resource it must be in place.
-                    If Not ResourcesCache.Property(ColumnName) Then
-                        // It isn't a resource, skip.
-                        Continue;
-                    EndIf;
+                    DCExpression.Expression, Not SkipColumn);
+                    
+                // If it is a resource it must be in place.
+                If Result = Undefined AND NOT ResourcesCache.Property(ColumnName) Then
+                    
+                    // It isn't a resource, skip.
+                    Continue;
+                    
                 Else
+                    
                     // Skip column on next level. 
                     NextLevelColumnsToSkip.Insert(CellKey, 
                         DCExpression.Expression);
+                        
                 EndIf;
                 
             // Detail records

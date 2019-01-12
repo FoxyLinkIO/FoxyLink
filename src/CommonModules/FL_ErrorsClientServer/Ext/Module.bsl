@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -151,6 +151,52 @@ Function ErrorColumnCollectionsAreDifferent(CollectionName1,
     Return ErrorMessage;   
     
 EndFunction // ErrorColumnCollectionsAreDifferent()
+
+#Region DataCompositionSchema
+
+// Returns value list allowed is set to false error description.
+//
+// Parameters:
+//  VarName - String - attribute name.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorDataCompositionDataParameterValueListNotAllowed(VarName) Export
+
+    ErrorMessage = NStr("en='The invocation context has several primary key values for {%1}.
+        |Data composition schema parameter property {ValueListAllowed} is set to value {False}.';
+        |ru='Контекст вызова имеет несколько значений первичных ключей для {%1}.
+        |Свойству параметра схемы компоновки данных {ДоступенСписокЗначений} установлено значение {Ложь}.';
+        |uk='Контекст виклику має декілька значень первинних ключів для {%1}.
+        |Властивості параметра схеми компоновки даних {ДоступенСписокЗначений} вставновлено значення {Хибно}.';
+        |en_CA='The invocation context has several primary key values  for {%1}.
+        |Data composition schema parameter property {ValueListAllowed} is set to value {False}.'");
+    ErrorMessage = StrTemplate(ErrorMessage, VarName);
+    Return ErrorMessage;   
+    
+EndFunction // ErrorDataCompositionDataParameterValueListNotAllowed()
+
+// Returns available parameter warning description.
+//
+// Parameters:
+//  VarName - String - attribute name.
+//
+// Returns:
+//  String - warning description message.
+//
+Function WarningDataCompositionAvailableParameterNotFound(VarName) Export
+
+    WarningMessage = NStr("en='Warning: Available parameter not found for {%1}.'; 
+        |ru='Предупреждение: Доступный параметр не найден для {%1}.'; 
+        |uk='Попередження: Доступний параметр не знайдено для {%1}.';
+        |en_CA='Warning: Available parameter not found for {%1}.'");
+    WarningMessage = StrTemplate(WarningMessage, VarName);
+    Return WarningMessage;
+
+EndFunction // WarningDataCompositionAvailableParameterNotFound()
+
+#EndRegion // DataCompositionSchema
 
 #Region ValueConversion
 

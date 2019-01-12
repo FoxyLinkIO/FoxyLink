@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2018 Petro Bazeliuk.
+// Copyright © 2018-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -284,13 +284,12 @@ Function UserId(User = Undefined)
     EndIf;
     
     ConfigurationName = Metadata.Name;
-    If Upper(ConfigurationName) = Upper("УправлениеТорговлей") Then
-
-        If TypeOf(User) = Type("CatalogRef.Пользователи") 
-            AND NOT User.IsEmpty() Then
-            UserId = FL_CommonUse.ObjectAttributeValue(User, 
-                "ИдентификаторПользователяИБ");      
-        EndIf;
+    If Upper(ConfigurationName) = Upper("УправлениеТорговлей") 
+        AND TypeOf(User) = Type("CatalogRef.Пользователи") 
+        AND NOT User.IsEmpty() Then
+        
+        UserId = FL_CommonUse.ObjectAttributeValue(User, 
+            "ИдентификаторПользователяИБ");      
         
     EndIf;
     

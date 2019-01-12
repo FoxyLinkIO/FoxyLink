@@ -26,25 +26,9 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         Return;
     EndIf;
     
-    If Parameters.Property("AppEndpoint", AppEndpoint)
-        AND NOT Parameters.Property("ChannelData") 
-        AND NOT Parameters.Property("EncryptedData") Then
+    FL_InteriorUse.FillAppEndpointChannelFormData(AppEndpoint, Object, 
+        Parameters);
         
-        For Each Item In AppEndpoint.ChannelData Do
-            FillPropertyValues(Object.ChannelData.Add(), Item);
-        EndDo;
-        
-        For Each Item In AppEndpoint.EncryptedData Do
-            FillPropertyValues(Object.EncryptedData.Add(), Item);
-        EndDo;
-            
-    Else
-        
-        CopyFormData(Parameters.ChannelData, Object.ChannelData);
-        CopyFormData(Parameters.EncryptedData, Object.EncryptedData);
-        
-    EndIf;
-    
     UpdateRabbitMQView();
     
 EndProcedure // OnCreateAtServer()

@@ -21,31 +21,50 @@
 
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
-    
+                         
     SafeMode = True;
-    UpdateJobServerStateAtServer();   
+    
+    FL_CommonUseClientServer.SetDynamicListParameter(Jobs, "State", 
+        StateReference("Enqueued"));
+        
+    UpdateJobServerStateAtServer(); 
+    UpdateJobStatesCountAtServer();
     
 EndProcedure // OnCreateAtServer()
 
 &AtClient
 Procedure OnOpen(Cancel)
     
-    AttachIdleHandler("UpdateJobServerState", 10, False);
+    IdleUpdateJobServerState();
     
 EndProcedure // OnOpen()
 
 #EndRegion // FormEventHandlers 
 
+#Region FormItemsEventHandlers
+
+
+
+#EndRegion // FormItemsEventHandlers
+
 #Region FormCommandHandlers
+
+&AtClient
+Procedure FilterJobs(Command)
+    
+    UpdateJobs(Command.Name);
+    UpdateJobStatesCountAtServer();
+    
+EndProcedure // FilterJobs()
 
 // See function Catalogs.FL_Jobs.Trigger.
 //
 &AtClient
 Procedure TriggerSelectedMessages(Command)
     
-    CurrentData = Items.List.CurrentData;
+    CurrentData = Items.Jobs.CurrentData;
     If CurrentData <> Undefined Then
-        TriggerSelectedMessagesAtServer(Items.List.SelectedRows);
+        TriggerSelectedMessagesAtServer(Items.Jobs.SelectedRows);
     Else
         FL_CommonUseClientServer.NotifyUser(NStr("en='Select a message to process from the list.';
             |ru='Выберите сообщение для обработки из списка.';
@@ -69,6 +88,7 @@ EndProcedure // TriggerMessages()
 Procedure StartJobServer(Command)
     
     StartJobServerAtServer();
+    IdleUpdateJobServerState();
     
 EndProcedure // StartJobServer()
 
@@ -101,9 +121,31 @@ EndProcedure // StopJobServer()
 // Only for internal use.
 //
 &AtClient
+Procedure UpdateJobs(Description)
+
+    FL_CommonUseClientServer.SetDynamicListParameter(Jobs, "State", 
+        StateReference(Description));
+             
+EndProcedure // UpdateJobs()
+
+// Only for internal use.
+//
+&AtClient
+Procedure IdleUpdateJobServerState()
+    
+    FL_InteriorUseClient.AttachDetachIdleHandler(ThisObject, 
+        Items.GroupJobServerPages.CurrentPage = Items.GroupJobServerRunning,
+        "UpdateJobServerState");
+    
+EndProcedure // IdleUpdateJobServerState()
+
+// Only for internal use.
+//
+&AtClient
 Procedure UpdateJobServerState() Export
     
     UpdateJobServerStateAtServer();
+    IdleUpdateJobServerState();
     
 EndProcedure // UpdateJobServerState() 
 
@@ -119,6 +161,27 @@ Procedure UpdateJobServerStateAtServer()
     EndIf;
     
 EndProcedure // UpdateJobServerStateAtServer() 
+
+// Only for internal use.
+//
+&AtServer
+Procedure UpdateJobStatesCountAtServer()
+    
+    Query = New Query;
+    Query.Text = QueryTextJobStatesCount();
+    StateStats = Query.Execute().Unload();
+    
+    For Each RowItem In StateStats Do
+        
+        Command = Commands.Find(RowItem.Presentation);
+        If Command <> Undefined Then
+            Command.Title = StrTemplate("%1 (%2)", RowItem.Presentation, 
+                RowItem.Count);    
+        EndIf;
+        
+    EndDo;
+           
+EndProcedure // UpdateJobStatesCountAtServer()
 
 // See function Catalogs.FL_Jobs.Trigger.
 //
@@ -173,5 +236,39 @@ Procedure StopJobServerAtServer()
     FL_JobServer.StopScheduledJob(FL_JobServer.JobServer());
     
 EndProcedure // StopJobServerAtServer() 
+
+// Only for internal use.
+//
+&AtServerNoContext
+Function StateReference(Description)
+
+    Return FL_CommonUse.ReferenceByDescription(Metadata.Catalogs.FL_States, 
+        Description); 
+
+EndFunction // StateReference() 
+
+// Only for internal use.
+//
+&AtServerNoContext
+Function QueryTextJobStatesCount()
+    
+    QueryText = "
+        |SELECT
+        |   States.Ref AS State,
+        |   States.Description AS Presentation,
+        |   Count(Jobs.Ref) AS Count
+        |
+        |FROM
+        |   Catalog.FL_States AS States  
+        |
+        |LEFT JOIN Catalog.FL_Jobs AS Jobs
+        |ON Jobs.State = States.Ref 
+        |
+        |GROUP BY
+        |   States.Ref   
+        |";  
+    Return QueryText;
+
+EndFunction // QueryTextJobStatesCount()
 
 #EndRegion // ServiceProceduresAndFunctions
