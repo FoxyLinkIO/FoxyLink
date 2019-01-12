@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -41,10 +41,8 @@ Procedure Route(Source = Undefined, Exchange = Undefined,
     Messages = Messages(Source);
     For Each Message In Messages Do
         
-        If NOT ReRoute Then
-            If FL_CommonUse.ObjectAttributeValue(Message, "Routed") Then
-                Continue;
-            EndIf;
+        If NOT ReRoute AND FL_CommonUse.ObjectAttributeValue(Message, "Routed") Then
+            Continue;
         EndIf;
         
         Try
@@ -113,6 +111,9 @@ EndProcedure // RouteAndRun()
 //  Exchange    - CatalogRef.FL_Exchanges   - a routing exchange.
 //  AppEndpoint - CatalogRef.FL_Channels    - a receiver channel.
 //                      Default value: Null.
+//
+// Returns:
+//  Structure - see function Catalogs.FL_Jobs.NewJobResult.  
 //
 Function RouteAndRunOutputResult(Source, Exchange, AppEndpoint = Null) Export
     
@@ -292,6 +293,85 @@ Procedure FillRegisterContext(Context, Filter, PrimaryKeys,
     EndDo;    
     
 EndProcedure // FillRegisterContext()
+
+// Returns deserialized context value if exists.
+//
+// Parameters:
+//  PrimaryKey - String    - the name of primary key.
+//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
+//  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
+//                      Default value: Undefined.
+//
+// Returns:
+//  Arbitrary - deserialized context value if exists.
+//  Undefined - context value is absent.
+//
+Function ContextValue(PrimaryKey, Properties, JobResult = Undefined) Export
+    
+    Context = DeserializeContext(Properties.MessageId);
+    If Context = Undefined OR Context.Count() = 0 Then  
+        
+        ErrorDescription = StrTemplate(FL_ErrorsClientServer
+            .ErrorFailedToProcessMessageContext(), Properties.MessageId);
+        FL_InteriorUse.WriteLog("FoxyLink.Integration.ContextValue",
+            EventLogLevel.Error,
+            Metadata.Catalogs.FL_Messages,
+            ErrorDescription,
+            JobResult);
+        Return Undefined;
+                
+    EndIf;
+        
+    SearchResult = Context.Find(PrimaryKey, "PrimaryKey");
+    If SearchResult = Undefined Then
+        
+        ErrorDescription = FL_ErrorsClientServer.ErrorKeyIsMissingInObject(
+            "Context", Context, PrimaryKey);
+        FL_InteriorUse.WriteLog("FoxyLink.Integration.ContextValue",
+            EventLogLevel.Error,
+            Metadata.Catalogs.FL_Messages,
+            ErrorDescription,
+            JobResult);
+        Return Undefined;
+        
+    EndIf;
+    
+    Return SearchResult.Value;
+    
+EndFunction // ContextValue()
+
+// Returns deserialized context value if exists or undefined.
+//
+// Parameters:
+//  PrimaryKey - String    - the name of primary key.
+//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
+//
+// Returns:
+//  Arbitrary - deserialized context value if exists.
+//  Undefined - context value is absent.
+//
+Function ContextValueNoException(PrimaryKey, Properties) Export
+
+    Var MessageId;
+
+    If TypeOf(Properties) <> Type("Structure") 
+        OR NOT Properties.Property("MessageId", MessageId) Then
+        Return Undefined;
+    EndIf;
+
+    Context = DeserializeContext(MessageId);
+    If Context = Undefined OR Context.Count() = 0 Then  
+        Return Undefined;      
+    EndIf;
+        
+    SearchResult = Context.Find(PrimaryKey, "PrimaryKey");
+    If SearchResult = Undefined Then
+        Return Undefined;
+    EndIf;
+    
+    Return SearchResult.Value;
+    
+EndFunction // ContextValueNoException()
 
 // Deserializes a message tabular section or payload into context call.
 //

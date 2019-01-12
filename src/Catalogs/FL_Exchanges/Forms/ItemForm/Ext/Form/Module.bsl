@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -991,35 +991,32 @@ EndProcedure // LoadOperationSettings()
 &AtServer
 Procedure SaveOperationSettings()
 
-    If Not IsBlankString(RowOperation) Then
+    If NOT IsBlankString(RowOperation) 
+        AND Items.OperationPages.ChildItems.Find(RowOperation) <> Undefined Then
         
-        If Items.OperationPages.ChildItems.Find(RowOperation) <> Undefined Then
+        ChangedData = CurrentOperationData(RowOperation);
+        ChangedData.Invoke = RowInvoke;
+        ChangedData.Isolated = RowIsolated;
+        ChangedData.Priority = RowPriority;
+        ChangedData.CanUseExternalFunctions = RowCanUseExternalFunctions;
         
-            ChangedData = CurrentOperationData(RowOperation);
-            ChangedData.Invoke = RowInvoke;
-            ChangedData.Isolated = RowIsolated;
-            ChangedData.Priority = RowPriority;
-            ChangedData.CanUseExternalFunctions = RowCanUseExternalFunctions;
+        If RowDataCompositionSchemaModified Then
             
-            If RowDataCompositionSchemaModified Then
+            FL_DataComposition.CopyDataCompositionSchema(
+                ChangedData.DataCompositionSchemaAddress, 
+                DataCompositionSchemaEditAddress);
                 
-                FL_DataComposition.CopyDataCompositionSchema(
-                    ChangedData.DataCompositionSchemaAddress, 
-                    DataCompositionSchemaEditAddress);
-                    
-            EndIf;
-
-            If RowComposerSettingsModified Then
-                
-                FL_CommonUseClientServer.PutSerializedValueToTempStorage(
-                    RowComposerSettings.GetSettings(), 
-                    ChangedData.DataCompositionSettingsAddress, 
-                    ThisObject.UUID);
-                    
-            EndIf;
-          
         EndIf;
-        
+
+        If RowComposerSettingsModified Then
+            
+            FL_CommonUseClientServer.PutSerializedValueToTempStorage(
+                RowComposerSettings.GetSettings(), 
+                ChangedData.DataCompositionSettingsAddress, 
+                ThisObject.UUID);
+                
+        EndIf;
+                  
     EndIf;
     
     RowComposerSettingsModified = False;

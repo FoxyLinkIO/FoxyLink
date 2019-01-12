@@ -100,103 +100,105 @@
 			<ShowTitle>false</ShowTitle>
 			<ExtendedTooltip name="GroupBodyExtendedTooltip" id="104"/>
 			<ChildItems>
-				<UsualGroup name="GroupJobsSidebar" id="92">
-					<Group>Vertical</Group>
-					<Representation>NormalSeparation</Representation>
-					<ShowTitle>false</ShowTitle>
-					<ExtendedTooltip name="GroupJobsSidebarExtendedTooltip" id="93"/>
-					<ChildItems>
-						<Button name="EnqueuedJobs" id="101">
-							<Type>UsualButton</Type>
-							<CommandName>Form.Command.EnqueuedJobs</CommandName>
-							<ExtendedTooltip name="EnqueuedJobsExtendedTooltip" id="102"/>
-						</Button>
-						<Button name="ScheduledJobs" id="105">
-							<Type>UsualButton</Type>
-							<CommandName>Form.Command.ScheduledJobs</CommandName>
-							<ExtendedTooltip name="ScheduledJobsExtendedTooltip" id="106"/>
-						</Button>
-						<Button name="ProcessingJobs" id="107">
-							<Type>UsualButton</Type>
-							<CommandName>Form.Command.ProcessingJobs</CommandName>
-							<ExtendedTooltip name="ProcessingJobsExtendedTooltip" id="108"/>
-						</Button>
-						<Button name="SucceededJobs" id="109">
-							<Type>UsualButton</Type>
-							<CommandName>Form.Command.SucceededJobs</CommandName>
-							<ExtendedTooltip name="SucceededJobsExtendedTooltip" id="110"/>
-						</Button>
-						<Button name="FailedJobs" id="111">
-							<Type>UsualButton</Type>
-							<CommandName>Form.Command.FailedJobs</CommandName>
-							<ExtendedTooltip name="FailedJobsExtendedTooltip" id="112"/>
-						</Button>
-						<Button name="DeletedJobs" id="113">
-							<Type>UsualButton</Type>
-							<CommandName>Form.Command.DeletedJobs</CommandName>
-							<ExtendedTooltip name="DeletedJobsExtendedTooltip" id="114"/>
-						</Button>
-						<Button name="AwaitingJobs" id="115">
-							<Type>UsualButton</Type>
-							<CommandName>Form.Command.AwaitingJobs</CommandName>
-							<ExtendedTooltip name="AwaitingJobsExtendedTooltip" id="116"/>
-						</Button>
-					</ChildItems>
-				</UsualGroup>
-				<UsualGroup name="GroupJobsEnqueued" id="94">
+				<UsualGroup name="GroupStateFilter" id="717">
+					<EnableContentChange>true</EnableContentChange>
 					<Title>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Enqueued</v8:content>
+							<v8:content>Jobs state filter</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Enqueued</v8:content>
+							<v8:content>Jobs state filter</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
-							<v8:content>В очереди</v8:content>
+							<v8:content>Фильтр по состоянию заданий</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>В черзі</v8:content>
+							<v8:content>Фільтр за станом завдань</v8:content>
 						</v8:item>
 					</Title>
 					<ToolTip>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Enqueued</v8:content>
+							<v8:content>Jobs state filter</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Enqueued</v8:content>
+							<v8:content>Jobs state filter</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
-							<v8:content>В очереди</v8:content>
+							<v8:content>Фильтр по состоянию заданий</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>В черзі</v8:content>
+							<v8:content>Фільтр за станом завдань</v8:content>
 						</v8:item>
 					</ToolTip>
 					<Group>Vertical</Group>
-					<Representation>StrongSeparation</Representation>
-					<ExtendedTooltip name="GroupJobsEnqueuedExtendedTooltip" id="95"/>
+					<Representation>None</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="GroupStateFilterExtendedTooltip" id="718"/>
 					<ChildItems>
-						<Table name="List" id="3">
+						<Button name="Enqueued" id="719">
+							<Type>UsualButton</Type>
+							<CommandName>Form.Command.Enqueued</CommandName>
+							<ExtendedTooltip name="EnqueuedExtendedTooltip" id="720"/>
+						</Button>
+						<Button name="Scheduled" id="721">
+							<Type>CommandBarButton</Type>
+							<CommandName>Form.Command.Scheduled</CommandName>
+							<ExtendedTooltip name="ScheduledExtendedTooltip" id="722"/>
+						</Button>
+						<Button name="Processing" id="723">
+							<Type>CommandBarButton</Type>
+							<CommandName>Form.Command.Processing</CommandName>
+							<ExtendedTooltip name="ProcessingExtendedTooltip" id="724"/>
+						</Button>
+						<Button name="Succeeded" id="725">
+							<Type>CommandBarButton</Type>
+							<CommandName>Form.Command.Succeeded</CommandName>
+							<ExtendedTooltip name="SucceededExtendedTooltip" id="726"/>
+						</Button>
+						<Button name="Failed" id="731">
+							<Type>UsualButton</Type>
+							<CommandName>Form.Command.Failed</CommandName>
+							<ExtendedTooltip name="FailedExtendedTooltip" id="732"/>
+						</Button>
+						<Button name="Deleted" id="727">
+							<Type>CommandBarButton</Type>
+							<CommandName>Form.Command.Deleted</CommandName>
+							<ExtendedTooltip name="DeletedExtendedTooltip" id="728"/>
+						</Button>
+						<Button name="Awaiting" id="729">
+							<Type>CommandBarButton</Type>
+							<CommandName>Form.Command.Awaiting</CommandName>
+							<ExtendedTooltip name="AwaitingExtendedTooltip" id="730"/>
+						</Button>
+					</ChildItems>
+				</UsualGroup>
+				<UsualGroup name="GroupJobs" id="94">
+					<Group>Vertical</Group>
+					<Representation>None</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="GroupJobsExtendedTooltip" id="95"/>
+					<ChildItems>
+						<Table name="Jobs" id="3">
 							<Representation>List</Representation>
 							<CommandBarLocation>None</CommandBarLocation>
 							<MultipleChoice>true</MultipleChoice>
 							<UseAlternationRowColor>true</UseAlternationRowColor>
 							<InitialTreeView>ExpandTopLevel</InitialTreeView>
 							<EnableStartDrag>true</EnableStartDrag>
-							<DataPath>List</DataPath>
-							<RowPictureDataPath>List.DefaultPicture</RowPictureDataPath>
+							<DataPath>Jobs</DataPath>
+							<RowPictureDataPath>Jobs.DefaultPicture</RowPictureDataPath>
 							<SearchStringLocation>None</SearchStringLocation>
 							<SearchControlLocation>None</SearchControlLocation>
 							<AutoRefresh>false</AutoRefresh>
-							<AutoRefreshPeriod>60</AutoRefreshPeriod>
+							<AutoRefreshPeriod>5</AutoRefreshPeriod>
 							<Period>
 								<v8:variant xsi:type="v8:StandardPeriodVariant">Custom</v8:variant>
 								<v8:startDate>0001-01-01T00:00:00</v8:startDate>
@@ -209,12 +211,12 @@
 							<AllowRootChoice>false</AllowRootChoice>
 							<UpdateOnDataChange>Auto</UpdateOnDataChange>
 							<UserSettingsGroup>1:02023637-7868-4a5f-8576-835a76e0c9ba</UserSettingsGroup>
-							<ContextMenu name="ListContextMenu" id="4">
+							<ContextMenu name="JobsContextMenu" id="4">
 								<Autofill>false</Autofill>
 								<ChildItems>
 									<Button name="UpdateList" id="79">
 										<Type>CommandBarButton</Type>
-										<CommandName>Form.Item.List.StandardCommand.Refresh</CommandName>
+										<CommandName>Form.Item.Jobs.StandardCommand.Refresh</CommandName>
 										<ExtendedTooltip name="UpdateListExtendedTooltip" id="80"/>
 									</Button>
 									<Button name="TriggerSelectedMessages" id="67">
@@ -234,54 +236,54 @@
 									</ButtonGroup>
 								</ChildItems>
 							</ContextMenu>
-							<AutoCommandBar name="ListCommandBar" id="5">
+							<AutoCommandBar name="JobsCommandBar" id="5">
 								<Autofill>false</Autofill>
 							</AutoCommandBar>
-							<ExtendedTooltip name="ListExtendedTooltip" id="6"/>
-							<SearchStringAddition name="ListSearchString" id="7">
+							<ExtendedTooltip name="JobsExtendedTooltip" id="6"/>
+							<SearchStringAddition name="JobsSearchString" id="7">
 								<AdditionSource>
-									<Item>List</Item>
+									<Item>Jobs</Item>
 									<Type>SearchStringRepresentation</Type>
 								</AdditionSource>
-								<ContextMenu name="ListSearchStringContextMenu" id="8"/>
-								<ExtendedTooltip name="ListSearchStringExtendedTooltip" id="9"/>
+								<ContextMenu name="JobsSearchStringContextMenu" id="8"/>
+								<ExtendedTooltip name="JobsSearchStringExtendedTooltip" id="9"/>
 							</SearchStringAddition>
-							<ViewStatusAddition name="ListViewStatus" id="10">
+							<ViewStatusAddition name="JobsViewStatus" id="10">
 								<AdditionSource>
-									<Item>List</Item>
+									<Item>Jobs</Item>
 									<Type>ViewStatusRepresentation</Type>
 								</AdditionSource>
-								<ContextMenu name="ListViewStatusContextMenu" id="11"/>
-								<ExtendedTooltip name="ListViewStatusExtendedTooltip" id="12"/>
+								<ContextMenu name="JobsViewStatusContextMenu" id="11"/>
+								<ExtendedTooltip name="JobsViewStatusExtendedTooltip" id="12"/>
 							</ViewStatusAddition>
-							<SearchControlAddition name="ListSearchControl" id="13">
+							<SearchControlAddition name="JobsSearchControl" id="13">
 								<AdditionSource>
-									<Item>List</Item>
+									<Item>Jobs</Item>
 									<Type>SearchControl</Type>
 								</AdditionSource>
-								<ContextMenu name="ListSearchControlContextMenu" id="14"/>
-								<ExtendedTooltip name="ListSearchControlExtendedTooltip" id="15"/>
+								<ContextMenu name="JobsSearchControlContextMenu" id="14"/>
+								<ExtendedTooltip name="JobsSearchControlExtendedTooltip" id="15"/>
 							</SearchControlAddition>
 							<ChildItems>
 								<LabelField name="Code" id="16">
-									<DataPath>List.Code</DataPath>
+									<DataPath>Jobs.Code</DataPath>
 									<DefaultItem>true</DefaultItem>
 									<Width>5</Width>
 									<ContextMenu name="CodeContextMenu" id="17"/>
 									<ExtendedTooltip name="CodeExtendedTooltip" id="18"/>
 								</LabelField>
 								<LabelField name="MethodName" id="86">
-									<DataPath>List.MethodName</DataPath>
+									<DataPath>Jobs.MethodName</DataPath>
 									<ContextMenu name="MethodNameContextMenu" id="87"/>
 									<ExtendedTooltip name="MethodNameExtendedTooltip" id="88"/>
 								</LabelField>
 								<LabelField name="Priority" id="89">
-									<DataPath>List.Priority</DataPath>
+									<DataPath>Jobs.Priority</DataPath>
 									<ContextMenu name="PriorityContextMenu" id="90"/>
 									<ExtendedTooltip name="PriorityExtendedTooltip" id="91"/>
 								</LabelField>
 								<LabelField name="State" id="76">
-									<DataPath>List.State</DataPath>
+									<DataPath>Jobs.State</DataPath>
 									<ContextMenu name="StateContextMenu" id="77"/>
 									<ExtendedTooltip name="StateExtendedTooltip" id="78"/>
 								</LabelField>
@@ -293,17 +295,52 @@
 		</UsualGroup>
 	</ChildItems>
 	<Attributes>
-		<Attribute name="List" id="1">
+		<Attribute name="Jobs" id="1">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Jobs</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Задания</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Завдання</v8:content>
+				</v8:item>
+			</Title>
 			<Type>
 				<v8:Type>cfg:DynamicList</v8:Type>
 			</Type>
 			<MainAttribute>true</MainAttribute>
 			<UseAlways>
-				<Field>List.Ref</Field>
+				<Field>Jobs.Ref</Field>
 			</UseAlways>
 			<Settings xsi:type="DynamicList">
-				<ManualQuery>false</ManualQuery>
+				<ManualQuery>true</ManualQuery>
 				<DynamicDataRead>true</DynamicDataRead>
+				<QueryText>SELECT
+    Jobs.Ref,
+    Jobs.DeletionMark,
+    Jobs.Code,
+    Jobs.CreatedAt AS CreatedAt,
+    Jobs.ExpireAt AS ExpireAt,
+    Jobs.Invoke,
+    Jobs.Isolated,
+    Jobs.MethodName,
+    Jobs.Priority,
+    Jobs.State,
+    Jobs.Transactional
+FROM
+    Catalog.FL_Jobs AS Jobs
+WHERE
+    Jobs.State = &amp;State
+    </QueryText>
 				<MainTable>Catalog.FL_Jobs</MainTable>
 				<ListSettings>
 					<dcsset:filter>
@@ -342,29 +379,6 @@
 				<v8:Type>xs:boolean</v8:Type>
 			</Type>
 		</Attribute>
-		<ConditionalAppearance>
-			<dcsset:item>
-				<dcsset:selection>
-					<dcsset:item>
-						<dcsset:field>List</dcsset:field>
-					</dcsset:item>
-				</dcsset:selection>
-				<dcsset:filter>
-					<dcsset:item xsi:type="dcsset:FilterItemComparison">
-						<dcsset:left xsi:type="dcscor:Field">List.State</dcsset:left>
-						<dcsset:comparisonType>InList</dcsset:comparisonType>
-						<dcsset:right xsi:type="dcscor:DesignTimeValue">Catalog.FL_States.Succeeded</dcsset:right>
-						<dcsset:right xsi:type="dcscor:DesignTimeValue">Catalog.FL_States.Deleted</dcsset:right>
-					</dcsset:item>
-				</dcsset:filter>
-				<dcsset:appearance>
-					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>TextColor</dcscor:parameter>
-						<dcscor:value xsi:type="v8ui:Color">web:MediumGray</dcscor:value>
-					</dcscor:item>
-				</dcsset:appearance>
-			</dcsset:item>
-		</ConditionalAppearance>
 	</Attributes>
 	<Commands>
 		<Command name="TriggerSelectedMessages" id="1">
@@ -542,7 +556,7 @@
 			</ToolTip>
 			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
-		<Command name="EnqueuedJobs" id="6">
+		<Command name="Enqueued" id="6">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
@@ -579,9 +593,10 @@
 					<v8:content>Завдання в черзі</v8:content>
 				</v8:item>
 			</ToolTip>
+			<Action>FilterJobs</Action>
 			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
-		<Command name="ScheduledJobs" id="7">
+		<Command name="Scheduled" id="7">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
@@ -618,9 +633,10 @@
 					<v8:content>Заплановані завдання</v8:content>
 				</v8:item>
 			</ToolTip>
+			<Action>FilterJobs</Action>
 			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
-		<Command name="ProcessingJobs" id="8">
+		<Command name="Processing" id="8">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
@@ -657,9 +673,10 @@
 					<v8:content>Завдання в процесі обробки</v8:content>
 				</v8:item>
 			</ToolTip>
+			<Action>FilterJobs</Action>
 			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
-		<Command name="SucceededJobs" id="9">
+		<Command name="Succeeded" id="9">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
@@ -696,9 +713,10 @@
 					<v8:content>Успішні завдання</v8:content>
 				</v8:item>
 			</ToolTip>
+			<Action>FilterJobs</Action>
 			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
-		<Command name="FailedJobs" id="10">
+		<Command name="Failed" id="10">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
@@ -735,9 +753,10 @@
 					<v8:content>Невдалі завдання</v8:content>
 				</v8:item>
 			</ToolTip>
+			<Action>FilterJobs</Action>
 			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
-		<Command name="DeletedJobs" id="11">
+		<Command name="Deleted" id="11">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
@@ -774,9 +793,10 @@
 					<v8:content>Видалені завдання</v8:content>
 				</v8:item>
 			</ToolTip>
+			<Action>FilterJobs</Action>
 			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
-		<Command name="AwaitingJobs" id="12">
+		<Command name="Awaiting" id="12">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
@@ -813,6 +833,7 @@
 					<v8:content>Завдання в очікуванні</v8:content>
 				</v8:item>
 			</ToolTip>
+			<Action>FilterJobs</Action>
 			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 	</Commands>

@@ -788,7 +788,7 @@
 					<LinkByType/>
 					<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 					<Use>ForItem</Use>
-					<Indexing>Index</Indexing>
+					<Indexing>IndexWithAdditionalOrder</Indexing>
 					<FullTextSearch>DontUse</FullTextSearch>
 					<DataHistory>DontUse</DataHistory>
 				</Properties>

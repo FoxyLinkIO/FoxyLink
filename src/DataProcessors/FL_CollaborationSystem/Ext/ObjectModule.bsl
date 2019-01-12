@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2018 Petro Bazeliuk.
+// Copyright © 2018-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -93,15 +93,12 @@ Procedure DeliverMessage(Payload, Properties, JobResult) Export
     SocialMessage = InformationRegisters.SocialNetworks_Messages
         .DeserializeSocialMessage(Payload, Properties, JobResult);
     
-    If FL_InteriorUseReUse.IsSuccessHTTPStatusCode(JobResult.StatusCode) Then    
-        
-        If SocialMessage.Property("CollaborationMessageId")
-            AND IsBlankString(SocialMessage.CollaborationMessageId) Then
+    If FL_InteriorUseReUse.IsSuccessHTTPStatusCode(JobResult.StatusCode)     
+        AND SocialMessage.Property("CollaborationMessageId")
+        AND IsBlankString(SocialMessage.CollaborationMessageId) Then
             
-            DataProcessors.FL_CollaborationSystem.CollaborationSystemMessage(
-                SocialMessage);
-            
-        EndIf;
+        DataProcessors.FL_CollaborationSystem.CollaborationSystemMessage(
+            SocialMessage);
             
     EndIf;
     

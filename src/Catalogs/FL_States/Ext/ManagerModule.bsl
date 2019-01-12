@@ -21,6 +21,32 @@
 
 #Region ProgramInterface
 
+// Returns list of the all states from this catalog.
+//
+// Returns:
+//  ValueList - list of the states. 
+//
+Function States() Export
+    
+    ValueList = New ValueList;
+    
+    Query = New Query;
+    Query.Text = QueryTextStates();
+    QueryResult = Query.Execute();
+    
+    If NOT QueryResult.IsEmpty() Then
+        
+        ValueTable = QueryResult.Unload();
+        For Each Item In ValueTable Do
+            ValueList.Add(Item.Ref, Item.Description);        
+        EndDo;
+
+    EndIf;
+    
+    Return ValueList;    
+    
+EndFunction // States()
+
 // Returns list of the final states from this catalog.
 //
 // Returns:
@@ -46,6 +72,21 @@ EndFunction // FinalStates()
 #EndRegion // ProgramInterface 
 
 #Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Function QueryTextStates()
+
+    QueryText = "
+        |SELECT
+        |   States.Ref AS Ref,
+        |   States.Description AS Description
+        |FROM
+        |   Catalog.FL_States AS States
+        |";
+    Return QueryText;
+
+EndFunction // QueryTextStates()
 
 // Only for internal use.
 //

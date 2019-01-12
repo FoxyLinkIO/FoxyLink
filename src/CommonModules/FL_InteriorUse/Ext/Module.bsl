@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -169,7 +169,41 @@ EndFunction // NewHTTPRequest()
 #EndRegion // HTTPInteraction
 
 #Region FormInteraction
- 
+
+// Copies data to a form object from app endpoint or from form parameters 
+// collection. 
+//
+// Parameters:
+//  AppEndpoint - CatalogRef.FL_Channels  - reference to the app endpoint.
+//  FormObject  - DataProcessorObject.<*> - represents a processing object. 
+//                                          It can be used to access the attributes and the tabular section, 
+//                                          as well as the data processor forms and templates.
+//  Parameters  - FormDataStructure       - contains the form parameters collection.
+//
+Procedure FillAppEndpointChannelFormData(AppEndpoint, FormObject, 
+    Parameters) Export
+    
+    If Parameters.Property("AppEndpoint", AppEndpoint)
+        AND NOT Parameters.Property("ChannelData") 
+        AND NOT Parameters.Property("EncryptedData") Then
+        
+        For Each Item In AppEndpoint.ChannelData Do
+            FillPropertyValues(FormObject.ChannelData.Add(), Item);
+        EndDo;
+        
+        For Each Item In AppEndpoint.EncryptedData Do
+            FillPropertyValues(FormObject.EncryptedData.Add(), Item);
+        EndDo;
+            
+    Else
+        
+        CopyFormData(Parameters.ChannelData, FormObject.ChannelData);
+        CopyFormData(Parameters.EncryptedData, FormObject.EncryptedData);
+        
+    EndIf;
+    
+EndProcedure // FillAppEndpointChannelFormData()
+
 // Moves a collection item.
 //
 // Parameters:
