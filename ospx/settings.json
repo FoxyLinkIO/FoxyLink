@@ -1,0 +1,15 @@
+{
+    "root": "build/empty",
+    "include": [
+        "tests"
+    ],
+    "opm_build": [
+        "tests/smoke",
+        "tests/xunit",
+        "tools/add/plugins",
+        "tools/add/bddRunner",
+        "tools/add/xddTestRunner"
+    ],
+    "opm_build_exclude": [
+    ]
+}
