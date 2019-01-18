@@ -32,7 +32,7 @@
 				</v8:item>
 			</Synonym>
 			<Comment/>
-			<DefaultForm>ExternalDataProcessor.Tests_SmokeCommonModules.Form.ManagedForm</DefaultForm>
+			<DefaultForm/>
 			<AuxiliaryForm/>
 		</Properties>
 		<ChildObjects>
@@ -97,7 +97,6 @@
 					<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 				</Properties>
 			</Attribute>
-			<Form>ManagedForm</Form>
 		</ChildObjects>
 	</ExternalDataProcessor>
 </MetaDataObject>
