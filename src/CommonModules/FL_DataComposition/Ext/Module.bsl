@@ -1123,11 +1123,11 @@ Function TemplateColumns(DataCompositionSettings,
                 Result = GroupTemplateItem(ItemBody.Group, 
                     DCExpression.Expression, Not SkipColumn);
                 If Result = Undefined Then
-                    // If it is a resource it must be in place.
+                    // If it is a resource it must be in place. 
                     If NOT ResourcesCache.Property(ColumnName) Then
                         // It isn't a resource, skip.
                         Continue;
-                    EndIf;    
+                    EndIf;  
                 Else
                     
                     // Skip column on next level. 
