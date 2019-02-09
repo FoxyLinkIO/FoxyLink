@@ -65,7 +65,7 @@ FoxyLink provides an unified programming model to handle integration tasks in a 
 
 Open-source projects develop more smoothly when discussions are public.
 
-If you've discovered a bug, please report it to the [FoxyLink GitHub Issues](https://github.com/pbazeliuk/FoxyLink/issues?state=open). Detailed reports with stack traces, actual and expected behavours are welcome.
+If you've discovered a bug, please report it to the [FoxyLink GitHub Issues](https://github.com/pbazeliuk/FoxyLink/issues?state=open). Detailed reports with stack traces, actual and expected behaviours are welcome.
 
 If you have any questions, problems related to the FoxyLink subsystem usage or if you want to discuss new features, please visit the chatroom [Slack](https://foxylinkio.herokuapp.com/).
 
@@ -116,7 +116,7 @@ By submitting a Pull Request, you disavow any rights or claims to any changes su
 
 If you cannot or do not want to reassign those rights (your employment contract for your employer may not allow this), you should not submit a PR. Open an issue and someone else can do the work.
 
-This is a legal way of saying "If you submit a PR to us, that code becomes ours". 99.9% of the time that's what you intend anyways; we hope it doesn't scare you away from contributing.
+This is a legal way of saying "If you submit a PR to us, that code becomes ours". 99.9% of the time that's what you intend anyways; we hope it won't scare you away from contributing.
 
 ## Happy Customers
 
