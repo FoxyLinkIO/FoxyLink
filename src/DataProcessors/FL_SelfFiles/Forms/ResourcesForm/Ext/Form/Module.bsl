@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -52,8 +52,8 @@ EndProcedure // OnCreateAtServer()
 Procedure SaveAndClose(Command)
         
     If IsBlankString(Path) Then
-        FL_CommonUseClientServer.NotifyUser(NStr("
-                |en='Field {Path} must be filled.';
+        FL_CommonUseClientServer.NotifyUser(
+            NStr("en='Field {Path} must be filled.';
                 |ru='Поле {Путь} должно быть заполнено.';
                 |uk='Поле {Шлях} повинно бути заповненим.';
                 |en_CA='Field {Path} must be filled.'"), , 
@@ -61,18 +61,22 @@ Procedure SaveAndClose(Command)
         Return;    
     EndIf;
     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "Path";
-    ResourceRow.FieldValue = Path;
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, "Path", 
+        Path);
     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "BaseName";
-    ResourceRow.FieldValue = BaseName;
+    If ValueIsFilled(BaseName) Then    
+        FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+            "BaseName", BaseName);
+    EndIf;
     
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "Extension";
-    ResourceRow.FieldValue = Extension;
-        
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "AddTimestamp", AddTimestamp);
+    
+    If ValueIsFilled(Extension) Then
+        FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+            "Extension", Extension);
+    EndIf;
+            
     Close(Object);
     
 EndProcedure // SaveAndClose()

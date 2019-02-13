@@ -488,7 +488,7 @@
 		<Metadata name="DataProcessor.FL_RabbitMQ.Form.ResourcesForm.Form" id="157e599b-9271-4a6e-867c-227b775e7da0.0" configVersion="fc3c23e1b2ec3a49b1cd2a9dcd63af8700000000"/>
 		<Metadata name="DataProcessor.FL_RabbitMQ.ManagerModule" id="2b5d1e25-9c65-49aa-95e5-babe01e9f593.2" configVersion="5a40ce227a67ed4e9976b1698098423600000000"/>
 		<Metadata name="DataProcessor.FL_RabbitMQ.ObjectModule" id="2b5d1e25-9c65-49aa-95e5-babe01e9f593.0" configVersion="5e4bb8eed469374a9eec8b294b2e7a0c00000000"/>
-		<Metadata name="DataProcessor.FL_SelfFiles" id="93757a32-83fb-4479-b028-34affd020da5" configVersion="2c4dae0389161d418fd7574ba56aeb9800000000">
+		<Metadata name="DataProcessor.FL_SelfFiles" id="93757a32-83fb-4479-b028-34affd020da5" configVersion="d58d00790c33474e9fae31e72ab6158700000000">
 			<Metadata name="DataProcessor.FL_SelfFiles.TabularSection.ChannelResources" id="04fb2c9c-3b23-483d-9df7-64dc36eda25d"/>
 			<Metadata name="DataProcessor.FL_SelfFiles.Attribute.Log" id="0948a902-18c8-4bb0-bb2d-81f5ae07c46f"/>
 			<Metadata name="DataProcessor.FL_SelfFiles.TabularSection.ChannelData" id="179937e9-b853-43f4-9132-2c1d8c3e930a"/>
@@ -502,12 +502,12 @@
 			<Metadata name="DataProcessor.FL_SelfFiles.TabularSection.EncryptedData.Attribute.FieldValue" id="e079cd43-403d-4c43-8e41-2480e5c463e2"/>
 			<Metadata name="DataProcessor.FL_SelfFiles.TabularSection.ChannelResources.Attribute.FieldValue" id="e90995c4-416a-4874-aa95-d5565bd4ffce"/>
 		</Metadata>
-		<Metadata name="DataProcessor.FL_SelfFiles.Form.ChannelForm" id="53b654aa-6984-48c0-a670-b694adebd82a" configVersion="796029ce46a6f44c9c6c5b213627feb500000000"/>
-		<Metadata name="DataProcessor.FL_SelfFiles.Form.ChannelForm.Form" id="53b654aa-6984-48c0-a670-b694adebd82a.0" configVersion="1f7eb0bb505b70438dc011861f8ab4cc00000000"/>
-		<Metadata name="DataProcessor.FL_SelfFiles.Form.ResourcesForm" id="23f8a205-388d-46b8-9f34-fd265b02929f" configVersion="cc843d4f2897404784ccead5314e83c000000000"/>
-		<Metadata name="DataProcessor.FL_SelfFiles.Form.ResourcesForm.Form" id="23f8a205-388d-46b8-9f34-fd265b02929f.0" configVersion="c9fdd0c71aa40941910be5642c78596b00000000"/>
+		<Metadata name="DataProcessor.FL_SelfFiles.Form.ChannelForm" id="53b654aa-6984-48c0-a670-b694adebd82a" configVersion="c8a62096628e24458e80841d15b93db400000000"/>
+		<Metadata name="DataProcessor.FL_SelfFiles.Form.ChannelForm.Form" id="53b654aa-6984-48c0-a670-b694adebd82a.0" configVersion="2e59ebc84abefb47a65d7ed2625c65ae00000000"/>
+		<Metadata name="DataProcessor.FL_SelfFiles.Form.ResourcesForm" id="23f8a205-388d-46b8-9f34-fd265b02929f" configVersion="e06cf870f9d1ac4ea1dd068721aa375000000000"/>
+		<Metadata name="DataProcessor.FL_SelfFiles.Form.ResourcesForm.Form" id="23f8a205-388d-46b8-9f34-fd265b02929f.0" configVersion="2e9029f5be409d4fa91eab8743899e6f00000000"/>
 		<Metadata name="DataProcessor.FL_SelfFiles.ManagerModule" id="93757a32-83fb-4479-b028-34affd020da5.2" configVersion="021834282bf7734bb2c6f9aeb0f35c5a00000000"/>
-		<Metadata name="DataProcessor.FL_SelfFiles.ObjectModule" id="93757a32-83fb-4479-b028-34affd020da5.0" configVersion="2cf9056b6598d348928bb8506e70c0d700000000"/>
+		<Metadata name="DataProcessor.FL_SelfFiles.ObjectModule" id="93757a32-83fb-4479-b028-34affd020da5.0" configVersion="ff3544a95b2eda4fa45d3cc2b74ab72400000000"/>
 		<Metadata name="DataProcessor.FL_SelfFiles.Template.Self" id="4919ba03-dab0-44f9-8865-d3edf7104975" configVersion="1eabf08fd9272c46b209d916d55b4bfa00000000"/>
 		<Metadata name="DataProcessor.FL_SelfFiles.Template.Self.Template" id="4919ba03-dab0-44f9-8865-d3edf7104975.0" configVersion="0435ac3ef5df56439827113f3c84fccc00000000"/>
 		<Metadata name="DataProcessor.SocialNetworks_AdministrationPanel" id="c76c306e-79c7-4050-b56a-88d460ad4e80" configVersion="162a57cfbe578b49b67c4ae8dc22ae3c00000000">
