@@ -74,29 +74,79 @@
 					<ContextMenu name="PathContextMenu" id="34"/>
 					<ExtendedTooltip name="PathExtendedTooltip" id="35"/>
 				</InputField>
-				<InputField name="BaseName" id="30">
-					<DataPath>BaseName</DataPath>
-					<InputHint>
+				<UsualGroup name="GroupBaseName" id="39">
+					<ToolTip>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Auto-generate</v8:content>
+							<v8:content>Base name</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Auto-generate</v8:content>
+							<v8:content>Base name</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
-							<v8:content>Автогенерировать</v8:content>
+							<v8:content>Имя без расширения </v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Автогенерувати</v8:content>
+							<v8:content>Ім'я без розширення</v8:content>
 						</v8:item>
-					</InputHint>
-					<ContextMenu name="BaseNameContextMenu" id="31"/>
-					<ExtendedTooltip name="BaseNameExtendedTooltip" id="32"/>
-				</InputField>
+					</ToolTip>
+					<Representation>None</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="GroupBaseNameExtendedTooltip" id="40"/>
+					<ChildItems>
+						<InputField name="BaseName" id="30">
+							<DataPath>BaseName</DataPath>
+							<InputHint>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Auto-generate</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Auto-generate</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Автогенерировать</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Автогенерувати</v8:content>
+								</v8:item>
+							</InputHint>
+							<ContextMenu name="BaseNameContextMenu" id="31"/>
+							<ExtendedTooltip name="BaseNameExtendedTooltip" id="32"/>
+						</InputField>
+						<CheckBoxField name="AddTimestamp" id="41">
+							<DataPath>AddTimestamp</DataPath>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Adds timestamp to the end of the filename.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Adds timestamp to the end of the filename.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Добавляет метку времени в конец имени файла.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Додає мітку часу до кінця імені файлу.</v8:content>
+								</v8:item>
+							</ToolTip>
+							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<CheckBoxType>Auto</CheckBoxType>
+							<ContextMenu name="AddTimestampContextMenu" id="42"/>
+							<ExtendedTooltip name="AddTimestampExtendedTooltip" id="43"/>
+						</CheckBoxField>
+					</ChildItems>
+				</UsualGroup>
 				<InputField name="Extension" id="36">
 					<DataPath>Extension</DataPath>
 					<InputHint>
@@ -224,6 +274,29 @@
 					<v8:Length>0</v8:Length>
 					<v8:AllowedLength>Variable</v8:AllowedLength>
 				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="AddTimestamp" id="8">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Timestamp</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Timestamp</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Метка времени</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Мітка часу</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:boolean</v8:Type>
 			</Type>
 		</Attribute>
 	</Attributes>

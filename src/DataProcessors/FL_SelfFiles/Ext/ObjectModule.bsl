@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -80,23 +80,32 @@ EndFunction // ChannelFullName()
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
     
+    Timestamp = "";
+    
     Path = FL_EncryptionClientServer.FieldValue(ChannelResources, "Path"); 
     
     BaseName = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "BaseName");
-    If NOT ValueIsFilled(BaseName) Then
-        BaseName = StrReplace(New UUID, "-", "");
-    EndIf;
-    
+        ChannelResources, "BaseName", StrReplace(New UUID, "-", ""));
+    AddTimestamp = Boolean(FL_EncryptionClientServer.FieldValueNoException(
+            ChannelResources, "AddTimestamp", False));    
+        
     Extension = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "Extension");
-    If NOT ValueIsFilled(Extension) Then
-        Extension = Properties.FileExtension;
-    EndIf;
+        ChannelResources, "Extension", Properties.FileExtension);
     
     Try 
-    
-        FullName = StrTemplate("%1%2%3", Path, BaseName, Extension);
+        
+        If AddTimestamp Then
+            
+            DateInMilliseconds = CurrentUniversalDateInMilliseconds();
+            UniversalDate = Date(1, 1, 1) + DateInMilliseconds / 1000;
+            Milliseconds = DateInMilliseconds % 1000;
+            Timestamp = Format(ToLocalTime(UniversalDate), "df=_yyyy-MM-ddTHHmmss")
+                + Format(Milliseconds, "NF=.N");
+            
+        EndIf;
+        
+        FullName = StrTemplate("%1%2%3%4", Path, BaseName, Timestamp, 
+            Extension);
         If TypeOf(Payload) = Type("SpreadsheetDocument") Then
             WriteSpreadsheetDocument(Payload, FullName, Extension);    
         Else
@@ -262,7 +271,7 @@ EndProcedure // ProcessAdditionalOutputProperties()
 //
 Function Version() Export
     
-    Return "1.0.5";
+    Return "1.0.6";
     
 EndFunction // Version()
 
@@ -273,7 +282,8 @@ EndFunction // Version()
 //
 Function BaseDescription() Export
     
-    BaseDescription = NStr("en='Export data to file (%1) application endpoint processor, ver. %2'; 
+    BaseDescription = NStr(
+        "en='Export data to file (%1) application endpoint processor, ver. %2'; 
         |ru='Обработчик конечной точки приложения экспорта данных в файл (%1), вер. %2';
         |uk='Обробник кінцевої точки додатку експорту данних в файл (%1), вер. %2';
         |en_CA='Export data to file (%1) application endpoint processor, ver. %2'");
