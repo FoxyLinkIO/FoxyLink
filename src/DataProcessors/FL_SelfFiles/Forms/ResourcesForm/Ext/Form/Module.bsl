@@ -27,20 +27,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     EndIf;
     
     Parameters.Property("Channel", Channel);
-    If Parameters.Property("ChannelResources") Then
-        
-        Attributes = GetAttributes();
-        For Each Attribute In Attributes Do
-            
-            FieldValue = FL_EncryptionClientServer.FieldValueNoException(
-                Parameters.ChannelResources, Attribute.Name);
-            If ValueIsFilled(FieldValue) Then 
-                ThisObject[Attribute.Name] = FieldValue;                   
-            EndIf;
-            
-        EndDo;
-        
-    EndIf;
+    FL_InteriorUse.FillAppEndpointResourcesFormData(ThisObject, Parameters);
      
 EndProcedure // OnCreateAtServer()
 

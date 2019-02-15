@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -26,10 +26,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         Return;
     EndIf;
 
-    Raise NStr("en='Channel form is not intended for usage.';
-        |ru='Форма канала не предназначена для использования.';
-        |uk='Форма канала не предназначена для використання.';
-        |en_CA='Channel form is not intended for usage.'");
+    Raise FL_ErrorsClientServer.ErrorDisabledAppEndpointChannelForm();
 
 EndProcedure // OnCreateAtServer()
 

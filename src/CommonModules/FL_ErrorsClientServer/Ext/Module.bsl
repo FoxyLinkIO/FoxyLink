@@ -35,6 +35,21 @@ Procedure PersonalizeErrorsWithKey(AnonymousErrors, PersonalizedErrors,
     
 EndProcedure // PersonalizeErrorsWithKey()
 
+// Returns {app endpoint channel form is disabled} error description.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorDisabledAppEndpointChannelForm() Export
+    
+    ErrorMessage = NStr("en='App endpoint form is not intended for usage.';
+        |ru='Форма конечной точки не предназначена для использования.';
+        |uk='Форма кінцевої точки не предназначена для використання.';
+        |en_CA='App endpoint form is not intended for usage.'");
+    Return ErrorMessage;
+    
+EndFunction // ErrorDisabledAppEndpointChannelForm()
+    
 // Returns {failed to process message context} error description.
 //
 // Returns:

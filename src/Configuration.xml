@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.335</Version>
+			<Version>0.9.9.336</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -291,6 +291,7 @@
 			<CommonPicture>FL_Update</CommonPicture>
 			<CommonPicture>FL_ValidMethodSettings</CommonPicture>
 			<CommonPicture>FL_WooCommerce</CommonPicture>
+			<CommonPicture>FL_WordPress</CommonPicture>
 			<CommonTemplate>FL_LICENSE</CommonTemplate>
 			<CommonModule>FL_BackgroundJob</CommonModule>
 			<CommonModule>FL_BatchJob</CommonModule>

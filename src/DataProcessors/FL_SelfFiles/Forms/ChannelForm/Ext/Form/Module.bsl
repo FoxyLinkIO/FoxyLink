@@ -26,10 +26,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         Return;
     EndIf;
 
-    Raise NStr("en='App endpoint form is not intended for usage.';
-        |ru='Форма конечной точки не предназначена для использования.';
-        |uk='Форма кінцевої точки не предназначена для використання.';
-        |en_CA='App endpoint form is not intended for usage.'");
+   Raise FL_ErrorsClientServer.ErrorDisabledAppEndpointChannelForm();
 
 EndProcedure // OnCreateAtServer()
 
