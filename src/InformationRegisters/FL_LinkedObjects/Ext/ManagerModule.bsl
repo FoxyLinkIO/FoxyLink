@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -31,7 +31,7 @@
 //                          Default value: Undefined.
 //
 Procedure RegisterLinkedObject(AppEndpoint, Object, Identifier, 
-    SyncToken = Undefined) Export
+    SyncToken = Undefined, Rendered = Undefined) Export
     
     RecordManager = InformationRegisters.FL_LinkedObjects.CreateRecordManager();
     RecordManager.AppEndpoint = AppEndpoint;
@@ -55,6 +55,7 @@ Procedure RegisterLinkedObject(AppEndpoint, Object, Identifier,
         RecordManager.SyncToken = SyncToken;
     EndIf;
     
+    RecordManager.Rendered = Rendered;
     RecordManager.Write();
     
 EndProcedure // RegisterLinkedObject()
@@ -177,7 +178,8 @@ Function QueryTextLinkedObjectResources()
     QueryText = "
         |SELECT 
         |   LinkedObjects.Identifier AS Identifier,
-        |   LinkedObjects.SyncToken AS SyncToken 
+        |   LinkedObjects.SyncToken AS SyncToken,
+        |   LinkedObjects.Rendered AS Rendered
         |FROM
         |   InformationRegister.FL_LinkedObjects AS LinkedObjects 
         |WHERE

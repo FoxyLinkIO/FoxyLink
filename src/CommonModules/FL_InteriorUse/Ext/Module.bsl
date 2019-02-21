@@ -478,7 +478,7 @@ EndProcedure // WriteLog()
 //
 Procedure InitializeSubsystem() Export
     
-    InitializeStates();
+    Catalogs.FL_States.InitializeStates();
     InitializeOperations();
     InitializeChannels();
     InitializeConstants();
@@ -840,24 +840,6 @@ EndFunction // ParametersPropertyValue()
 #EndRegion // FormInteraction
 
 #Region SubsystemInteraction
-
-// Only for internal use.
-//
-Procedure InitializeStates()
-    
-    DeletedState = Catalogs.FL_States.Deleted.GetObject();
-    If NOT DeletedState.IsFinal Then
-        DeletedState.IsFinal = True;
-        DeletedState.Write();
-    EndIf;
-    
-    SucceededState = Catalogs.FL_States.Succeeded.GetObject();
-    If NOT SucceededState.IsFinal Then
-        SucceededState.IsFinal = True;
-        SucceededState.Write();
-    EndIf;
-    
-EndProcedure // InitializeStates()
 
 // Only for internal use.
 //

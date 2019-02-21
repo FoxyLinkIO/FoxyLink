@@ -66,9 +66,11 @@ Procedure TriggerSelectedMessages(Command)
     If CurrentData <> Undefined Then
         TriggerSelectedMessagesAtServer(Items.Jobs.SelectedRows);
     Else
-        FL_CommonUseClientServer.NotifyUser(NStr("en='Select a message to process from the list.';
-            |ru='Выберите сообщение для обработки из списка.';
-            |en_CA='Select a message to process from the list.'"));
+        FL_CommonUseClientServer.NotifyUser(
+            NStr("en='Select a message to process from the list.';
+                |ru='Выберите сообщение для обработки из списка.';
+                |uk='Виберіть повідомлення для обробки зі списку.';
+                |en_CA='Select a message to process from the list.'"));
     EndIf;
     
 EndProcedure // TriggerSelectedMessages()

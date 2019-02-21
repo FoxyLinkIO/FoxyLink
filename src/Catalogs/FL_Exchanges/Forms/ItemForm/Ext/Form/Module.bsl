@@ -565,8 +565,13 @@ Procedure LoadBasicFormatInfo()
     FormatAPISchemaSupport = FPMetadata.Forms.Find("APICreationForm") <> Undefined;
 
     Items.DescribeAPI.Visible = FormatAPISchemaSupport;
-    Items.GenerateSpecificDocument.Title = StrTemplate("Generate (%1, ver. %2)", 
-        FormatProcessor.FormatShortName(), FormatProcessor.Version());
+    Items.GenerateSpecificDocument.Title = StrTemplate(
+        NStr("en='Generate (%1, ver. %2)';
+            |ru='Сформировать (%1, вер. %2)';
+            |uk='Сформувати (%1, вер. %2)';
+            |en_CA='Generate (%1, ver. %2)'"), 
+        FormatProcessor.FormatShortName(), 
+        FormatProcessor.Version());
                 
 EndProcedure // LoadBasicFormatInfo() 
 
