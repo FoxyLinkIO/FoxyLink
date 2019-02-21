@@ -31,7 +31,9 @@
 ## Quick start
 
 It's easy to start using it with any configuration on "1C:Enterprise 8" platform, requirements:
-- Platform version: 8.3.10.2252 (minimal), **recommended 8.3.11.2924** and higher
+- Platform version: 
+    - 8.3.10.2252 (minimal, SocialNetwork subsystem unsupported)
+    - **recommended 8.3.11.2924** and higher
 - Data lock control mode: **Managed**
 - Compatibility mode: **8.3.7** and higher
 - «1C:Enterprise 8» server cluster and Database server for the best performance 
@@ -94,7 +96,7 @@ EndFunction // OutputInJSON()
 
 ## Copyright and license
 
-Copyright © 2016-2018 Petro Bazeliuk.
+Copyright © 2016-2019 Petro Bazeliuk.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
