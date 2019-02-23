@@ -3,13 +3,13 @@ pipeline {
     
     stages {
         stage('QASonar') {
-            
-                try {
+            steps {   
+                //try {
                     echo 'FoxyLink'
-                } catch (e) {
-                    echo 'Sonar status : ${e}'
-                }
-            
+                //} catch (e) {
+                //    echo 'Sonar status : ${e}'
+                //}
+            }   
         }
     }
 }
