@@ -25,13 +25,13 @@ pipeline {
                         //println conf.MetaDataObject.Configuration.Properties.Version.toString()
                         conf.children().children().children().each { 
                             if (it.name() == "Version") { 
-                                env.version = it.toString() 
+                                version = it.toString() 
                             } 
                         } 
                         //conf.children().children().children().each { println it.name() } 
                         //echo version
-                        //println version
-                        echo ${env.version}
+                        println version
+                        echo version
                         sonarCommand = sonarCommand + " -Dsonar.projectVersion=0.9.9.338"    
                     } else if (env.BRANCH_NAME.startsWith("PR-")) {
                         PRNumber = env.BRANCH_NAME.tokenize("PR-")[0]
