@@ -16,6 +16,8 @@ pipeline {
                         echo 'Analysing master branch'
                     } else if (env.BRANCH_NAME == "develop") {
                         echo 'Analysing develop branch'
+                        def configuration=new XmlSlurper().parse(new File("./src/Configuration.xml"))
+                        configuration.children().each { println it.name() }
                         sonarCommand = sonarCommand + " -Dsonar.projectVersion=0.9.9.338"    
                     } else if (env.BRANCH_NAME.startsWith("PR-")) {
                         PRNumber = env.BRANCH_NAME.tokenize("PR-")[0]
