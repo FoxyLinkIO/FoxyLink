@@ -31,8 +31,7 @@ pipeline {
                         sonarCommand = sonarCommand + " -Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=FoxyLinkIO/FoxyLink -Dsonar.github.oauth=${env.GITHUB_TOKEN}"
                     }
                 }
-                echo sonarCommand
-                //cmd(sonarCommand)
+                cmd(sonarCommand)
             }   
         }
     }
