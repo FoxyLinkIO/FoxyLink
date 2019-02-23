@@ -22,7 +22,8 @@ pipeline {
                         //def node = conf.MetaDataObject.Configuration.Properties.Version
                         //node.children().each { println it.text() }
                         println conf.MetaDataObject.Configuration.Properties.Version.toString()
-                        conf.children().children().children().each { if (it.name == "Version") { println it.toString() } } 
+                        conf.children().children().children().each { if (it.name() == "Version") { println it.toString() } } 
+                        conf.children().children().children().each { println it.name() } 
                         //echo version
                         //println version
                         //echo ${version}
