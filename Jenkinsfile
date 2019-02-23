@@ -15,10 +15,11 @@ pipeline {
                     if (env.BRANCH_NAME == "master") {
                         echo 'Analysing master branch'
                     } else if (env.BRANCH_NAME == "develop") {
-                        sonarCommand = sonarCommand + " -Dsonar.branch.name=${BRANCH_NAME}"    
+                        echo 'Analysing develop branch'
+                        //sonarCommand = sonarCommand + " -Dsonar.branch.name=${BRANCH_NAME}"    
                     } else if (env.BRANCH_NAME.startsWith("PR-")) {
                         PRNumber = env.BRANCH_NAME.tokenize("PR-")[0]
-                        sonarcommand = sonarCommand + " -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=FoxyLinkIO/FoxyLink -Dsonar.github.oauth=${env.GITHUB_TOKEN}"
+                        sonarCommand = sonarCommand + " -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=FoxyLinkIO/FoxyLink -Dsonar.github.oauth=${env.GITHUB_TOKEN}"
                     }
                 }
                 cmd(sonarCommand)
