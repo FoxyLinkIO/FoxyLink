@@ -20,7 +20,7 @@ pipeline {
                         echo "Analysing develop branch"
                         def conf = new XmlSlurper().parse(new File("${WORKSPACE}/src/Configuration.xml"))
                         def node = conf.MetaDataObject.Configuration.Properties.Version
-                        println ${env.node.text()}
+                        println node.text()
                         //echo version
                         //println version
                         //echo ${version}
