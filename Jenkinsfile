@@ -15,7 +15,7 @@ pipeline {
                     PRNumber = env.BRANCH_NAME.tokenize("PR-")[0]
                 }
                 //try {
-                    cmd(sonarCommand + " -Dsonar.login=${env.SONAR_TOKEN} -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=FoxyLink -Dsonar.github.oauth=${env.GITHUB_TOKEN}")
+                    cmd(sonarCommand + " -Dsonar.login=${env.SONAR_TOKEN} -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=FoxyLinkIO/FoxyLink -Dsonar.github.oauth=${env.GITHUB_TOKEN}")
                 //} catch (e) {
                 //    echo 'Sonar status : ${e}'
                 //}
