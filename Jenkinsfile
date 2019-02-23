@@ -5,9 +5,9 @@ pipeline {
         stage('QASonar') {
             steps {
                 try {
-                    echo "FoxyLink"
+                    echo 'FoxyLink'
                 } catch (e) {
-                    echo "Sonar status : ${e}"
+                    echo 'Sonar status : ${e}'
                 }
             }
         }
