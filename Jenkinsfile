@@ -11,15 +11,15 @@ pipeline {
         stage('QASonar') {
             steps {
                 script {
-                    sonarCommand = "\"${SONAR_HOME}/bin/sonar-scanner\" -Dsonar.login=${env.SONAR_TOKEN} -Dsonar.analysis.mode=issues"
+                    sonarCommand = "\"${SONAR_HOME}/bin/sonar-scanner\" -Dsonar.login=${env.SONAR_TOKEN}"
                     if (env.BRANCH_NAME == "master") {
                         echo 'Analysing master branch'
                     } else if (env.BRANCH_NAME == "develop") {
                         echo 'Analysing develop branch'
-                        //sonarCommand = sonarCommand + " -Dsonar.branch.name=${BRANCH_NAME}"    
+                        sonarCommand = sonarCommand + " -Dsonar.projectVersion=0.9.9.338"    
                     } else if (env.BRANCH_NAME.startsWith("PR-")) {
                         PRNumber = env.BRANCH_NAME.tokenize("PR-")[0]
-                        sonarCommand = sonarCommand + " -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=FoxyLinkIO/FoxyLink -Dsonar.github.oauth=${env.GITHUB_TOKEN}"
+                        sonarCommand = sonarCommand + " -Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=FoxyLinkIO/FoxyLink -Dsonar.github.oauth=${env.GITHUB_TOKEN}"
                     }
                 }
                 cmd(sonarCommand)
