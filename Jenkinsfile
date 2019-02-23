@@ -19,7 +19,8 @@ pipeline {
                     } else if (env.BRANCH_NAME == "develop") {
                         echo "Analysing develop branch"
                         def configuration=new XmlSlurper().parse(new File("${WORKSPACE}/src/Configuration.xml"))
-                        echo ${configuration.MetaDataObject.Configuration.Properties.Version}
+                        def version = configuration.MetaDataObject.Configuration.Properties.Version.toString()
+                        echo ${version}
                         sonarCommand = sonarCommand + " -Dsonar.projectVersion=0.9.9.338"    
                     } else if (env.BRANCH_NAME.startsWith("PR-")) {
                         PRNumber = env.BRANCH_NAME.tokenize("PR-")[0]
