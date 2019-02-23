@@ -18,9 +18,9 @@ pipeline {
                         echo "Analysing master branch"
                     } else if (env.BRANCH_NAME == "develop") {
                         echo "Analysing develop branch"
-                        def conf=new XmlSlurper().parse(new File("${WORKSPACE}/src/Configuration.xml"))
-                        println conf.MetaDataObject.Configuration.Properties.Version.name()
-                        println conf.MetaDataObject.Configuration.Properties.Version.text()
+                        def conf = new XmlSlurper().parse(new File("${WORKSPACE}/src/Configuration.xml"))
+                        def node = conf.MetaDataObject.Configuration.Properties.Version
+                        println ${node.text()}
                         //echo version
                         //println version
                         //echo ${version}
