@@ -1,3 +1,7 @@
+#!groovy
+
+import groovy.util.xmlslurper
+
 def sonarCommand
 def PRNumber
 
