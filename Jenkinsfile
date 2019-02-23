@@ -1,7 +1,8 @@
 #!groovy
 
-def sonarCommand
 def PRNumber
+def sonarCommand
+def version
 
 pipeline {
     agent any
@@ -17,16 +18,20 @@ pipeline {
                     if (env.BRANCH_NAME == "master") {
                         echo "Analysing master branch"
                     } else if (env.BRANCH_NAME == "develop") {
-                        echo "Analysing develop branch" //new File(
-                        def conf = new XmlSlurper().parse("${WORKSPACE}/src/Configuration.xml")//)
+                        echo "Analysing develop branch" 
+                        def conf = new XmlSlurper().parse("${WORKSPACE}/src/Configuration.xml")
                         //def node = conf.MetaDataObject.Configuration.Properties.Version
                         //node.children().each { println it.text() }
-                        println conf.MetaDataObject.Configuration.Properties.Version.toString()
-                        conf.children().children().children().each { if (it.name() == "Version") { println it.toString() } } 
-                        conf.children().children().children().each { println it.name() } 
+                        //println conf.MetaDataObject.Configuration.Properties.Version.toString()
+                        conf.children().children().children().each { 
+                            if (it.name() == "Version") { 
+                                env.version = it.toString() 
+                            } 
+                        } 
+                        //conf.children().children().children().each { println it.name() } 
                         //echo version
                         //println version
-                        //echo ${version}
+                        echo ${env.version}
                         sonarCommand = sonarCommand + " -Dsonar.projectVersion=0.9.9.338"    
                     } else if (env.BRANCH_NAME.startsWith("PR-")) {
                         PRNumber = env.BRANCH_NAME.tokenize("PR-")[0]
