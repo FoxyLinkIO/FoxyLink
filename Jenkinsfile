@@ -20,19 +20,12 @@ pipeline {
                     } else if (env.BRANCH_NAME == "develop") {
                         echo "Analysing develop branch" 
                         def conf = new XmlSlurper().parse("${WORKSPACE}/src/Configuration.xml")
-                        //def node = conf.MetaDataObject.Configuration.Properties.Version
-                        //node.children().each { println it.text() }
-                        //println conf.MetaDataObject.Configuration.Properties.Version.toString()
                         conf.children().children().children().each { 
                             if (it.name() == "Version") { 
                                 version = it.toString() 
                             } 
-                        } 
-                        //conf.children().children().children().each { println it.name() } 
-                        //echo version
-                        println version
-                        echo version
-                        sonarCommand = sonarCommand + " -Dsonar.projectVersion=0.9.9.338"    
+                        }
+                        sonarCommand = sonarCommand + " -Dsonar.projectVersion=${version}"    
                     } else if (env.BRANCH_NAME.startsWith("PR-")) {
                         PRNumber = env.BRANCH_NAME.tokenize("PR-")[0]
                         sonarCommand = sonarCommand + " -Dsonar.analysis.mode=preview -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=FoxyLinkIO/FoxyLink -Dsonar.github.oauth=${env.GITHUB_TOKEN}"
