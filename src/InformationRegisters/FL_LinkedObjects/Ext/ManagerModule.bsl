@@ -29,6 +29,8 @@
 //  Identifier  - String                 - the object identifier in the application endpoint.
 //  SyncToken   - String                 - a version number of the entity.
 //                          Default value: Undefined.
+//  Rendered    - String                 - a destination where linked object can be rendered.
+//                          Default value: Undefined. 
 //
 Procedure RegisterLinkedObject(AppEndpoint, Object, Identifier, 
     SyncToken = Undefined, Rendered = Undefined) Export

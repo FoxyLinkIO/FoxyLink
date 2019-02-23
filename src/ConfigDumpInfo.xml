@@ -571,14 +571,14 @@
 			<Metadata name="InformationRegister.FL_JobState.Dimension.Job" id="cb195e37-2289-4378-8a3c-8246db6644e9"/>
 			<Metadata name="InformationRegister.FL_JobState.Dimension.State" id="fb4d1170-c6db-4eaa-9dc0-7f0e716828b4"/>
 		</Metadata>
-		<Metadata name="InformationRegister.FL_LinkedObjects" id="372c858e-b858-48fb-9100-e9d69d2d503f" configVersion="e32b7260d0ff8d44a0972ec809bd255d00000000">
+		<Metadata name="InformationRegister.FL_LinkedObjects" id="372c858e-b858-48fb-9100-e9d69d2d503f" configVersion="e186de2f1275b44db0b0a39ed4be2f1700000000">
 			<Metadata name="InformationRegister.FL_LinkedObjects.Resource.Rendered" id="2788d4cc-cdf3-418d-a7c9-0f9869109190"/>
 			<Metadata name="InformationRegister.FL_LinkedObjects.Dimension.Object" id="483b6d68-76cf-481b-b347-4f34fb7f2814"/>
 			<Metadata name="InformationRegister.FL_LinkedObjects.Resource.Identifier" id="628aed58-1c9e-4c96-aadf-dffb20d3be90"/>
 			<Metadata name="InformationRegister.FL_LinkedObjects.Resource.SyncToken" id="9354e72a-ba05-4628-92c4-5d9e38cdae09"/>
 			<Metadata name="InformationRegister.FL_LinkedObjects.Dimension.AppEndpoint" id="f3260094-e0db-40b7-b009-a53679e4ea4e"/>
 		</Metadata>
-		<Metadata name="InformationRegister.FL_LinkedObjects.ManagerModule" id="372c858e-b858-48fb-9100-e9d69d2d503f.2" configVersion="6d5def3b9eab3a4db13ee6ee5ede611d00000000"/>
+		<Metadata name="InformationRegister.FL_LinkedObjects.ManagerModule" id="372c858e-b858-48fb-9100-e9d69d2d503f.2" configVersion="edbb00909cd5dd4486beeab5def24b5600000000"/>
 		<Metadata name="InformationRegister.FL_MessagePayload" id="848260ee-09ad-46ee-86a0-d14fd6e0ff5e" configVersion="f3dbd92e1c0a754796c8eda0557e3d8000000000">
 			<Metadata name="InformationRegister.FL_MessagePayload.Resource.Payload" id="29da749b-2ab2-460c-a2e5-92ddaee1a225"/>
 			<Metadata name="InformationRegister.FL_MessagePayload.Dimension.Message" id="de59a85c-74f1-4c21-9618-d3d8dac8d72d"/>
