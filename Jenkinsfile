@@ -21,7 +21,8 @@ pipeline {
                         def conf = new XmlSlurper().parse(new File("${WORKSPACE}/src/Configuration.xml"))
                         //def node = conf.MetaDataObject.Configuration.Properties.Version
                         //node.children().each { println it.text() }
-                        conf.children().children().children().each { println it.toString() } 
+                        println conf.MetaDataObject.Configuration.Properties.Version.toString()
+                        //conf.children().children().children().each { println it.toString() } 
                         //echo version
                         //println version
                         //echo ${version}
