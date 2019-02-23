@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('QASonar') {
             steps { 
-                def sonarcommand = "@\"{SONAR_HOME}/bin/sonar-scanner\""
+                def sonarcommand = "@\"${SONAR_HOME}/bin/sonar-scanner\""
                 //try {
                     cmd(sonarcommand + " -Dsonar.login=${SONAR_LOGIN} -Dsonar.analysis.mode=issues -Dsonar.projectVersion=0.9.9.338")
                 //} catch (e) {
