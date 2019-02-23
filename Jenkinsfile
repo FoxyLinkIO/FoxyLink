@@ -18,10 +18,10 @@ pipeline {
                         echo "Analysing master branch"
                     } else if (env.BRANCH_NAME == "develop") {
                         echo "Analysing develop branch"
-                        def configuration=new XmlSlurper().parse(new File("${WORKSPACE}/src/Configuration.xml"))
-                        def version = configuration.MetaDataObject.Configuration.Properties.Version.text()
-                        echo version
-                        println version
+                        def conf=new XmlSlurper().parse(new File("${WORKSPACE}/src/Configuration.xml"))
+                        println conf.MetaDataObject.Configuration.Properties.Version.text()
+                        //echo version
+                        //println version
                         //echo ${version}
                         sonarCommand = sonarCommand + " -Dsonar.projectVersion=0.9.9.338"    
                     } else if (env.BRANCH_NAME.startsWith("PR-")) {
