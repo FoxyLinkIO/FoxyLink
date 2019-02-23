@@ -1,12 +1,14 @@
 pipeline {
     agent any
-    
+    environment {
+        SONAR_LOGIN = credentials('sonar-login')
+    }
     stages {
         stage('QASonar') {
             steps { 
                 //def sonarcommand = "@\"${SONAR_HOME}/bin/sonar-scanner\""
                 //try {
-                    cmd("\"${SONAR_HOME}/bin/sonar-scanner\" -Dsonar.login=${SONAR_LOGIN} -Dsonar.analysis.mode=issues -Dsonar.projectVersion=0.9.9.338")
+                    cmd("\"${SONAR_HOME}/bin/sonar-scanner\" -Dsonar.login=${SONAR_LOGIN} -Dsonar.analysis.mode=issues -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=${repository} -Dsonar.github.oauth=${githubOAuth}")
                 //} catch (e) {
                 //    echo 'Sonar status : ${e}'
                 //}
