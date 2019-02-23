@@ -15,9 +15,10 @@ pipeline {
                 script {
                     sonarCommand = "\"${SONAR_HOME}/bin/sonar-scanner\" -Dsonar.login=${env.SONAR_TOKEN}"
                     if (env.BRANCH_NAME == "master") {
-                        echo 'Analysing master branch'
+                        echo "Analysing master branch"
                     } else if (env.BRANCH_NAME == "develop") {
-                        echo 'Analysing develop branch'
+                        echo "Analysing develop branch"
+                        echo "${WORKSPACE}" 
                         def configuration=new XmlSlurper().parse(new File("./src/Configuration.xml"))
                         configuration.children().each { println it.name() }
                         sonarCommand = sonarCommand + " -Dsonar.projectVersion=0.9.9.338"    
