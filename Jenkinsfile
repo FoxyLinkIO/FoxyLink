@@ -1,14 +1,21 @@
+def sonarCommand
+def PRNumber
+
 pipeline {
     agent any
     environment {
-        SONAR_LOGIN = credentials('sonar-login')
+        SONAR_TOKEN = credentials('sonar-login')
+        GITHUB_TOKEN = credentials('sonarqube-silverbulleters')
     }
     stages {
         stage('QASonar') {
-            steps { 
-                //def sonarcommand = "@\"${SONAR_HOME}/bin/sonar-scanner\""
+            steps {
+                script {
+                    sonarCommand = "\"${SONAR_HOME}/bin/sonar-scanner\""
+                    PRNumber = env.BRANCH_NAME.tokenize("PR-")[0]
+                }
                 //try {
-                    cmd("\"${SONAR_HOME}/bin/sonar-scanner\" -Dsonar.login=${SONAR_LOGIN} -Dsonar.analysis.mode=issues -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=${repository} -Dsonar.github.oauth=${githubOAuth}")
+                    cmd(sonarCommand + " -Dsonar.login=${env.SONAR_LOGIN} -Dsonar.analysis.mode=issues -Dsonar.github.pullRequest=${PRNumber} -Dsonar.github.repository=FoxyLink -Dsonar.github.oauth=${env.GITHUB_TOKEN}")
                 //} catch (e) {
                 //    echo 'Sonar status : ${e}'
                 //}
