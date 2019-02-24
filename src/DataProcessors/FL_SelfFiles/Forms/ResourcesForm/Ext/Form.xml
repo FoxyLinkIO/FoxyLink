@@ -121,6 +121,13 @@
 							<ContextMenu name="BaseNameContextMenu" id="31"/>
 							<ExtendedTooltip name="BaseNameExtendedTooltip" id="32"/>
 						</InputField>
+					</ChildItems>
+				</UsualGroup>
+				<UsualGroup name="GroupTimestamp" id="49">
+					<Representation>None</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="GroupTimestampExtendedTooltip" id="50"/>
+					<ChildItems>
 						<CheckBoxField name="AddTimestamp" id="41">
 							<DataPath>AddTimestamp</DataPath>
 							<ToolTip>
@@ -157,8 +164,116 @@
 							<ChildItems>
 								<InputField name="FormatString" id="46">
 									<DataPath>FormatString</DataPath>
+									<ToolTipRepresentation>Button</ToolTipRepresentation>
 									<ContextMenu name="FormatStringContextMenu" id="47"/>
-									<ExtendedTooltip name="FormatStringExtendedTooltip" id="48"/>
+									<ExtendedTooltip name="FormatStringExtendedTooltip" id="48">
+										<Title formatted="false">
+											<v8:item>
+												<v8:lang>en</v8:lang>
+												<v8:content>A format string is a string value that contains the formatting parameters. The formatting parameters are separated with a ";" character (e.g. DF=yyyyMMddHHmmss).
+DF - the date format. 
+• d - the date (digits) without a leading zero. 
+• dd - date (digits) with a leading zero. 
+• ddd - the abbreviation of the day of the week *). 
+• dddd - the full name of the day of the week *). 
+• M - month number (digits) without a leading zero. 
+• MM - month number (digits) with a leading zero. 
+• MMM - the month abbreviation*). 
+• MMMM - the month full name *). 
+• q - the quarter number. 
+• y - the year number without century and without a leading zero. 
+• yy - the year number without century and with a leading zero. 
+• yyyy - the year number with century. 
+• h - the hours in 12-hour format without a leading zero. 
+• hh - the hours in 12-hour format with a leading zero. 
+• H - the hours in 24-hour format without a leading zero. 
+• HH - the hours in 24-hour format with a leading zero. 
+• m - the minutes without a leading zero. 
+• mm - the minutes with a leading zero. 
+• s - the seconds without a leading zero. 
+• ss - the seconds with a leading zero. 
+• tt - AM/PM display (valid only for configuration languages supporting the 12-hour format for displaying time).</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>en_CA</v8:lang>
+												<v8:content>A format string is a string value that contains the formatting parameters. The formatting parameters are separated with a ";" character (e.g. DF=yyyyMMddHHmmss).
+DF - the date format. 
+• d - the date (digits) without a leading zero. 
+• dd - date (digits) with a leading zero. 
+• ddd - the abbreviation of the day of the week *). 
+• dddd - the full name of the day of the week *). 
+• M - month number (digits) without a leading zero. 
+• MM - month number (digits) with a leading zero. 
+• MMM - the month abbreviation*). 
+• MMMM - the month full name *). 
+• q - the quarter number. 
+• y - the year number without century and without a leading zero. 
+• yy - the year number without century and with a leading zero. 
+• yyyy - the year number with century. 
+• h - the hours in 12-hour format without a leading zero. 
+• hh - the hours in 12-hour format with a leading zero. 
+• H - the hours in 24-hour format without a leading zero. 
+• HH - the hours in 24-hour format with a leading zero. 
+• m - the minutes without a leading zero. 
+• mm - the minutes with a leading zero. 
+• s - the seconds without a leading zero. 
+• ss - the seconds with a leading zero. 
+• tt - AM/PM display (valid only for configuration languages supporting the 12-hour format for displaying time).</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>ru</v8:lang>
+												<v8:content>Форматная строка представляет собой строковое значение, включающее параметры форматирования. Параметры форматирования перечисляются через символ ";" (например ДФ=ггггММддЧЧммсс).
+ДФ (DF) - формат даты.
+• д (d) - день месяца (цифрами) без лидирующего нуля; 
+• дд (dd) - день месяца (цифрами) с лидирующим нулем; 
+• ддд (ddd) - краткое название дня недели *); 
+• дддд (dddd) - полное название дня недели *); 
+• М (M) - месяц без лидирующего нуля; 
+• ММ (MM) - месяц с лидирующим нулем; 
+• МММ (MMM) - краткое название месяца *); 
+• ММММ (MMMM) - полное название месяца *); 
+• к (q) - номер квартала в году; 
+• г (y) - номер года без века и лидирующего нуля; 
+• гг (yy) - номер года без века с лидирующим нулем; 
+• гггг (yyyy) - номер года с веком; 
+• ч (h) - час в 12 часовом варианте без лидирующих нулей; 
+• чч (hh) - час в 12 часовом варианте с лидирующим нулем; 
+• Ч (H) - час в 24 часовом варианте без лидирующих нулей; 
+• ЧЧ (HH) - час в 24 часовом варианте с лидирующим нулем; 
+• м (m) - минута без лидирующего нуля; 
+• мм (mm) - минута с лидирующим нулем; 
+• с (s) - секунда без лидирующего нуля; 
+• сс (ss) - секунда с лидирующим нулем; 
+• вв (tt) - отображение половины дня AM/PM (действительно только для языков конфигурирования, поддерживающих 12 часовой вариант представления времени).</v8:content>
+											</v8:item>
+											<v8:item>
+												<v8:lang>uk</v8:lang>
+												<v8:content>Форматна рядок являє собою строкове значення, що включає параметри форматування. Параметри форматування перераховуються через символ ";" (наприклад ДФ=ггггММддЧЧммсс).
+ДФ (DF) - формат дати.
+• д (d) - день місяця (цифрами) без лідуючого нуля; 
+• дд (dd) - день місяця (цифрами) з лідуючим нулем; 
+• ддд (ddd) - коротка назва дня тижня *); 
+• дддд (dddd) - повна назва дня тижня *); 
+• М (M) - місяць без лідуючого нуля; 
+• ММ (MM) - місяць з лідуючим нулем; 
+• МММ (MMM) - коротка назва місяця *); 
+• ММММ (MMMM) - повна назва місяця *); 
+• к (q) - номер кварталу в році; 
+• г (y) - номер року без віку і лідуючого нуля; 
+• гг (yy) - номер року без віку з лідуючим нулем; 
+• гггг (yyyy) - номер року з віком; 
+• ч (h) - година в 12-годинному варіанті без лідуючого нуля; 
+• чч (hh) - година в 12-годинному варіанті з лідуючим нулем; 
+• Ч (H) - година в 24-годинному варіанті без лідуючого нуля; 
+• ЧЧ (HH) - година в 24-годинному варіант з лідуючим нулем; 
+• м (m) - хвилина без лідуючого нуля; 
+• мм (mm) - хвилина з лідуючим нулем; 
+• с (s) - секунда без лідуючого нуля; 
+• сс (ss) - секунда з лідуючим нулем; 
+• вв (tt) - відображення половини дня AM/PM (дійсно тільки для мов конфігурації, які підтримують 12 годинний варіант представлення часу).</v8:content>
+											</v8:item>
+										</Title>
+									</ExtendedTooltip>
 								</InputField>
 							</ChildItems>
 						</UsualGroup>
@@ -187,6 +302,163 @@
 					<ContextMenu name="ExtensionContextMenu" id="37"/>
 					<ExtendedTooltip name="ExtensionExtendedTooltip" id="38"/>
 				</InputField>
+			</ChildItems>
+		</UsualGroup>
+		<UsualGroup name="GroupZip" id="51">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Zip settings</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Zip settings</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Zip настройки</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Zip налаштування</v8:content>
+				</v8:item>
+			</Title>
+			<Group>Vertical</Group>
+			<Representation>None</Representation>
+			<ExtendedTooltip name="GroupZipExtendedTooltip" id="52"/>
+			<ChildItems>
+				<CheckBoxField name="CompressOutput" id="53">
+					<DataPath>CompressOutput</DataPath>
+					<CheckBoxType>Auto</CheckBoxType>
+					<ContextMenu name="CompressOutputContextMenu" id="54"/>
+					<ExtendedTooltip name="CompressOutputExtendedTooltip" id="55"/>
+					<Events>
+						<Event name="OnChange">CompressOutputOnChange</Event>
+					</Events>
+				</CheckBoxField>
+				<UsualGroup name="GroupZipSettings" id="71">
+					<Group>Vertical</Group>
+					<Representation>None</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="GroupZipSettingsExtendedTooltip" id="72"/>
+					<ChildItems>
+						<InputField name="ZipPassword" id="56">
+							<DataPath>ZipPassword</DataPath>
+							<PasswordMode>true</PasswordMode>
+							<ContextMenu name="ZipPasswordContextMenu" id="57"/>
+							<ExtendedTooltip name="ZipPasswordExtendedTooltip" id="58"/>
+						</InputField>
+						<InputField name="ZipCommentaries" id="59">
+							<DataPath>ZipCommentaries</DataPath>
+							<ContextMenu name="ZipCommentariesContextMenu" id="60"/>
+							<ExtendedTooltip name="ZipCommentariesExtendedTooltip" id="61"/>
+						</InputField>
+						<RadioButtonField name="ZipCompressionMethod" id="62">
+							<DataPath>ZipCompressionMethod</DataPath>
+							<RadioButtonType>Tumbler</RadioButtonType>
+							<ChoiceList>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xs:string">BZIP2</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xs:string">Copy</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xs:string">Deflate</Value>
+									</xr:Value>
+								</xr:Item>
+							</ChoiceList>
+							<ContextMenu name="ZipCompressionMethodContextMenu" id="63"/>
+							<ExtendedTooltip name="ZipCompressionMethodExtendedTooltip" id="64"/>
+						</RadioButtonField>
+						<RadioButtonField name="ZipCompressionLevel" id="65">
+							<DataPath>ZipCompressionLevel</DataPath>
+							<RadioButtonType>Tumbler</RadioButtonType>
+							<ChoiceList>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xs:string">Maximum</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xs:string">Minimum</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xs:string">Optimal</Value>
+									</xr:Value>
+								</xr:Item>
+							</ChoiceList>
+							<ContextMenu name="ZipCompressionLevelContextMenu" id="66"/>
+							<ExtendedTooltip name="ZipCompressionLevelExtendedTooltip" id="67"/>
+						</RadioButtonField>
+						<RadioButtonField name="ZipEncryptionMethod" id="68">
+							<DataPath>ZipEncryptionMethod</DataPath>
+							<RadioButtonType>Tumbler</RadioButtonType>
+							<ChoiceList>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xs:string">AES128</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xs:string">AES192</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xs:string">AES256</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xs:string">Zip20</Value>
+									</xr:Value>
+								</xr:Item>
+							</ChoiceList>
+							<ContextMenu name="ZipEncryptionMethodContextMenu" id="69"/>
+							<ExtendedTooltip name="ZipEncryptionMethodExtendedTooltip" id="70"/>
+						</RadioButtonField>
+					</ChildItems>
+				</UsualGroup>
 			</ChildItems>
 		</UsualGroup>
 	</ChildItems>
@@ -333,6 +605,164 @@
 				<v8:item>
 					<v8:lang>uk</v8:lang>
 					<v8:content>Форматний рядок</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="CompressOutput" id="10">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Compress output</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Compress output</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Сжать вывод</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Стиснення виводу</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:boolean</v8:Type>
+			</Type>
+		</Attribute>
+		<Attribute name="ZipPassword" id="11">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Password</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Password</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Пароль</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Пароль</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="ZipCommentaries" id="12">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Commentary</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Commentary</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Комментарий</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Коментар</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="ZipCompressionMethod" id="13">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Compression method</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Compression method</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Метод сжатия</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Метод стиснення</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="ZipCompressionLevel" id="14">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Compression level</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Compression level</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Степень сжатия</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Рівень стиснення</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="ZipEncryptionMethod" id="15">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Encryption method</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Encryption method</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Метод шифрования</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Метод шифрування</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
