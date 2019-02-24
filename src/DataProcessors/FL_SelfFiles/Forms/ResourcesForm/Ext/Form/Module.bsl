@@ -28,13 +28,26 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
     Parameters.Property("Channel", Channel);
     FL_InteriorUse.FillAppEndpointResourcesFormData(ThisObject, Parameters);
-     
+    
+    If IsBlankString(ZipCompressionMethod) Then
+        ZipCompressionMethod = "Deflate";
+    EndIf;
+    
+    If IsBlankString(ZipCompressionLevel) Then
+        ZipCompressionLevel = "Optimal";
+    EndIf;
+    
+    If IsBlankString(ZipEncryptionMethod) Then
+        ZipEncryptionMethod = "Zip20";
+    EndIf;
+    
 EndProcedure // OnCreateAtServer()
 
 &AtClient
 Procedure OnOpen(Cancel)
     
     AddTimestampOnChange(Items.AddTimestamp);
+    CompressOutputOnChange(Items.CompressOutput);
     
 EndProcedure // OnOpen()
 
@@ -48,6 +61,13 @@ Procedure AddTimestampOnChange(Item)
     Items.GroupFormatString.Visible = AddTimestamp; 
     
 EndProcedure // AddTimestampOnChange()
+
+&AtClient
+Procedure CompressOutputOnChange(Item)
+    
+    Items.GroupZipSettings.Visible = CompressOutput;        
+    
+EndProcedure // CompressOutputOnChange()
 
 #EndRegion // FormItemsEventHandlers
 
@@ -78,6 +98,19 @@ Procedure SaveAndClose(Command)
         "AddTimestamp", AddTimestamp);
     FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
         "FormatString", FormatString);
+    
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "CompressOutput", CompressOutput);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "ZipPassword", ZipPassword);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "ZipCommentaries", ZipCommentaries);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "ZipCompressionMethod", ZipCompressionMethod);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "ZipCompressionLevel", ZipCompressionLevel);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "ZipEncryptionMethod", ZipEncryptionMethod);
     
     If ValueIsFilled(Extension) Then
         FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 

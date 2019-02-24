@@ -80,27 +80,9 @@ EndFunction // ChannelFullName()
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
     
-    Timestamp = "";
-    
-    Path = FL_EncryptionClientServer.FieldValue(ChannelResources, "Path"); 
-    
-    BaseName = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "BaseName", StrReplace(New UUID, "-", ""));
-          
-    Extension = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "Extension", Properties.FileExtension);
-    
     Try 
-        
-        FillTimestampIfNecessary(Timestamp); 
-        
-        FullName = StrTemplate("%1%2%3%4", Path, BaseName, Timestamp, 
-            Extension);
-        If TypeOf(Payload) = Type("SpreadsheetDocument") Then
-            WriteSpreadsheetDocument(Payload, FullName, Extension);    
-        Else
-            Payload.Write(FullName);
-        EndIf;
+                    
+        FullName = WriteOutputToDestination(Payload, Properties);
         
         FileProperties = FL_InteriorUseClientServer.NewFileProperties(FullName);   
         ProcessAdditionalOutputProperties(FileProperties);     
@@ -216,29 +198,51 @@ EndFunction // SuppliedIntegration()
 
 // Only for internal use.
 //
-Procedure FillTimestampIfNecessary(Timestamp)
+Procedure ProcessAdditionalOutputProperties(FileProperties)
     
-    AddTimestamp = Boolean(FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "AddTimestamp", False));
-    If AddTimestamp Then
-            
-        FormatString = FL_EncryptionClientServer.FieldValueNoException(
-            ChannelResources, "FormatString");
-            
-        DateInMilliseconds = CurrentUniversalDateInMilliseconds();
-        UniversalDate = Date(1, 1, 1) + DateInMilliseconds / 1000;
-        Milliseconds = DateInMilliseconds % 1000;
-            
-        If ValueIsFilled(FormatString) Then
-            Timestamp = "_" + Format(ToLocalTime(UniversalDate), FormatString);     
-        Else
-            Timestamp = "_" + Format(ToLocalTime(UniversalDate), 
-                "df=yyyy-MM-ddTHH-mm-ss") + Format(Milliseconds, "NF=.N");
+    AdditionalProperties = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "AdditionalOutputProperties");
+    If ValueIsFilled(AdditionalProperties) Then
+        
+        AdditionalProperties = FL_CommonUse.ValueFromJSONString(
+            AdditionalProperties);
+        If TypeOf(AdditionalProperties) = Type("Structure") Then
+            FL_CommonUseClientServer.ExtendStructure(FileProperties, 
+                AdditionalProperties, True); 
         EndIf;
-            
+        
     EndIf;
+    
+EndProcedure // ProcessAdditionalOutputProperties()
 
-EndProcedure // FillTimestampIfNecessary()
+// Only for internal use.
+//
+Function WriteOutputToDestination(Payload, Properties)
+    
+    Path = FL_EncryptionClientServer.FieldValue(ChannelResources, "Path"); 
+    BaseName = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "BaseName", StrReplace(New UUID, "-", ""));     
+    Extension = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "Extension", Properties.FileExtension);
+        
+    FullName = StrTemplate("%1%2%3%4", Path, BaseName, NewTimestamp(), 
+        Extension);
+        
+    If TypeOf(Payload) = Type("SpreadsheetDocument") Then
+        WriteSpreadsheetDocument(Payload, FullName, Extension);    
+    Else
+        Payload.Write(FullName);
+    EndIf;
+    
+    CompressOutput = Boolean(FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "CompressOutput", False));
+    If CompressOutput Then
+        WriteZipDocument(FullName);
+    EndIf;
+    
+    Return FullName;
+    
+EndFunction // WriteOutputToDestination()
 
 // Only for internal use.
 //
@@ -259,22 +263,87 @@ EndProcedure // WriteSpreadsheetDocument()
 
 // Only for internal use.
 //
-Procedure ProcessAdditionalOutputProperties(FileProperties)
+Procedure WriteZipDocument(FullName)
     
-    AdditionalProperties = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "AdditionalOutputProperties");
-    If ValueIsFilled(AdditionalProperties) Then
+    ZipPassword = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipPassword");
+    ZipCommentaries = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipCommentaries");
         
-        AdditionalProperties = FL_CommonUse.ValueFromJSONString(
-            AdditionalProperties);
-        If TypeOf(AdditionalProperties) = Type("Structure") Then
-            FL_CommonUseClientServer.ExtendStructure(FileProperties, 
-                AdditionalProperties, True); 
+    CompressionMethod = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipCompressionMethod");
+    If CompressionMethod = "BZIP2" Then
+        CompressionMethod = ZIPCompressionMethod.BZIP2;    
+    ElsIf CompressionMethod = "Copy" Then
+        CompressionMethod = ZIPCompressionMethod.Copy;    
+    Else
+        CompressionMethod = ZIPCompressionMethod.Deflate;    
+    EndIf;    
+        
+    CompressionLevel = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipCompressionLevel");
+    If CompressionLevel = "Maximum" Then
+        CompressionLevel = ZIPCompressionLevel.Maximum;    
+    ElsIf CompressionLevel = "Minimum" Then
+        CompressionLevel = ZIPCompressionLevel.Minimum;    
+    Else
+        CompressionLevel = ZIPCompressionLevel.Optimal;    
+    EndIf;     
+        
+    EncryptionMethod = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipEncryptionMethod");
+    If EncryptionMethod = "AES128" Then
+        EncryptionMethod = ZipEncryptionMethod.AES128;    
+    ElsIf EncryptionMethod = "Minimum" Then
+        EncryptionMethod = ZipEncryptionMethod.AES192;    
+    ElsIf EncryptionMethod = "Minimum" Then
+        EncryptionMethod = ZipEncryptionMethod.AES256;
+    Else
+        EncryptionMethod = ZipEncryptionMethod.Zip20;    
+    EndIf;
+           
+    ZipFileWriter = New ZipFileWriter(FullName + ".zip", 
+        ZipPassword, 
+        ZipCommentaries, 
+        CompressionMethod, 
+        CompressionLevel, 
+        EncryptionMethod);
+    ZipFileWriter.Add(FullName);
+    ZipFileWriter.Write();
+    
+    DeleteFiles(FullName);
+    
+    FullName = FullName + ".zip";   
+    
+EndProcedure // WriteZipDocument()
+
+// Only for internal use.
+//
+Function NewTimestamp()
+    
+    AddTimestamp = Boolean(FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "AddTimestamp", False));
+    If AddTimestamp Then
+            
+        FormatString = FL_EncryptionClientServer.FieldValueNoException(
+            ChannelResources, "FormatString");
+            
+        DateInMilliseconds = CurrentUniversalDateInMilliseconds();
+        UniversalDate = Date(1, 1, 1) + DateInMilliseconds / 1000;
+        Milliseconds = DateInMilliseconds % 1000;
+            
+        If ValueIsFilled(FormatString) Then
+            Return "_" + Format(ToLocalTime(UniversalDate), FormatString);     
+        Else
+            Return "_" + Format(ToLocalTime(UniversalDate), 
+                "df=yyyy-MM-ddTHH-mm-ss") + Format(Milliseconds, "NF=.N");
         EndIf;
-        
+            
     EndIf;
     
-EndProcedure // ProcessAdditionalOutputProperties()
+    Return "";
+
+EndFunction // NewTimestamp()
 
 #EndRegion // ServiceProceduresAndFunctions
 
