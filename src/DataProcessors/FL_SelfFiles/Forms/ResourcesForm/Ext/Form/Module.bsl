@@ -31,7 +31,25 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
      
 EndProcedure // OnCreateAtServer()
 
+&AtClient
+Procedure OnOpen(Cancel)
+    
+    AddTimestampOnChange(Items.AddTimestamp);
+    
+EndProcedure // OnOpen()
+
 #EndRegion // FormEventHandlers
+
+#Region FormItemsEventHandlers
+
+&AtClient
+Procedure AddTimestampOnChange(Item)
+    
+    Items.GroupFormatString.Visible = AddTimestamp; 
+    
+EndProcedure // AddTimestampOnChange()
+
+#EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
 
@@ -47,7 +65,7 @@ Procedure SaveAndClose(Command)
             "Path");
         Return;    
     EndIf;
-    
+        
     FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, "Path", 
         Path);
     
@@ -58,6 +76,8 @@ Procedure SaveAndClose(Command)
     
     FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
         "AddTimestamp", AddTimestamp);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "FormatString", FormatString);
     
     If ValueIsFilled(Extension) Then
         FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 

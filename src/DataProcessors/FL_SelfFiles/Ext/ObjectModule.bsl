@@ -86,23 +86,13 @@ Procedure DeliverMessage(Payload, Properties, JobResult) Export
     
     BaseName = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "BaseName", StrReplace(New UUID, "-", ""));
-    AddTimestamp = Boolean(FL_EncryptionClientServer.FieldValueNoException(
-            ChannelResources, "AddTimestamp", False));    
-        
+          
     Extension = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "Extension", Properties.FileExtension);
     
     Try 
         
-        If AddTimestamp Then
-            
-            DateInMilliseconds = CurrentUniversalDateInMilliseconds();
-            UniversalDate = Date(1, 1, 1) + DateInMilliseconds / 1000;
-            Milliseconds = DateInMilliseconds % 1000;
-            Timestamp = Format(ToLocalTime(UniversalDate), "df=_yyyy-MM-ddTHHmmss")
-                + Format(Milliseconds, "NF=.N");
-            
-        EndIf;
+        FillTimestampIfNecessary(Timestamp); 
         
         FullName = StrTemplate("%1%2%3%4", Path, BaseName, Timestamp, 
             Extension);
@@ -226,6 +216,32 @@ EndFunction // SuppliedIntegration()
 
 // Only for internal use.
 //
+Procedure FillTimestampIfNecessary(Timestamp)
+    
+    AddTimestamp = Boolean(FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "AddTimestamp", False));
+    If AddTimestamp Then
+            
+        FormatString = FL_EncryptionClientServer.FieldValueNoException(
+            ChannelResources, "FormatString");
+            
+        DateInMilliseconds = CurrentUniversalDateInMilliseconds();
+        UniversalDate = Date(1, 1, 1) + DateInMilliseconds / 1000;
+        Milliseconds = DateInMilliseconds % 1000;
+            
+        If ValueIsFilled(FormatString) Then
+            Timestamp = "_" + Format(ToLocalTime(UniversalDate), FormatString);     
+        Else
+            Timestamp = "_" + Format(ToLocalTime(UniversalDate), 
+                "df=yyyy-MM-ddTHH-mm-ss") + Format(Milliseconds, "NF=.N");
+        EndIf;
+            
+    EndIf;
+
+EndProcedure // FillTimestampIfNecessary()
+
+// Only for internal use.
+//
 Procedure WriteSpreadsheetDocument(Payload, FullName, Extension)
     
     If Upper(Extension) = ".PDF" Then
@@ -271,7 +287,7 @@ EndProcedure // ProcessAdditionalOutputProperties()
 //
 Function Version() Export
     
-    Return "1.0.6";
+    Return "1.0.7";
     
 EndFunction // Version()
 
