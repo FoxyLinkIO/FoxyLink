@@ -270,44 +270,12 @@ Procedure WriteZipDocument(FullName)
     ZipCommentaries = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "ZipCommentaries");
         
-    CompressionMethod = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "ZipCompressionMethod");
-    If CompressionMethod = "BZIP2" Then
-        CompressionMethod = ZIPCompressionMethod.BZIP2;    
-    ElsIf CompressionMethod = "Copy" Then
-        CompressionMethod = ZIPCompressionMethod.Copy;    
-    Else
-        CompressionMethod = ZIPCompressionMethod.Deflate;    
-    EndIf;    
-        
-    CompressionLevel = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "ZipCompressionLevel");
-    If CompressionLevel = "Maximum" Then
-        CompressionLevel = ZIPCompressionLevel.Maximum;    
-    ElsIf CompressionLevel = "Minimum" Then
-        CompressionLevel = ZIPCompressionLevel.Minimum;    
-    Else
-        CompressionLevel = ZIPCompressionLevel.Optimal;    
-    EndIf;     
-        
-    EncryptionMethod = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "ZipEncryptionMethod");
-    If EncryptionMethod = "AES128" Then
-        EncryptionMethod = ZipEncryptionMethod.AES128;    
-    ElsIf EncryptionMethod = "Minimum" Then
-        EncryptionMethod = ZipEncryptionMethod.AES192;    
-    ElsIf EncryptionMethod = "Minimum" Then
-        EncryptionMethod = ZipEncryptionMethod.AES256;
-    Else
-        EncryptionMethod = ZipEncryptionMethod.Zip20;    
-    EndIf;
-           
     ZipFileWriter = New ZipFileWriter(FullName + ".zip", 
         ZipPassword, 
         ZipCommentaries, 
-        CompressionMethod, 
-        CompressionLevel, 
-        EncryptionMethod);
+        NewCompressionMethod(), 
+        NewCompressionLevel(), 
+        NewEncryptionMethod());
     ZipFileWriter.Add(FullName);
     ZipFileWriter.Write();
     
@@ -316,6 +284,56 @@ Procedure WriteZipDocument(FullName)
     FullName = FullName + ".zip";   
     
 EndProcedure // WriteZipDocument()
+
+// Only for internal use.
+//
+Function NewCompressionMethod()
+    
+    CompressionMethod = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipCompressionMethod");
+    If CompressionMethod = "BZIP2" Then
+        Return ZIPCompressionMethod.BZIP2;    
+    ElsIf CompressionMethod = "Copy" Then
+        Return ZIPCompressionMethod.Copy;    
+    Else
+        Return ZIPCompressionMethod.Deflate;    
+    EndIf;   
+    
+EndFunction // NewCompressionMethod()
+
+// Only for internal use.
+//
+Function NewCompressionLevel()
+    
+    CompressionLevel = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipCompressionLevel");
+    If CompressionLevel = "Maximum" Then
+        Return ZIPCompressionLevel.Maximum;    
+    ElsIf CompressionLevel = "Minimum" Then
+        Return ZIPCompressionLevel.Minimum;    
+    Else
+        Return ZIPCompressionLevel.Optimal;    
+    EndIf;
+    
+EndFunction // NewCompressionLevel()
+
+// Only for internal use.
+//
+Function NewEncryptionMethod()
+    
+    EncryptionMethod = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipEncryptionMethod");
+    If EncryptionMethod = "AES128" Then
+        Return ZipEncryptionMethod.AES128;    
+    ElsIf EncryptionMethod = "AES192" Then
+        Return ZipEncryptionMethod.AES192;    
+    ElsIf EncryptionMethod = "AES256" Then
+        Return ZipEncryptionMethod.AES256;
+    Else
+        Return ZipEncryptionMethod.Zip20;    
+    EndIf;
+    
+EndFunction // NewEncryptionMethod()
 
 // Only for internal use.
 //
@@ -356,7 +374,7 @@ EndFunction // NewTimestamp()
 //
 Function Version() Export
     
-    Return "1.0.7";
+    Return "1.0.8";
     
 EndFunction // Version()
 
