@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -71,6 +71,30 @@ Procedure RefreshApplicationInterface() Export
     EndIf;
 
 EndProcedure // RefreshApplicationInterface()
+
+// Shows detail values from data composition details object.
+//
+// Parameters:
+//  DataCompositionDetails - DataCompositionDetailsData - object that contains details information.
+//  Details                - Arbitrary                  - details value.
+//  StandardProcessing     - Boolean                    - sets passed flag to false. Indicates that standard (system) 
+//                                                        processing of the event isn't performed.
+//  NotifyDescription      - NotifyDescription          - It contains description of the procedure that will be called 
+//                                                        after the value entry window is closed.
+//                                              Default value: Undefined. 
+//
+Procedure DetailProcessing(DataCompositionDetails, Details, StandardProcessing, 
+    NotifyDescription = Undefined) Export
+    
+    StandardProcessing = False;
+    
+    FieldDetailsItem = DataCompositionDetails.Items[Details];
+    FieldDetailsValues = FieldDetailsItem.GetFields();
+    If FieldDetailsValues.Count() > 0 Then
+        ShowValue(NotifyDescription, FieldDetailsValues[0].Value);    
+    EndIf;
+    
+EndProcedure // DetailProcessing()
 
 // Prompts whether the action that results in loss of changes should be 
 // continued. For use in the BeforeClosing event handler of forms modules.

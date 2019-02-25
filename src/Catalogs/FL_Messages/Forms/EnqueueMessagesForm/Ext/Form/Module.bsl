@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -46,15 +46,9 @@ EndProcedure // OnCreateAtServer()
 Procedure PreviewSpreadsheetDocumentDetailProcessing(Item, Details, 
     StandardProcessing)
     
-    StandardProcessing = False;
-    
-    DataCompositionDetails = GetFromTempStorage(DetailsDataAddress);
-    FieldDetailsItem = DataCompositionDetails.Items[Details];
-    FieldDetailsValues = FieldDetailsItem.GetFields();
-    If FieldDetailsValues.Count() = 1 Then
-        ShowValue(, FieldDetailsValues[0].Value);    
-    EndIf;
-        
+    FL_InteriorUseClient.DetailProcessing(GetFromTempStorage(DetailsDataAddress), 
+        Details, StandardProcessing);
+            
 EndProcedure // PreviewSpreadsheetDocumentDetailProcessing()
 
 #EndRegion // FormItemsEventHandlers
