@@ -240,6 +240,15 @@ EndProcedure // RowComposerSettingsOrderOnChange()
 
 #EndRegion // DataCompositionSettingsComposer
 
+&AtClient
+Procedure ResultSpreadsheetDocumentDetailProcessing(Item, Details, 
+    StandardProcessing)
+    
+    FL_InteriorUseClient.DetailProcessing(GetFromTempStorage(DetailsDataAddress), 
+        Details, StandardProcessing);
+        
+EndProcedure // ResultSpreadsheetDocumentDetailProcessing()
+
 #EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
@@ -776,25 +785,32 @@ Procedure GenerateSpreadsheetDocumentAtServer()
     // Start measuring.
     StartTime = CurrentUniversalDateInMilliseconds();
     
+    DetailsData = New DataCompositionDetailsData;
     DataCompositionSchema = GetFromTempStorage(
         DataCompositionSchemaEditAddress);     
     DataCompositionSettings = RowComposerSettings.GetSettings();
 
     DataCompositionTemplate = FL_DataComposition
         .NewTemplateComposerParameters();
-    DataCompositionTemplate.Schema   = DataCompositionSchema;
+    DataCompositionTemplate.DetailsData = DetailsData;
+    DataCompositionTemplate.Schema = DataCompositionSchema;
     DataCompositionTemplate.Template = DataCompositionSettings;
 
     OutputParameters = FL_DataComposition.NewOutputParameters();
     OutputParameters.DCTParameters = DataCompositionTemplate;
     OutputParameters.CanUseExternalFunctions = RowCanUseExternalFunctions;
+    OutputParameters.DetailsData = DetailsData;
     
     FL_DataComposition.OutputInSpreadsheetDocument(ResultSpreadsheetDocument, 
         OutputParameters);     
             
     // End measuring.
     TestingExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
-        
+    
+    // Details data that should be placed in the temporary storage.
+    // This value is cleared when the form is closed.
+    DetailsDataAddress = PutToTempStorage(DetailsData, UUID);
+    
     Items.HiddenPageTestingResults.CurrentPage = 
         Items.HiddenPageTestingSpreadsheetDocument;
         
