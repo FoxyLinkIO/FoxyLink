@@ -43,6 +43,11 @@
 				<xr:Item xsi:type="xr:MDObjectRef">HTTPService.FL_AppEndpoint</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_MessagePayload</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">InformationRegister.FL_LinkedObjects</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_ChartOfCharacteristicTypesBeforeWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_ChartOfCharacteristicTypesBeforeDelete</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_ChartOfCharacteristicTypesOnWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsBeforeWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsOnWrite</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>
