@@ -97,8 +97,8 @@
 		<Metadata name="Catalog.FL_Jobs.Command.ConfigureJobServerStartUp.CommandModule" id="1ea7847f-2cdb-4359-91d0-7bb7fae80788.2" configVersion="8275305300e9b044b027a70c1439abf600000000"/>
 		<Metadata name="Catalog.FL_Jobs.Form.ItemForm" id="37c29e63-8f92-438a-8f32-4acca455f1ec" configVersion="34f00eaf1c66ee46a8ceaff345be261400000000"/>
 		<Metadata name="Catalog.FL_Jobs.Form.ItemForm.Form" id="37c29e63-8f92-438a-8f32-4acca455f1ec.0" configVersion="20cede43f880344a9a2e4a3217a03c9200000000"/>
-		<Metadata name="Catalog.FL_Jobs.Form.ListForm" id="f6e6ba23-c508-45e1-91cf-6b9036d2ee22" configVersion="0620724da9368741ab1857677680540400000000"/>
-		<Metadata name="Catalog.FL_Jobs.Form.ListForm.Form" id="f6e6ba23-c508-45e1-91cf-6b9036d2ee22.0" configVersion="6dab8ea3e03ac240bce2fc10951f61ee00000000"/>
+		<Metadata name="Catalog.FL_Jobs.Form.ListForm" id="f6e6ba23-c508-45e1-91cf-6b9036d2ee22" configVersion="6a8f30271f1e3a4c8d16425ddd42ebe500000000"/>
+		<Metadata name="Catalog.FL_Jobs.Form.ListForm.Form" id="f6e6ba23-c508-45e1-91cf-6b9036d2ee22.0" configVersion="cdfcd9c39f09fa408f0bb2a514cd4bf900000000"/>
 		<Metadata name="Catalog.FL_Jobs.Form.ScheduledJobForm" id="506149d2-47aa-4e31-a78e-9b4b01b301b3" configVersion="e1eaa8c9c9d5fe4e92c6e624792a6b6900000000"/>
 		<Metadata name="Catalog.FL_Jobs.Form.ScheduledJobForm.Form" id="506149d2-47aa-4e31-a78e-9b4b01b301b3.0" configVersion="361f1f93189809499123e3d8c2c7df3d00000000"/>
 		<Metadata name="Catalog.FL_Jobs.ManagerModule" id="83d109a0-741e-40d3-86aa-fa3bf87e41d7.3" configVersion="c8eb79f7797add468eeffc59e3a4fd4500000000"/>
@@ -330,7 +330,7 @@
 		<Metadata name="CommonPicture.FL_WordPress.Picture" id="35f9dcd0-18cb-4676-b93a-f8328c146a72.0" configVersion="d66c02230856274887d9d78c1c3f059e00000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE" id="4cc3426b-e953-4bd9-b838-2153998228de" configVersion="581927af0e4d7e44846e3a24740bdf6700000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE.Template" id="4cc3426b-e953-4bd9-b838-2153998228de.0" configVersion="a3107b1e2e297649811382e1f34ff0a400000000"/>
-		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="0214ad661f24b849becd270b326812bf00000000"/>
+		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="9b262c93bb11064ba793b674db04860400000000"/>
 		<Metadata name="Configuration.FoxyLink.ClientApplicationInterface" id="d93db53b-5a84-46dd-b01b-c5c745936a50.b" configVersion="11629064c93eff4886978d5b451f1c6800000000"/>
 		<Metadata name="Configuration.FoxyLink.Logo" id="d93db53b-5a84-46dd-b01b-c5c745936a50.1" configVersion="9659276839a8dc428c0d1192ab0a0d9b00000000"/>
 		<Metadata name="Configuration.FoxyLink.MainSectionPicture" id="d93db53b-5a84-46dd-b01b-c5c745936a50.c" configVersion="ff26138f08918640818c02536eca4d0000000000"/>

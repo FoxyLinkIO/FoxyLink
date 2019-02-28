@@ -123,10 +123,10 @@ EndProcedure // StopJobServer()
 // Only for internal use.
 //
 &AtClient
-Procedure UpdateJobs(Description)
+Procedure UpdateJobs(PredefinedDataName)
 
     FL_CommonUseClientServer.SetDynamicListParameter(Jobs, "State", 
-        StateReference(Description));
+        StateReference(PredefinedDataName));
              
 EndProcedure // UpdateJobs()
 
@@ -175,7 +175,7 @@ Procedure UpdateJobStatesCountAtServer()
     
     For Each RowItem In StateStats Do
         
-        Command = Commands.Find(RowItem.Presentation);
+        Command = Commands.Find(RowItem.PredefinedDataName);
         If Command <> Undefined Then
             Command.Title = StrTemplate("%1 (%2)", RowItem.Presentation, 
                 RowItem.Count);    
@@ -242,10 +242,10 @@ EndProcedure // StopJobServerAtServer()
 // Only for internal use.
 //
 &AtServerNoContext
-Function StateReference(Description)
+Function StateReference(PredefinedDataName)
 
-    Return FL_CommonUse.ReferenceByDescription(Metadata.Catalogs.FL_States, 
-        Description); 
+    Return FL_CommonUse.ReferenceByPredefinedDataName(Metadata.Catalogs.FL_States, 
+        PredefinedDataName); 
 
 EndFunction // StateReference() 
 
@@ -258,6 +258,7 @@ Function QueryTextJobStatesCount()
         |SELECT
         |   States.Ref AS State,
         |   States.Description AS Presentation,
+        |   States.PredefinedDataName AS PredefinedDataName,
         |   Count(Jobs.Ref) AS Count
         |
         |FROM
