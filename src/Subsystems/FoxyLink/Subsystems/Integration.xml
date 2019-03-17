@@ -48,6 +48,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_ChartOfCharacteristicTypesOnWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsBeforeWrite</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">EventSubscription.FL_DocumentsOnWrite</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_DataCompositionClient</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

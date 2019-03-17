@@ -136,50 +136,6 @@ EndProcedure // OutputInValueCollection()
 
 #Region ServiceInterface
 
-// Creates data composition schema from the data sources and data sets and
-// copies data composition schema to the destination address.
-//
-// Parameters:
-//  DataSources        - Array  - data source items.
-//          see function FL_DataComposition.NewDataCompositionSchemaDataSource.
-//  DataSets           - Array  - data set items.
-//          see function FL_DataComposition.NewDataCompositionSchemaDataSetQuery.
-//          see function FL_DataComposition.NewDataCompositionSchemaDataSetObject.
-//          see function FL_DataComposition.NewDataCompositionSchemaDataSetUnion.
-//  DestinationAddress - String - the address to copy data composition schema in.
-//  UUID               - UUID   - an unique identifier of the form in the 
-//          temporary storage of which the data should be placed
-//
-Procedure CreateDataCompositionSchema(DataSources, DataSets, DestinationAddress, 
-    UUID) Export
-    
-    // Create a data composition schema.
-    DataCompositiomSchema = New DataCompositionSchema;
-    
-    // Determine the data sources for the schema.
-    For Each DataSource In DataSources Do
-        FillPropertyValues(DataCompositiomSchema.DataSources.Add(), 
-            DataSource);
-    EndDo;
-
-    // Determine the data sets for the schema.
-    For Each DataSet In DataSets Do
-        
-        NewDataSet = DataCompositiomSchema.DataSets.Add(DataSet.Type);
-        FillPropertyValues(NewDataSet, DataSet, , "Fields"); 
-        
-        // Determine the data fields for the data set.
-        For Each Field In DataSet.Fields Do
-            NewField = NewDataSet.Fields.Add(Field.Type);
-            FillPropertyValues(NewField, Field);
-        EndDo;
-        
-    EndDo;
-    
-    DestinationAddress = PutToTempStorage(DataCompositiomSchema, UUID);
-    
-EndProcedure // CreateDataCompositionSchema() 
-
 // Copies data composition schema from the source address to the destination address.
 //
 // Parameters:
@@ -307,7 +263,7 @@ Procedure SetDataToSettingsComposer(SettingsComposer, Context) Export
     EndIf;
     
     If TypeOf(Context) = Type("CatalogTabularSection.FL_Messages.Context") Then
-        ConvertedContext = Context.Unload();
+        ConvertedContext = Context.Unload();        
     Else
         ConvertedContext = Context;    
     EndIf;
@@ -328,6 +284,132 @@ Procedure SetDataToSettingsComposer(SettingsComposer, Context) Export
     FillDataCompositionParameterValueCollection(DataParameters, ConvertedContext);
                                 
 EndProcedure // SetDataToSettingsComposer()
+
+// Creates data composition schema from the data sources and data sets.
+//
+// Parameters:
+//  DataSources        - Array  - data source items.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSource.
+//  DataSets           - Array  - data set items.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSetQuery.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSetObject.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSetUnion.
+//
+// Returns:
+//  DataCompositiomSchema - a new data composition schema. 
+//
+Function CreateDataCompositionSchema(DataSources, DataSets) Export
+    
+    // Create a data composition schema.
+    DataCompositiomSchema = New DataCompositionSchema;
+    
+    // Determine the data sources for the schema.
+    For Each DataSource In DataSources Do
+        FillPropertyValues(DataCompositiomSchema.DataSources.Add(), 
+            DataSource);
+    EndDo;
+
+    // Determine the data sets for the schema.
+    For Each DataSet In DataSets Do
+        
+        NewDataSet = DataCompositiomSchema.DataSets.Add(DataSet.Type);
+        FillPropertyValues(NewDataSet, DataSet, , "Fields"); 
+        
+        // Determine the data fields for the data set.
+        For Each Field In DataSet.Fields Do
+            NewField = NewDataSet.Fields.Add(Field.Type);
+            FillPropertyValues(NewField, Field);
+        EndDo;
+        
+    EndDo;
+    
+    Return DataCompositiomSchema;
+    
+EndFunction // CreateDataCompositionSchema() 
+
+// Creates data composition schema based on event source.
+//
+// Parameters:
+//  EventSource    - String - object full name of a configuration. 
+//                            E.g. the Catalog.Nomenclature, Document.Employment.
+//  MaxResults    - Number  - maximun number of output results.
+//                      Default value: 500.
+//  UseParameters - Boolean - if value is true, schema parameters are filled by primary keys.
+//                      Default value: False.
+//
+// Returns:
+//  DataCompositiomSchema - a new data composition schema. 
+//
+Function CreateEventSourceDataCompositionSchema(EventSource, 
+    MaxResults = 500, UseParameters = False) Export
+    
+    // Getting primary keys from metadata object.
+    PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
+        Metadata.FindByFullName(EventSource));
+    If PrimaryKeys.Count() = 0 Then
+        Return New DataCompositionSchema;    
+    EndIf;
+           
+    // Creating data source
+    DataSource = NewDataCompositionSchemaDataSource();
+    DataSources = New Array;
+    DataSources.Add(DataSource);
+    
+    // Creating data set
+    DataSet = NewDataCompositionSchemaDataSetQuery();
+    DataSet.Query = CreateEventSourceQueryText(EventSource, PrimaryKeys, 
+        UseParameters);
+    For Each PrimaryKey In PrimaryKeys Do
+        
+        DataSetField = NewDataCompositionSchemaDataSetField();
+        DataSetField.Title = PrimaryKey.Key;
+        DataSetField.DataPath = PrimaryKey.Key;
+        DataSetField.Field = PrimaryKey.Key;
+        DataSetField.ValueType = New TypeDescription(PrimaryKey.Value);
+        
+        DataSet.Fields.Add(DataSetField);
+        
+    EndDo;
+    
+    DataSets = New Array;
+    DataSets.Add(DataSet);
+     
+    DataCompositionSchema = CreateDataCompositionSchema(DataSources, DataSets);
+    If UseParameters Then
+        For Each PrimaryKey In PrimaryKeys Do
+            SchemaParameter = DataCompositionSchema.Parameters.Add();
+            SchemaParameter.DenyIncompleteValues = True;
+            SchemaParameter.Name = PrimaryKey.Key;
+            SchemaParameter.Title = PrimaryKey.Key;
+            SchemaParameter.Use = DataCompositionParameterUse.Always;
+            SchemaParameter.UseRestriction = True;
+            SchemaParameter.ValueType = New TypeDescription(PrimaryKey.Value);
+        EndDo;
+    EndIf;
+    
+    DataCompositionSettings = DataCompositionSchema.DefaultSettings;
+    Selection = DataCompositionSettings.Selection;
+    Structure = DataCompositionSettings.Structure;
+    DataCompositionGroup = Structure.Add(Type("DataCompositionGroup"));
+    DataCompositionGroup.Use = True;
+    DataCompositionGroup.Name = "FoxyLinkGroup";
+    DataCompositionGroup.Order.Items.Add(
+        Type("DataCompositionAutoOrderItem"));
+    DataCompositionGroup.Selection.Items.Add(
+        Type("DataCompositionAutoSelectedField"));
+    DataCompositionGroup.OutputParameters.SetParameterValue("RecordsCount", 
+        MaxResults);
+        
+    For Each PrimaryKey In PrimaryKeys Do
+        SelectedField = Selection.Items.Add(
+            Type("DataCompositionSelectedField"));
+        SelectedField.Field = New DataCompositionField(PrimaryKey.Key);
+        SelectedField.Use = True;
+    EndDo;
+        
+    Return DataCompositionSchema;
+
+EndFunction // CreateEventSourceDataCompositionSchema()
 
 // Creates description of data source of data composition schema.
 //
@@ -769,6 +851,49 @@ Function DataCompositionSettings(DataCompositionSettingsURL)
 EndFunction // DataCompositionSettings()
 
 #EndRegion // SettingsComposer
+
+#Region QuerySchema
+
+// Only for internal use.
+//
+Function CreateEventSourceQueryText(EventSource, PrimaryKeys, UseParameters)
+    
+    QuerySchema = New QuerySchema;
+    QueryBatch = QuerySchema.QueryBatch[0];
+    OperatorSelect = QueryBatch.Operators[0];
+    
+    // Adding query source 
+    OperatorSelect.Sources.Add(EventSource, "EventSource");
+    AvailableTable = QueryBatch.AvailableTables.Find(EventSource); 
+    
+    // Selecting query fields
+    Index = 0;
+    For Each PrimaryKey In PrimaryKeys Do
+        
+        OperatorSelect.SelectedFields.Add(PrimaryKey.Key);  
+        QueryBatch.Columns[Index].Alias = PrimaryKey.Key;
+        Index = Index + 1;
+        
+        If UseParameters Then
+            SearchResult = AvailableTable.Fields.Find(PrimaryKey.Key);
+            If SearchResult <> Undefined Then
+                OperatorSelect.Filter.Add(SearchResult);
+            EndIf;
+        EndIf;
+        
+    EndDo;
+       
+    For Each Field In AvailableTable.Fields Do
+        If OperatorSelect.SelectedFields.Find(Field.Name) = Undefined Then
+            OperatorSelect.SelectedFields.Add(Field);
+        EndIf;
+    EndDo;
+            
+    Return QuerySchema.GetQueryText();
+    
+EndFunction // CreateEventSourceQueryText()
+
+#EndRegion // QuerySchema
 
 // Recursively fills the report structure from nested data composition 
 // layouts in main data composition template. 

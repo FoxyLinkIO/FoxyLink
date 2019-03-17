@@ -123,6 +123,29 @@ Procedure OperationPagesOnCurrentPageChange(Item, CurrentPage)
 EndProcedure // OperationPagesOnCurrentPageChange()
 
 &AtClient
+Procedure EventsSelection(Item, SelectedRow, Field, StandardProcessing)
+    
+    If Field.Name = "EventsEventName" Then
+        
+        AddEvent();
+        
+    ElsIf Field.Name = "EventsFilterPresentation" Then
+        
+        OpenForm("Catalog.FL_Messages.Form.EventsFilterForm", 
+            NewEventFilterFormParameters(SelectedRow), 
+            ThisObject,
+            New UUID, 
+            , 
+            ,
+            New NotifyDescription("DoAfterSetEventFilter", ThisObject, 
+                SelectedRow), 
+            FormWindowOpeningMode.LockOwnerWindow);        
+        
+    EndIf;
+    
+EndProcedure // EventsSelection()
+
+&AtClient
 Procedure EventsEventHandlerStartChoice(Item, ChoiceData, StandardProcessing)
     
     StandardProcessing = False;
@@ -265,7 +288,7 @@ Procedure AddAppEndpoint(Command)
 EndProcedure // AddAppEndpoint()
 
 &AtClient
-Procedure AddEvent(Command)
+Procedure AddEvent(Command = Undefined)
     
     OpenForm("Catalog.FL_Exchanges.Form.EventsSelectionForm", 
         New Structure("Operation, MarkedEvents", RowOperation, MarkedEvents()), 
@@ -407,24 +430,9 @@ EndProcedure // EditAppEndpointResources()
 &AtClient
 Procedure EditDataCompositionSchema(Command)
     
-    #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then
-        
-        // Copy existing data composition schema.
-        DataCompositionSchema = XDTOSerializer.ReadXDTO(XDTOSerializer.WriteXDTO(
-            GetFromTempStorage(DataCompositionSchemaEditAddress)));
-        
-        Wizard = New DataCompositionSchemaWizard(DataCompositionSchema);
-        Wizard.Edit(ThisObject);
-        
-    #Else
-        
-        ShowMessageBox(Undefined,
-            NStr("en='To edit the layout scheme, run configuration in thick client mode.';
-                |ru='Для того, чтобы редактировать схему компоновки, необходимо запустить конфигурацию в режиме толстого клиента.';
-                |en_CA='To edit the layout scheme, run configuration in thick client mode.'"));
-        
-    #EndIf
-    
+    FL_DataCompositionClient.RunDataCompositionSchemaWizard(ThisObject,
+        DataCompositionSchemaEditAddress);
+            
 EndProcedure // EditDataCompositionSchema()
 
 &AtClient
@@ -434,7 +442,11 @@ Procedure EnqueueEvents(Command)
     If CurrentData <> Undefined Then
         
         FormParameters = New Structure;
-        FormParameters.Insert("Exchange", Object.Ref); 
+        FormParameters.Insert("Exchange", Object.Ref);
+        FormParameters.Insert("DataCompositionSchemaFilterAddress", 
+            CurrentData.EventFilterDCSchemaAddress);
+        FormParameters.Insert("DataCompositionSettingsFilterAddress", 
+            CurrentData.EventFilterDCSettingsAddress);
         FormParameters.Insert("EventSource", CurrentData.MetadataObject);
         FormParameters.Insert("Operation", CurrentData.Operation);
         
@@ -452,6 +464,7 @@ Procedure EnqueueEvents(Command)
         ShowQueryBox(New NotifyDescription("DoAfterEnqueueEvents", ThisObject),
             NStr("en='Enqueue event that is not connected with metadata directly?';
                 |ru='Отправить в очередь событие, которое напрямую не связано с метаданными?';
+                |uk='Надіслати в чергу подію, яка безпосередньо не звязана з метаданими?';
                 |en_CA='Enqueue event that is not connected with metadata directly?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);    
         
@@ -975,7 +988,7 @@ Procedure LoadOperationSettings()
         // Create schema, if needed.
         If IsBlankString(CurrentData.DataCompositionSchemaAddress) Then
             CurrentData.DataCompositionSchemaAddress = PutToTempStorage(
-                New DataCompositionSchema, ThisObject.UUID);
+                New DataCompositionSchema, UUID);
         EndIf;
             
         FL_DataComposition.CopyDataCompositionSchema(
@@ -1102,6 +1115,7 @@ Function CurrentOperationData(Val RowOperation)
         
         ErrorMessage = NStr("en='Critical error, operation not found.';
             |ru='Критическая ошибка, операция не найдена.';
+            |uk='Критична помилка, операцію не знайдено.';
             |en_CA='Critical error, operation not found.'");
         
         Raise ErrorMessage;     
@@ -1236,6 +1250,56 @@ Procedure DoAfterEnqueueEvents(QuestionResult, AdditionalParameters) Export
 
 EndProcedure // DoAfterEnqueueEvents()
 
+// Sets a new event filter for subscription on event.
+//
+// Parameters:
+//  ClosureResult        - Arbitrary - the value transferred when you call 
+//                                      the Close method of the opened form.
+//  AdditionalParameters - Arbitrary - the value specified when the 
+//                                      NotifyDescription object was created.
+//
+&AtClient
+Procedure DoAfterSetEventFilter(ClosureResult, AdditionalParameters) Export
+    
+    If ClosureResult <> Undefined
+        AND TypeOf(ClosureResult) = Type("Structure") Then
+        SetEventFilterAtServer(ClosureResult, AdditionalParameters);    
+        
+    EndIf;
+    
+EndProcedure // DoAfterSetEventFilter()
+
+// Only for internal use.
+//
+&AtClient
+Function NewEventFilterFormParameters(Identifier)
+    
+    CurrentData = Object.Events.FindById(Identifier);
+    If CurrentData = Undefined Then
+        
+        ErrorMessage = NStr("en='Critical error, selected event not found.';
+            |ru='Критическая ошибка, выбранное событие не найдено.';
+            |uk='Критична помилка, вибрана подія не знайдена.';
+            |en_CA='Critical error, selected event not found.'");
+        Raise ErrorMessage;
+        
+    EndIf;
+    
+    EventFilterFormParameters = New Structure;
+    EventFilterFormParameters.Insert("DataCompositionSchemaAddress");
+    EventFilterFormParameters.Insert("DataCompositionSettingsAddress");
+    EventFilterFormParameters.Insert("EventSource");
+    
+    EventFilterFormParameters.DataCompositionSchemaAddress = 
+        CurrentData.EventFilterDCSchemaAddress;
+    EventFilterFormParameters.DataCompositionSettingsAddress = 
+        CurrentData.EventFilterDCSettingsAddress;
+    EventFilterFormParameters.EventSource = CurrentData.MetadataObject;
+    
+    Return EventFilterFormParameters;
+    
+EndFunction // NewEventFilterFormParameters()
+
 // Only for internal use.
 //
 &AtServer
@@ -1288,7 +1352,27 @@ Procedure AddEventAtServer(EventValueList)
     FL_CommonUseClientServer.DeleteRowsByFilter(Object.Events, 
         FilterParameters, Modified);
     
-EndProcedure // AddEventAtServer() 
+EndProcedure // AddEventAtServer()
+
+// Only for internal use.
+//
+&AtServer
+Procedure SetEventFilterAtServer(EventFilterFormParameters, Identifier)
+    
+    CurrentData = Object.Events.FindById(Identifier);
+    If CurrentData = Undefined Then
+        Return;        
+    EndIf;
+    
+    Modified = True;
+    CurrentData.FilterPresentation = EventFilterFormParameters
+        .FilterPresentation;
+    CurrentData.EventFilterDCSchemaAddress = EventFilterFormParameters
+        .DataCompositionSchemaAddress;
+    CurrentData.EventFilterDCSettingsAddress = EventFilterFormParameters
+        .DataCompositionSettingsAddress;    
+    
+EndProcedure // SetEventFilterAtServer()
 
 // Only for internal use.
 //

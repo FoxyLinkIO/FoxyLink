@@ -4,6 +4,7 @@
 		<Autofill>false</Autofill>
 	</AutoCommandBar>
 	<Events>
+		<Event name="ChoiceProcessing">ChoiceProcessing</Event>
 		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
 	</Events>
 	<ChildItems>
@@ -88,6 +89,11 @@
 									<Type>UsualButton</Type>
 									<CommandName>Form.Command.EnqueueEvents</CommandName>
 									<ExtendedTooltip name="EnqueueEventsExtendedTooltip" id="82"/>
+								</Button>
+								<Button name="EditDataCompositionSchema" id="134">
+									<Type>UsualButton</Type>
+									<CommandName>Form.Command.EditDataCompositionSchema</CommandName>
+									<ExtendedTooltip name="EditDataCompositionSchemaExtendedTooltip" id="135"/>
 								</Button>
 								<UsualGroup name="GroupPerformance" id="96">
 									<HorizontalStretch>true</HorizontalStretch>
@@ -546,12 +552,16 @@
 					<v8:content>Exchange</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Exchange</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Обмен</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Exchange</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Обмін</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -571,6 +581,10 @@
 				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Операция</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Операція</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -611,12 +625,16 @@
 					<v8:content>Data composition schema address</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Data composition schema address</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Адрес схемы компоновки данных</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Data composition schema address</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Адреса схеми компоновки даних</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -634,12 +652,16 @@
 					<v8:content>Data composition settings composer</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Data composition settings composer</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Компоновщик настроек компоновки данных</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Data composition settings composer</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Компонувальник налаштувань компоновки даних</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -653,12 +675,16 @@
 					<v8:content>Execution time (ms)</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Execution time (ms)</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Время выполнения (мс)</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Execution time (ms)</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Час виконання (мс)</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -677,12 +703,16 @@
 					<v8:content>Preview spreadsheet document</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Preview spreadsheet document</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Табличный документ предварительного просмотра</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Preview spreadsheet document</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Табличний документ попереднього перегляду</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -696,12 +726,70 @@
 					<v8:content>Details data address</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Details data address</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Адрес данных расшифровки</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Адреса даних розшифровки</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="DataCompositionSchemaFilterAddress" id="12">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Data composition schema filter address</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Details data address</v8:content>
+					<v8:content>Data composition schema filter address</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Адрес фильтра схемы компоновки данных</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Адреса фільтру схеми копонування даних</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="DataCompositionSettingsFilterAddress" id="13">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Data composition settings filter address</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Data composition settings filter address</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Адрес фильтра настроек компоновки данных</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Адреса фільтру налаштувань компонування даних</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -785,6 +873,51 @@
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
 			<Action>EnqueueEvents</Action>
+			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
+		</Command>
+		<Command name="EditDataCompositionSchema" id="3">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Edit schema</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Edit schema</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Редактировать схему</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Редагувати схему</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Edit data composition schema</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Edit data composition schema</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Редактировать схему компоновки данных</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Редагувати схему компоновки даних</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Edit</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>EditDataCompositionSchema</Action>
 			<Representation>TextPicture</Representation>
 			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>

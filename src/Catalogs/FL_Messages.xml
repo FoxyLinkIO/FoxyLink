@@ -1972,8 +1972,9 @@
 					</Attribute>
 				</ChildObjects>
 			</TabularSection>
-			<Form>ListForm</Form>
 			<Form>EnqueueMessagesForm</Form>
+			<Form>EventsFilterForm</Form>
+			<Form>ListForm</Form>
 			<Command uuid="8e8e5fc5-bf9a-463b-8532-545dbb2f7fdd">
 				<Properties>
 					<Name>ConfigureJobRoutingStartUp</Name>
