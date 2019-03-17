@@ -1084,6 +1084,104 @@
 					<Use>ForItem</Use>
 				</Properties>
 				<ChildObjects>
+					<Attribute uuid="4669788a-311d-43a5-ba7f-b4fe18fe3fef">
+						<Properties>
+							<Name>EventFilterDCSchema</Name>
+							<Synonym>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Event filter data composition schema</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Event filter data composition schema</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Схема компоновки данных фильтра событий</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Схема компоновки даних фільтру подій</v8:content>
+								</v8:item>
+							</Synonym>
+							<Comment/>
+							<Type>
+								<v8:Type>v8:ValueStorage</v8:Type>
+							</Type>
+							<PasswordMode>false</PasswordMode>
+							<Format/>
+							<EditFormat/>
+							<ToolTip/>
+							<MarkNegatives>false</MarkNegatives>
+							<Mask/>
+							<MultiLine>false</MultiLine>
+							<ExtendedEdit>false</ExtendedEdit>
+							<MinValue xsi:nil="true"/>
+							<MaxValue xsi:nil="true"/>
+							<FillChecking>DontCheck</FillChecking>
+							<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
+							<ChoiceParameterLinks/>
+							<ChoiceParameters/>
+							<QuickChoice>DontUse</QuickChoice>
+							<CreateOnInput>DontUse</CreateOnInput>
+							<ChoiceForm/>
+							<LinkByType/>
+							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
+							<Indexing>DontIndex</Indexing>
+							<FullTextSearch>DontUse</FullTextSearch>
+							<DataHistory>DontUse</DataHistory>
+						</Properties>
+					</Attribute>
+					<Attribute uuid="e92a63c4-8255-4c45-9a79-21c8fb991ab5">
+						<Properties>
+							<Name>EventFilterDCSettings</Name>
+							<Synonym>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Event filter data composition settings</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Event filter data composition settings</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Настройки компоновки данных фильтра событий</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Налаштування компоновки даних фільтру подій</v8:content>
+								</v8:item>
+							</Synonym>
+							<Comment/>
+							<Type>
+								<v8:Type>v8:ValueStorage</v8:Type>
+							</Type>
+							<PasswordMode>false</PasswordMode>
+							<Format/>
+							<EditFormat/>
+							<ToolTip/>
+							<MarkNegatives>false</MarkNegatives>
+							<Mask/>
+							<MultiLine>false</MultiLine>
+							<ExtendedEdit>false</ExtendedEdit>
+							<MinValue xsi:nil="true"/>
+							<MaxValue xsi:nil="true"/>
+							<FillChecking>DontCheck</FillChecking>
+							<ChoiceFoldersAndItems>Items</ChoiceFoldersAndItems>
+							<ChoiceParameterLinks/>
+							<ChoiceParameters/>
+							<QuickChoice>DontUse</QuickChoice>
+							<CreateOnInput>DontUse</CreateOnInput>
+							<ChoiceForm/>
+							<LinkByType/>
+							<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
+							<Indexing>DontIndex</Indexing>
+							<FullTextSearch>DontUse</FullTextSearch>
+							<DataHistory>DontUse</DataHistory>
+						</Properties>
+					</Attribute>
 					<Attribute uuid="aad2d61f-634e-4667-86eb-2323507ae24e">
 						<Properties>
 							<Name>EventHandler</Name>
@@ -1405,6 +1503,10 @@
 							<v8:lang>ru</v8:lang>
 							<v8:content>Операции</v8:content>
 						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Операції</v8:content>
+						</v8:item>
 					</Synonym>
 					<Comment/>
 					<ToolTip/>
@@ -1449,12 +1551,16 @@
 									<v8:content>API schema</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>API schema</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Схема API</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>API schema</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Схема API</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1494,12 +1600,16 @@
 									<v8:content>Can use external functions</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Can use external functions</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Возможность использования внешних функций</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Can use external functions</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Можливість використання зовнішніх функцій</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1539,12 +1649,16 @@
 									<v8:content>Data composition schema</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Data composition schema</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Схема компоновки данных</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Data composition schema</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Схема компоновки даних</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1584,12 +1698,16 @@
 									<v8:content>Data composition settings</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Data composition settings</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Настройки компоновки данных</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Data composition settings</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Налаштування компоновки даних</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1768,6 +1886,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Операция</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Операція</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1806,12 +1928,16 @@
 									<v8:content>Operation description</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Operation description</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Описание операции</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Operation description</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Опис операції</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment/>
@@ -1855,12 +1981,16 @@
 									<v8:content>Priority</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Priority</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Приоритет</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>Priority</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Пріоритет</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment>Default job priority.</Comment>
@@ -1881,12 +2011,16 @@
 									<v8:content>FoxyLink can handle several jobs. All jobs are placed in a queue, from which they are fetched as resources are freed and are executed. Each job has a priority, denoted by a positive integer. The lower the number, the higher priority. If priority is not specified explicitly when creating a job, it is automatically assigned.</v8:content>
 								</v8:item>
 								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>FoxyLink can handle several jobs. All jobs are placed in a queue, from which they are fetched as resources are freed and are executed. Each job has a priority, denoted by a positive integer. The lower the number, the higher priority. If priority is not specified explicitly when creating a job, it is automatically assigned.</v8:content>
+								</v8:item>
+								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>FoxyLink может обрабатывать несколько заданий. Все задания помещаются в очередь, откуда они ивзлекаются по мере освобождения ресурсов и выполняются. У каждого задания есть приоритет, обозначаемый положительным целым числом. Чем меньше это число, тем выше приоритет. Если приоритет не указан явно при создании задания, он назначается автоматически.</v8:content>
 								</v8:item>
 								<v8:item>
-									<v8:lang>en_CA</v8:lang>
-									<v8:content>FoxyLink can handle several jobs. All jobs are placed in a queue, from which they are fetched as resources are freed and are executed. Each job has a priority, denoted by a positive integer. The lower the number, the higher priority. If priority is not specified explicitly when creating a job, it is automatically assigned.</v8:content>
+									<v8:lang>uk</v8:lang>
+									<v8:content>FoxyLink може обробляти кілька завдань. Всі завдання поміщаються в чергу, звідки вони дістаються в міру звільнення ресурсів і виконуються. У кожного завдання є пріоритет, що позначається позитивним цілим числом. Чим менше це число, тим вище пріоритет. Якщо пріоритет не вказано явно при створенні завдання, він призначається автоматично.</v8:content>
 								</v8:item>
 							</ToolTip>
 							<MarkNegatives>false</MarkNegatives>

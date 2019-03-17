@@ -293,7 +293,7 @@ Procedure FillRegisterContext(Context, Filter, PrimaryKeys,
     EndDo;    
     
 EndProcedure // FillRegisterContext()
-
+ 
 // Returns deserialized context value if exists.
 //
 // Parameters:
@@ -397,12 +397,7 @@ Function DeserializeContext(Val Message) Export
     If NOT QueryResult.IsEmpty() Then
         
         Context = QueryResult.Unload();
-        Context.Columns.Add("Value");
-        For Each Row In Context Do
-            Row.Value = FL_CommonUse.ValueFromXMLTypeAndValue(Row.XMLValue, 
-                Row.TypeName, Row.NamespaceURI);     
-        EndDo;
-        
+        JoinContextValueColumn(Context);
         Return Context; 
         
     EndIf;
@@ -590,29 +585,15 @@ EndFunction // CreateMessage()
 
 // Only for internal use.
 //
-Function RouteToExchange(MsgRef, Exchange)
-    
-    JobData = FL_BackgroundJob.NewJobData();
-    JobData.MethodName = "Catalogs.FL_Exchanges.ProcessMessage";
-    
-    InputParameter = JobData.Input.Add();
-    InputParameter.Name = "Exchange";
-    InputParameter.Value = Exchange;
-    
-    InputParameter = JobData.Input.Add();
-    InputParameter.Name = "Message";
-    InputParameter.Value = MsgRef;
-    
-    Return FL_BackgroundJob.Enqueue(JobData);  
-    
-EndFunction // RouteToExchange()
-
-// Only for internal use.
-//
 Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
     
     ExchangeEndpoints = ExchangeEndpoints(Source, Exchange);  
     For Each Endpoint In ExchangeEndpoints Do
+        
+        // Checks whether message is passed through event filter 
+        If NOT PassedByEventFilter(Source, Endpoint) Then
+            Continue;
+        EndIf;
         
         JobData = FL_BackgroundJob.NewJobData();
         JobData.Invoke = Endpoint.Invoke;
@@ -735,6 +716,18 @@ EndProcedure // FillAppResources()
 
 // Only for internal use.
 //
+Procedure JoinContextValueColumn(Context)
+    
+    Context.Columns.Add("Value");
+    For Each Row In Context Do
+        Row.Value = FL_CommonUse.ValueFromXMLTypeAndValue(Row.XMLValue, 
+            Row.TypeName, Row.NamespaceURI);     
+    EndDo;
+    
+EndProcedure // JoinContextValueColumn()
+
+// Only for internal use.
+//
 Function GetMessage(Source)
     
     If TypeOf(Source) = Type("CatalogRef.FL_Messages") Then
@@ -807,6 +800,52 @@ Function ExchangeEndpoints(Source, Exchange)
     Return Query.Execute().Unload();
         
 EndFunction // ExchangeEndpoints()
+
+// Only for internal use.
+//
+Function PassedByEventFilter(Source, Endpoint)
+    
+    FilterPassed = True;
+    FilterNotPassed = False;
+    
+    // Event source isn't set or unknown. 
+    If Endpoint.EventFilterDCSchema = Undefined
+        OR Endpoint.EventFilterDCSettings = Undefined Then
+        Return FilterPassed;
+    EndIf;
+    
+    DataCompositionSchema = Endpoint.EventFilterDCSchema.Get();
+    DataCompositionSettings = Endpoint.EventFilterDCSettings.Get();
+    
+    // Event filter isn't set.
+    If TypeOf(DataCompositionSchema) <> Type("DataCompositionSchema") Then
+        Return FilterPassed;
+    EndIf;
+    
+    If Source.Context.Count() <> 0 Then
+        Context = Source.Context.Unload();
+        JoinContextValueColumn(Context);
+    Else
+        // HTTP endpoint context.
+        Context = DeserializeContext(Source.Ref);    
+    EndIf;
+    
+    Settings = Catalogs.FL_Exchanges.NewExchangeSettings();
+    Settings.DataCompositionSchema = DataCompositionSchema;
+    Settings.DataCompositionSettings = DataCompositionSettings;
+    
+    OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(Settings, 
+        Context);
+        
+    ValueTable = New ValueTable;
+    FL_DataComposition.OutputInValueCollection(ValueTable, OutputParameters);    
+    If ValueTable.Count() > 0 Then
+        Return FilterPassed;
+    EndIf;
+    
+    Return FilterNotPassed;
+    
+EndFunction // PassedByEventFilter()
 
 // Only for internal use.
 //
@@ -893,7 +932,9 @@ Function QueryTextExchangeEndpoint()
         |   Exchanges.Ref AS Exchange,
         |   IsNull(OperationTable.Invoke, False) AS Invoke,
         |   IsNull(OperationTable.Isolated, False) AS Isolated,
-        |   IsNull(OperationTable.Priority, 5) AS Priority, 
+        |   IsNull(OperationTable.Priority, 5) AS Priority,
+        |   IsNull(EventTable.EventFilterDCSchema, Undefined) AS EventFilterDCSchema,
+        |   IsNull(EventTable.EventFilterDCSettings, Undefined) AS EventFilterDCSettings,
         |   IsNull(EventTable.EventHandler, &EventHandler) AS EventHandler,
         |   IsNull(EventTable.Transactional, False) AS Transactional
         |FROM
@@ -928,7 +969,9 @@ Function QueryTextExchangeEndpoints()
         |   Exchanges.Ref AS Exchange,
         |   IsNull(OperationTable.Invoke, False) AS Invoke,
         |   IsNull(OperationTable.Isolated, False) AS Isolated, 
-        |   IsNull(OperationTable.Priority, 5) AS Priority, 
+        |   IsNull(OperationTable.Priority, 5) AS Priority,
+        |   EventTable.EventFilterDCSchema AS EventFilterDCSchema,
+        |   EventTable.EventFilterDCSettings AS EventFilterDCSettings,
         |   EventTable.EventHandler AS EventHandler,
         |   EventTable.Transactional AS Transactional
         |FROM

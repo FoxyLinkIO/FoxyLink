@@ -730,7 +730,13 @@ Procedure ImportEvents(Object, ImportedExchange, OperationTable, EventTable)
         For Each OperationLine In OperationLines Do
             
             NewEvent = Object.Events.Add();
-            FillPropertyValues(NewEvent, Event, , "Operation");
+            NewEvent.EventFilterDCSchema = FL_CommonUse.ValueFromJSONString(
+                Event.EventFilterDCSchema);
+            NewEvent.EventFilterDCSettings = FL_CommonUse.ValueFromJSONString(
+                Event.EventFilterDCSettings);
+            FillPropertyValues(NewEvent, Event, , "Operation, 
+                |EventFilterDCSchema, EventFilterDCSettings");
+            
             FillPropertyValues(NewEvent, OperationLine, "Operation");
             
             RecordSet = InformationRegisters.FL_MessagePublishers
