@@ -872,14 +872,13 @@ Function CreateEventSourceQueryText(EventSource, PrimaryKeys, UseParameters)
         
         OperatorSelect.SelectedFields.Add(PrimaryKey.Key);  
         QueryBatch.Columns[Index].Alias = PrimaryKey.Key;
-        Index = Index + 1;
         
         If UseParameters Then
-            SearchResult = AvailableTable.Fields.Find(PrimaryKey.Key);
-            If SearchResult <> Undefined Then
-                OperatorSelect.Filter.Add(SearchResult);
-            EndIf;
+            OperatorSelect.Filter.Add(StrTemplate("%1.%2 = &%2", "EventSource", 
+                PrimaryKey.Key));
         EndIf;
+            
+        Index = Index + 1;
         
     EndDo;
        
