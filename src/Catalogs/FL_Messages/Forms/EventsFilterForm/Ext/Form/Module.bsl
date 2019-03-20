@@ -26,9 +26,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         // Return if the form for analysis is received.
         Return;
     EndIf;
-     
-    Parameters.Property("DataCompositionSchemaAddress", 
-        DataCompositionSchemaAddress);
+    
     Parameters.Property("DataCompositionSettingsAddress", 
         DataCompositionSettingsAddress);
     Parameters.Property("EventSource", EventSource);
