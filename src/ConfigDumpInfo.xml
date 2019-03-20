@@ -138,8 +138,8 @@
 		<Metadata name="Catalog.FL_Messages.Command.ConfigureJobRoutingStartUp.CommandModule" id="8e8e5fc5-bf9a-463b-8532-545dbb2f7fdd.2" configVersion="c19cd7acdc643f4288ef94ba5b8ab6c200000000"/>
 		<Metadata name="Catalog.FL_Messages.Form.EnqueueMessagesForm" id="68b71f35-3d8c-4edf-b0a7-46e94188983a" configVersion="c105296276c4f543a07f9bd3bdc670fb00000000"/>
 		<Metadata name="Catalog.FL_Messages.Form.EnqueueMessagesForm.Form" id="68b71f35-3d8c-4edf-b0a7-46e94188983a.0" configVersion="5ff5e7454a643044a1f47f3372a5f4fb00000000"/>
-		<Metadata name="Catalog.FL_Messages.Form.EventsFilterForm" id="30cbcec8-2c2a-4bb6-a854-b7e2f56cf9bd" configVersion="70560b03e9e9b5448f1798c8139bad3b00000000"/>
-		<Metadata name="Catalog.FL_Messages.Form.EventsFilterForm.Form" id="30cbcec8-2c2a-4bb6-a854-b7e2f56cf9bd.0" configVersion="64dd023873070f4e8f5719fd2629a2e200000000"/>
+		<Metadata name="Catalog.FL_Messages.Form.EventsFilterForm" id="30cbcec8-2c2a-4bb6-a854-b7e2f56cf9bd" configVersion="d06eb5d6970ea24cb15168e08435628e00000000"/>
+		<Metadata name="Catalog.FL_Messages.Form.EventsFilterForm.Form" id="30cbcec8-2c2a-4bb6-a854-b7e2f56cf9bd.0" configVersion="196c7cdf511eb04088025a69cc98dc3f00000000"/>
 		<Metadata name="Catalog.FL_Messages.Form.ListForm" id="b64c61de-6a30-40f5-88da-a609c49b5997" configVersion="2a495baea183934ea200aab3696a689b00000000"/>
 		<Metadata name="Catalog.FL_Messages.Form.ListForm.Form" id="b64c61de-6a30-40f5-88da-a609c49b5997.0" configVersion="51ee8360f4a78b4e8fe8448989cd984000000000"/>
 		<Metadata name="Catalog.FL_Messages.ManagerModule" id="7e40194d-b284-4432-b0b0-f4c2773befc8.3" configVersion="b85036b2f793984f9b66e69786b82e2600000000"/>
@@ -336,7 +336,7 @@
 		<Metadata name="CommonPicture.FL_WordPress.Picture" id="35f9dcd0-18cb-4676-b93a-f8328c146a72.0" configVersion="d66c02230856274887d9d78c1c3f059e00000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE" id="4cc3426b-e953-4bd9-b838-2153998228de" configVersion="581927af0e4d7e44846e3a24740bdf6700000000"/>
 		<Metadata name="CommonTemplate.FL_LICENSE.Template" id="4cc3426b-e953-4bd9-b838-2153998228de.0" configVersion="a3107b1e2e297649811382e1f34ff0a400000000"/>
-		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="cb28d7a7cf791744b7811538bc24e16900000000"/>
+		<Metadata name="Configuration.FoxyLink" id="9bbbe9e6-1774-4203-b2b5-acb27e665492" configVersion="95e1be54a75345438249c08954b6d43a00000000"/>
 		<Metadata name="Configuration.FoxyLink.ClientApplicationInterface" id="d93db53b-5a84-46dd-b01b-c5c745936a50.b" configVersion="11629064c93eff4886978d5b451f1c6800000000"/>
 		<Metadata name="Configuration.FoxyLink.Logo" id="d93db53b-5a84-46dd-b01b-c5c745936a50.1" configVersion="9659276839a8dc428c0d1192ab0a0d9b00000000"/>
 		<Metadata name="Configuration.FoxyLink.MainSectionPicture" id="d93db53b-5a84-46dd-b01b-c5c745936a50.c" configVersion="ff26138f08918640818c02536eca4d0000000000"/>
