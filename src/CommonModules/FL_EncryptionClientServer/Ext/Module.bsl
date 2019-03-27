@@ -35,6 +35,28 @@ Procedure AddFieldValue(Collection, FieldName, FieldValue) Export
     
 EndProcedure // AddFieldValue()
 
+// Drops field value in collection of channel data.
+//
+// Parameters:
+//  Collection - FormDataCollection - collection with channel data.
+//             - ValueTable         - value table with channel data.
+//  FieldName  - String             - field name.
+//
+Procedure DropFieldValue(Collection, FieldName) Export
+    
+    Index = Collection.Count();
+    While Index > 0 Do
+        
+        Index = Index - 1;
+        CollectionRow = Collection[Index];
+        If CollectionRow.FieldName = FieldName Then
+            Collection.Delete(CollectionRow);    
+        EndIf;
+        
+    EndDo;
+        
+EndProcedure // DropFieldValue() 
+
 // Sets or adds field value in collection of channel data.
 //
 // Parameters:
@@ -46,9 +68,9 @@ EndProcedure // AddFieldValue()
 Procedure SetFieldValue(Collection, FieldName, FieldValue) Export
     
     FilterParameters = New Structure("FieldName", FieldName);
-    FilterResult = Collection.FindRows(FilterParameters);
-    If FilterResult.Count() > 0 Then
-        FilterResult[0].FieldValue = FieldValue;
+    FilterResults = Collection.FindRows(FilterParameters);
+    If FilterResults.Count() > 0 Then
+        FilterResults[0].FieldValue = FieldValue;
     Else
         AddFieldValue(Collection, FieldName, FieldValue);  
     EndIf;    
@@ -68,9 +90,9 @@ EndProcedure // SetFieldValue()
 Function FieldValue(Collection, FieldName) Export
     
     FilterParameters = New Structure("FieldName", FieldName);
-    FilterResult = Collection.FindRows(FilterParameters);
-    If FilterResult.Count() = 1 Then
-        Return FilterResult[0].FieldValue;
+    FilterResults = Collection.FindRows(FilterParameters);
+    If FilterResults.Count() = 1 Then
+        Return FilterResults[0].FieldValue;
     EndIf;
     
     Raise NStr("en='Value not found or duplicated.';
@@ -96,9 +118,9 @@ Function FieldValueNoException(Collection, FieldName,
     DefaultValue = Undefined) Export
     
     FilterParameters = New Structure("FieldName", FieldName);
-    FilterResult = Collection.FindRows(FilterParameters);
-    If FilterResult.Count() = 1 Then
-        Return FilterResult[0].FieldValue;   
+    FilterResults = Collection.FindRows(FilterParameters);
+    If FilterResults.Count() = 1 Then
+        Return FilterResults[0].FieldValue;   
     EndIf;
     
     Return DefaultValue;

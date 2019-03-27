@@ -224,6 +224,9 @@ Function WriteOutputToDestination(Payload, Properties)
         ChannelResources, "BaseName", StrReplace(New UUID, "-", ""));     
     Extension = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "Extension", Properties.FileExtension);
+    If NOT ValueIsFilled(Extension) Then
+        Extension = Properties.FileExtension;
+    EndIf;
         
     FullName = StrTemplate("%1%2%3%4", Path, BaseName, NewTimestamp(), 
         Extension);
@@ -374,7 +377,7 @@ EndFunction // NewTimestamp()
 //
 Function Version() Export
     
-    Return "1.0.8";
+    Return "1.0.9";
     
 EndFunction // Version()
 
