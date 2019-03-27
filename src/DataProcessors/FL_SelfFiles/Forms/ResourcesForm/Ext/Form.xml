@@ -71,9 +71,30 @@
 			<ChildItems>
 				<InputField name="Path" id="33">
 					<DataPath>Path</DataPath>
+					<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
 					<AutoMarkIncomplete>true</AutoMarkIncomplete>
 					<ContextMenu name="PathContextMenu" id="34"/>
-					<ExtendedTooltip name="PathExtendedTooltip" id="35"/>
+					<ExtendedTooltip name="PathExtendedTooltip" id="35">
+						<TextColor>style:FieldSelectionBackColor</TextColor>
+						<Title formatted="false">
+							<v8:item>
+								<v8:lang>en</v8:lang>
+								<v8:content>The place where the binary data needs to be recorded. If the path doesn't exist, it will be created.</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>The place where the binary data needs to be recorded. If the path doesn't exist, it will be created.</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>ru</v8:lang>
+								<v8:content>Место, где необходимо записать двоичные данные. Если путь не существует, он будет создан.</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Місце, де потрібно записати двійкові дані. Якщо шлях не існує, він буде створений.</v8:content>
+							</v8:item>
+						</Title>
+					</ExtendedTooltip>
 				</InputField>
 				<UsualGroup name="GroupBaseName" id="39">
 					<ToolTip>

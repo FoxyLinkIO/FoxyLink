@@ -636,6 +636,31 @@ Function PlatformType() Export
     
 EndFunction // PlatformType() 
 
+// Adds a value of the path separator, used in the operating system that serves 
+// as a context for the request, if it isn't set.
+//
+// Parameters:
+//  Path - String - contains path to the directory.
+//
+// Returns:
+//  String - path to the directory with valid path separator used 
+//           in the operating system that serves as a context for the request.
+//
+Function AddPathSeparatorToPath(Val Path) Export
+
+    If IsBlankString(Path) Then
+        Return Path;
+    EndIf;
+
+    PathSeparator = GetPathSeparator();
+    If Right(Path, 1) = PathSeparator Then
+        Return Path;
+    Else 
+        Return Path + PathSeparator;
+    EndIf;
+    
+EndFunction // AddPathSeparatorToPath()
+
 // Dissembles URI string and returns it as a structure.
 // Based on RFC 3986.
 //
