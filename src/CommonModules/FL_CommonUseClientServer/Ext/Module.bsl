@@ -309,7 +309,7 @@ Function CopyArray(ArraySource) Export
     
 EndFunction // CopyArray()
 
-// Create the value copy of the ValuesList type.
+// Creates the value copy of the ValuesList type.
 // 
 // Parameters:
 //  SourceList - ValueList - copied values list.
@@ -332,7 +332,7 @@ Function CopyValueList(SourceList) Export
     
 EndFunction // CopyValueList() 
 
-// Create the value copy of the TypeDescription type.
+// Creates the value copy of the TypeDescription type.
 // 
 // Parameters:
 //  SourceTypeDescription - TypeDescription - copied description of type.
@@ -621,6 +621,45 @@ Procedure HandleThreeStateCheckBox(TreeItem, FieldName) Export
 EndProcedure // HandleThreeStateCheckBox()
 
 #EndRegion // ValueTreeOperations
+
+// Defines current platform type.
+//
+// Returns:
+//  PlatformType, Undefined - the current platform type.
+//      If the platform type differs from the PlatformType type in the 
+//      web client mode, contains Undefined.
+//
+Function PlatformType() Export
+    
+    SystemInfo = New SystemInfo;
+    Return SystemInfo.PlatformType;
+    
+EndFunction // PlatformType() 
+
+// Adds a value of the path separator, used in the operating system that serves 
+// as a context for the request, if it isn't set.
+//
+// Parameters:
+//  Path - String - contains path to the directory.
+//
+// Returns:
+//  String - path to the directory with valid path separator used 
+//           in the operating system that serves as a context for the request.
+//
+Function AddPathSeparatorToPath(Val Path) Export
+
+    If IsBlankString(Path) Then
+        Return Path;
+    EndIf;
+
+    PathSeparator = GetPathSeparator();
+    If Right(Path, 1) = PathSeparator Then
+        Return Path;
+    Else 
+        Return Path + PathSeparator;
+    EndIf;
+    
+EndFunction // AddPathSeparatorToPath()
 
 // Dissembles URI string and returns it as a structure.
 // Based on RFC 3986.

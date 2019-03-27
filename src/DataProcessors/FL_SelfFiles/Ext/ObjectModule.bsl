@@ -219,7 +219,8 @@ EndProcedure // ProcessAdditionalOutputProperties()
 //
 Function WriteOutputToDestination(Payload, Properties)
     
-    Path = FL_EncryptionClientServer.FieldValue(ChannelResources, "Path"); 
+    Path = FL_CommonUseClientServer.AddPathSeparatorToPath(
+        FL_EncryptionClientServer.FieldValue(ChannelResources, "Path"));
     BaseName = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "BaseName", StrReplace(New UUID, "-", ""));     
     Extension = FL_EncryptionClientServer.FieldValueNoException(
@@ -377,7 +378,7 @@ EndFunction // NewTimestamp()
 //
 Function Version() Export
     
-    Return "1.0.9";
+    Return "1.0.10";
     
 EndFunction // Version()
 
