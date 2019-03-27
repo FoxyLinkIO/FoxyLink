@@ -115,6 +115,9 @@ Procedure SaveAndClose(Command)
     If ValueIsFilled(Extension) Then
         FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
             "Extension", Extension);
+    Else
+        FL_EncryptionClientServer.DropFieldValue(Object.ChannelResources, 
+            "Extension");    
     EndIf;
             
     Close(Object);
