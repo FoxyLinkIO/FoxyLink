@@ -309,7 +309,7 @@ Function CopyArray(ArraySource) Export
     
 EndFunction // CopyArray()
 
-// Create the value copy of the ValuesList type.
+// Creates the value copy of the ValuesList type.
 // 
 // Parameters:
 //  SourceList - ValueList - copied values list.
@@ -332,7 +332,7 @@ Function CopyValueList(SourceList) Export
     
 EndFunction // CopyValueList() 
 
-// Create the value copy of the TypeDescription type.
+// Creates the value copy of the TypeDescription type.
 // 
 // Parameters:
 //  SourceTypeDescription - TypeDescription - copied description of type.
@@ -621,6 +621,20 @@ Procedure HandleThreeStateCheckBox(TreeItem, FieldName) Export
 EndProcedure // HandleThreeStateCheckBox()
 
 #EndRegion // ValueTreeOperations
+
+// Defines current platform type.
+//
+// Returns:
+//  PlatformType, Undefined - the current platform type.
+//      If the platform type differs from the PlatformType type in the 
+//      web client mode, contains Undefined.
+//
+Function PlatformType() Export
+    
+    SystemInfo = New SystemInfo;
+    Return SystemInfo.PlatformType;
+    
+EndFunction // PlatformType() 
 
 // Dissembles URI string and returns it as a structure.
 // Based on RFC 3986.
