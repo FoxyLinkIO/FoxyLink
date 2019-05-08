@@ -64,8 +64,8 @@
 		<Metadata name="Catalog.FL_Exchanges.Command.ImportExchange.CommandModule" id="bbfdf14f-56c2-4a13-9661-ea49c8f69c09.2" configVersion="342f9b20c9fa6d4a828f8cd801d1302100000000"/>
 		<Metadata name="Catalog.FL_Exchanges.Form.EventsSelectionForm" id="fc2417ad-e974-42d0-99b4-d782017182c4" configVersion="8d9c8b6a85e27b46a5c29c794ab222bd00000000"/>
 		<Metadata name="Catalog.FL_Exchanges.Form.EventsSelectionForm.Form" id="fc2417ad-e974-42d0-99b4-d782017182c4.0" configVersion="649d166fac6f5743a6a102e444b6fcee00000000"/>
-		<Metadata name="Catalog.FL_Exchanges.Form.ImportForm" id="9831d69e-2131-4a22-83fe-a711d26eb3f3" configVersion="9312946351a7f4419f1f57cb16cc505d00000000"/>
-		<Metadata name="Catalog.FL_Exchanges.Form.ImportForm.Form" id="9831d69e-2131-4a22-83fe-a711d26eb3f3.0" configVersion="8d2937c7018ac048b22f17437437681000000000"/>
+		<Metadata name="Catalog.FL_Exchanges.Form.ImportForm" id="9831d69e-2131-4a22-83fe-a711d26eb3f3" configVersion="be9d40fe41328c4b955884b8d58f160f00000000"/>
+		<Metadata name="Catalog.FL_Exchanges.Form.ImportForm.Form" id="9831d69e-2131-4a22-83fe-a711d26eb3f3.0" configVersion="adbc6bf603ce5040b627b48bd55e8add00000000"/>
 		<Metadata name="Catalog.FL_Exchanges.Form.ItemForm" id="6385429d-5b72-43ed-8300-ec08de404f55" configVersion="3a4298f79eb84e45bf88d8bddda2256400000000"/>
 		<Metadata name="Catalog.FL_Exchanges.Form.ItemForm.Form" id="6385429d-5b72-43ed-8300-ec08de404f55.0" configVersion="5a954f0bd12fbd4ea50dc202df0d654100000000"/>
 		<Metadata name="Catalog.FL_Exchanges.Form.ListForm" id="e11a26ac-018f-4daf-ae67-79cf85a24dca" configVersion="7d70fb08ef436646b152eb14b3967ae200000000"/>
