@@ -730,15 +730,11 @@ Procedure ImportEvents(Object, ImportedExchange, OperationTable, EventTable)
         For Each OperationLine In OperationLines Do
             
             NewEvent = Object.Events.Add();
-            If Event.Property("EventFilterDCSchema") Then
-                NewEvent.EventFilterDCSchema = FL_CommonUse.ValueFromJSONString(
-                    Event.EventFilterDCSchema);
-            EndIf;
-
-            If Event.Property("EventFilterDCSettings") Then
-                NewEvent.EventFilterDCSettings = FL_CommonUse.ValueFromJSONString(
-                    Event.EventFilterDCSettings);
-            EndIf;
+            NewEvent.EventFilterDCSchema = FL_CommonUse.ValueFromJSONString(
+                Event.EventFilterDCSchema);
+            
+            NewEvent.EventFilterDCSettings = FL_CommonUse.ValueFromJSONString(
+                Event.EventFilterDCSettings);
 
             FillPropertyValues(NewEvent, Event, , "Operation, 
                 |EventFilterDCSchema, EventFilterDCSettings");
@@ -836,12 +832,14 @@ EndProcedure // ImportChannelResources()
 // Only for internal use.
 //
 &AtServerNoContext
-Procedure LegacyConvertionMethodIntoOperation(LegacyItem)
+Procedure LegacyConvertionMethodIntoOperation(ImportedExchange, PropertyName)
     
-    For Each Item In LegacyItem Do
-        Item.Insert("Operation", Item.Method); 
-        Item.Delete("Method");
-    EndDo;
+    If ImportedExchange.Property(PropertyName) Then
+        For Each Item In ImportedExchange[PropertyName] Do
+            Item.Insert("Operation", Item.Method); 
+            Item.Delete("Method");
+        EndDo;
+    EndIf;
     
 EndProcedure // LegacyConvertionMethodIntoOperation()
 
@@ -879,11 +877,30 @@ Function ImportedExchange()
             .CopyArray(ImportedExchange.Methods));
         ImportedExchange.Delete("Methods");
         
-        LegacyConvertionMethodIntoOperation(ImportedExchange.ChannelResources);
-        LegacyConvertionMethodIntoOperation(ImportedExchange.Channels);
-        LegacyConvertionMethodIntoOperation(ImportedExchange.Events);
-        LegacyConvertionMethodIntoOperation(ImportedExchange.Operations);
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "ChannelResources");
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "Channels");
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "Events");
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "Operations");
             
+    EndIf;
+    
+    // Support for older versions 0.9.9.342 and below.
+    If ImportedExchange.Property("Events") Then
+        For Each Event In ImportedExchange.Events Do
+            
+            If NOT Event.Property("EventFilterDCSchema") Then
+                Event.Insert("EventFilterDCSchema");
+                Event.EventFilterDCSchema = FL_CommonUse.ValueToJSONString(
+                    New ValueStorage(Undefined));    
+            EndIf;
+            
+            If NOT Event.Property("EventFilterDCSettings") Then
+                Event.Insert("EventFilterDCSettings");
+                Event.EventFilterDCSettings = FL_CommonUse.ValueToJSONString(
+                    New ValueStorage(Undefined));    
+            EndIf;
+            
+        EndDo;
     EndIf;
     
     Return ImportedExchange;
