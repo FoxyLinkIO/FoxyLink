@@ -1149,4 +1149,49 @@ GET product/_doc/3
 # Домашнее видео
 [![Домашнее видео](https://i.ytimg.com/vi/mg7jNQYthZ4/hqdefault.jpg)](https://www.youtube.com/watch?v=mg7jNQYthZ4&feature=youtu.be)
 
+### Код как выполнять поиск в индексе
 
+```1c-enterprise
+    Invocation = Catalogs.FL_Messages.NewInvocation();
+    Invocation.EventSource = "Справочник.Номенклатура";
+    Invocation.Operation = Catalogs.FL_Operations.Read;
+    
+    // Проверка выполнять точный поиск
+    If Лев(СтрокаПоиска, 1) = """" И Прав(СтрокаПоиска, 1) = """" Тогда
+        Catalogs.FL_Messages.AddToContext(Invocation.Context, "UseNGram", False, True);
+        Catalogs.FL_Messages.AddToContext(Invocation.Context, "SearchString", 
+            Mid(СтрокаПоиска, 2, StrLen(СтрокаПоиска) - 2), True);
+    Иначе
+        Catalogs.FL_Messages.AddToContext(Invocation.Context, "SearchString", 
+            СтрокаПоиска, True);    
+    EndIf;
+
+    JobResult = Catalogs.FL_Messages.RouteAndRunOutputResult(Invocation,
+        FL_CommonUse.ReferenceByDescription(Metadata.Catalogs.FL_Exchanges, 
+            "elastic_products"),
+        FL_CommonUse.ReferenceByDescription(Metadata.Catalogs.FL_Channels,
+            "elastic search"));
+
+    JSONReader = New JSONReader;
+    JSONReader.OpenStream(JobResult.Output[0].Value.OpenStreamForRead());
+    Result = ReadJSON(JSONReader);
+    JSONReader.Close();
+    
+    If Result.Property("hits") Then
+        
+	// Обработка и отсечение по параметру boost
+        BestScore = Undefined;
+        For Each hit In Result.hits.hits Do
+            
+            If BestScore = Undefined Then
+                BestScore = hit._score / 2.5;
+            ElsIf BestScore > hit._score Then
+                Break;
+            EndIf;
+            
+            СписокНоменклатуры.Добавить(hit._source.Код);
+            
+        EndDo;
+        
+    EndIf;
+```
