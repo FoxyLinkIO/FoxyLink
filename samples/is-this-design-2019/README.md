@@ -1145,3 +1145,8 @@ PUT product/_doc/1?pipeline=my_pipeline
 
 GET product/_doc/3
 ```
+
+# Домашнее видео
+[![Домашнее видео](https://i.ytimg.com/vi/mg7jNQYthZ4/hqdefault.jpg)](https://www.youtube.com/watch?v=mg7jNQYthZ4&feature=youtu.be)
+
+
