@@ -1168,9 +1168,9 @@ GET product/_doc/3
 
     JobResult = Catalogs.FL_Messages.RouteAndRunOutputResult(Invocation,
         FL_CommonUse.ReferenceByDescription(Metadata.Catalogs.FL_Exchanges, 
-            "elastic_products"),
+            "products"),
         FL_CommonUse.ReferenceByDescription(Metadata.Catalogs.FL_Channels,
-            "elastic search"));
+            "elastic"));
 
     JSONReader = New JSONReader;
     JSONReader.OpenStream(JobResult.Output[0].Value.OpenStreamForRead());
