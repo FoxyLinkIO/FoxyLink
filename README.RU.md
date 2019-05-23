@@ -43,7 +43,7 @@
 
 ## Статус
 
-[![Slack](https://img.shields.io/badge/chat-on%20slack-3BB9FF.svg)](https://foxylinkio.herokuapp.com/) 
+[![Telegram](https://img.shields.io/badge/chat-Telegram-blue.svg)](https://t.me/FoxyLink)
 [![Quality Gate](https://sonar.silverbulleters.org/api/badges/gate?key=ktc-foxylink)](https://sonar.silverbulleters.org/dashboard?id=ktc-foxylink)
 
 ## Общие сведения
