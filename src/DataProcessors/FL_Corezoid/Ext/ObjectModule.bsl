@@ -107,10 +107,6 @@ Procedure DeliverMessage(Payload, Properties, JobResult) Export
     HTTPConnection = FL_InteriorUse.NewHTTPConnection(
         FL_EncryptionClientServer.FieldValue(ChannelData, "StringURI"));
     
-    If Log Then
-        JobResult.LogAttribute = "";     
-    EndIf;
-    
     FL_InteriorUse.CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, 
         JobResult);
             

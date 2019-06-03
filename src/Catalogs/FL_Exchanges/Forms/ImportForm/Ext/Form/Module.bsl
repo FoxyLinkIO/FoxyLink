@@ -730,11 +730,15 @@ Procedure ImportEvents(Object, ImportedExchange, OperationTable, EventTable)
         For Each OperationLine In OperationLines Do
             
             NewEvent = Object.Events.Add();
-            NewEvent.EventFilterDCSchema = FL_CommonUse.ValueFromJSONString(
-                Event.EventFilterDCSchema);
-            
-            NewEvent.EventFilterDCSettings = FL_CommonUse.ValueFromJSONString(
-                Event.EventFilterDCSettings);
+            If Event.Property("EventFilterDCSchema") Then
+                NewEvent.EventFilterDCSchema = FL_CommonUse.ValueFromJSONString(
+                    Event.EventFilterDCSchema);
+            EndIf;
+
+            If Event.Property("EventFilterDCSettings") Then
+                NewEvent.EventFilterDCSettings = FL_CommonUse.ValueFromJSONString(
+                    Event.EventFilterDCSettings);
+            EndIf;
 
             FillPropertyValues(NewEvent, Event, , "Operation, 
                 |EventFilterDCSchema, EventFilterDCSettings");
@@ -882,25 +886,6 @@ Function ImportedExchange()
         LegacyConvertionMethodIntoOperation(ImportedExchange, "Events");
         LegacyConvertionMethodIntoOperation(ImportedExchange, "Operations");
             
-    EndIf;
-    
-    // Support for older versions 0.9.9.342 and below.
-    If ImportedExchange.Property("Events") Then
-        For Each Event In ImportedExchange.Events Do
-            
-            If NOT Event.Property("EventFilterDCSchema") Then
-                Event.Insert("EventFilterDCSchema");
-                Event.EventFilterDCSchema = FL_CommonUse.ValueToJSONString(
-                    New ValueStorage(Undefined));    
-            EndIf;
-            
-            If NOT Event.Property("EventFilterDCSettings") Then
-                Event.Insert("EventFilterDCSettings");
-                Event.EventFilterDCSettings = FL_CommonUse.ValueToJSONString(
-                    New ValueStorage(Undefined));    
-            EndIf;
-            
-        EndDo;
     EndIf;
     
     Return ImportedExchange;

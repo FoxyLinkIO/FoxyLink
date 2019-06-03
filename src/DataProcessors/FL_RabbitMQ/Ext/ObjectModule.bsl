@@ -79,11 +79,7 @@ EndFunction // ChannelFullName()
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
-    
-    If Log Then
-        JobResult.LogAttribute = "";        
-    EndIf;
-    
+        
     Path = FL_EncryptionClientServer.FieldValueNoException(ChannelResources, 
         "Path");
     
@@ -489,7 +485,7 @@ Procedure AMQPNetPublish(Payload, Properties, AMQPURI, JobResult)
     If Result = "Delivered successfully." Then
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
-        If Log Then
+        If TypeOf(JobResult.LogAttribute) = Type("String") Then
             JobResult.LogAttribute = Result;        
         EndIf;
         
@@ -686,7 +682,7 @@ EndFunction // PayloadSize()
 //
 Function Version() Export
     
-    Return "1.3.15";
+    Return "1.3.16";
     
 EndFunction // Version()
 
