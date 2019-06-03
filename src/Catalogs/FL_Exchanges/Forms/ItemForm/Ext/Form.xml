@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6">
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
 	<Customizable>false</Customizable>
 	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
 	<AutoCommandBar name="FormCommandBar" id="-1">
@@ -2514,7 +2514,6 @@
 			</Picture>
 			<Action>AddOperation</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="DeleteOperation" id="2">
 			<Title>
@@ -2551,7 +2550,6 @@
 			</Picture>
 			<Action>DeleteOperation</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="DescribeAPI" id="3">
 			<Title>
@@ -2588,7 +2586,6 @@
 			</Picture>
 			<Action>DescribeAPI</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="CopyAPI" id="4">
 			<Title>
@@ -2625,7 +2622,6 @@
 			</Picture>
 			<Action>CopyAPI</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="EditDataCompositionSchema" id="5">
 			<Title>
@@ -2670,7 +2666,6 @@
 			</Picture>
 			<Action>EditDataCompositionSchema</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="GenerateSpreadsheetDocument" id="6">
 			<Title>
@@ -2703,7 +2698,6 @@
 			</Picture>
 			<Action>GenerateSpreadsheetDocument</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="GenerateSpecificDocument" id="7">
 			<Title>
@@ -2740,7 +2734,6 @@
 			</Picture>
 			<Action>GenerateSpecificDocument</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="AddAppEndpoint" id="8">
 			<Title>
@@ -2785,7 +2778,6 @@
 			</Picture>
 			<Action>AddAppEndpoint</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="DeleteChannel" id="9">
 			<Title>
@@ -2822,7 +2814,6 @@
 			</Picture>
 			<Action>DeleteChannel</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="EditAppEndpointResources" id="10">
 			<Title>
@@ -2867,7 +2858,6 @@
 			</Picture>
 			<Action>EditAppEndpointResources</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="AddEvent" id="11">
 			<Title>
@@ -2904,7 +2894,6 @@
 			</Picture>
 			<Action>AddEvent</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="DeleteEvent" id="12">
 			<Title>
@@ -2941,7 +2930,6 @@
 			</Picture>
 			<Action>DeleteEvent</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="DeleteAPI" id="14">
 			<Title>
@@ -2978,7 +2966,6 @@
 			</Picture>
 			<Action>DeleteAPI</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="EnqueueEvents" id="15">
 			<Title>
@@ -3015,7 +3002,6 @@
 			</Picture>
 			<Action>EnqueueEvents</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="CopyDataCompositionSchema" id="13">
 			<Title>
@@ -3060,7 +3046,6 @@
 			</Picture>
 			<Action>CopyDataCompositionSchema</Action>
 			<Representation>TextPicture</Representation>
-			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 	</Commands>
 </Form>

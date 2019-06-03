@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -250,6 +250,10 @@ EndFunction // NewJobData()
 
 // Returns a new job result structure.
 //
+// Parameters:
+//  Log - Boolean - shows whether log is to be turned on.
+//          Default value: False.
+//
 // Returns:
 //  Structure - the new job result with values:
 //      * AppEndpoint  - CatalogRef.FL_Channels - reference to the app endpoint.
@@ -261,7 +265,7 @@ EndFunction // NewJobData()
 //          ** Name  - String    - parameter name.
 //          ** Value - Arbitrary - parameter value.
 //
-Function NewJobResult() Export
+Function NewJobResult(Log = False) Export
 
     JobResult = New Structure;
     JobResult.Insert("AppEndpoint");
@@ -270,6 +274,10 @@ Function NewJobResult() Export
     JobResult.Insert("Success", False);
     JobResult.Insert("Output", NewInputOutputTable());
 
+    If Log Then
+        JobResult.LogAttribute = "";    
+    EndIf;
+    
     Return JobResult;
     
 EndFunction // NewJobResult()
@@ -431,6 +439,7 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, JobResultCopy = Undefined)
     EndIf;
         
     NewLogRow = JobObject.Log.Add();
+    NewLogRow.InitializedAt = StartTime;
     FinalResult.Property("LogAttribute", NewLogRow.LogAttribute);
     FinalResult.Property("StatusCode", NewLogRow.StatusCode);
     FinalResult.Property("Success", NewLogRow.Success);
@@ -506,12 +515,14 @@ EndProcedure // ProcessSubordinateJobs()
 
 // Only for internal use.
 //
-Procedure RecordJobPerformanceMetrics(Job, State, PerformanceDuration) 
+Procedure RecordJobPerformanceMetrics(Job, State, PerformanceDuration, 
+    InitializedAt = Undefined) 
     
     RecordManager = InformationRegisters.FL_JobState.CreateRecordManager();
     RecordManager.Job = Job;
     RecordManager.State = State;
     RecordManager.CreatedAt = CurrentUniversalDateInMilliseconds();
+    RecordManager.InitializedAt = InitializedAt;
     RecordManager.PerformanceDuration = PerformanceDuration; 
     RecordManager.Write();
     
@@ -526,7 +537,8 @@ Procedure RecordJobObjectPerformanceMetrics(JobObject, StartTime = Undefined)
     EndIf;
     
     Duration = CurrentUniversalDateInMilliseconds() - StartTime;
-    RecordJobPerformanceMetrics(JobObject.Ref, JobObject.State, Duration);
+    RecordJobPerformanceMetrics(JobObject.Ref, JobObject.State, Duration, 
+        StartTime);
     
 EndProcedure // RecordJobObjectPerformanceMetrics()
 

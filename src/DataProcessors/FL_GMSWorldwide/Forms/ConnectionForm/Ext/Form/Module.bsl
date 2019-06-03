@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2018 Petro Bazeliuk.
+// Copyright © 2018-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -16,17 +16,6 @@
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-#Region FormEventHandlers
-
-&AtServer
-Procedure OnCreateAtServer(Cancel, StandardProcessing)
-    
-    Object.Log = True;    
-    
-EndProcedure // OnCreateAtServer()
-
-#EndRegion // FormEventHandlers
 
 #Region FormCommandHandlers
 
@@ -86,7 +75,7 @@ Procedure ConnectToGMSWorldwideAtServer()
     FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
         "Resource", "");
     
-    JobResult = Catalogs.FL_Jobs.NewJobResult();
+    JobResult = Catalogs.FL_Jobs.NewJobResult(True);
     MainObject.DeliverMessage(Undefined, Undefined, JobResult);
     
     LogAttribute = LogAttribute + JobResult.LogAttribute;

@@ -108,7 +108,7 @@ Procedure DeliverMessage(Payload, Properties, JobResult) Export
         Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", OutProperties);
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode(); 
-        If Log Then
+        If TypeOf(JobResult.LogAttribute) = Type("String") Then
             JobResult.LogAttribute = "200 Success";
         EndIf;
         
