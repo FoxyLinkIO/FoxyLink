@@ -639,21 +639,6 @@ Function IsReference(Type) Export
     
 EndFunction // IsReference()
 
-// Specifies that the metadata object belongs to the catalog type.
-// 
-// Parameters:
-//  MetadataObject - MetadataObject - object for which it is necessary to specify 
-//                                    whether it belongs to the catalog type.
-// 
-// Returns:
-//  Boolean - True if metadata object belongs to the catalog type.
-//
-Function IsCatalog(MetadataObject) Export
-
-    Return Metadata.Catalogs.Contains(MetadataObject);
-
-EndFunction // IsCatalog()
-
 // Checks if the record about the passed reference value is actually in the data infobase.
 // 
 // Parameters:
@@ -992,6 +977,21 @@ EndFunction // TypeNameTasks()
 #EndRegion // MetadataObjectTypes
 
 #Region MetadataObjectTypesDefinition
+
+// Defines if passed a metadata object belongs to the catalog type.
+// 
+// Parameters:
+//  MetadataObject - MetadataObject - object for which it is necessary to specify 
+//                                      whether it belongs to the catalog type.
+// 
+// Returns:
+//  Boolean - True if metadata object belongs to the catalog type.
+//
+Function IsCatalog(MetadataObject) Export
+
+    Return Metadata.Catalogs.Contains(MetadataObject);
+
+EndFunction // IsCatalog()
 
 // Defines if passed a metadata object belongs to the register type.
 // 

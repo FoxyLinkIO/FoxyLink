@@ -79,11 +79,7 @@ EndFunction // ChannelFullName()
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
-    
-    If Log Then
-        JobResult.LogAttribute = "";     
-    EndIf;
-    
+        
     Headers = New Map;
     Headers.Insert("Accept", "application/json"); 
     Headers.Insert("Content-Type", "application/json");
@@ -188,7 +184,7 @@ EndFunction // SuppliedIntegration()
 //
 Function Version() Export
     
-    Return "1.0.0";
+    Return "1.0.1";
     
 EndFunction // Version()
 

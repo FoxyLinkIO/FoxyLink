@@ -31,7 +31,9 @@
 ## Quick start
 
 It's easy to start using it with any configuration on "1C:Enterprise 8" platform, requirements:
-- Platform version: 8.3.10.2252 (minimal), **recommended 8.3.11.2924** and higher
+- Platform version: 
+    - 8.3.10.2252 (minimal, SocialNetwork subsystem unsupported)
+    - **recommended 8.3.11.2924** and higher
 - Data lock control mode: **Managed**
 - Compatibility mode: **8.3.7** and higher
 - «1C:Enterprise 8» server cluster and Database server for the best performance 
@@ -41,7 +43,7 @@ FoxyLink subsystem is available as configuration, so you can install it using co
 
 ## Status
 
-[![Slack](https://img.shields.io/badge/chat-on%20slack-3BB9FF.svg)](https://foxylinkio.herokuapp.com/)
+[![Telegram](https://img.shields.io/badge/chat-Telegram-blue.svg)](https://t.me/FoxyLink)
 [![Quality Gate](https://sonar.silverbulleters.org/api/badges/gate?key=ktc-foxylink)](https://sonar.silverbulleters.org/dashboard?id=ktc-foxylink)
 
 
@@ -65,7 +67,7 @@ FoxyLink provides an unified programming model to handle integration tasks in a 
 
 Open-source projects develop more smoothly when discussions are public.
 
-If you've discovered a bug, please report it to the [FoxyLink GitHub Issues](https://github.com/pbazeliuk/FoxyLink/issues?state=open). Detailed reports with stack traces, actual and expected behavours are welcome.
+If you've discovered a bug, please report it to the [FoxyLink GitHub Issues](https://github.com/pbazeliuk/FoxyLink/issues?state=open). Detailed reports with stack traces, actual and expected behaviours are welcome.
 
 If you have any questions, problems related to the FoxyLink subsystem usage or if you want to discuss new features, please visit the chatroom [Slack](https://foxylinkio.herokuapp.com/).
 
@@ -94,7 +96,7 @@ EndFunction // OutputInJSON()
 
 ## Copyright and license
 
-Copyright © 2016-2018 Petro Bazeliuk.
+Copyright © 2016-2019 Petro Bazeliuk.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -116,7 +118,7 @@ By submitting a Pull Request, you disavow any rights or claims to any changes su
 
 If you cannot or do not want to reassign those rights (your employment contract for your employer may not allow this), you should not submit a PR. Open an issue and someone else can do the work.
 
-This is a legal way of saying "If you submit a PR to us, that code becomes ours". 99.9% of the time that's what you intend anyways; we hope it doesn't scare you away from contributing.
+This is a legal way of saying "If you submit a PR to us, that code becomes ours". 99.9% of the time that's what you intend anyways; we hope it won't scare you away from contributing.
 
 ## Happy Customers
 

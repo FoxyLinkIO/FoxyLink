@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -27,24 +27,49 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     EndIf;
     
     Parameters.Property("Channel", Channel);
-    If Parameters.Property("ChannelResources") Then
-        
-        Attributes = GetAttributes();
-        For Each Attribute In Attributes Do
-            
-            FieldValue = FL_EncryptionClientServer.FieldValueNoException(
-                Parameters.ChannelResources, Attribute.Name);
-            If ValueIsFilled(FieldValue) Then 
-                ThisObject[Attribute.Name] = FieldValue;                   
-            EndIf;
-            
-        EndDo;
-        
+    FL_InteriorUse.FillAppEndpointResourcesFormData(ThisObject, Parameters);
+    
+    If IsBlankString(ZipCompressionMethod) Then
+        ZipCompressionMethod = "Deflate";
     EndIf;
-     
+    
+    If IsBlankString(ZipCompressionLevel) Then
+        ZipCompressionLevel = "Optimal";
+    EndIf;
+    
+    If IsBlankString(ZipEncryptionMethod) Then
+        ZipEncryptionMethod = "Zip20";
+    EndIf;
+    
 EndProcedure // OnCreateAtServer()
 
+&AtClient
+Procedure OnOpen(Cancel)
+    
+    AddTimestampOnChange(Items.AddTimestamp);
+    CompressOutputOnChange(Items.CompressOutput);
+    
+EndProcedure // OnOpen()
+
 #EndRegion // FormEventHandlers
+
+#Region FormItemsEventHandlers
+
+&AtClient
+Procedure AddTimestampOnChange(Item)
+    
+    Items.GroupFormatString.Visible = AddTimestamp; 
+    
+EndProcedure // AddTimestampOnChange()
+
+&AtClient
+Procedure CompressOutputOnChange(Item)
+    
+    Items.GroupZipSettings.Visible = CompressOutput;        
+    
+EndProcedure // CompressOutputOnChange()
+
+#EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
 
@@ -52,27 +77,49 @@ EndProcedure // OnCreateAtServer()
 Procedure SaveAndClose(Command)
         
     If IsBlankString(Path) Then
-        FL_CommonUseClientServer.NotifyUser(NStr("
-                |en='Field {Path} must be filled.';
+        FL_CommonUseClientServer.NotifyUser(
+            NStr("en='Field {Path} must be filled.';
                 |ru='Поле {Путь} должно быть заполнено.';
                 |uk='Поле {Шлях} повинно бути заповненим.';
                 |en_CA='Field {Path} must be filled.'"), , 
             "Path");
         Return;    
     EndIf;
-    
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "Path";
-    ResourceRow.FieldValue = Path;
-    
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "BaseName";
-    ResourceRow.FieldValue = BaseName;
-    
-    ResourceRow = Object.ChannelResources.Add();
-    ResourceRow.FieldName = "Extension";
-    ResourceRow.FieldValue = Extension;
         
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, "Path", 
+        Path);
+    
+    If ValueIsFilled(BaseName) Then    
+        FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+            "BaseName", BaseName);
+    EndIf;
+    
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "AddTimestamp", AddTimestamp);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "FormatString", FormatString);
+    
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "CompressOutput", CompressOutput);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "ZipPassword", ZipPassword);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "ZipCommentaries", ZipCommentaries);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "ZipCompressionMethod", ZipCompressionMethod);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "ZipCompressionLevel", ZipCompressionLevel);
+    FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+        "ZipEncryptionMethod", ZipEncryptionMethod);
+    
+    If ValueIsFilled(Extension) Then
+        FL_EncryptionClientServer.SetFieldValue(Object.ChannelResources, 
+            "Extension", Extension);
+    Else
+        FL_EncryptionClientServer.DropFieldValue(Object.ChannelResources, 
+            "Extension");    
+    EndIf;
+            
     Close(Object);
     
 EndProcedure // SaveAndClose()

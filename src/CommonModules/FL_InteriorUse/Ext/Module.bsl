@@ -170,8 +170,7 @@ EndFunction // NewHTTPRequest()
 
 #Region FormInteraction
 
-// Copies data to a form object from app endpoint or from form parameters 
-// collection. 
+// Copies data to a form object from app endpoint or form parameters collection. 
 //
 // Parameters:
 //  AppEndpoint - CatalogRef.FL_Channels  - reference to the app endpoint.
@@ -203,6 +202,31 @@ Procedure FillAppEndpointChannelFormData(AppEndpoint, FormObject,
     EndIf;
     
 EndProcedure // FillAppEndpointChannelFormData()
+
+// Copies data to a managed form from form parameters collection.
+//
+// Parameters:
+//  ManagedForm - ManagedForm       - contains the given form.
+//  Parameters  - FormDataStructure - contains the form parameters collection.
+//
+Procedure FillAppEndpointResourcesFormData(ManagedForm, Parameters) Export
+    
+    If Parameters.Property("ChannelResources") Then
+        
+        Attributes = ManagedForm.GetAttributes();
+        For Each Attribute In Attributes Do
+            
+            FieldValue = FL_EncryptionClientServer.FieldValueNoException(
+                Parameters.ChannelResources, Attribute.Name);    
+            If FieldValue <> Undefined Then
+                ManagedForm[Attribute.Name] = FieldValue;    
+            EndIf;
+            
+        EndDo;
+        
+    EndIf;
+    
+EndProcedure // FillAppEndpointResourcesFormData()
 
 // Moves a collection item.
 //
@@ -454,7 +478,7 @@ EndProcedure // WriteLog()
 //
 Procedure InitializeSubsystem() Export
     
-    InitializeStates();
+    Catalogs.FL_States.InitializeStates();
     InitializeOperations();
     InitializeChannels();
     InitializeConstants();
@@ -816,24 +840,6 @@ EndFunction // ParametersPropertyValue()
 #EndRegion // FormInteraction
 
 #Region SubsystemInteraction
-
-// Only for internal use.
-//
-Procedure InitializeStates()
-    
-    DeletedState = Catalogs.FL_States.Deleted.GetObject();
-    If NOT DeletedState.IsFinal Then
-        DeletedState.IsFinal = True;
-        DeletedState.Write();
-    EndIf;
-    
-    SucceededState = Catalogs.FL_States.Succeeded.GetObject();
-    If NOT SucceededState.IsFinal Then
-        SucceededState.IsFinal = True;
-        SucceededState.Write();
-    EndIf;
-    
-EndProcedure // InitializeStates()
 
 // Only for internal use.
 //

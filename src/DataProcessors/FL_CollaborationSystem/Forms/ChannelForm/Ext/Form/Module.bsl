@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2018 Petro Bazeliuk.
+// Copyright © 2018-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -26,10 +26,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
         Return;
     EndIf;
 
-    Raise NStr("en='App endpoint form is not intended for usage.';
-        |ru='Форма конечной точки не предназначена для использования.';
-        |uk='Форма кінцевої точки не призначена для використання.';
-        |en_CA='App endpoint  form is not intended for usage.'");
+    Raise FL_ErrorsClientServer.ErrorDisabledAppEndpointChannelForm();
 
 EndProcedure // OnCreateAtServer()
 

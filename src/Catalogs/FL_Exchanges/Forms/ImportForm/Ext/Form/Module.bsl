@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -730,7 +730,15 @@ Procedure ImportEvents(Object, ImportedExchange, OperationTable, EventTable)
         For Each OperationLine In OperationLines Do
             
             NewEvent = Object.Events.Add();
-            FillPropertyValues(NewEvent, Event, , "Operation");
+            NewEvent.EventFilterDCSchema = FL_CommonUse.ValueFromJSONString(
+                Event.EventFilterDCSchema);
+            
+            NewEvent.EventFilterDCSettings = FL_CommonUse.ValueFromJSONString(
+                Event.EventFilterDCSettings);
+
+            FillPropertyValues(NewEvent, Event, , "Operation, 
+                |EventFilterDCSchema, EventFilterDCSettings");
+            
             FillPropertyValues(NewEvent, OperationLine, "Operation");
             
             RecordSet = InformationRegisters.FL_MessagePublishers
@@ -824,12 +832,14 @@ EndProcedure // ImportChannelResources()
 // Only for internal use.
 //
 &AtServerNoContext
-Procedure LegacyConvertionMethodIntoOperation(LegacyItem)
+Procedure LegacyConvertionMethodIntoOperation(ImportedExchange, PropertyName)
     
-    For Each Item In LegacyItem Do
-        Item.Insert("Operation", Item.Method); 
-        Item.Delete("Method");
-    EndDo;
+    If ImportedExchange.Property(PropertyName) Then
+        For Each Item In ImportedExchange[PropertyName] Do
+            Item.Insert("Operation", Item.Method); 
+            Item.Delete("Method");
+        EndDo;
+    EndIf;
     
 EndProcedure // LegacyConvertionMethodIntoOperation()
 
@@ -867,11 +877,30 @@ Function ImportedExchange()
             .CopyArray(ImportedExchange.Methods));
         ImportedExchange.Delete("Methods");
         
-        LegacyConvertionMethodIntoOperation(ImportedExchange.ChannelResources);
-        LegacyConvertionMethodIntoOperation(ImportedExchange.Channels);
-        LegacyConvertionMethodIntoOperation(ImportedExchange.Events);
-        LegacyConvertionMethodIntoOperation(ImportedExchange.Operations);
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "ChannelResources");
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "Channels");
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "Events");
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "Operations");
             
+    EndIf;
+    
+    // Support for older versions 0.9.9.342 and below.
+    If ImportedExchange.Property("Events") Then
+        For Each Event In ImportedExchange.Events Do
+            
+            If NOT Event.Property("EventFilterDCSchema") Then
+                Event.Insert("EventFilterDCSchema");
+                Event.EventFilterDCSchema = FL_CommonUse.ValueToJSONString(
+                    New ValueStorage(Undefined));    
+            EndIf;
+            
+            If NOT Event.Property("EventFilterDCSettings") Then
+                Event.Insert("EventFilterDCSettings");
+                Event.EventFilterDCSettings = FL_CommonUse.ValueToJSONString(
+                    New ValueStorage(Undefined));    
+            EndIf;
+            
+        EndDo;
     EndIf;
     
     Return ImportedExchange;

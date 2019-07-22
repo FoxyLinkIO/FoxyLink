@@ -22,8 +22,6 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
-    Object.Log = True;
-
     V8Loader = False;
     V8Publisher = False;
     
@@ -161,7 +159,7 @@ Procedure ConnectToRabbitMQAtServer()
     FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
         "Path", "Aliveness");
         
-    JobResult = Catalogs.FL_Jobs.NewJobResult();
+    JobResult = Catalogs.FL_Jobs.NewJobResult(True);
     MainObject.DeliverMessage(Undefined, Undefined, JobResult);
     
     LogAttribute = LogAttribute + JobResult.LogAttribute;

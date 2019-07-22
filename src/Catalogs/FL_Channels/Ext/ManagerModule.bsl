@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -76,8 +76,12 @@ Function ProcessMessage(AppProperties, Payload, Properties) Export
     
         AppEndpointProcessor = FL_InteriorUse.NewAppEndpointProcessor(
             AppEndpointSettings.BasicChannelGuid);
+                
+        // Shows wether log is to be turned on.
+        If AppEndpointSettings.Log Then
+            JobResult.LogAttribute = "";        
+        EndIf;
         
-        AppEndpointProcessor.Log = AppEndpointSettings.Log;
         AppEndpointProcessor.ChannelData.Load(
             AppEndpointSettings.ChannelData.Unload());
         AppEndpointProcessor.ChannelResources.Load(AppProperties.AppResources);
@@ -178,11 +182,16 @@ EndFunction // SuppliedIntegrations()
 
 // Returns exchange plugable channels.
 //
+// Parameters:
+//  LibraryGuid - String - guid which is used to identify different implementations 
+//                         of specific app endpoint.
+//                  Default value: Undefined.
+//
 // Returns:
 //  ValueList - with values:
 //      * Value - CatalogRef.FL_Channels - reference to the channel.
 //
-Function ExchangeChannels() Export
+Function ExchangeChannels(LibraryGuid = Undefined) Export
     
     ValueList = New ValueList;
 
@@ -192,12 +201,23 @@ Function ExchangeChannels() Export
     If NOT QueryResult.IsEmpty() Then
         
         ValueTable = QueryResult.Unload();
+        
+        If LibraryGuid <> Undefined Then
+            FilterParameters = New Structure;
+            FilterParameters.Insert("LibraryGuid", LibraryGuid);
+            ValueTable = ValueTable.FindRows(FilterParameters);
+        EndIf;
+        
         For Each Item In ValueTable Do
+            
             If Item.Connected Then 
-                ValueList.Add(Item.Ref, , True, PictureLib.FL_Connected);
+                ValueList.Add(Item.Ref, Item.Presentation, True, 
+                    PictureLib.FL_Connected);
             Else
-                ValueList.Add(Item.Ref, , False, PictureLib.FL_Disconnected);   
+                ValueList.Add(Item.Ref, Item.Presentation, False, 
+                    PictureLib.FL_Disconnected);   
             EndIf;
+            
         EndDo;
         
     EndIf;
@@ -284,8 +304,10 @@ Function QueryTextConnectedAppEndpoints()
     
     QueryText = "
         |SELECT
-        |   AppEndpoints.Ref         AS Ref,
-        |   AppEndpoints.Connected   AS Connected
+        |   AppEndpoints.Ref AS Ref,
+        |   AppEndpoints.BasicChannelGuid AS LibraryGuid, 
+        |   AppEndpoints.Connected AS Connected,
+        |   Presentation(AppEndpoints.Ref) AS Presentation
         |FROM
         |   Catalog.FL_Channels AS AppEndpoints
         |WHERE

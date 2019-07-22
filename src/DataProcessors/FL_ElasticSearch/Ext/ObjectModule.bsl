@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -79,7 +79,7 @@ EndFunction // ChannelFullName()
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
-    
+        
     Headers = New Map;
     Headers.Insert("Accept", "application/json"); 
     Headers.Insert("Content-Type", "application/json");
@@ -97,11 +97,7 @@ Procedure DeliverMessage(Payload, Properties, JobResult) Export
     // Getting HTTP connection.
     HTTPConnection = FL_InteriorUse.NewHTTPConnection(
         FL_EncryptionClientServer.FieldValue(ChannelData, "StringURI"));
-    
-    If Log Then
-        JobResult.LogAttribute = "";     
-    EndIf;
-    
+        
     FL_InteriorUse.CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, 
         JobResult);
             
