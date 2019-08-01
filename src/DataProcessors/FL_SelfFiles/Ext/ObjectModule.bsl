@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -80,28 +80,9 @@ EndFunction // ChannelFullName()
 //
 Procedure DeliverMessage(Payload, Properties, JobResult) Export
     
-    Path = FL_EncryptionClientServer.FieldValue(ChannelResources, "Path"); 
-    
-    BaseName = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "BaseName");
-    If NOT ValueIsFilled(BaseName) Then
-        BaseName = StrReplace(New UUID, "-", "");
-    EndIf;
-    
-    Extension = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "Extension");
-    If NOT ValueIsFilled(Extension) Then
-        Extension = Properties.FileExtension;
-    EndIf;
-    
     Try 
-    
-        FullName = StrTemplate("%1%2%3", Path, BaseName, Extension);
-        If TypeOf(Payload) = Type("SpreadsheetDocument") Then
-            WriteSpreadsheetDocument(Payload, FullName, Extension);    
-        Else
-            Payload.Write(FullName);
-        EndIf;
+                    
+        FullName = WriteOutputToDestination(Payload, Properties);
         
         FileProperties = FL_InteriorUseClientServer.NewFileProperties(FullName);   
         ProcessAdditionalOutputProperties(FileProperties);     
@@ -127,7 +108,7 @@ Procedure DeliverMessage(Payload, Properties, JobResult) Export
         Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", OutProperties);
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode(); 
-        If Log Then
+        If TypeOf(JobResult.LogAttribute) = Type("String") Then
             JobResult.LogAttribute = "200 Success";
         EndIf;
         
@@ -204,7 +185,7 @@ Function SuppliedIntegrations() Export
         |en_CA='Exchange description service'");
     PluggableSettings.Template = "Self";
     PluggableSettings.ToolTip = StrConcat(BasicPhrases);
-    PluggableSettings.Version = "1.2.8";
+    PluggableSettings.Version = "1.2.10";
     SuppliedIntegrations.Add(PluggableSettings);
     
     Return SuppliedIntegrations;
@@ -214,23 +195,6 @@ EndFunction // SuppliedIntegration()
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
-
-// Only for internal use.
-//
-Procedure WriteSpreadsheetDocument(Payload, FullName, Extension)
-    
-    If Upper(Extension) = ".PDF" Then
-        Payload.Write(FullName, SpreadsheetDocumentFileType.PDF);
-    ElsIf Upper(Extension) = ".MXL" Then
-        Payload.Write(FullName, SpreadsheetDocumentFileType.MXL);    
-    Else
-        Raise NStr("en='Unsupported file type for spreadsheet document.';
-            |ru='Неподдерживаемый тип файла для табличного документа.';
-            |uk='Непідтримуваний тип файлу для табличного документу.';
-            |en_CA='Unsupported file type for spreadsheet document.'");
-    EndIf;    
-    
-EndProcedure // WriteSpreadsheetDocument()
 
 // Only for internal use.
 //
@@ -251,6 +215,158 @@ Procedure ProcessAdditionalOutputProperties(FileProperties)
     
 EndProcedure // ProcessAdditionalOutputProperties()
 
+// Only for internal use.
+//
+Function WriteOutputToDestination(Payload, Properties)
+    
+    Path = FL_CommonUseClientServer.AddPathSeparatorToPath(
+        FL_EncryptionClientServer.FieldValue(ChannelResources, "Path"));
+    BaseName = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "BaseName", StrReplace(New UUID, "-", ""));     
+    Extension = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "Extension", Properties.FileExtension);
+    If NOT ValueIsFilled(Extension) Then
+        Extension = Properties.FileExtension;
+    EndIf;
+        
+    FullName = StrTemplate("%1%2%3%4", Path, BaseName, NewTimestamp(), 
+        Extension);
+        
+    If TypeOf(Payload) = Type("SpreadsheetDocument") Then
+        WriteSpreadsheetDocument(Payload, FullName, Extension);    
+    Else
+        Payload.Write(FullName);
+    EndIf;
+    
+    CompressOutput = Boolean(FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "CompressOutput", False));
+    If CompressOutput Then
+        WriteZipDocument(FullName);
+    EndIf;
+    
+    Return FullName;
+    
+EndFunction // WriteOutputToDestination()
+
+// Only for internal use.
+//
+Procedure WriteSpreadsheetDocument(Payload, FullName, Extension)
+    
+    If Upper(Extension) = ".PDF" Then
+        Payload.Write(FullName, SpreadsheetDocumentFileType.PDF);
+    ElsIf Upper(Extension) = ".MXL" Then
+        Payload.Write(FullName, SpreadsheetDocumentFileType.MXL);    
+    Else
+        Raise NStr("en='Unsupported file type for spreadsheet document.';
+            |ru='Неподдерживаемый тип файла для табличного документа.';
+            |uk='Непідтримуваний тип файлу для табличного документу.';
+            |en_CA='Unsupported file type for spreadsheet document.'");
+    EndIf;    
+    
+EndProcedure // WriteSpreadsheetDocument()
+
+// Only for internal use.
+//
+Procedure WriteZipDocument(FullName)
+    
+    ZipPassword = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipPassword");
+    ZipCommentaries = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipCommentaries");
+        
+    ZipFileWriter = New ZipFileWriter(FullName + ".zip", 
+        ZipPassword, 
+        ZipCommentaries, 
+        NewCompressionMethod(), 
+        NewCompressionLevel(), 
+        NewEncryptionMethod());
+    ZipFileWriter.Add(FullName);
+    ZipFileWriter.Write();
+    
+    DeleteFiles(FullName);
+    
+    FullName = FullName + ".zip";   
+    
+EndProcedure // WriteZipDocument()
+
+// Only for internal use.
+//
+Function NewCompressionMethod()
+    
+    CompressionMethod = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipCompressionMethod");
+    If CompressionMethod = "BZIP2" Then
+        Return ZIPCompressionMethod.BZIP2;    
+    ElsIf CompressionMethod = "Copy" Then
+        Return ZIPCompressionMethod.Copy;    
+    Else
+        Return ZIPCompressionMethod.Deflate;    
+    EndIf;   
+    
+EndFunction // NewCompressionMethod()
+
+// Only for internal use.
+//
+Function NewCompressionLevel()
+    
+    CompressionLevel = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipCompressionLevel");
+    If CompressionLevel = "Maximum" Then
+        Return ZIPCompressionLevel.Maximum;    
+    ElsIf CompressionLevel = "Minimum" Then
+        Return ZIPCompressionLevel.Minimum;    
+    Else
+        Return ZIPCompressionLevel.Optimal;    
+    EndIf;
+    
+EndFunction // NewCompressionLevel()
+
+// Only for internal use.
+//
+Function NewEncryptionMethod()
+    
+    EncryptionMethod = FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "ZipEncryptionMethod");
+    If EncryptionMethod = "AES128" Then
+        Return ZipEncryptionMethod.AES128;    
+    ElsIf EncryptionMethod = "AES192" Then
+        Return ZipEncryptionMethod.AES192;    
+    ElsIf EncryptionMethod = "AES256" Then
+        Return ZipEncryptionMethod.AES256;
+    Else
+        Return ZipEncryptionMethod.Zip20;    
+    EndIf;
+    
+EndFunction // NewEncryptionMethod()
+
+// Only for internal use.
+//
+Function NewTimestamp()
+    
+    AddTimestamp = Boolean(FL_EncryptionClientServer.FieldValueNoException(
+        ChannelResources, "AddTimestamp", False));
+    If AddTimestamp Then
+            
+        FormatString = FL_EncryptionClientServer.FieldValueNoException(
+            ChannelResources, "FormatString");
+            
+        DateInMilliseconds = CurrentUniversalDateInMilliseconds();
+        UniversalDate = Date(1, 1, 1) + DateInMilliseconds / 1000;
+        Milliseconds = DateInMilliseconds % 1000;
+            
+        If ValueIsFilled(FormatString) Then
+            Return "_" + Format(ToLocalTime(UniversalDate), FormatString);     
+        Else
+            Return "_" + Format(ToLocalTime(UniversalDate), 
+                "df=yyyy-MM-ddTHH-mm-ss") + Format(Milliseconds, "NF=.N");
+        EndIf;
+            
+    EndIf;
+    
+    Return "";
+
+EndFunction // NewTimestamp()
+
 #EndRegion // ServiceProceduresAndFunctions
 
 #Region ExternalDataProcessorInfo
@@ -262,7 +378,7 @@ EndProcedure // ProcessAdditionalOutputProperties()
 //
 Function Version() Export
     
-    Return "1.0.5";
+    Return "1.0.10";
     
 EndFunction // Version()
 
@@ -273,7 +389,8 @@ EndFunction // Version()
 //
 Function BaseDescription() Export
     
-    BaseDescription = NStr("en='Export data to file (%1) application endpoint processor, ver. %2'; 
+    BaseDescription = NStr(
+        "en='Export data to file (%1) application endpoint processor, ver. %2'; 
         |ru='Обработчик конечной точки приложения экспорта данных в файл (%1), вер. %2';
         |uk='Обробник кінцевої точки додатку експорту данних в файл (%1), вер. %2';
         |en_CA='Export data to file (%1) application endpoint processor, ver. %2'");

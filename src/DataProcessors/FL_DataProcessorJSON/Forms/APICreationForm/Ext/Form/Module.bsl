@@ -28,15 +28,14 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     Items.APISchemaType.ChoiceList.LoadValues(
         MainObject.SupportedTypes().UnloadValues());
         
-    If Parameters.Property("APISchemaAddress", APISchemaAddress) Then
-        If IsTempStorageURL(APISchemaAddress) Then
+    If Parameters.Property("APISchemaAddress", APISchemaAddress) 
+        AND IsTempStorageURL(APISchemaAddress) Then
             
-            ValueTree = GetFromTempStorage(APISchemaAddress);
-            If TypeOf(ValueTree) = Type("ValueTree") Then
-                ValueToFormAttribute(ValueTree, "Object.APISchema");        
-            EndIf;
-            
+        ValueTree = GetFromTempStorage(APISchemaAddress);
+        If TypeOf(ValueTree) = Type("ValueTree") Then
+            ValueToFormAttribute(ValueTree, "Object.APISchema");        
         EndIf;
+            
     EndIf;
   
 EndProcedure // OnCreateAtServer()

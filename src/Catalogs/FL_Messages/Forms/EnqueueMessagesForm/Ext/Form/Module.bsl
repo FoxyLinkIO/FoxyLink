@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -28,15 +28,38 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     EndIf;
     
     Parameters.Property("Exchange", Exchange);
+    Parameters.Property("DataCompositionSchemaFilterAddress", 
+        DataCompositionSchemaFilterAddress);
+    Parameters.Property("DataCompositionSettingsFilterAddress", 
+        DataCompositionSettingsFilterAddress);
     Parameters.Property("EventSource", EventSource);
     Parameters.Property("Operation", Operation);
     
-    PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
-        Metadata.FindByFullName(EventSource));
-
-    InitializeDataCompositionSchema(PrimaryKeys); 
-    
+    DataCompositionSchema = FL_DataComposition
+        .CreateEventSourceDataCompositionSchema(EventSource);   
+    DataCompositionSchemaAddress = PutToTempStorage(DataCompositionSchema, UUID); 
+    FL_DataComposition.InitSettingsComposer(ComposerSettings, 
+        DataCompositionSchemaAddress, DataCompositionSettingsFilterAddress);
+        
+    SetMaxOutputRecordsCount(ComposerSettings);     
+        
 EndProcedure // OnCreateAtServer()
+
+&AtClient
+Procedure ChoiceProcessing(SelectedValue, ChoiceSource)
+    
+    #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then
+        
+    If TypeOf(ChoiceSource) = Type("DataCompositionSchemaWizard")
+        AND TypeOf(SelectedValue) = Type("DataCompositionSchema") Then
+        
+        UpdateDataCompositionSchema(SelectedValue);    
+        
+    EndIf;
+        
+    #EndIf
+        
+EndProcedure // ChoiceProcessing()
 
 #EndRegion // FormEventHandlers
 
@@ -46,15 +69,9 @@ EndProcedure // OnCreateAtServer()
 Procedure PreviewSpreadsheetDocumentDetailProcessing(Item, Details, 
     StandardProcessing)
     
-    StandardProcessing = False;
-    
-    DataCompositionDetails = GetFromTempStorage(DetailsDataAddress);
-    FieldDetailsItem = DataCompositionDetails.Items[Details];
-    FieldDetailsValues = FieldDetailsItem.GetFields();
-    If FieldDetailsValues.Count() = 1 Then
-        ShowValue(, FieldDetailsValues[0].Value);    
-    EndIf;
-        
+    FL_InteriorUseClient.DetailProcessing(GetFromTempStorage(DetailsDataAddress), 
+        Details, StandardProcessing);
+            
 EndProcedure // PreviewSpreadsheetDocumentDetailProcessing()
 
 #EndRegion // FormItemsEventHandlers
@@ -62,9 +79,12 @@ EndProcedure // PreviewSpreadsheetDocumentDetailProcessing()
 #Region FormCommandHandlers
 
 &AtClient
-Procedure PreviewEvents(Command)
-    PreviewEventsAtServer();
-EndProcedure // PreviewEvents()
+Procedure EditDataCompositionSchema(Command)
+    
+    FL_DataCompositionClient.RunDataCompositionSchemaWizard(ThisObject,
+        DataCompositionSchemaAddress);
+    
+EndProcedure // EditDataCompositionSchema()
 
 &AtClient
 Procedure EnqueueEvents(Command)
@@ -78,6 +98,11 @@ Procedure EnqueueEvents(Command)
         QuestionDialogMode.YesNo, , DialogReturnCode.No);   
     
 EndProcedure // EnqueueEvents()
+
+&AtClient
+Procedure PreviewEvents(Command)
+    PreviewEventsAtServer();
+EndProcedure // PreviewEvents()
 
 #EndRegion // FormCommandHandlers
 
@@ -103,57 +128,30 @@ Procedure DoAfterChooseEventToDispatch(QuestionResult,
     
 EndProcedure // DoAfterChooseEventToDispatch() 
 
-// Only for internal use.
+// Applies changes to data composition schema.
+//
+// Parameters:
+//  DataCompositionSchema - DataCompositionSchema - updated data composition schema.
 //
 &AtServer
-Procedure InitializeDataCompositionSchema(PrimaryKeys)
-    
-    MaxResults = 500;
-    
-    DataSource = FL_DataComposition.NewDataCompositionSchemaDataSource();
-    DataSources = New Array;
-    DataSources.Add(DataSource);
-           
-    DataSet = FL_DataComposition.NewDataCompositionSchemaDataSetQuery();
-    DataSet.Query = GenerateQueryText(PrimaryKeys, EventSource);
-    DataSets = New Array;
-    DataSets.Add(DataSet);
-     
-    FL_DataComposition.CreateDataCompositionSchema(DataSources, DataSets, 
-        DataCompositionSchemaAddress, UUID);
-    FL_DataComposition.InitSettingsComposer(ComposerSettings, 
-        DataCompositionSchemaAddress);
+Procedure UpdateDataCompositionSchema(DataCompositionSchema)
+
+    Changes = False;
+    FL_DataComposition.CopyDataCompositionSchema(
+        DataCompositionSchemaAddress, 
+        DataCompositionSchema, 
+        True, 
+        Changes);
         
-    FoxyLinkGroup = ComposerSettings.Settings.Structure.Add(
-        Type("DataCompositionGroup"));
-    FoxyLinkGroup.Use = True;
-    FoxyLinkGroup.Name = "FoxyLinkGroup";
-    FoxyLinkGroup.Order.Items.Add(
-        Type("DataCompositionAutoOrderItem"));
-    FoxyLinkGroup.Selection.Items.Add(
-        Type("DataCompositionAutoSelectedField"));
-    FoxyLinkGroup.OutputParameters.SetParameterValue("RecordsCount", 
-        MaxResults);
-    
-    SelectionFields = ComposerSettings.Settings.Selection.Items;
-    AvailableFields = ComposerSettings.Settings.Selection
-        .SelectionAvailableFields.Items;
-    For Each PrimaryKey In PrimaryKeys Do
+    If Changes Then
         
-        AvailableField = AvailableFields.Find(PrimaryKey.Key);
-        If AvailableField <> Undefined Then
-            
-            SelectedField = SelectionFields.Add(
-                Type("DataCompositionSelectedField"));
-            SelectedField.Field = New DataCompositionField(
-                AvailableField.Field);
-            SelectedField.Use = True;
-            
-        EndIf;
-        
-    EndDo;
-       
-EndProcedure // InitializeDataCompositionSchema() 
+        // Init data composer by new data composition schema.
+        FL_DataComposition.InitSettingsComposer(ComposerSettings, 
+            DataCompositionSchemaAddress);
+
+    EndIf;
+
+EndProcedure // UpdateDataCompositionSchema()
 
 // Only for internal use.
 //
@@ -192,11 +190,7 @@ EndProcedure // PreviewEventsAtServer()
 &AtServer
 Procedure EnqueueEventsAtServer()
     
-    FoxyLinkGroup = ComposerSettings.Settings.Structure.Get(0);
-    ParameterValue = FoxyLinkGroup.OutputParameters.Items.Find("RecordsCount");
-    If ParameterValue <> Undefined Then
-        ParameterValue.Use = False;
-    EndIf;
+    SetMaxOutputRecordsCount(ComposerSettings, 0);
     
     DataCompositionTemplate = FL_DataComposition
         .NewTemplateComposerParameters();
@@ -249,36 +243,18 @@ EndProcedure // EnqueueEventsTable()
 // Only for internal use.
 //
 &AtServerNoContext
-Function GenerateQueryText(PrimaryKeys, EventSource)
+Procedure SetMaxOutputRecordsCount(ComposerSettings, MaxResults = 500)
     
-    QuerySchema = New QuerySchema;
-    QueryBatch = QuerySchema.QueryBatch[0];
-    Operator = QueryBatch.Operators[0];
-    
-    // Adding query source 
-    Operator.Sources.Add(EventSource, "EventSource");
-    
-    // Selecting query fields
-    Index = 0;
-    For Each PrimaryKey In PrimaryKeys Do
-        Operator.SelectedFields.Add(PrimaryKey.Key);
-        QueryBatch.Columns[Index].Alias = PrimaryKey.Key;
-        Index = Index + 1;
-    EndDo;
-    
-    AvailableTable = QueryBatch.AvailableTables.Find(EventSource);
-    If AvailableTable <> Undefined Then
-        
-        For Each Field In AvailableTable.Fields Do
-            If Operator.SelectedFields.Find(Field.Name) = Undefined Then
-                Operator.SelectedFields.Add(Field);
-            EndIf;
-        EndDo;
-        
+    FoxyLinkGroup = ComposerSettings.Settings.Structure.Get(0);
+    ParameterValue = FoxyLinkGroup.OutputParameters.Items.Find("RecordsCount");
+    If ParameterValue <> Undefined Then
+        If MaxResults = 0 Then
+            ParameterValue.Use = False;
+        Else
+            ParameterValue.Value = MaxResults;
+        EndIf;
     EndIf;
     
-    Return QuerySchema.GetQueryText();
-    
-EndFunction // GenerateQueryText()
+EndProcedure // SetMaxOutputRecordsCount()
 
 #EndRegion // ServiceProceduresAndFunctions

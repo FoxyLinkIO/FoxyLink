@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -730,10 +730,19 @@ Procedure ImportEvents(Object, ImportedExchange, OperationTable, EventTable)
         For Each OperationLine In OperationLines Do
             
             NewEvent = Object.Events.Add();
-            FillPropertyValues(NewEvent, Event, , "Operation");
+            NewEvent.EventFilterDCSchema = FL_CommonUse.ValueFromJSONString(
+                Event.EventFilterDCSchema);
+            
+            NewEvent.EventFilterDCSettings = FL_CommonUse.ValueFromJSONString(
+                Event.EventFilterDCSettings);
+
+            FillPropertyValues(NewEvent, Event, , "Operation, 
+                |EventFilterDCSchema, EventFilterDCSettings");
+            
             FillPropertyValues(NewEvent, OperationLine, "Operation");
             
-            RecordSet = InformationRegisters.FL_MessagePublishers.CreateRecordSet();
+            RecordSet = InformationRegisters.FL_MessagePublishers
+                .CreateRecordSet();
             RecordSet.Filter.EventSource.Set(NewEvent.MetadataObject);
             RecordSet.Filter.Operation.Set(NewEvent.Operation);
             
@@ -823,6 +832,20 @@ EndProcedure // ImportChannelResources()
 // Only for internal use.
 //
 &AtServerNoContext
+Procedure LegacyConvertionMethodIntoOperation(ImportedExchange, PropertyName)
+    
+    If ImportedExchange.Property(PropertyName) Then
+        For Each Item In ImportedExchange[PropertyName] Do
+            Item.Insert("Operation", Item.Method); 
+            Item.Delete("Method");
+        EndDo;
+    EndIf;
+    
+EndProcedure // LegacyConvertionMethodIntoOperation()
+
+// Only for internal use.
+//
+&AtServerNoContext
 Function FindOperationLines(VTOperations, FDCOperations, FilterParameters)
     
     FilterResult = FDCOperations.FindRows(New Structure("Operation", 
@@ -845,7 +868,42 @@ Function ImportedExchange()
     BinaryData = GetFromTempStorage(BinaryDataAddress);
     JSONReader = New JSONReader;
     JSONReader.OpenStream(BinaryData.OpenStreamForRead());
-    Return ReadJSON(JSONReader);
+    ImportedExchange = ReadJSON(JSONReader);
+    
+    // Support for older versions 0.9.7.1 and below.
+    If ImportedExchange.Property("Methods") Then
+        
+        ImportedExchange.Insert("Operations", FL_CommonUseClientServer
+            .CopyArray(ImportedExchange.Methods));
+        ImportedExchange.Delete("Methods");
+        
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "ChannelResources");
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "Channels");
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "Events");
+        LegacyConvertionMethodIntoOperation(ImportedExchange, "Operations");
+            
+    EndIf;
+    
+    // Support for older versions 0.9.9.342 and below.
+    If ImportedExchange.Property("Events") Then
+        For Each Event In ImportedExchange.Events Do
+            
+            If NOT Event.Property("EventFilterDCSchema") Then
+                Event.Insert("EventFilterDCSchema");
+                Event.EventFilterDCSchema = FL_CommonUse.ValueToJSONString(
+                    New ValueStorage(Undefined));    
+            EndIf;
+            
+            If NOT Event.Property("EventFilterDCSettings") Then
+                Event.Insert("EventFilterDCSettings");
+                Event.EventFilterDCSettings = FL_CommonUse.ValueToJSONString(
+                    New ValueStorage(Undefined));    
+            EndIf;
+            
+        EndDo;
+    EndIf;
+    
+    Return ImportedExchange;
     
 EndFunction // ImportedExchange()
 

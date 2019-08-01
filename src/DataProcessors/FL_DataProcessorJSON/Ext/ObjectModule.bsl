@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -352,110 +352,114 @@ Procedure APISchemaOutput(Item, DataCompositionProcessor,
     // The code in the comment written in one line is below this comment.
     // To edit the code, remove the comment.
     // For more information about the code in 1 line see http://infostart.ru/public/71130/.
-     
-    FillParamName(ReportStructure, TemplateColumns);
-    TypeDate = Type("Date");
+    // 
+    //FillParamName(ReportStructure, TemplateColumns);
+    //TypeDate = Type("Date");
+    //
+    //CurrentLevel = APISchema.Rows[0];
+    //If CurrentLevel.Type = "Object" Then
+    //    StreamWriter.WriteStartObject();
+    //ElsIf CurrentLevel.Type = "Array" Then
+    //    StreamWriter.WriteStartArray();
+    //EndIf;                   
+    //
+    //While Item <> Undefined Do
+    //    
+    //    If NOT IsBlankString(Item.Template) Then
+    //        
+    //        If CurrentLevel = Undefined Then    
+    //            ErrorMessage = StrTemplate(NStr("en='Error: Failed to find property with name: {%1}.';
+    //                    |ru='Ошибка: Не удалось найти свойство с именем: {%1}.';
+    //                    |en_CA='Error: Failed to find property with name: {%1}.'"),
+    //                ReportStructure.Names[Item.Template]);
+    //            Raise ErrorMessage;
+    //        EndIf;
+    //        
+    //        If CurrentLevel.Template <> Item.Template Then
+    //            
+    //            DownLevel = CurrentLevel.Rows.Find(Item.Template, "Template", True);
+    //            If DownLevel <> Undefined Then
+    //                CertainlyOpenArrObj(CurrentLevel, DownLevel);    
+    //            Else
+    //                CertainlyCloseArrObj(CurrentLevel);
+    //                Continue;                      
+    //            EndIf;
+    //            
+    //        EndIf;
+    //                                                                                      
+    //       If CurrentLevel.StructuredType Then 
+    //           
+    //           For Each Row In CurrentLevel.Rows Do
+    //               
+    //               If Row.StructuredType Then
+    //                   Continue;
+    //               EndIf;
+    //               
+    //               If CurrentLevel.Type <> "Array" Then
+    //                   StreamWriter.WritePropertyName(Row.Name);
+    //               EndIf;
+    //                
+    //               Value = Item.ParameterValues[Row.Parameter].Value;
+    //               ValueType = TypeOf(Value);
+    //
+    //               If RefTypesCache[ValueType] = False Then
+    //                   StreamWriter.WriteValue(Value);
+    //               ElsIf ValueType = TypeDate Then
+    //                   StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO));    
+    //               ElsIf RefTypesCache[ValueType] = True Then
+    //                   StreamWriter.WriteValue(XMLString(Value));
+    //               // Possible improvement: skip non-ValueType.
+    //               ElsIf FL_CommonUse.IsReference(ValueType) 
+    //                   OR ValueType = Type("UUID")Then
+    //                   RefTypesCache.Insert(ValueType, True);
+    //                   StreamWriter.WriteValue(XMLString(Value));         
+    //               Else
+    //                   StreamWriter.WriteValue(Undefined);              
+    //               EndIf;
+    //               
+    //               Row.Done = True;
+    //                                           
+    //           EndDo;
+    //           
+    //           If CurrentLevel.Type = "Object" 
+    //               AND CurrentLevel.Rows.Find(False, "Done") = Undefined Then
+    //               CertainlyCloseArrObj(CurrentLevel);
+    //           EndIf;
+    //           
+    //       Else
+    //                                    
+    //            Value = Item.ParameterValues[CurrentLevel.Parameter].Value;
+    //            ValueType = TypeOf(Value);
+    //
+    //            If RefTypesCache[ValueType] = False Then
+    //                StreamWriter.WriteValue(Value);
+    //            ElsIf ValueType = TypeDate Then
+    //                StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO));    
+    //            ElsIf RefTypesCache[ValueType] = True Then
+    //                StreamWriter.WriteValue(XMLString(Value));
+    //            // Possible improvement: skip non-ValueType.
+    //        ElsIf FL_CommonUse.IsReference(ValueType) 
+    //            OR ValueType = Type("UUID") Then
+    //                RefTypesCache.Insert(ValueType, True);
+    //                StreamWriter.WriteValue(XMLString(Value));         
+    //            Else
+    //                StreamWriter.WriteValue(Undefined);              
+    //            EndIf;
+    //            
+    //        EndIf;
+    //                                  
+    //    EndIf;
+    //    
+    //    Item = DataCompositionProcessor.Next();
+    //    
+    //EndDo;
+    //
+    //While CurrentLevel <> Undefined Do
+    //    CertainlyCloseArrObj(CurrentLevel);
+    //EndDo;
     
-    CurrentLevel = APISchema.Rows[0];
-    If CurrentLevel.Type = "Object" Then
-        StreamWriter.WriteStartObject();
-    ElsIf CurrentLevel.Type = "Array" Then
-        StreamWriter.WriteStartArray();
-    EndIf;                   
-    
-    While Item <> Undefined Do
-        
-        If NOT IsBlankString(Item.Template) Then
-            
-            If CurrentLevel = Undefined Then    
-                ErrorMessage = StrTemplate(NStr("en='Error: Failed to find property with name: {%1}.';
-                        |ru='Ошибка: Не удалось найти свойство с именем: {%1}.';
-                        |en_CA='Error: Failed to find property with name: {%1}.'"),
-                    ReportStructure.Names[Item.Template]);
-                Raise ErrorMessage;
-            EndIf;
-            
-            If CurrentLevel.Template <> Item.Template Then
-                
-                DownLevel = CurrentLevel.Rows.Find(Item.Template, "Template", True);
-                If DownLevel <> Undefined Then
-                    CertainlyOpenArrObj(CurrentLevel, DownLevel);    
-                Else
-                    CertainlyCloseArrObj(CurrentLevel);
-                    Continue;                      
-                EndIf;
-                
-            EndIf;
-                                                                                           
-            If CurrentLevel.StructuredType Then 
-                
-                For Each Row In CurrentLevel.Rows Do
-                    
-                    If Row.StructuredType Then
-                        Continue;
-                    EndIf;
-                    
-                    If CurrentLevel.Type <> "Array" Then
-                        StreamWriter.WritePropertyName(Row.Name);
-                    EndIf;
-                     
-                    Value = Item.ParameterValues[Row.Parameter].Value;
-                    ValueType = TypeOf(Value);
-     
-                    If RefTypesCache[ValueType] = False Then
-                        StreamWriter.WriteValue(Value);
-                    ElsIf ValueType = TypeDate Then
-                        StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO));    
-                    ElsIf RefTypesCache[ValueType] = True Then
-                        StreamWriter.WriteValue(XMLString(Value));
-                    // Possible improvement: skip non-ValueType.
-                    ElsIf FL_CommonUse.IsReference(ValueType) Then
-                        RefTypesCache.Insert(ValueType, True);
-                        StreamWriter.WriteValue(XMLString(Value));         
-                    Else
-                        StreamWriter.WriteValue(Undefined);              
-                    EndIf;
-                    
-                    Row.Done = True;
-                                                
-                EndDo;
-                
-                If CurrentLevel.Type = "Object" 
-                    AND CurrentLevel.Rows.Find(False, "Done") = Undefined Then
-                    CertainlyCloseArrObj(CurrentLevel);
-                EndIf;
-                
-            Else
-                                        
-                Value = Item.ParameterValues[CurrentLevel.Parameter].Value;
-                ValueType = TypeOf(Value);
+    FillParamName(ReportStructure, TemplateColumns); TypeDate = Type("Date"); CurrentLevel = APISchema.Rows[0]; If CurrentLevel.Type = "Object" Then StreamWriter.WriteStartObject(); ElsIf CurrentLevel.Type = "Array" Then StreamWriter.WriteStartArray(); EndIf; While Item <> Undefined Do If NOT IsBlankString(Item.Template) Then If CurrentLevel = Undefined Then ErrorMessage = StrTemplate(NStr("en='Error: Failed to find property with name: {%1}.';ru='Ошибка: Не удалось найти свойство с именем: {%1}.'; en_CA='Error: Failed to find property with name: {%1}.'"), ReportStructure.Names[Item.Template]); Raise ErrorMessage; EndIf; If CurrentLevel.Template <> Item.Template Then DownLevel = CurrentLevel.Rows.Find(Item.Template, "Template", True); If DownLevel <> Undefined Then CertainlyOpenArrObj(CurrentLevel, DownLevel); Else CertainlyCloseArrObj(CurrentLevel); Continue; EndIf; EndIf; If CurrentLevel.StructuredType Then For Each Row In CurrentLevel.Rows Do If Row.StructuredType Then Continue; EndIf; If CurrentLevel.Type <> "Array" Then StreamWriter.WritePropertyName(Row.Name); EndIf; Value = Item.ParameterValues[Row.Parameter].Value; ValueType = TypeOf(Value); If RefTypesCache[ValueType] = False Then StreamWriter.WriteValue(Value); ElsIf ValueType = TypeDate Then StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO)); ElsIf RefTypesCache[ValueType] = True Then StreamWriter.WriteValue(XMLString(Value)); ElsIf FL_CommonUse.IsReference(ValueType) OR ValueType = Type("UUID")Then RefTypesCache.Insert(ValueType, True); StreamWriter.WriteValue(XMLString(Value)); Else StreamWriter.WriteValue(Undefined); EndIf; Row.Done = True; EndDo; If CurrentLevel.Type = "Object" AND CurrentLevel.Rows.Find(False, "Done") = Undefined Then CertainlyCloseArrObj(CurrentLevel); EndIf; Else Value = Item.ParameterValues[CurrentLevel.Parameter].Value; ValueType = TypeOf(Value); If RefTypesCache[ValueType] = False Then StreamWriter.WriteValue(Value); ElsIf ValueType = TypeDate Then StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO)); ElsIf RefTypesCache[ValueType] = True Then StreamWriter.WriteValue(XMLString(Value)); ElsIf FL_CommonUse.IsReference(ValueType) OR ValueType = Type("UUID") Then RefTypesCache.Insert(ValueType, True); StreamWriter.WriteValue(XMLString(Value)); Else StreamWriter.WriteValue(Undefined); EndIf; EndIf; EndIf; Item = DataCompositionProcessor.Next(); EndDo; While CurrentLevel <> Undefined Do CertainlyCloseArrObj(CurrentLevel); EndDo;
  
-                If RefTypesCache[ValueType] = False Then
-                    StreamWriter.WriteValue(Value);
-                ElsIf ValueType = TypeDate Then
-                    StreamWriter.WriteValue(WriteJSONDate(Value, JSONDateFormat.ISO));    
-                ElsIf RefTypesCache[ValueType] = True Then
-                    StreamWriter.WriteValue(XMLString(Value));
-                // Possible improvement: skip non-ValueType.
-                ElsIf FL_CommonUse.IsReference(ValueType) Then
-                    RefTypesCache.Insert(ValueType, True);
-                    StreamWriter.WriteValue(XMLString(Value));         
-                Else
-                    StreamWriter.WriteValue(Undefined);              
-                EndIf;
-                
-            EndIf;
-                                      
-        EndIf;
-        
-        Item = DataCompositionProcessor.Next();
-        
-    EndDo;
-    
-    While CurrentLevel <> Undefined Do
-        CertainlyCloseArrObj(CurrentLevel);
-    EndDo;
-   
 EndProcedure // APISchemaOutput()
 
 // Only for internal use.
@@ -674,7 +678,7 @@ EndProcedure // CheckDublicateProperty()
 //
 Function Version() Export
     
-    Return "1.0.2";
+    Return "1.0.3";
     
 EndFunction // Version()
 

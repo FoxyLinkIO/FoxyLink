@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -639,21 +639,6 @@ Function IsReference(Type) Export
     
 EndFunction // IsReference()
 
-// Specifies that the metadata object belongs to the catalog type.
-// 
-// Parameters:
-//  MetadataObject - MetadataObject - object for which it is necessary to specify 
-//                                    whether it belongs to the catalog type.
-// 
-// Returns:
-//  Boolean - True if metadata object belongs to the catalog type.
-//
-Function IsCatalog(MetadataObject) Export
-
-    Return Metadata.Catalogs.Contains(MetadataObject);
-
-EndFunction // IsCatalog()
-
 // Checks if the record about the passed reference value is actually in the data infobase.
 // 
 // Parameters:
@@ -992,6 +977,21 @@ EndFunction // TypeNameTasks()
 #EndRegion // MetadataObjectTypes
 
 #Region MetadataObjectTypesDefinition
+
+// Defines if passed a metadata object belongs to the catalog type.
+// 
+// Parameters:
+//  MetadataObject - MetadataObject - object for which it is necessary to specify 
+//                                      whether it belongs to the catalog type.
+// 
+// Returns:
+//  Boolean - True if metadata object belongs to the catalog type.
+//
+Function IsCatalog(MetadataObject) Export
+
+    Return Metadata.Catalogs.Contains(MetadataObject);
+
+EndFunction // IsCatalog()
 
 // Defines if passed a metadata object belongs to the register type.
 // 
@@ -1393,6 +1393,19 @@ Function NewMockOfMetadataObjectAttributes(MetadataObject) Export
         
     EndDo;
 
+    FullName = MetadataObject.FullName();
+    If FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(FullName) Then
+        
+        For Each Dimension In MetadataObject.Dimensions Do
+             Mock.Columns.Add(Dimension.Name, Dimension.Type, Dimension.Synonym);
+        EndDo;
+        
+        For Each Resource In MetadataObject.Resources Do
+             Mock.Columns.Add(Resource.Name, Resource.Type, Resource.Synonym);
+        EndDo;
+        
+    EndIf;
+
     Return Mock;
     
 EndFunction // NewMockOfMetadataObjectAttributes()
@@ -1453,6 +1466,48 @@ Procedure CheckAttributesFilling(ConversionResult, CheckAttributes) Export
 
 EndProcedure // CheckAttributesFilling()
 
+// Obtains a base64-encoded string from binary data.
+//
+// Parameters:
+//  Value - BinaryData   - binary data that are to be encoded using a base64 
+//                         algorithm.
+//        - ValueStorage - storage for binary data that are to be encoded using
+//                         a base64 algorithm.
+// 
+// Returns:
+//  String - base64-encoded string.
+//
+Function ValueToBase64String(Value) Export
+    
+    Var BinaryData;
+    If TypeOf(Value) = Type("ValueStorage") Then
+        BinaryData = Value.Get();
+    Else
+        BinaryData = Value;
+    EndIf;
+    
+    If TypeOf(BinaryData) = Type("BinaryData") Then
+        Return Base64String(BinaryData);   
+    EndIf;
+    
+    Return "";
+    
+EndFunction // ValueToBase64String()
+
+// Obtains binary data from base64-encoded string.
+//
+// Parameters:
+//  Value - String - base64-encoded string.
+// 
+// Returns:
+//  BinaryData - binary data .
+//
+Function ValueFromBase64String(Value) Export
+
+    Return Base64Value(Value);
+    
+EndFunction // ValueFromBase64String()    
+    
 // Serializes the value into JSON string representation.
 //
 // Parameters:
@@ -1513,7 +1568,7 @@ Function ValueFromXMLTypeAndValue(XMLValue, TypeName, NamespaceURI) Export
             Type = TypeOf(Undefined);    
         EndIf;
         
-        Return XMLValue(Type, XMLValue)
+        Return XMLValue(Type, XMLValue);
         
     Except
         
@@ -1585,57 +1640,61 @@ EndFunction // ConvertValueIntoPlatformObject()
 //
 Function ConvertValueIntoMetadataObject(Val Value, MetadataObject, 
     CheckAttributes = Undefined) Export
-    
+
     ConversionResult = NewConversionResult();
-    
-    TypeMatch = ValueTypeMatchExpected(Value, Type("Structure"), 
-        ConversionResult);
-    If NOT TypeMatch Then
-        Return ConversionResult;
-    EndIf;
-          
-    CriticalError = False;
-    ConvertedValue = New Structure;
-    MockObject = NewMockOfMetadataObjectAttributes(MetadataObject).Columns;
-    For Each Item In Value Do
+    If TypeOf(Value) = Type("Array") Then
         
-        If TypeOf(Item.Value) <> Type("Array") Then
-            
-            ConvertValueIntoAttribute(Item.Key, 
-                Item.Value, 
-                MockObject, 
-                MetadataObject, 
-                ConvertedValue, 
-                ConversionResult.ErrorMessages, 
-                CriticalError);
-                
-        Else
-            
-            ConvertArrayValueIntoAttribute(Item.Key, 
-                Item.Value, 
-                MetadataObject,  
-                ConvertedValue, 
-                ConversionResult.ErrorMessages, 
-                CriticalError);
-            
-        EndIf;
-        
-    EndDo;
-    
-    If NOT CriticalError Then
-        
+        // It's needed to check if any errors were during processing.
         ConversionResult.TypeConverted = True;
-        ConversionResult.ConvertedValue = ConvertedValue;
+        ConversionResult.ConvertedValue = New Array();
+        For Each Item In Value Do
+            
+            ConversionItemResult = NewConversionResult();
+            ConvertValueIntoObject(Item, MetadataObject, CheckAttributes, 
+                ConversionItemResult);
+                
+            ConversionResult.ConvertedValue.Add(ConversionItemResult.ConvertedValue);
+            
+            FL_CommonUseClientServer.ExtendArray(ConversionResult.ErrorMessages,
+                ConversionItemResult.ErrorMessages);
+            
+            If NOT ConversionItemResult.TypeConverted Then
+                ConversionResult.TypeConverted = False;
+            EndIf;
+                
+        EndDo;
         
-        If CheckAttributes <> Undefined Then
-            CheckAttributesFilling(ConversionResult, CheckAttributes);
-        EndIf;
+    ElsIf ValueTypeMatchExpected(Value, Type("Structure"), ConversionResult) Then
+        
+        ConvertValueIntoObject(Value, MetadataObject, CheckAttributes, 
+            ConversionResult);
         
     EndIf;
-    
+        
     Return ConversionResult;
     
 EndFunction // ConvertValueIntoMetadataObject()
+
+// Returns base convertion result structure.
+//
+// Returns:
+//  Structure - convertion result structure.
+//      * ConvertedValue - Arbitrary - converted value.
+//      * TypeConverted  - Boolean   - initial value 'False', when 'True' is set 
+//                                    it means value conversion was successful.
+//                          Default value: False.
+//      * ErrorMessages  - Array     - conversion error messages.
+//          ** ArrayItem - String - conversion error message.
+//
+Function NewConversionResult() Export
+
+    ConversionResult = New Structure;
+    ConversionResult.Insert("ConvertedValue");
+    ConversionResult.Insert("TypeConverted", False);
+    ConversionResult.Insert("ErrorMessages", New Array);
+    Return ConversionResult;
+
+EndFunction // NewConversionResult()
 
 #EndRegion // ValueConversion
 
@@ -2115,6 +2174,60 @@ EndProcedure // ProcessRecalculationObjectManager()
 #EndRegion // ObjectTypes
 
 #Region ValueConversion
+
+// Converts value into {MetadataObject} type.
+//
+// Parameters:
+//  Value            - Arbitrary      - value to be converted into {String} type.
+//  MetadataObject   - MetadataObject - the metadata object to which it is 
+//                                      required to convert the value.
+//  CheckAttributes  - FixedArray     - list of attribute names to be checked.
+//                          Default value: Undefined.
+//  ConversionResult - Structure      - see function FL_CommonUse.NewConversionResult.
+//
+Procedure ConvertValueIntoObject(Value, MetadataObject, 
+    CheckAttributes = Undefined, ConversionResult)
+
+    CriticalError = False;
+    ConvertedValue = New Structure;
+    MockObject = NewMockOfMetadataObjectAttributes(MetadataObject).Columns;
+    For Each Item In Value Do
+        
+        If TypeOf(Item.Value) <> Type("Array") Then
+            
+            ConvertValueIntoAttribute(Item.Key, 
+                Item.Value, 
+                MockObject, 
+                MetadataObject, 
+                ConvertedValue, 
+                ConversionResult.ErrorMessages, 
+                CriticalError);
+                
+        Else
+            
+            ConvertArrayValueIntoAttribute(Item.Key, 
+                Item.Value, 
+                MetadataObject,  
+                ConvertedValue, 
+                ConversionResult.ErrorMessages, 
+                CriticalError);
+            
+        EndIf;
+        
+    EndDo;
+
+    If NOT CriticalError Then
+        
+        ConversionResult.TypeConverted = True;
+        ConversionResult.ConvertedValue = ConvertedValue;
+        
+        If CheckAttributes <> Undefined Then
+            CheckAttributesFilling(ConversionResult, CheckAttributes);
+        EndIf;
+        
+    EndIf;
+
+EndProcedure // ConvertValueIntoObject()
 
 // Converts value into {String} type.
 //
@@ -2807,27 +2920,6 @@ Function AttributeDescription(Object, AttributeName, SynonymsRU)
     Return AttributeDescription;
     
 EndFunction // AttributeDescription()
-
-// Returns base convertion result structure.
-//
-// Returns:
-//  Structure - convertion result structure.
-//      * ConvertedValue - Arbitrary - converted value.
-//      * TypeConverted  - Boolean   - initial value 'False', when 'True' is set 
-//                                    it means value conversion was successful.
-//                          Default value: False.
-//      * ErrorMessages  - Array     - conversion error messages.
-//          ** ArrayItem - String - conversion error message.
-//
-Function NewConversionResult()
-
-    ConversionResult = New Structure;
-    ConversionResult.Insert("ConvertedValue");
-    ConversionResult.Insert("TypeConverted", False);
-    ConversionResult.Insert("ErrorMessages", New Array);
-    Return ConversionResult;
-
-EndFunction // NewConversionResult()
 
 // Converts a string into a date type value.
 //

@@ -29,7 +29,7 @@ EndProcedure // OnCreateAtServer()
 &AtClient
 Procedure OnOpen(Cancel)
     
-    AttachIdleHandler("UpdateJobRoutingState", 10, False);
+    IdleUpdateJobRoutingState(); 
     
 EndProcedure // OnOpen()
 
@@ -59,6 +59,7 @@ EndProcedure // ManualRouting()
 Procedure StartJobRouting(Command)
     
     StartJobRoutingAtServer();
+    IdleUpdateJobRoutingState();
     
 EndProcedure // StartJobRouting()
 
@@ -91,9 +92,21 @@ EndProcedure // StopJobRouting()
 // Only for internal use.
 //
 &AtClient
+Procedure IdleUpdateJobRoutingState()
+    
+    FL_InteriorUseClient.AttachDetachIdleHandler(ThisObject, 
+        Items.GroupJobRoutingPages.CurrentPage = Items.GroupJobRoutingRunning,
+        "UpdateJobRoutingState");
+    
+EndProcedure // IdleUpdateJobRoutingState()
+
+// Only for internal use.
+//
+&AtClient
 Procedure UpdateJobRoutingState() Export
     
     UpdateJobRoutingStateAtServer();
+    IdleUpdateJobRoutingState();
     
 EndProcedure // UpdateJobRoutingState() 
 

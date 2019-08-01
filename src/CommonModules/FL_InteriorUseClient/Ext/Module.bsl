@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -19,6 +19,47 @@
 
 #Region ProgramInterface
 
+// Attaches the specified procedure as an idle time handler or detaches the idle 
+// handler procedure previously attached using the AttachIdleHandler form method. 
+// The procedure will be called as long as the system is on idle each time 
+// a defined period of time has elapsed.
+//
+// Parameters:
+//  ManagedForm   - ManagedForm - managed form.
+//  Attach        - Boolean     - 
+//  ProcedureName - String      - name of the procedure enabled as idle handler.
+//                                The procedure must not contain any parameters.
+//  Interval      - Number      - Time interval in seconds with an accuracy to 
+//                                a decile that has to elapse before the procedure 
+//                                is called (positive number). If the value is less 
+//                                than 1, then the fifth parameter's value should be True.
+//                                Important! You should consider not to use the 
+//                                handler as a timer. 
+//                                The real actuation interval may vary from the specified.
+//                      Default value: 15.    
+//  Single        - Boolean     - Flag of singe idle handler run.
+//                                True - specified idle handler will be run once.
+//                      Default value: False. 
+//
+Procedure AttachDetachIdleHandler(ManagedForm, Val Attach, Val ProcedureName, 
+    Val Interval = 15, Val Single = False) Export
+    
+    If TypeOf(Interval) <> Type("Number") Then
+        Interval = 15;
+    EndIf;
+    
+    If Interval < 1 AND NOT Single Then
+        Single = True;
+    EndIf;
+    
+    If Attach Then
+        ManagedForm.AttachIdleHandler(ProcedureName, Interval, Single);    
+    Else
+        ManagedForm.DetachIdleHandler(ProcedureName);    
+    EndIf;
+    
+EndProcedure // AttachDetachIdleHandler()
+
 // Updates the application interface saving the current active window. 
 //
 Procedure RefreshApplicationInterface() Export
@@ -30,6 +71,30 @@ Procedure RefreshApplicationInterface() Export
     EndIf;
 
 EndProcedure // RefreshApplicationInterface()
+
+// Shows detail values from data composition details object.
+//
+// Parameters:
+//  DataCompositionDetails - DataCompositionDetailsData - object that contains details information.
+//  Details                - Arbitrary                  - details value.
+//  StandardProcessing     - Boolean                    - sets passed flag to false. Indicates that standard (system) 
+//                                                        processing of the event isn't performed.
+//  NotifyDescription      - NotifyDescription          - It contains description of the procedure that will be called 
+//                                                        after the value entry window is closed.
+//                                              Default value: Undefined. 
+//
+Procedure DetailProcessing(DataCompositionDetails, Details, StandardProcessing, 
+    NotifyDescription = Undefined) Export
+    
+    StandardProcessing = False;
+    
+    FieldDetailsItem = DataCompositionDetails.Items[Details];
+    FieldDetailsValues = FieldDetailsItem.GetFields();
+    If FieldDetailsValues.Count() > 0 Then
+        ShowValue(NotifyDescription, FieldDetailsValues[0].Value);    
+    EndIf;
+    
+EndProcedure // DetailProcessing()
 
 // Prompts whether the action that results in loss of changes should be 
 // continued. For use in the BeforeClosing event handler of forms modules.

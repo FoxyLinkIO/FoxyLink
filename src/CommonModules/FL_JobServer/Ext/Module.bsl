@@ -404,15 +404,9 @@ EndFunction // DefaultWorkerJobsLimit()
 //
 Procedure PopJobServerState(WorkerCount, ProcessingJobs, RetryJobs) 
     
-    JobTableIndex    = 1;
-    WorkerTableIndex = 2;
     RetryAttempts = GetRetryAttempts();
-    
+
     FinalStates = Catalogs.FL_States.FinalStates();
-    
-    Query = New Query;
-    Query.Text = QueryTextTasksHeartbeat();
-    BatchResult = Query.ExecuteBatch();
     
     BackgroundJobCache = New Map; 
     FilterResults = BackgroundJobsByFilter(New Structure("MethodName", 
@@ -421,7 +415,10 @@ Procedure PopJobServerState(WorkerCount, ProcessingJobs, RetryJobs)
         BackgroundJobCache.Insert(FilterResult.UUID, FilterResult.State);    
     EndDo;
     
-    JobTable = BatchResult[JobTableIndex].Unload();
+    Query = New Query;
+    Query.Text = QueryTextTasksHeartbeat();
+    JobTable = Query.Execute().Unload();
+    
     For Each Item In JobTable Do
 
         CurrentState = FL_CommonUse.ObjectAttributeValue(Item.Job, "State");
@@ -438,7 +435,8 @@ Procedure PopJobServerState(WorkerCount, ProcessingJobs, RetryJobs)
         
     EndDo;
     
-    WorkerTable = BatchResult[WorkerTableIndex].Unload();
+    WorkerTable = JobTable.Copy(, "TaskId");
+    FL_CommonUse.RemoveDuplicatesFromValueTable(WorkerTable);
     ReduceAvailableWorkerCount(WorkerCount, WorkerTable, BackgroundJobCache);
      
 EndProcedure // PopJobServerState()
@@ -654,32 +652,8 @@ Function QueryTextTasksHeartbeat()
         |   TasksHeartbeat.Isolated     AS Isolated,
         |   TasksHeartbeat.RetryAt      AS RetryAt,
         |   TasksHeartbeat.RetryAttempt AS RetryAttempt
-        |INTO TasksHeartbeat
         |FROM
         |   InformationRegister.FL_TasksHeartbeat AS TasksHeartbeat
-        |;
-        |
-        |////////////////////////////////////////////////////////////////////////////////
-        |SELECT
-        |   TasksHeartbeat.Job          AS Job,            
-        |   TasksHeartbeat.TaskId       AS TaskId,
-        |   TasksHeartbeat.Isolated     AS Isolated,
-        |   TasksHeartbeat.RetryAt      AS RetryAt,
-        |   TasksHeartbeat.RetryAttempt AS RetryAttempt
-        |FROM
-        |   TasksHeartbeat AS TasksHeartbeat
-        |;
-        |
-        |////////////////////////////////////////////////////////////////////////////////
-        |SELECT DISTINCT
-        |   TasksHeartbeat.TaskId AS TaskId
-        |FROM
-        |   TasksHeartbeat AS TasksHeartbeat  
-        |;
-        |
-        |////////////////////////////////////////////////////////////////////////////////
-        |DROP TasksHeartbeat
-        |;
         |";  
     Return QueryText;
     

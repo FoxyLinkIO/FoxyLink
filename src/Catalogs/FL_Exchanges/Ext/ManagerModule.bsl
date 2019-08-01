@@ -39,7 +39,8 @@ Procedure OnCreateAtServer(ManagedForm) Export
     
     // ManagedForm.UUID is used to remove automatically the value after 
     // closing the form.
-    PlaceStorageDataIntoFormObject(Object, Object.Ref, ManagedForm.UUID);
+    PlaceEventsDataIntoFormObject(Object, Object.Ref, ManagedForm.UUID);
+    PlaceOperationsDataIntoFormObject(Object, Object.Ref, ManagedForm.UUID);
     
 EndProcedure // OnCreateAtServer()
 
@@ -135,7 +136,8 @@ EndProcedure // UpdateOperationsView()
 //
 Procedure BeforeWriteAtServer(ManagedForm, CurrentObject) Export
     
-    ProcessBeforeWriteAtServer(ManagedForm.Object, CurrentObject);        
+    PlaceEventsDataIntoDataBaseObject(ManagedForm.Object, CurrentObject);
+    PlaceOperationsDataIntoDataBaseObject(ManagedForm.Object, CurrentObject);
     
 EndProcedure // BeforeWriteAtServer()
 
@@ -236,11 +238,13 @@ Function ExportObject(Exchange) Export
     Catalogs.FL_Messages.AddToContext(Invocation.Context, "Ref", Exchange, 
         True);
     
-    Output = Catalogs.FL_Messages.RouteOnlyToExchangeAndRun(Invocation, 
+    JobResult = Catalogs.FL_Messages.RouteAndRunOutputResult(Invocation, 
         Catalogs.FL_Exchanges.Self);    
-    If TypeOf(Output) = Type("ValueTable") Then
-        PayloadRow = Output.Find("Payload", "Name");
-        PropertiesRow = Output.Find("Properties", "Name");
+        
+    If JobResult.Success 
+        AND TypeOf(JobResult.Output) = Type("ValueTable") Then
+        PayloadRow = JobResult.Output.Find("Payload", "Name");
+        PropertiesRow = JobResult.Output.Find("Properties", "Name");
     EndIf;
         
     If PayloadRow <> Undefined 
@@ -531,7 +535,43 @@ EndFunction // EventHandlerInfo()
 
 // Only for internal use.
 //
-Procedure PlaceStorageDataIntoFormObject(FormObject, CurrentObject, FormUUID)
+Procedure PlaceEventsDataIntoFormObject(FormObject, CurrentObject, FormUUID)
+    
+    FilterParameters = New Structure;
+    FilterParameters.Insert("MetadataObject");
+    FilterParameters.Insert("Operation");
+    
+    FormEvents = FormObject.Events;
+    ObjectEvents = CurrentObject.Events;
+    For Each FormRow In FormEvents Do
+        
+        FillPropertyValues(FilterParameters, FormRow);
+        FilterResult = ObjectEvents.FindRows(FilterParameters);
+        If FilterResult.Count() = 1 Then
+            
+            ObjectRow = FilterResult[0];
+            DataCompositionSchema = ObjectRow.EventFilterDCSchema.Get();
+            If DataCompositionSchema <> Undefined Then
+                FormRow.EventFilterDCSchemaAddress = PutToTempStorage(
+                    DataCompositionSchema, FormUUID);
+            EndIf;
+            
+            DataCompositionSettings = ObjectRow.EventFilterDCSettings.Get();
+            If DataCompositionSettings <> Undefined Then
+                FormRow.EventFilterDCSettingsAddress = PutToTempStorage(
+                    DataCompositionSettings, FormUUID);
+                FormRow.FilterPresentation = String(DataCompositionSettings.Filter);
+            EndIf;
+        
+        EndIf;
+            
+    EndDo;    
+    
+EndProcedure // PlaceEventsDataIntoFormObject()
+
+// Only for internal use.
+//
+Procedure PlaceOperationsDataIntoFormObject(FormObject, CurrentObject, FormUUID)
     
     FormOperations = FormObject.Operations;
     ObjectOperations = CurrentObject.Operations;
@@ -556,12 +596,49 @@ Procedure PlaceStorageDataIntoFormObject(FormObject, CurrentObject, FormUUID)
         EndIf; 
             
     EndDo;
-        
-EndProcedure // PlaceStorageDataIntoFormObject()
+    
+EndProcedure // PlaceOperationsDataIntoFormObject()
 
 // Only for internal use.
 //
-Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
+Procedure PlaceEventsDataIntoDataBaseObject(FormObject, CurrentObject)
+    
+    FilterParameters = New Structure;
+    FilterParameters.Insert("MetadataObject");
+    FilterParameters.Insert("Operation");
+    
+    FormEvents = FormObject.Events;
+    ObjectEvents = CurrentObject.Events;
+    For Each FormRow In FormEvents Do
+        
+        FillPropertyValues(FilterParameters, FormRow);
+        FilterResult = ObjectEvents.FindRows(FilterParameters);
+        If FilterResult.Count() = 1 Then
+            
+            ObjectRow = FilterResult[0];
+            If IsTempStorageURL(FormRow.EventFilterDCSchemaAddress) Then
+                ObjectRow.EventFilterDCSchema = New ValueStorage(
+                    GetFromTempStorage(FormRow.EventFilterDCSchemaAddress));
+            Else
+                ObjectRow.EventFilterDCSchema = New ValueStorage(Undefined);
+            EndIf;
+            
+            If IsTempStorageURL(FormRow.EventFilterDCSettingsAddress) Then
+                ObjectRow.EventFilterDCSettings = New ValueStorage(
+                    GetFromTempStorage(FormRow.EventFilterDCSettingsAddress));
+            Else
+                ObjectRow.EventFilterDCSettings = New ValueStorage(Undefined);
+            EndIf;
+            
+        EndIf;
+                     
+    EndDo;
+    
+EndProcedure // PlaceEventsDataIntoDataBaseObject()
+
+// Only for internal use.
+//
+Procedure PlaceOperationsDataIntoDataBaseObject(FormObject, CurrentObject)
     
     FormOperations = FormObject.Operations;
     ObjectOperations = CurrentObject.Operations;
@@ -570,7 +647,7 @@ Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
         ObjectRow = ObjectOperations.Find(FormRow.Operation, "Operation");
         
         FillPropertyValues(ObjectRow, FormRow, "CanUseExternalFunctions, 
-            |Isolated, Priority"); 
+            |Invoke, Isolated, Priority"); 
         
         If IsTempStorageURL(FormRow.DataCompositionSchemaAddress) Then
             ObjectRow.DataCompositionSchema = New ValueStorage(
@@ -595,7 +672,7 @@ Procedure ProcessBeforeWriteAtServer(FormObject, CurrentObject)
                 
     EndDo;
     
-EndProcedure // ProcessBeforeWriteAtServer() 
+EndProcedure // PlaceOperationsDataIntoDataBaseObject() 
     
 // Add a new group page that corresponds to the operation.
 //

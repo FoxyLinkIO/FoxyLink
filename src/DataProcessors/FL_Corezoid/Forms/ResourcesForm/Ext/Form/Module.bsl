@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2018 Petro Bazeliuk.
+// Copyright © 2018-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -22,23 +22,11 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
-    If Parameters.Property("ChannelResources") Then
-        
-        ChannelResources = Parameters.ChannelResources;
-        
-        Attributes = GetAttributes();
-        FilterParameters = New Structure("FieldName");
-        For Each Attribute In Attributes Do
-            
-            FilterParameters.FieldName = Attribute.Name;
-            SearchResult = ChannelResources.FindRows(FilterParameters);
-            If SearchResult.Count() = 1 Then 
-                ThisObject[Attribute.Name] = SearchResult[0].FieldValue;                   
-            EndIf;
-            
-        EndDo;
-        
+    If Parameters.Property("AutoTest") Then
+        Return;
     EndIf;
+    
+    FL_InteriorUse.FillAppEndpointResourcesFormData(ThisObject, Parameters);
      
 EndProcedure // OnCreateAtServer()
 

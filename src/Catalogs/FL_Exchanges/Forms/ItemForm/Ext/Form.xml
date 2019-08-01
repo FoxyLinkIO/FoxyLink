@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5">
-	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
 	<Customizable>false</Customizable>
 	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
 	<AutoCommandBar name="FormCommandBar" id="-1">
@@ -665,6 +664,9 @@
 														<ContextMenu name="EventsSearchControlContextMenu" id="308"/>
 														<ExtendedTooltip name="EventsSearchControlExtendedTooltip" id="309"/>
 													</SearchControlAddition>
+													<Events>
+														<Event name="Selection">EventsSelection</Event>
+													</Events>
 													<ChildItems>
 														<InputField name="EventsEventName" id="319">
 															<DataPath>Object.Events.EventName</DataPath>
@@ -672,6 +674,13 @@
 															<EditMode>EnterOnInput</EditMode>
 															<ContextMenu name="EventsEventNameContextMenu" id="320"/>
 															<ExtendedTooltip name="EventsEventNameExtendedTooltip" id="321"/>
+														</InputField>
+														<InputField name="EventsFilterPresentation" id="392">
+															<DataPath>Object.Events.FilterPresentation</DataPath>
+															<ReadOnly>true</ReadOnly>
+															<EditMode>EnterOnInput</EditMode>
+															<ContextMenu name="EventsFilterPresentationContextMenu" id="393"/>
+															<ExtendedTooltip name="EventsFilterPresentationExtendedTooltip" id="394"/>
 														</InputField>
 														<InputField name="EventsEventHandler" id="370">
 															<DataPath>Object.Events.EventHandler</DataPath>
@@ -936,6 +945,34 @@
 															<v8:item>
 																<v8:lang>uk</v8:lang>
 																<v8:content>Ізоляція допомагає захистити кожне завдання від інших завдань в підсистемі FoxyLink. Якщо елемент відзначений, завдання, пов'язані з цим обміном, будуть оброблятися в їх власному потоці.</v8:content>
+															</v8:item>
+														</Title>
+													</ExtendedTooltip>
+												</CheckBoxField>
+												<CheckBoxField name="RowInvoke" id="389">
+													<DataPath>RowInvoke</DataPath>
+													<TitleLocation>Right</TitleLocation>
+													<ToolTipRepresentation>ShowBottom</ToolTipRepresentation>
+													<CheckBoxType>Auto</CheckBoxType>
+													<ContextMenu name="RowInvokeContextMenu" id="390"/>
+													<ExtendedTooltip name="RowInvokeExtendedTooltip" id="391">
+														<TextColor>style:FieldSelectionBackColor</TextColor>
+														<Title formatted="false">
+															<v8:item>
+																<v8:lang>en</v8:lang>
+																<v8:content>Invoke subordinate helps to trigger all subordinate jobs during single call.</v8:content>
+															</v8:item>
+															<v8:item>
+																<v8:lang>en_CA</v8:lang>
+																<v8:content>Invoke subordinate helps to trigger all subordinate jobs during single call.</v8:content>
+															</v8:item>
+															<v8:item>
+																<v8:lang>ru</v8:lang>
+																<v8:content>Вызов подчиненных помогает запускать все подчиненные задания во время одного вызова.</v8:content>
+															</v8:item>
+															<v8:item>
+																<v8:lang>uk</v8:lang>
+																<v8:content>Виклик підлеглих допомагає запускати всі підлеглі завдання під час одного виклику.</v8:content>
 															</v8:item>
 														</Title>
 													</ExtendedTooltip>
@@ -1687,6 +1724,9 @@
 															<HorizontalScrollBar>true</HorizontalScrollBar>
 															<ContextMenu name="ResultSpreadsheetDocumentContextMenu" id="73"/>
 															<ExtendedTooltip name="ResultSpreadsheetDocumentExtendedTooltip" id="74"/>
+															<Events>
+																<Event name="DetailProcessing">ResultSpreadsheetDocumentDetailProcessing</Event>
+															</Events>
 														</SpreadSheetDocumentField>
 													</ChildItems>
 												</Page>
@@ -1728,12 +1768,16 @@
 								<v8:content>Data composition schema address</v8:content>
 							</v8:item>
 							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Data composition schema address</v8:content>
+							</v8:item>
+							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>Адрес схемы компоновки данных</v8:content>
 							</v8:item>
 							<v8:item>
-								<v8:lang>en_CA</v8:lang>
-								<v8:content>Data composition schema address</v8:content>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Адреса схеми компоновки даних</v8:content>
 							</v8:item>
 						</Title>
 						<Type>
@@ -1751,12 +1795,16 @@
 								<v8:content>Data composition settings address</v8:content>
 							</v8:item>
 							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Data composition settings address</v8:content>
+							</v8:item>
+							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>Адрес настроек компоновки данных</v8:content>
 							</v8:item>
 							<v8:item>
-								<v8:lang>en_CA</v8:lang>
-								<v8:content>Data composition settings address</v8:content>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Адреса налаштувань компоновки даних</v8:content>
 							</v8:item>
 						</Title>
 						<Type>
@@ -1774,12 +1822,16 @@
 								<v8:content>API schema address</v8:content>
 							</v8:item>
 							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>API schema address</v8:content>
+							</v8:item>
+							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>Адрес схемы API</v8:content>
 							</v8:item>
 							<v8:item>
-								<v8:lang>en_CA</v8:lang>
-								<v8:content>API schema address</v8:content>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Адреса схеми API</v8:content>
 							</v8:item>
 						</Title>
 						<Type>
@@ -1895,6 +1947,87 @@
 						</Title>
 						<Type>
 							<v8:Type>xs:boolean</v8:Type>
+						</Type>
+					</Column>
+					<Column name="EventFilterDCSchemaAddress" id="5">
+						<Title>
+							<v8:item>
+								<v8:lang>en</v8:lang>
+								<v8:content>Event filter data composition schema address</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Event filter data composition schema address</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>ru</v8:lang>
+								<v8:content>Адрес схемы компоновки данных фильтра событий</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Адреса схеми компоновки даних фільтру подій</v8:content>
+							</v8:item>
+						</Title>
+						<Type>
+							<v8:Type>xs:string</v8:Type>
+							<v8:StringQualifiers>
+								<v8:Length>0</v8:Length>
+								<v8:AllowedLength>Variable</v8:AllowedLength>
+							</v8:StringQualifiers>
+						</Type>
+					</Column>
+					<Column name="EventFilterDCSettingsAddress" id="6">
+						<Title>
+							<v8:item>
+								<v8:lang>en</v8:lang>
+								<v8:content>Event filter data composition settings address</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Data composition settings address</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>ru</v8:lang>
+								<v8:content>Адрес настроек компоновки данных фильтра событий</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Адреса налаштувань компоновки даних фільтру подій</v8:content>
+							</v8:item>
+						</Title>
+						<Type>
+							<v8:Type>xs:string</v8:Type>
+							<v8:StringQualifiers>
+								<v8:Length>0</v8:Length>
+								<v8:AllowedLength>Variable</v8:AllowedLength>
+							</v8:StringQualifiers>
+						</Type>
+					</Column>
+					<Column name="FilterPresentation" id="7">
+						<Title>
+							<v8:item>
+								<v8:lang>en</v8:lang>
+								<v8:content>Filter presentation</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Filter presentation</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>ru</v8:lang>
+								<v8:content>Отображение фильтра</v8:content>
+							</v8:item>
+							<v8:item>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Відображення фільтра</v8:content>
+							</v8:item>
+						</Title>
+						<Type>
+							<v8:Type>xs:string</v8:Type>
+							<v8:StringQualifiers>
+								<v8:Length>0</v8:Length>
+								<v8:AllowedLength>Variable</v8:AllowedLength>
+							</v8:StringQualifiers>
 						</Type>
 					</Column>
 				</AdditionalColumns>
@@ -2079,12 +2212,16 @@
 					<v8:content>Data composition schema edit address</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Data composition schema edit address</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Адрес редактируемой схемы компоновки данных</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Data composition schema edit address</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Адреса редагованої схеми компонування даних</v8:content>
 				</v8:item>
 			</Title>
 			<Type>
@@ -2300,6 +2437,45 @@
 				<v8:Type>xs:boolean</v8:Type>
 			</Type>
 			<SavedData>true</SavedData>
+		</Attribute>
+		<Attribute name="RowInvoke" id="24">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Invoke</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Invoke</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Вызывать</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Викликати</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:boolean</v8:Type>
+			</Type>
+			<SavedData>true</SavedData>
+		</Attribute>
+		<Attribute name="DetailsDataAddress" id="25">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Details data address</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
 		</Attribute>
 	</Attributes>
 	<Commands>

@@ -24,20 +24,19 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
     Var APISchemaAddress;
         
-    If Parameters.Property("APISchemaAddress", APISchemaAddress) Then
-        If IsTempStorageURL(APISchemaAddress) Then
+    If Parameters.Property("APISchemaAddress", APISchemaAddress)
+        AND IsTempStorageURL(APISchemaAddress) Then
             
-            ValueTable = GetFromTempStorage(APISchemaAddress);
-            If TypeOf(ValueTable) = Type("ValueTable") Then
-                ValueToFormAttribute(ValueTable, "Object.APISchema");
-                
-                For Each APISchemaRow In Object.APISchema Do
-                    ThisForm[APISchemaRow.FieldName] = APISchemaRow.FieldValue;    
-                EndDo;
-                
-            EndIf;
+        ValueTable = GetFromTempStorage(APISchemaAddress);
+        If TypeOf(ValueTable) = Type("ValueTable") Then
+            ValueToFormAttribute(ValueTable, "Object.APISchema");
+            
+            For Each APISchemaRow In Object.APISchema Do
+                ThisForm[APISchemaRow.FieldName] = APISchemaRow.FieldValue;    
+            EndDo;
             
         EndIf;
+            
     EndIf;
     
     If Delimiter = Chars.Tab Then
@@ -60,9 +59,7 @@ EndProcedure // OnCreateAtServer()
 &AtClient
 Procedure FormatTypeOnChange(Item)
     
-    If FormatType = "CSV" Then
-        Delimiter = ",";
-    ElsIf FormatType = "TSV" Then
+    If FormatType = "TSV" Then
         Delimiter = Chars.Tab;
     Else 
         Delimiter = ",";

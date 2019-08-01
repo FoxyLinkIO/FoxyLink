@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -27,23 +27,37 @@
 //  AppEndpoint - CatalogRef.FL_Channels - a reference to application endpoint.
 //  Object      - AnyRef                 - any valid reference in database.
 //  Identifier  - String                 - the object identifier in the application endpoint.
+//  SyncToken   - String                 - a version number of the entity.
+//                          Default value: Undefined.
+//  Rendered    - String                 - a destination where linked object can be rendered.
+//                          Default value: Undefined. 
 //
-Procedure RegisterLinkedObject(AppEndpoint, Object, Identifier) Export
+Procedure RegisterLinkedObject(AppEndpoint, Object, Identifier, 
+    SyncToken = Undefined, Rendered = Undefined) Export
     
     RecordManager = InformationRegisters.FL_LinkedObjects.CreateRecordManager();
     RecordManager.AppEndpoint = AppEndpoint;
     RecordManager.Object = Object;
     RecordManager.Read();
     If NOT RecordManager.Selected() Then
+        
         RecordManager.AppEndpoint = AppEndpoint;
         RecordManager.Object = Object;
         If TypeOf(Identifier) = Type("Number") Then
             RecordManager.Identifier = Format(Identifier, "NDS=.; NGS=''; NZ=; NG=");    
         Else
             RecordManager.Identifier = Identifier;
-        EndIf;  
+        EndIf;
+                
     EndIf;
     
+    If TypeOf(SyncToken) = Type("Number") Then
+        RecordManager.SyncToken = Format(SyncToken, "NDS=.; NGS=''; NZ=; NG=");    
+    Else
+        RecordManager.SyncToken = SyncToken;
+    EndIf;
+    
+    RecordManager.Rendered = Rendered;
     RecordManager.Write();
     
 EndProcedure // RegisterLinkedObject()
@@ -75,7 +89,7 @@ EndProcedure // UnregisterLinkedObject()
 Function LinkedObjectId(AppEndpoint, Object) Export
     
     Query = New Query;
-    Query.Text = QueryTextLinkedObjectId();
+    Query.Text = QueryTextLinkedObjectResources();
     Query.SetParameter("AppEndpoint", AppEndpoint);
     Query.SetParameter("Object", Object);
     QueryResultSelection = Query.Execute().Select();
@@ -86,6 +100,30 @@ Function LinkedObjectId(AppEndpoint, Object) Export
     Return Undefined;
     
 EndFunction // LinkedObjectId()
+
+// Returns linked object sync token.
+//
+// Parameters:
+//  AppEndpoint - CatalogRef.FL_Channels - a reference to application endpoint.
+//  Object      - AnyRef                 - any valid reference in database.
+//
+// Returns:
+//  String - the object sync token in the application endpoint. 
+//
+Function LinkedObjectSyncToken(AppEndpoint, Object) Export
+    
+    Query = New Query;
+    Query.Text = QueryTextLinkedObjectResources();
+    Query.SetParameter("AppEndpoint", AppEndpoint);
+    Query.SetParameter("Object", Object);
+    QueryResultSelection = Query.Execute().Select();
+    If QueryResultSelection.Next() Then
+        Return QueryResultSelection.SyncToken;
+    EndIf;
+    
+    Return Undefined;
+    
+EndFunction // LinkedObjectSyncToken()
 
 // Returns linked object.
 //
@@ -137,11 +175,13 @@ EndFunction // QueryTextLinkedObject()
 
 // Only for internal use.
 //
-Function QueryTextLinkedObjectId()
+Function QueryTextLinkedObjectResources()
 
     QueryText = "
         |SELECT 
-        |   LinkedObjects.Identifier AS Identifier
+        |   LinkedObjects.Identifier AS Identifier,
+        |   LinkedObjects.SyncToken AS SyncToken,
+        |   LinkedObjects.Rendered AS Rendered
         |FROM
         |   InformationRegister.FL_LinkedObjects AS LinkedObjects 
         |WHERE
@@ -150,7 +190,7 @@ Function QueryTextLinkedObjectId()
         |";
     Return QueryText;
     
-EndFunction // QueryTextLinkedObjectId()
+EndFunction // QueryTextLinkedObjectResources()
 
 #EndRegion // ServiceProceduresAndFunctions 
     

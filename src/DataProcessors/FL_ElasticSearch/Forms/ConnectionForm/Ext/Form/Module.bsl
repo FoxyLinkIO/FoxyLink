@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -16,17 +16,6 @@
 // along with FoxyLink. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-#Region FormEventHandlers
-
-&AtServer
-Procedure OnCreateAtServer(Cancel, StandardProcessing)
-    
-    Object.Log = True;    
-    
-EndProcedure // OnCreateAtServer()
-
-#EndRegion // FormEventHandlers
 
 #Region FormCommandHandlers
 
@@ -51,9 +40,7 @@ Procedure ConnectToElasticSearch(Command)
     FilterParameters = New Structure("FieldName", "StringURI");
     FilterResult = Object.ChannelData.FindRows(FilterParameters);
     If FilterResult.Count() = 1 Then
-        
         Close(Object);
-        
     Else
         FL_CommonUseClientServer.NotifyUser(NStr("en='Failed to connect.';
                 |ru='Не удалось подключиться.';
@@ -75,21 +62,19 @@ Procedure ConnectToElasticSearchAtServer()
     URIStructure.Password = Password;
     
     MainObject = FormAttributeToValue("Object");
-    MainObject.ChannelData.Clear();
-    MainObject.ChannelResources.Clear();
-    
-    FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelData, 
+    FL_EncryptionClientServer.SetFieldValue(MainObject.ChannelData,
         "StringURI", FL_CommonUseClientServer.StringURI(URIStructure));
-    FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
+    
+    FL_EncryptionClientServer.SetFieldValue(MainObject.ChannelResources, 
         "HTTPMethod", "GET");
-    FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
+    FL_EncryptionClientServer.SetFieldValue(MainObject.ChannelResources, 
         "Resource", "/_cat/indices?v");
     
-    JobResult = Catalogs.FL_Jobs.NewJobResult();
-    MainObject.DeliverMessage(Undefined, Undefined, JobResult);
+    JobResult = Catalogs.FL_Jobs.NewJobResult(True);
+    MainObject.DeliverMessage(Undefined, Catalogs.FL_Exchanges.NewProperties(), 
+        JobResult);
     
-    LogAttribute = LogAttribute + JobResult.LogAttribute;
-    
+    LogAttribute = JobResult.LogAttribute;
     If JobResult.Success Then     
         ValueToFormAttribute(MainObject.ChannelData, "Object.ChannelData");
     EndIf;

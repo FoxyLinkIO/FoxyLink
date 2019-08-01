@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -41,10 +41,8 @@ Procedure Route(Source = Undefined, Exchange = Undefined,
     Messages = Messages(Source);
     For Each Message In Messages Do
         
-        If NOT ReRoute Then
-            If FL_CommonUse.ObjectAttributeValue(Message, "Routed") Then
-                Continue;
-            EndIf;
+        If NOT ReRoute AND FL_CommonUse.ObjectAttributeValue(Message, "Routed") Then
+            Continue;
         EndIf;
         
         Try
@@ -83,9 +81,12 @@ EndProcedure // Route()
 //                      Default value: Undefined.
 //  AppEndpoint - CatalogRef.FL_Channels    - a receiver channel.
 //                      Default value: Undefined.
+//  JobResult   - Structure                 - returns the copy of last job result execution.
+//                                            See function Catalogs.FL_Jobs.NewJobResult.
+//                      Default value: Undefined.
 //
 Procedure RouteAndRun(Source, Exchange = Undefined, 
-    AppEndpoint = Undefined) Export
+    AppEndpoint = Undefined, JobResult = Undefined) Export
 
     Message = GetMessage(Source);
     
@@ -94,40 +95,45 @@ Procedure RouteAndRun(Source, Exchange = Undefined,
     RouteToEndpoints(MessageObject, Exchange, AppEndpoint, True);
     
     For Each Row In MessageObject.Exchanges Do
-        Catalogs.FL_Jobs.Trigger(Row.Job, True);    
+        Catalogs.FL_Jobs.Trigger(Row.Job, True, JobResult);    
     EndDo;
     
     MessageObject.Write();   
     
 EndProcedure // RouteAndRun()    
-    
-// Routes and runs message to exchange and returns outputs.
+
+// Returns an output result of message that is delivered into exchange and 
+// app endpoint if it's set.
 //
 // Parameters:
 //  Source      - Structure, FixedStructure - see function Catalogs.FL_Messages.NewInvocation.
-//              - CatalogRef.FL_Messages    - a single message to route.
+//              - CatalogRef.FL_Messages    - a single message to get result.
 //  Exchange    - CatalogRef.FL_Exchanges   - a routing exchange.
+//  AppEndpoint - CatalogRef.FL_Channels    - a receiver channel.
+//                      Default value: Null.
 //
 // Returns:
-//  ValueTable - copy of output parameters, see function Catalogs.FL_Jobs.NewJobResult.  
+//  Structure - see function Catalogs.FL_Jobs.NewJobResult.  
 //
-Function RouteOnlyToExchangeAndRun(Source, Exchange) Export
+Function RouteAndRunOutputResult(Source, Exchange, AppEndpoint = Null) Export
     
-    OutputCopy = Catalogs.FL_Jobs.NewJobResult().Output;
+    // Copy of the job result, see function Catalogs.FL_Jobs.NewJobResult.
+    JobResult = Catalogs.FL_Jobs.NewJobResult();
     
     If TransactionActive() Then
-            
-        // Helps to avoid hierarchical transaction errors.
-        TriggerMessage(Source, Exchange, OutputCopy);
+        
+        Message = GetMessage(Source);
+        RouteAndRun(Message, Exchange, AppEndpoint, JobResult);    
         
     Else
-    
+        
         Try
-            
+        
             BeginTransaction();
             
-            TriggerMessage(Source, Exchange, OutputCopy); 
-             
+            Message = GetMessage(Source);
+            RouteAndRun(Message, Exchange, AppEndpoint, JobResult); 
+            
             CommitTransaction();
         
         Except
@@ -135,8 +141,7 @@ Function RouteOnlyToExchangeAndRun(Source, Exchange) Export
             RollbackTransaction();
             
             ErrorMessage = ErrorDescription();
-            FL_InteriorUse.WriteLog(
-                "FoxyLink.Integration.RouteOnlyToExchangeAndRun", 
+            FL_InteriorUse.WriteLog("FoxyLink.Integration.RouteAndRunResult",
                 EventLogLevel.Error,
                 Metadata.Catalogs.FL_Messages,
                 ErrorMessage);
@@ -145,12 +150,12 @@ Function RouteOnlyToExchangeAndRun(Source, Exchange) Export
             Raise ErrorMessage;
             
         EndTry;
-    
+        
     EndIf;
     
-    Return OutputCopy;
+    Return JobResult;
     
-EndFunction // RouteOnlyToExchangeAndRun()
+EndFunction // RouteAndRunOutputResult()
 
 // Creates a message based on a given event object call expression.
 //
@@ -288,6 +293,85 @@ Procedure FillRegisterContext(Context, Filter, PrimaryKeys,
     EndDo;    
     
 EndProcedure // FillRegisterContext()
+ 
+// Returns deserialized context value if exists.
+//
+// Parameters:
+//  PrimaryKey - String    - the name of primary key.
+//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
+//  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
+//                      Default value: Undefined.
+//
+// Returns:
+//  Arbitrary - deserialized context value if exists.
+//  Undefined - context value is absent.
+//
+Function ContextValue(PrimaryKey, Properties, JobResult = Undefined) Export
+    
+    Context = DeserializeContext(Properties.MessageId);
+    If Context = Undefined OR Context.Count() = 0 Then  
+        
+        ErrorDescription = StrTemplate(FL_ErrorsClientServer
+            .ErrorFailedToProcessMessageContext(), Properties.MessageId);
+        FL_InteriorUse.WriteLog("FoxyLink.Integration.ContextValue",
+            EventLogLevel.Error,
+            Metadata.Catalogs.FL_Messages,
+            ErrorDescription,
+            JobResult);
+        Return Undefined;
+                
+    EndIf;
+        
+    SearchResult = Context.Find(PrimaryKey, "PrimaryKey");
+    If SearchResult = Undefined Then
+        
+        ErrorDescription = FL_ErrorsClientServer.ErrorKeyIsMissingInObject(
+            "Context", Context, PrimaryKey);
+        FL_InteriorUse.WriteLog("FoxyLink.Integration.ContextValue",
+            EventLogLevel.Error,
+            Metadata.Catalogs.FL_Messages,
+            ErrorDescription,
+            JobResult);
+        Return Undefined;
+        
+    EndIf;
+    
+    Return SearchResult.Value;
+    
+EndFunction // ContextValue()
+
+// Returns deserialized context value if exists or undefined.
+//
+// Parameters:
+//  PrimaryKey - String    - the name of primary key.
+//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
+//
+// Returns:
+//  Arbitrary - deserialized context value if exists.
+//  Undefined - context value is absent.
+//
+Function ContextValueNoException(PrimaryKey, Properties) Export
+
+    Var MessageId;
+
+    If TypeOf(Properties) <> Type("Structure") 
+        OR NOT Properties.Property("MessageId", MessageId) Then
+        Return Undefined;
+    EndIf;
+
+    Context = DeserializeContext(MessageId);
+    If Context = Undefined OR Context.Count() = 0 Then  
+        Return Undefined;      
+    EndIf;
+        
+    SearchResult = Context.Find(PrimaryKey, "PrimaryKey");
+    If SearchResult = Undefined Then
+        Return Undefined;
+    EndIf;
+    
+    Return SearchResult.Value;
+    
+EndFunction // ContextValueNoException()
 
 // Deserializes a message tabular section or payload into context call.
 //
@@ -313,12 +397,7 @@ Function DeserializeContext(Val Message) Export
     If NOT QueryResult.IsEmpty() Then
         
         Context = QueryResult.Unload();
-        Context.Columns.Add("Value");
-        For Each Row In Context Do
-            Row.Value = FL_CommonUse.ValueFromXMLTypeAndValue(Row.XMLValue, 
-                Row.TypeName, Row.NamespaceURI);     
-        EndDo;
-        
+        JoinContextValueColumn(Context);
         Return Context; 
         
     EndIf;
@@ -468,24 +547,6 @@ EndFunction // NewInvocation()
 
 // Only for internal use.
 //
-Procedure TriggerMessage(Source, Exchange, OutputCopy)
-    
-    Message = GetMessage(Source);
-    MessageObject = Message.GetObject();
-    MessageObject.Routed = True;
-    
-    ExchangeJob = RouteToExchange(Message, Exchange);
-        NewRow = MessageObject.Exchanges.Add();
-        NewRow.Exchange = Exchange;
-        NewRow.Job = ExchangeJob;
-    MessageObject.Write();
-    
-    Catalogs.FL_Jobs.Trigger(ExchangeJob, True, OutputCopy);
-    
-EndProcedure // TriggerMessage()
-
-// Only for internal use.
-//
 Function CreateMessage(Invocation)
     
     Var Context, SessionContext;
@@ -524,31 +585,18 @@ EndFunction // CreateMessage()
 
 // Only for internal use.
 //
-Function RouteToExchange(MsgRef, Exchange)
-    
-    JobData = FL_BackgroundJob.NewJobData();
-    JobData.MethodName = "Catalogs.FL_Exchanges.ProcessMessage";
-    
-    InputParameter = JobData.Input.Add();
-    InputParameter.Name = "Exchange";
-    InputParameter.Value = Exchange;
-    
-    InputParameter = JobData.Input.Add();
-    InputParameter.Name = "Message";
-    InputParameter.Value = MsgRef;
-    
-    Return FL_BackgroundJob.Enqueue(JobData);  
-    
-EndFunction // RouteToExchange()
-
-// Only for internal use.
-//
 Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
     
     ExchangeEndpoints = ExchangeEndpoints(Source, Exchange);  
     For Each Endpoint In ExchangeEndpoints Do
         
+        // Checks whether message is passed through event filter 
+        If NOT PassedByEventFilter(Source, Endpoint) Then
+            Continue;
+        EndIf;
+        
         JobData = FL_BackgroundJob.NewJobData();
+        JobData.Invoke = Endpoint.Invoke;
         JobData.Isolated = Endpoint.Isolated;
         JobData.MethodName = Endpoint.EventHandler;
         JobData.Priority = Endpoint.Priority;
@@ -570,8 +618,10 @@ Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
         NewRow.Exchange = Endpoint.Exchange;
         NewRow.Job = ExchangeJob;
         
-        RouteToAppEndpoints(Source, Endpoint.Exchange, AppEndpoint, 
-            ExchangeJob);
+        If AppEndpoint <> Null Then
+            RouteToAppEndpoints(Source, Endpoint.Exchange, AppEndpoint, 
+                ExchangeJob);
+        EndIf;
         
     EndDo;
     
@@ -598,6 +648,7 @@ Procedure RouteToAppEndpoints(Source, Exchange, AppEndpoint, ExchangeJob)
         FillAppResources(Source, AppProperties, AppResources.FindRows(Filter));
         
         JobData = FL_BackgroundJob.NewJobData();
+        JobData.Invoke = TableRow.Invoke;
         JobData.Isolated = TableRow.Isolated;
         JobData.MethodName = "Catalogs.FL_Channels.ProcessMessage";
         JobData.Priority = TableRow.Priority;
@@ -662,6 +713,18 @@ Procedure FillAppResources(Source, AppProperties, AppResources)
     EndDo;    
     
 EndProcedure // FillAppResources()
+
+// Only for internal use.
+//
+Procedure JoinContextValueColumn(Context)
+    
+    Context.Columns.Add("Value");
+    For Each Row In Context Do
+        Row.Value = FL_CommonUse.ValueFromXMLTypeAndValue(Row.XMLValue, 
+            Row.TypeName, Row.NamespaceURI);     
+    EndDo;
+    
+EndProcedure // JoinContextValueColumn()
 
 // Only for internal use.
 //
@@ -740,8 +803,54 @@ EndFunction // ExchangeEndpoints()
 
 // Only for internal use.
 //
-Function AppEndpoints(Source, Exchange, AppEndpoint)
+Function PassedByEventFilter(Source, Endpoint)
     
+    FilterPassed = True;
+    FilterNotPassed = False;
+    
+    // Event source isn't set or unknown. 
+    If Endpoint.EventFilterDCSchema = Undefined
+        OR Endpoint.EventFilterDCSettings = Undefined Then
+        Return FilterPassed;
+    EndIf;
+    
+    DataCompositionSchema = Endpoint.EventFilterDCSchema.Get();
+    DataCompositionSettings = Endpoint.EventFilterDCSettings.Get();
+    
+    // Event filter isn't set.
+    If TypeOf(DataCompositionSchema) <> Type("DataCompositionSchema") Then
+        Return FilterPassed;
+    EndIf;
+    
+    If Source.Context.Count() <> 0 Then
+        Context = Source.Context.Unload();
+        JoinContextValueColumn(Context);
+    Else
+        // HTTP endpoint context.
+        Context = DeserializeContext(Source.Ref);    
+    EndIf;
+    
+    Settings = Catalogs.FL_Exchanges.NewExchangeSettings();
+    Settings.DataCompositionSchema = DataCompositionSchema;
+    Settings.DataCompositionSettings = DataCompositionSettings;
+    
+    OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(Settings, 
+        Context);
+        
+    ValueTable = New ValueTable;
+    FL_DataComposition.OutputInValueCollection(ValueTable, OutputParameters);    
+    If ValueTable.Count() > 0 Then
+        Return FilterPassed;
+    EndIf;
+    
+    Return FilterNotPassed;
+    
+EndFunction // PassedByEventFilter()
+
+// Only for internal use.
+//
+Function AppEndpoints(Source, Exchange, AppEndpoint)
+        
     Query = New Query;
     Query.Text = QueryTextAppEndpoints();
     Query.SetParameter("Exchange", Exchange);
@@ -821,8 +930,11 @@ Function QueryTextExchangeEndpoint()
     QueryText = "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
+        |   IsNull(OperationTable.Invoke, False) AS Invoke,
         |   IsNull(OperationTable.Isolated, False) AS Isolated,
-        |   IsNull(OperationTable.Priority, 5) AS Priority, 
+        |   IsNull(OperationTable.Priority, 5) AS Priority,
+        |   IsNull(EventTable.EventFilterDCSchema, Undefined) AS EventFilterDCSchema,
+        |   IsNull(EventTable.EventFilterDCSettings, Undefined) AS EventFilterDCSettings,
         |   IsNull(EventTable.EventHandler, &EventHandler) AS EventHandler,
         |   IsNull(EventTable.Transactional, False) AS Transactional
         |FROM
@@ -855,8 +967,11 @@ Function QueryTextExchangeEndpoints()
     QueryText = "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
+        |   IsNull(OperationTable.Invoke, False) AS Invoke,
         |   IsNull(OperationTable.Isolated, False) AS Isolated, 
-        |   IsNull(OperationTable.Priority, 5) AS Priority, 
+        |   IsNull(OperationTable.Priority, 5) AS Priority,
+        |   EventTable.EventFilterDCSchema AS EventFilterDCSchema,
+        |   EventTable.EventFilterDCSettings AS EventFilterDCSettings,
         |   EventTable.EventHandler AS EventHandler,
         |   EventTable.Transactional AS Transactional
         |FROM
@@ -900,6 +1015,7 @@ Function QueryTextAppEndpoint()
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
         |   AppEndpoints.AppEndpoint AS AppEndpoint,
+        |   IsNull(Operations.Invoke, False) AS Invoke,
         |   IsNull(Operations.Isolated, False) AS Isolated,
         |   IsNull(Operations.Priority, 5) AS Priority
         |FROM
@@ -957,6 +1073,7 @@ Function QueryTextAppEndpoints()
         |////////////////////////////////////////////////////////////////////////////////
         |SELECT
         |   AppEndpoints.AppEndpoint AS AppEndpoint,
+        |   Operations.Invoke AS Invoke,
         |   Operations.Isolated AS Isolated,
         |   Operations.Priority AS Priority
         |FROM
@@ -1028,8 +1145,7 @@ Function QueryTextMessagePayload()
     Return QueryText;
     
 EndFunction // QueryTextMessagePayload()
-
+    
 #EndRegion // ServiceProceduresAndFunctions
 
 #EndIf
-

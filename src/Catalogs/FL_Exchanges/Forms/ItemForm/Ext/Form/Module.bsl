@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -123,6 +123,29 @@ Procedure OperationPagesOnCurrentPageChange(Item, CurrentPage)
 EndProcedure // OperationPagesOnCurrentPageChange()
 
 &AtClient
+Procedure EventsSelection(Item, SelectedRow, Field, StandardProcessing)
+    
+    If Field.Name = "EventsEventName" Then
+        
+        AddEvent();
+        
+    ElsIf Field.Name = "EventsFilterPresentation" Then
+        
+        OpenForm("Catalog.FL_Messages.Form.EventsFilterForm", 
+            NewEventFilterFormParameters(SelectedRow), 
+            ThisObject,
+            New UUID, 
+            , 
+            ,
+            New NotifyDescription("DoAfterSetEventFilter", ThisObject, 
+                SelectedRow), 
+            FormWindowOpeningMode.LockOwnerWindow);        
+        
+    EndIf;
+    
+EndProcedure // EventsSelection()
+
+&AtClient
 Procedure EventsEventHandlerStartChoice(Item, ChoiceData, StandardProcessing)
     
     StandardProcessing = False;
@@ -146,11 +169,12 @@ Procedure ChannelsSelection(Item, SelectedRow, Field, StandardProcessing)
     StandardProcessing = False;
     SelectedRow = Object.Channels.FindByID(SelectedRow);
     
-    ChannelParameters = ChannelParameters(SelectedRow.Channel, "ChannelForm");
-    ChannelParameters.Insert("ChannelRef", SelectedRow.Channel);
+    AppEndpointParameters = ChannelParameters(SelectedRow.Channel, 
+        "ChannelForm");
+    AppEndpointParameters.Insert("AppEndpoint", SelectedRow.Channel);
  
-    OpenForm(ChannelParameters.FormName, 
-        ChannelParameters, 
+    OpenForm(AppEndpointParameters.FormName, 
+        AppEndpointParameters, 
         ThisObject,
         New UUID, 
         , 
@@ -239,6 +263,15 @@ EndProcedure // RowComposerSettingsOrderOnChange()
 
 #EndRegion // DataCompositionSettingsComposer
 
+&AtClient
+Procedure ResultSpreadsheetDocumentDetailProcessing(Item, Details, 
+    StandardProcessing)
+    
+    FL_InteriorUseClient.DetailProcessing(GetFromTempStorage(DetailsDataAddress), 
+        Details, StandardProcessing);
+        
+EndProcedure // ResultSpreadsheetDocumentDetailProcessing()
+
 #EndRegion // FormItemsEventHandlers
 
 #Region FormCommandHandlers
@@ -255,7 +288,7 @@ Procedure AddAppEndpoint(Command)
 EndProcedure // AddAppEndpoint()
 
 &AtClient
-Procedure AddEvent(Command)
+Procedure AddEvent(Command = Undefined)
     
     OpenForm("Catalog.FL_Exchanges.Form.EventsSelectionForm", 
         New Structure("Operation, MarkedEvents", RowOperation, MarkedEvents()), 
@@ -397,24 +430,9 @@ EndProcedure // EditAppEndpointResources()
 &AtClient
 Procedure EditDataCompositionSchema(Command)
     
-    #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then
-        
-        // Copy existing data composition schema.
-        DataCompositionSchema = XDTOSerializer.ReadXDTO(XDTOSerializer.WriteXDTO(
-            GetFromTempStorage(DataCompositionSchemaEditAddress)));
-        
-        Wizard = New DataCompositionSchemaWizard(DataCompositionSchema);
-        Wizard.Edit(ThisObject);
-        
-    #Else
-        
-        ShowMessageBox(Undefined,
-            NStr("en='To edit the layout scheme, run configuration in thick client mode.';
-                |ru='Для того, чтобы редактировать схему компоновки, необходимо запустить конфигурацию в режиме толстого клиента.';
-                |en_CA='To edit the layout scheme, run configuration in thick client mode.'"));
-        
-    #EndIf
-    
+    FL_DataCompositionClient.RunDataCompositionSchemaWizard(ThisObject,
+        DataCompositionSchemaEditAddress);
+            
 EndProcedure // EditDataCompositionSchema()
 
 &AtClient
@@ -424,7 +442,11 @@ Procedure EnqueueEvents(Command)
     If CurrentData <> Undefined Then
         
         FormParameters = New Structure;
-        FormParameters.Insert("Exchange", Object.Ref); 
+        FormParameters.Insert("Exchange", Object.Ref);
+        FormParameters.Insert("DataCompositionSchemaFilterAddress", 
+            CurrentData.EventFilterDCSchemaAddress);
+        FormParameters.Insert("DataCompositionSettingsFilterAddress", 
+            CurrentData.EventFilterDCSettingsAddress);
         FormParameters.Insert("EventSource", CurrentData.MetadataObject);
         FormParameters.Insert("Operation", CurrentData.Operation);
         
@@ -442,6 +464,7 @@ Procedure EnqueueEvents(Command)
         ShowQueryBox(New NotifyDescription("DoAfterEnqueueEvents", ThisObject),
             NStr("en='Enqueue event that is not connected with metadata directly?';
                 |ru='Отправить в очередь событие, которое напрямую не связано с метаданными?';
+                |uk='Надіслати в чергу подію, яка безпосередньо не звязана з метаданими?';
                 |en_CA='Enqueue event that is not connected with metadata directly?'"),
             QuestionDialogMode.YesNo, , DialogReturnCode.No);    
         
@@ -564,8 +587,13 @@ Procedure LoadBasicFormatInfo()
     FormatAPISchemaSupport = FPMetadata.Forms.Find("APICreationForm") <> Undefined;
 
     Items.DescribeAPI.Visible = FormatAPISchemaSupport;
-    Items.GenerateSpecificDocument.Title = StrTemplate("Generate (%1, ver. %2)", 
-        FormatProcessor.FormatShortName(), FormatProcessor.Version());
+    Items.GenerateSpecificDocument.Title = StrTemplate(
+        NStr("en='Generate (%1, ver. %2)';
+            |ru='Сформировать (%1, вер. %2)';
+            |uk='Сформувати (%1, вер. %2)';
+            |en_CA='Generate (%1, ver. %2)'"), 
+        FormatProcessor.FormatShortName(), 
+        FormatProcessor.Version());
                 
 EndProcedure // LoadBasicFormatInfo() 
 
@@ -770,25 +798,32 @@ Procedure GenerateSpreadsheetDocumentAtServer()
     // Start measuring.
     StartTime = CurrentUniversalDateInMilliseconds();
     
+    DetailsData = New DataCompositionDetailsData;
     DataCompositionSchema = GetFromTempStorage(
         DataCompositionSchemaEditAddress);     
     DataCompositionSettings = RowComposerSettings.GetSettings();
 
     DataCompositionTemplate = FL_DataComposition
         .NewTemplateComposerParameters();
-    DataCompositionTemplate.Schema   = DataCompositionSchema;
+    DataCompositionTemplate.DetailsData = DetailsData;
+    DataCompositionTemplate.Schema = DataCompositionSchema;
     DataCompositionTemplate.Template = DataCompositionSettings;
 
     OutputParameters = FL_DataComposition.NewOutputParameters();
     OutputParameters.DCTParameters = DataCompositionTemplate;
     OutputParameters.CanUseExternalFunctions = RowCanUseExternalFunctions;
+    OutputParameters.DetailsData = DetailsData;
     
     FL_DataComposition.OutputInSpreadsheetDocument(ResultSpreadsheetDocument, 
         OutputParameters);     
             
     // End measuring.
     TestingExecutionTime = CurrentUniversalDateInMilliseconds() - StartTime;
-        
+    
+    // Details data that should be placed in the temporary storage.
+    // This value is cleared when the form is closed.
+    DetailsDataAddress = PutToTempStorage(DetailsData, UUID);
+    
     Items.HiddenPageTestingResults.CurrentPage = 
         Items.HiddenPageTestingSpreadsheetDocument;
         
@@ -943,6 +978,7 @@ Procedure LoadOperationSettings()
             "HiddenGroupSettings", RowOperation);
            
         CurrentData = CurrentOperationData(RowOperation);
+        RowInvoke = CurrentData.Invoke;
         RowIsolated = CurrentData.Isolated;
         RowPriority = CurrentData.Priority;
         RowCanUseExternalFunctions = CurrentData.CanUseExternalFunctions;
@@ -952,7 +988,7 @@ Procedure LoadOperationSettings()
         // Create schema, if needed.
         If IsBlankString(CurrentData.DataCompositionSchemaAddress) Then
             CurrentData.DataCompositionSchemaAddress = PutToTempStorage(
-                New DataCompositionSchema, ThisObject.UUID);
+                New DataCompositionSchema, UUID);
         EndIf;
             
         FL_DataComposition.CopyDataCompositionSchema(
@@ -989,34 +1025,32 @@ EndProcedure // LoadOperationSettings()
 &AtServer
 Procedure SaveOperationSettings()
 
-    If Not IsBlankString(RowOperation) Then
+    If NOT IsBlankString(RowOperation) 
+        AND Items.OperationPages.ChildItems.Find(RowOperation) <> Undefined Then
         
-        If Items.OperationPages.ChildItems.Find(RowOperation) <> Undefined Then
+        ChangedData = CurrentOperationData(RowOperation);
+        ChangedData.Invoke = RowInvoke;
+        ChangedData.Isolated = RowIsolated;
+        ChangedData.Priority = RowPriority;
+        ChangedData.CanUseExternalFunctions = RowCanUseExternalFunctions;
         
-            ChangedData = CurrentOperationData(RowOperation);
-            ChangedData.Isolated = RowIsolated;
-            ChangedData.Priority = RowPriority;
-            ChangedData.CanUseExternalFunctions = RowCanUseExternalFunctions;
+        If RowDataCompositionSchemaModified Then
             
-            If RowDataCompositionSchemaModified Then
+            FL_DataComposition.CopyDataCompositionSchema(
+                ChangedData.DataCompositionSchemaAddress, 
+                DataCompositionSchemaEditAddress);
                 
-                FL_DataComposition.CopyDataCompositionSchema(
-                    ChangedData.DataCompositionSchemaAddress, 
-                    DataCompositionSchemaEditAddress);
-                    
-            EndIf;
-
-            If RowComposerSettingsModified Then
-                
-                FL_CommonUseClientServer.PutSerializedValueToTempStorage(
-                    RowComposerSettings.GetSettings(), 
-                    ChangedData.DataCompositionSettingsAddress, 
-                    ThisObject.UUID);
-                    
-            EndIf;
-          
         EndIf;
-        
+
+        If RowComposerSettingsModified Then
+            
+            FL_CommonUseClientServer.PutSerializedValueToTempStorage(
+                RowComposerSettings.GetSettings(), 
+                ChangedData.DataCompositionSettingsAddress, 
+                ThisObject.UUID);
+                
+        EndIf;
+                  
     EndIf;
     
     RowComposerSettingsModified = False;
@@ -1081,6 +1115,7 @@ Function CurrentOperationData(Val RowOperation)
         
         ErrorMessage = NStr("en='Critical error, operation not found.';
             |ru='Критическая ошибка, операция не найдена.';
+            |uk='Критична помилка, операцію не знайдено.';
             |en_CA='Critical error, operation not found.'");
         
         Raise ErrorMessage;     
@@ -1215,6 +1250,56 @@ Procedure DoAfterEnqueueEvents(QuestionResult, AdditionalParameters) Export
 
 EndProcedure // DoAfterEnqueueEvents()
 
+// Sets a new event filter for subscription on event.
+//
+// Parameters:
+//  ClosureResult        - Arbitrary - the value transferred when you call 
+//                                      the Close method of the opened form.
+//  AdditionalParameters - Arbitrary - the value specified when the 
+//                                      NotifyDescription object was created.
+//
+&AtClient
+Procedure DoAfterSetEventFilter(ClosureResult, AdditionalParameters) Export
+    
+    If ClosureResult <> Undefined
+        AND TypeOf(ClosureResult) = Type("Structure") Then
+        SetEventFilterAtServer(ClosureResult, AdditionalParameters);    
+        
+    EndIf;
+    
+EndProcedure // DoAfterSetEventFilter()
+
+// Only for internal use.
+//
+&AtClient
+Function NewEventFilterFormParameters(Identifier)
+    
+    CurrentData = Object.Events.FindById(Identifier);
+    If CurrentData = Undefined Then
+        
+        ErrorMessage = NStr("en='Critical error, selected event not found.';
+            |ru='Критическая ошибка, выбранное событие не найдено.';
+            |uk='Критична помилка, вибрана подія не знайдена.';
+            |en_CA='Critical error, selected event not found.'");
+        Raise ErrorMessage;
+        
+    EndIf;
+    
+    EventFilterFormParameters = New Structure;
+    EventFilterFormParameters.Insert("DataCompositionSchemaAddress");
+    EventFilterFormParameters.Insert("DataCompositionSettingsAddress");
+    EventFilterFormParameters.Insert("EventSource");
+    
+    EventFilterFormParameters.DataCompositionSchemaAddress = 
+        CurrentData.EventFilterDCSchemaAddress;
+    EventFilterFormParameters.DataCompositionSettingsAddress = 
+        CurrentData.EventFilterDCSettingsAddress;
+    EventFilterFormParameters.EventSource = CurrentData.MetadataObject;
+    
+    Return EventFilterFormParameters;
+    
+EndFunction // NewEventFilterFormParameters()
+
 // Only for internal use.
 //
 &AtServer
@@ -1267,7 +1352,27 @@ Procedure AddEventAtServer(EventValueList)
     FL_CommonUseClientServer.DeleteRowsByFilter(Object.Events, 
         FilterParameters, Modified);
     
-EndProcedure // AddEventAtServer() 
+EndProcedure // AddEventAtServer()
+
+// Only for internal use.
+//
+&AtServer
+Procedure SetEventFilterAtServer(EventFilterFormParameters, Identifier)
+    
+    CurrentData = Object.Events.FindById(Identifier);
+    If CurrentData = Undefined Then
+        Return;        
+    EndIf;
+    
+    Modified = True;
+    CurrentData.FilterPresentation = EventFilterFormParameters
+        .FilterPresentation;
+    CurrentData.EventFilterDCSchemaAddress = EventFilterFormParameters
+        .DataCompositionSchemaAddress;
+    CurrentData.EventFilterDCSettingsAddress = EventFilterFormParameters
+        .DataCompositionSettingsAddress;    
+    
+EndProcedure // SetEventFilterAtServer()
 
 // Only for internal use.
 //

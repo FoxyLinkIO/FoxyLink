@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -28,16 +28,15 @@
 // the following Wednesday.
 //
 // Parameters:
-//  Jobs   - Array              - array of references to the jobs to be triggered.
-//         - CatalogRef.FL_Jobs - reference to the job to be triggered.
-//  Invoke - Boolean            - if True triggers all subordinate jobs during this call.
+//  Jobs          - Array              - array of references to the jobs to be triggered.
+//                - CatalogRef.FL_Jobs - reference to the job to be triggered.
+//  Invoke        - Boolean            - if True triggers all subordinate jobs during this call.
 //                          Default value: False.
-//  OutputCopy        - ValueTable         - helps to make copy of output parameters.
-//      ** Name  - String    - parameter name.
-//      ** Value - Arbitrary - parameter value.
+//  JobResultCopy - Structure          - returns the copy of last job result execution.
+//                                       See function Catalogs.FL_Jobs.NewJobResult.
 //                          Default value: Undefined.
 //
-Procedure Trigger(Jobs, Invoke = False, OutputCopy = Undefined) Export
+Procedure Trigger(Jobs, Invoke = False, JobResultCopy = Undefined) Export
        
     ValidJobs = New Array;
     ValidateJobType(ValidJobs, Jobs);
@@ -48,7 +47,7 @@ Procedure Trigger(Jobs, Invoke = False, OutputCopy = Undefined) Export
             OR FL_CommonUse.ObjectAttributeValue(Job, "Transactional") Then
             
             // Helps to avoid hierarchical transaction errors.
-            ProcessJob(Job, Invoke, , OutputCopy);
+            ProcessJob(Job, Invoke, , JobResultCopy);
             
         Else
             
@@ -58,7 +57,7 @@ Procedure Trigger(Jobs, Invoke = False, OutputCopy = Undefined) Export
                 
                 BeginTransaction();
 
-                ProcessJob(Job, Invoke, , OutputCopy);
+                ProcessJob(Job, Invoke, , JobResultCopy);
                 
                 CommitTransaction();
                 
@@ -97,6 +96,7 @@ Function Create(JobData) Export
     
     ListOfProperties = "CreatedAt, 
         |ExpireAt,
+        |Invoke,
         |Isolated,
         |MethodName, 
         |Priority, 
@@ -205,7 +205,9 @@ EndProcedure // AddToJobResult()
 //                                  Default value: Undefined.
 //      * CreatedAt     - Number               - job data creation time.
 //      * ExpireAt      - Number               - job data expiration time.
-//      * Isolated      - Boolean              - selps to protect each job from other jobs.
+//      * Invoke        - Boolean              - if True triggers all subordinate jobs during single call.
+//                                  Default value: False.
+//      * Isolated      - Boolean              - helps to protect each job from other jobs.
 //                                  Default value: False.      
 //      * MethodName    - String               - name of non-global common 
 //                              module method having the ModuleName.MethodName form.
@@ -231,6 +233,7 @@ Function NewJobData() Export
     JobData.Insert("Continuations");
     JobData.Insert("CreatedAt", CurrentUniversalDateInMilliseconds());
     JobData.Insert("ExpireAt");
+    JobData.Insert("Invoke", False);
     JobData.Insert("Isolated", False);
     JobData.Insert("MethodName");
     JobData.Insert("Priority", NormalPriority);
@@ -247,6 +250,10 @@ EndFunction // NewJobData()
 
 // Returns a new job result structure.
 //
+// Parameters:
+//  Log - Boolean - shows whether log is to be turned on.
+//          Default value: False.
+//
 // Returns:
 //  Structure - the new job result with values:
 //      * AppEndpoint  - CatalogRef.FL_Channels - reference to the app endpoint.
@@ -258,7 +265,7 @@ EndFunction // NewJobData()
 //          ** Name  - String    - parameter name.
 //          ** Value - Arbitrary - parameter value.
 //
-Function NewJobResult() Export
+Function NewJobResult(Log = False) Export
 
     JobResult = New Structure;
     JobResult.Insert("AppEndpoint");
@@ -267,6 +274,10 @@ Function NewJobResult() Export
     JobResult.Insert("Success", False);
     JobResult.Insert("Output", NewInputOutputTable());
 
+    If Log Then
+        JobResult.LogAttribute = "";    
+    EndIf;
+    
     Return JobResult;
     
 EndFunction // NewJobResult()
@@ -400,7 +411,7 @@ EndFunction // QueryTextParentJobsOutputTable()
 
 // Only for internal use.
 //
-Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
+Procedure ProcessJob(Job, Invoke, Output = Undefined, JobResultCopy = Undefined)
        
     Var BasicResult;
     
@@ -408,6 +419,9 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
     
     JobObject = Job.GetObject();
     JobObject.Output.Clear();
+    If JobObject.Invoke Then
+        Invoke = JobObject.Invoke;   
+    EndIf;
 
     Algorithm = BuildAlgorithm(JobObject, Output);
     Execute Algorithm;
@@ -425,6 +439,7 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
     EndIf;
         
     NewLogRow = JobObject.Log.Add();
+    NewLogRow.InitializedAt = StartTime;
     FinalResult.Property("LogAttribute", NewLogRow.LogAttribute);
     FinalResult.Property("StatusCode", NewLogRow.StatusCode);
     FinalResult.Property("Success", NewLogRow.Success);
@@ -434,9 +449,8 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
         JobObject.State = Catalogs.FL_States.Failed;       
     EndIf;
 
-    If TypeOf(OutputCopy) = Type("ValueTable") Then
-        FL_CommonUseClientServer.ExtendValueTable(FinalResult.Output, 
-            OutputCopy);    
+    If TypeOf(JobResultCopy) = Type("Structure") Then
+        JobResultCopy = FL_CommonUseClientServer.CopyStructure(FinalResult);   
     EndIf;
     
     // If message size exceeded the maximum we have to process 
@@ -455,15 +469,15 @@ Procedure ProcessJob(Job, Invoke, Output = Undefined, OutputCopy = Undefined)
     // End measuring and recording performance metrics.
     RecordJobObjectPerformanceMetrics(JobObject, StartTime); 
     
-    ProcessSubordinateJobs(Job, FinalResult.Output, OutputCopy, 
+    ProcessSubordinateJobs(Job, FinalResult.Output, JobResultCopy, 
         JobObject.State, Invoke, SizeExceeded);
         
 EndProcedure // ProcessJob()
 
 // Only for internal use.
 //
-Procedure ProcessSubordinateJobs(ParentJob, Output, OutputCopy, State, Invoke,
-    SizeExceeded)
+Procedure ProcessSubordinateJobs(ParentJob, Output, JobResultCopy, State, 
+    Invoke, SizeExceeded)
     
     If State <> Catalogs.FL_States.Succeeded Then
         Return;
@@ -476,20 +490,16 @@ Procedure ProcessSubordinateJobs(ParentJob, Output, OutputCopy, State, Invoke,
             
             // It is not needed to change state here because transaction is active
             // ChangeState(SubordinateJob, Catalogs.FL_States.Processing);.
-            ProcessJob(SubordinateJob, Invoke, Output, OutputCopy);
+            ProcessJob(SubordinateJob, Invoke, Output, JobResultCopy);
             
-            // If the message size of parent job is exceeded the maximum, 
-            // it is needed to check child job state. If child job is failed,
-            // it is needed to mark parent job as failed too.
-            If SizeExceeded Then
-                
-                CurrentState = FL_CommonUse.ObjectAttributeValue(
-                    SubordinateJob, "State");   
-                If CurrentState <> Catalogs.FL_States.Succeeded Then   
-                    ChangeState(ParentJob, Catalogs.FL_States.Failed);    
-                EndIf;    
-                    
-            EndIf;
+            // If the message size of parent job is exceeded the maximum 
+            // or invoke is set, it is needed to check child job state. 
+            // If child job is failed, it is needed to mark parent job as failed too.
+            CurrentState = FL_CommonUse.ObjectAttributeValue(
+                SubordinateJob, "State");   
+            If CurrentState <> Catalogs.FL_States.Succeeded Then   
+                ChangeState(ParentJob, Catalogs.FL_States.Failed);    
+            EndIf;    
             
         Else
             
@@ -505,12 +515,14 @@ EndProcedure // ProcessSubordinateJobs()
 
 // Only for internal use.
 //
-Procedure RecordJobPerformanceMetrics(Job, State, PerformanceDuration) 
+Procedure RecordJobPerformanceMetrics(Job, State, PerformanceDuration, 
+    InitializedAt = Undefined) 
     
     RecordManager = InformationRegisters.FL_JobState.CreateRecordManager();
     RecordManager.Job = Job;
     RecordManager.State = State;
     RecordManager.CreatedAt = CurrentUniversalDateInMilliseconds();
+    RecordManager.InitializedAt = InitializedAt;
     RecordManager.PerformanceDuration = PerformanceDuration; 
     RecordManager.Write();
     
@@ -525,7 +537,8 @@ Procedure RecordJobObjectPerformanceMetrics(JobObject, StartTime = Undefined)
     EndIf;
     
     Duration = CurrentUniversalDateInMilliseconds() - StartTime;
-    RecordJobPerformanceMetrics(JobObject.Ref, JobObject.State, Duration);
+    RecordJobPerformanceMetrics(JobObject.Ref, JobObject.State, Duration, 
+        StartTime);
     
 EndProcedure // RecordJobObjectPerformanceMetrics()
 

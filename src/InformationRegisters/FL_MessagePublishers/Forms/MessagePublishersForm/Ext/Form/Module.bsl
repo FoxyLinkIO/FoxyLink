@@ -117,6 +117,12 @@ Procedure LoadBasicEventPublishers()
     ValueTree = FL_CommonUse.ConfigurationMetadataTree(Filter);
     
     // Avoiding possible stack overflow
+    SearchResult = ValueTree.Rows.Find("FL_Jobs", "Name", True);
+    If SearchResult <> Undefined Then
+        SearchResult.Parent.Rows.Delete(SearchResult);
+    EndIf;
+    
+    // Avoiding possible stack overflow
     SearchResult = ValueTree.Rows.Find("FL_Messages", "Name", True);
     If SearchResult <> Undefined Then
         SearchResult.Parent.Rows.Delete(SearchResult);

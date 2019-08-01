@@ -19,38 +19,80 @@
 
 #Region ProgramInterface
 
-// Adds field value to channel data.
+// Adds field value to collection of channel data.
 //
 // Parameters:
-//  ChannelData - FormDataCollection - collection with channel data.
-//              - ValueTable         - value table with channel data.
-//  FieldName   - String             - field name.
-//  FieldValue  - String             - field value.
+//  Collection - FormDataCollection - collection with channel data.
+//             - ValueTable         - value table with channel data.
+//  FieldName  - String             - field name.
+//  FieldValue - String             - field value.
 //
-Procedure AddFieldValue(ChannelData, FieldName, FieldValue) Export
+Procedure AddFieldValue(Collection, FieldName, FieldValue) Export
     
-    NewChannelDataRow = ChannelData.Add();
-    NewChannelDataRow.FieldName  = FieldName;
-    NewChannelDataRow.FieldValue = FieldValue;
+    NewCollectionRow = Collection.Add();
+    NewCollectionRow.FieldName  = FieldName;
+    NewCollectionRow.FieldValue = FieldValue;
     
 EndProcedure // AddFieldValue()
+
+// Drops field value in collection of channel data.
+//
+// Parameters:
+//  Collection - FormDataCollection - collection with channel data.
+//             - ValueTable         - value table with channel data.
+//  FieldName  - String             - field name.
+//
+Procedure DropFieldValue(Collection, FieldName) Export
+    
+    Index = Collection.Count();
+    While Index > 0 Do
+        
+        Index = Index - 1;
+        CollectionRow = Collection[Index];
+        If CollectionRow.FieldName = FieldName Then
+            Collection.Delete(CollectionRow);    
+        EndIf;
+        
+    EndDo;
+        
+EndProcedure // DropFieldValue() 
+
+// Sets or adds field value in collection of channel data.
+//
+// Parameters:
+//  Collection - FormDataCollection - collection with channel data.
+//             - ValueTable         - value table with channel data.
+//  FieldName  - String             - field name.
+//  FieldValue - String             - field value.
+//
+Procedure SetFieldValue(Collection, FieldName, FieldValue) Export
+    
+    FilterParameters = New Structure("FieldName", FieldName);
+    FilterResults = Collection.FindRows(FilterParameters);
+    If FilterResults.Count() > 0 Then
+        FilterResults[0].FieldValue = FieldValue;
+    Else
+        AddFieldValue(Collection, FieldName, FieldValue);  
+    EndIf;    
+    
+EndProcedure // SetFieldValue()  
 
 // Returns field value by the passed field name.
 //
 // Parameters:
-//  ChannelData - FormDataCollection - collection with channel data.
-//              - ValueTable         - value table with channel data.
-//  FieldName   - String             - field name.
+//  Collection - FormDataCollection - collection with channel data.
+//             - ValueTable         - value table with channel data.
+//  FieldName  - String             - field name.
 //
 // Returns:
 //  String - field value.
 //
-Function FieldValue(ChannelData, FieldName) Export
+Function FieldValue(Collection, FieldName) Export
     
     FilterParameters = New Structure("FieldName", FieldName);
-    FilterResult = ChannelData.FindRows(FilterParameters);
-    If FilterResult.Count() = 1 Then
-        Return FilterResult[0].FieldValue;
+    FilterResults = Collection.FindRows(FilterParameters);
+    If FilterResults.Count() = 1 Then
+        Return FilterResults[0].FieldValue;
     EndIf;
     
     Raise NStr("en='Value not found or duplicated.';
@@ -63,23 +105,25 @@ EndFunction // FieldValue()
 // Returns field value by the passed field name without exception.
 //
 // Parameters:
-//  ChannelData - FormDataCollection - collection with channel data.
-//              - ValueTable         - value table with channel data.
-//  FieldName   - String             - field name.
-//
+//  Collection   - FormDataCollection - collection with channel data.
+//               - ValueTable         - value table with channel data.
+//  FieldName    - String             - field name.
+//  DefaultValue - Arbitrary          - default value if exist.
+//                          Default value: Undefined.
 // Returns:
-//  String    - field value.
-//  Undefined - field value not found.
+//  String - field value.
+//  Undefined, Arbitrary - field value not found; default value returns.
 //
-Function FieldValueNoException(ChannelData, FieldName) Export
+Function FieldValueNoException(Collection, FieldName, 
+    DefaultValue = Undefined) Export
     
     FilterParameters = New Structure("FieldName", FieldName);
-    FilterResult = ChannelData.FindRows(FilterParameters);
-    If FilterResult.Count() = 1 Then
-        Return FilterResult[0].FieldValue;
+    FilterResults = Collection.FindRows(FilterParameters);
+    If FilterResults.Count() = 1 Then
+        Return FilterResults[0].FieldValue;   
     EndIf;
     
-    Return Undefined;
+    Return DefaultValue;
     
 EndFunction // FieldValueNoException()
    

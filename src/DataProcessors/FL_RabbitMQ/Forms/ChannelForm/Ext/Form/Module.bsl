@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -22,29 +22,13 @@
 &AtServer
 Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
-    Var ChannelRef;
-    
     If Parameters.Property("AutoTest") Then
         Return;
     EndIf;
     
-    If Parameters.Property("ChannelRef", ChannelRef) Then
+    FL_InteriorUse.FillAppEndpointChannelFormData(AppEndpoint, Object, 
+        Parameters);
         
-        For Each Item In ChannelRef.ChannelData Do
-            FillPropertyValues(Object.ChannelData.Add(), Item);
-        EndDo;
-        
-        For Each Item In ChannelRef.EncryptedData Do
-            FillPropertyValues(Object.EncryptedData.Add(), Item);
-        EndDo;
-            
-    Else
-        
-        CopyFormData(Parameters.ChannelData, Object.ChannelData);
-        CopyFormData(Parameters.EncryptedData, Object.EncryptedData);
-        
-    EndIf;
-    
     UpdateRabbitMQView();
     
 EndProcedure // OnCreateAtServer()
@@ -338,7 +322,7 @@ Function DeliverToAppEndpoint(MainObject, ResourceName)
     FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
         "Path", ResourceName);
     
-    JobResult = Catalogs.FL_Jobs.NewJobResult();
+    JobResult = Catalogs.FL_Jobs.NewJobResult(True);
     MainObject.DeliverMessage(Undefined, Undefined, JobResult); 
         
     LogAttribute = LogAttribute + JobResult.LogAttribute;

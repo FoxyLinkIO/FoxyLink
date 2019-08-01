@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -136,50 +136,6 @@ EndProcedure // OutputInValueCollection()
 
 #Region ServiceInterface
 
-// Creates data composition schema from the data sources and data sets and
-// copies data composition schema to the destination address.
-//
-// Parameters:
-//  DataSources        - Array  - data source items.
-//          see function FL_DataComposition.NewDataCompositionSchemaDataSource.
-//  DataSets           - Array  - data set items.
-//          see function FL_DataComposition.NewDataCompositionSchemaDataSetQuery.
-//          see function FL_DataComposition.NewDataCompositionSchemaDataSetObject.
-//          see function FL_DataComposition.NewDataCompositionSchemaDataSetUnion.
-//  DestinationAddress - String - the address to copy data composition schema in.
-//  UUID               - UUID   - an unique identifier of the form in the 
-//          temporary storage of which the data should be placed
-//
-Procedure CreateDataCompositionSchema(DataSources, DataSets, DestinationAddress, 
-    UUID) Export
-    
-    // Create a data composition schema.
-    DataCompositiomSchema = New DataCompositionSchema;
-    
-    // Determine the data sources for the schema.
-    For Each DataSource In DataSources Do
-        FillPropertyValues(DataCompositiomSchema.DataSources.Add(), 
-            DataSource);
-    EndDo;
-
-    // Determine the data sets for the schema.
-    For Each DataSet In DataSets Do
-        
-        NewDataSet = DataCompositiomSchema.DataSets.Add(DataSet.Type);
-        FillPropertyValues(NewDataSet, DataSet, , "Fields"); 
-        
-        // Determine the data fields for the data set.
-        For Each Field In DataSet.Fields Do
-            NewField = NewDataSet.Fields.Add(Field.Type);
-            FillPropertyValues(NewField, Field);
-        EndDo;
-        
-    EndDo;
-    
-    DestinationAddress = PutToTempStorage(DataCompositiomSchema, UUID);
-    
-EndProcedure // CreateDataCompositionSchema() 
-
 // Copies data composition schema from the source address to the destination address.
 //
 // Parameters:
@@ -307,7 +263,7 @@ Procedure SetDataToSettingsComposer(SettingsComposer, Context) Export
     EndIf;
     
     If TypeOf(Context) = Type("CatalogTabularSection.FL_Messages.Context") Then
-        ConvertedContext = Context.Unload();
+        ConvertedContext = Context.Unload();        
     Else
         ConvertedContext = Context;    
     EndIf;
@@ -328,6 +284,132 @@ Procedure SetDataToSettingsComposer(SettingsComposer, Context) Export
     FillDataCompositionParameterValueCollection(DataParameters, ConvertedContext);
                                 
 EndProcedure // SetDataToSettingsComposer()
+
+// Creates data composition schema from the data sources and data sets.
+//
+// Parameters:
+//  DataSources        - Array  - data source items.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSource.
+//  DataSets           - Array  - data set items.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSetQuery.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSetObject.
+//          see function FL_DataComposition.NewDataCompositionSchemaDataSetUnion.
+//
+// Returns:
+//  DataCompositiomSchema - a new data composition schema. 
+//
+Function CreateDataCompositionSchema(DataSources, DataSets) Export
+    
+    // Create a data composition schema.
+    DataCompositiomSchema = New DataCompositionSchema;
+    
+    // Determine the data sources for the schema.
+    For Each DataSource In DataSources Do
+        FillPropertyValues(DataCompositiomSchema.DataSources.Add(), 
+            DataSource);
+    EndDo;
+
+    // Determine the data sets for the schema.
+    For Each DataSet In DataSets Do
+        
+        NewDataSet = DataCompositiomSchema.DataSets.Add(DataSet.Type);
+        FillPropertyValues(NewDataSet, DataSet, , "Fields"); 
+        
+        // Determine the data fields for the data set.
+        For Each Field In DataSet.Fields Do
+            NewField = NewDataSet.Fields.Add(Field.Type);
+            FillPropertyValues(NewField, Field);
+        EndDo;
+        
+    EndDo;
+    
+    Return DataCompositiomSchema;
+    
+EndFunction // CreateDataCompositionSchema() 
+
+// Creates data composition schema based on event source.
+//
+// Parameters:
+//  EventSource    - String - object full name of a configuration. 
+//                            E.g. the Catalog.Nomenclature, Document.Employment.
+//  MaxResults    - Number  - maximun number of output results.
+//                      Default value: 500.
+//  UseParameters - Boolean - if value is true, schema parameters are filled by primary keys.
+//                      Default value: False.
+//
+// Returns:
+//  DataCompositiomSchema - a new data composition schema. 
+//
+Function CreateEventSourceDataCompositionSchema(EventSource, 
+    MaxResults = 500, UseParameters = False) Export
+    
+    // Getting primary keys from metadata object.
+    PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
+        Metadata.FindByFullName(EventSource));
+    If PrimaryKeys.Count() = 0 Then
+        Return New DataCompositionSchema;    
+    EndIf;
+           
+    // Creating data source
+    DataSource = NewDataCompositionSchemaDataSource();
+    DataSources = New Array;
+    DataSources.Add(DataSource);
+    
+    // Creating data set
+    DataSet = NewDataCompositionSchemaDataSetQuery();
+    DataSet.Query = CreateEventSourceQueryText(EventSource, PrimaryKeys, 
+        UseParameters);
+    For Each PrimaryKey In PrimaryKeys Do
+        
+        DataSetField = NewDataCompositionSchemaDataSetField();
+        DataSetField.Title = PrimaryKey.Key;
+        DataSetField.DataPath = PrimaryKey.Key;
+        DataSetField.Field = PrimaryKey.Key;
+        DataSetField.ValueType = New TypeDescription(PrimaryKey.Value);
+        
+        DataSet.Fields.Add(DataSetField);
+        
+    EndDo;
+    
+    DataSets = New Array;
+    DataSets.Add(DataSet);
+     
+    DataCompositionSchema = CreateDataCompositionSchema(DataSources, DataSets);
+    If UseParameters Then
+        For Each PrimaryKey In PrimaryKeys Do
+            SchemaParameter = DataCompositionSchema.Parameters.Add();
+            SchemaParameter.DenyIncompleteValues = True;
+            SchemaParameter.Name = PrimaryKey.Key;
+            SchemaParameter.Title = PrimaryKey.Key;
+            SchemaParameter.Use = DataCompositionParameterUse.Always;
+            SchemaParameter.UseRestriction = True;
+            SchemaParameter.ValueType = New TypeDescription(PrimaryKey.Value);
+        EndDo;
+    EndIf;
+    
+    DataCompositionSettings = DataCompositionSchema.DefaultSettings;
+    Selection = DataCompositionSettings.Selection;
+    Structure = DataCompositionSettings.Structure;
+    DataCompositionGroup = Structure.Add(Type("DataCompositionGroup"));
+    DataCompositionGroup.Use = True;
+    DataCompositionGroup.Name = "FoxyLinkGroup";
+    DataCompositionGroup.Order.Items.Add(
+        Type("DataCompositionAutoOrderItem"));
+    DataCompositionGroup.Selection.Items.Add(
+        Type("DataCompositionAutoSelectedField"));
+    DataCompositionGroup.OutputParameters.SetParameterValue("RecordsCount", 
+        MaxResults);
+        
+    For Each PrimaryKey In PrimaryKeys Do
+        SelectedField = Selection.Items.Add(
+            Type("DataCompositionSelectedField"));
+        SelectedField.Field = New DataCompositionField(PrimaryKey.Key);
+        SelectedField.Use = True;
+    EndDo;
+        
+    Return DataCompositionSchema;
+
+EndFunction // CreateEventSourceDataCompositionSchema()
 
 // Creates description of data source of data composition schema.
 //
@@ -770,6 +852,48 @@ EndFunction // DataCompositionSettings()
 
 #EndRegion // SettingsComposer
 
+#Region QuerySchema
+
+// Only for internal use.
+//
+Function CreateEventSourceQueryText(EventSource, PrimaryKeys, UseParameters)
+    
+    QuerySchema = New QuerySchema;
+    QueryBatch = QuerySchema.QueryBatch[0];
+    OperatorSelect = QueryBatch.Operators[0];
+    
+    // Adding query source 
+    OperatorSelect.Sources.Add(EventSource, "EventSource");
+    AvailableTable = QueryBatch.AvailableTables.Find(EventSource); 
+    
+    // Selecting query fields
+    Index = 0;
+    For Each PrimaryKey In PrimaryKeys Do
+        
+        OperatorSelect.SelectedFields.Add(PrimaryKey.Key);  
+        QueryBatch.Columns[Index].Alias = PrimaryKey.Key;
+        
+        If UseParameters Then
+            OperatorSelect.Filter.Add(StrTemplate("%1.%2 = &%2", "EventSource", 
+                PrimaryKey.Key));
+        EndIf;
+            
+        Index = Index + 1;
+        
+    EndDo;
+       
+    For Each Field In AvailableTable.Fields Do
+        If OperatorSelect.SelectedFields.Find(Field.Name) = Undefined Then
+            OperatorSelect.SelectedFields.Add(Field);
+        EndIf;
+    EndDo;
+            
+    Return QuerySchema.GetQueryText();
+    
+EndFunction // CreateEventSourceQueryText()
+
+#EndRegion // QuerySchema
+
 // Recursively fills the report structure from nested data composition 
 // layouts in main data composition template. 
 //
@@ -882,15 +1006,10 @@ Procedure FillParameterValueCollectionFromValueTable(DataParameters, Context)
                 
         ElsIf Parameters.Count() > 1 Then 
             
-            If NOT Item.ValueListAllowed Then
+            If NOT Item.ValueListAllowed Then   
                 
-                ErrorMessage = NStr("en='The invocation context has several primary key values.
-                    |Parameter property {ValueListAllowed} is set to value {False}.';
-                    |ru='Контекст вызова имеет несколько значений первичных ключей.
-                    |Свойству параметра {ДоступенСписокЗначений} установлено значение {Ложь}.';
-                    |en_CA='The invocation context has several primary key values.
-                    |Parameter property {ValueListAllowed} is set to value {False}.'");
-                        
+                ErrorMessage = FL_ErrorsClientServer
+                    .ErrorDataCompositionDataParameterValueListNotAllowed(PrimaryKey);
                 Raise ErrorMessage;
                 
             EndIf;
@@ -900,9 +1019,9 @@ Procedure FillParameterValueCollectionFromValueTable(DataParameters, Context)
                 ValueList.Add(Parameter.Value);        
             EndDo;
             
-            SetDataCompositionDataParameterValue(DataParameters, PrimaryKey, 
+             SetDataCompositionDataParameterValue(DataParameters, PrimaryKey, 
                 ValueList);
-            
+                        
         EndIf;
                 
     EndDo;
@@ -926,33 +1045,21 @@ Procedure FillParameterValueCollectionFromStructure(DataParameters, Settings)
         Parameter = New DataCompositionParameter(Setting.Key);   
         AvailableParameter = AvailableParameters.FindParameter(Parameter);
         If AvailableParameter = Undefined Then
-            
-            ErrorMessage = StrTemplate(
-                NStr("en='Warning: Available parameter not found for {%1}.'; 
-                    |ru='Предупреждение: Доступный параметр не найден для {%1}.'; 
-                    |uk='Попередження: Доступний параметр не знайдено для {%1}.';
-                    |en_CA='Warning: Available parameter not found for {%1}.';"),
-                Setting.Key);
-            ErrorMessages.Add(ErrorMessage);
+            ErrorMessages.Add(FL_ErrorsClientServer
+                .WarningDataCompositionAvailableParameterNotFound(Setting.Key));
             Continue;
-            
         EndIf;
         
-        ConversionResult = FL_CommonUse.ConvertValueIntoPlatformObject(
-            Setting.Value, AvailableParameter.Type.Types());
+        ConversionResult = ConvertDataTransferObject(AvailableParameter, Setting);
         If ConversionResult.TypeConverted Then
-            
             SetDataCompositionDataParameterValue(DataParameters, Setting.Key, 
                 ConversionResult.ConvertedValue);
-                
         Else
-            
             CriticalError = True;
             FL_ErrorsClientServer.PersonalizeErrorsWithKey(
                 ConversionResult.ErrorMessages, ErrorMessages, Setting.Key);
-            
         EndIf;
-        
+                
     EndDo;
     
     If CriticalError Then
@@ -982,15 +1089,72 @@ Procedure SetDataCompositionDataParameterValue(DataParameters, ID, Value)
         // Research is needed whether we can add new parameters.        
         Raise StrTemplate(NStr("en='For field {%1} adding new elements into 
                 |{DataCompositionParameterValueCollection} not implemented.';
-            |ru='Для поля {%1} добавление новых элементов в 
+                |ru='Для поля {%1} добавление новых элементов в 
                 |{КоллекцияЗначенийПараметровКомпоновкиДанных} не реализовано.';
-            |en_CA='For field {%1} adding new elements into 
+                |uk='Для поля {%1} додавання нових елементів в 
+                |{КоллекцияЗначенийПараметровКомпоновкиДанных} не реалізовано.';
+                |en_CA='For field {%1} adding new elements into 
                 |{DataCompositionParameterValueCollection} not implemented.'"),
             ID);
         
     EndIf;
 
-EndProcedure // SetValueOfDataCompositionAvailableParameter()
+EndProcedure // SetDataCompositionDataParameterValue()
+
+// Convert data transfer object to 1C:Enterprise object.
+//
+// Parameters:
+//  Parameter - DataCompositionAvailableParameter - available parameter.
+//  DTObject  - Arbitrary                         - DTO object to be converted.
+//
+// Returns:
+//  Structure - convertion result structure. See function FL_CommonUse.NewConversionResult.
+//
+Function ConvertDataTransferObject(Parameter, DTObject)
+
+    ConversionResult = FL_CommonUse.NewConversionResult();
+    DTObjectType = TypeOf(DTObject.Value);
+    If NOT Parameter.Type.ContainsType(Type("ValueList")) 
+        AND DTObjectType = Type("Array") Then
+        
+        ConversionResult.ErrorMessages.Add(FL_ErrorsClientServer
+            .ErrorDataCompositionDataParameterValueListNotAllowed("%1"));
+        Return ConversionResult;
+        
+    EndIf;
+
+    SupportedTypes = Parameter.ValueType.Types();
+    If DTObjectType = Type("Array") Then
+        
+        // It's needed to check if any errors were during processing.
+        ConversionResult.TypeConverted = True;
+        ConversionResult.ConvertedValue = New ValueList();
+        For Each Item In DTObject.Value Do
+            
+            ConversionItemResult = FL_CommonUse.ConvertValueIntoPlatformObject(Item, 
+                SupportedTypes);
+                
+            ConversionResult.ConvertedValue.Add(ConversionItemResult.ConvertedValue);
+            
+            FL_CommonUseClientServer.ExtendArray(ConversionResult.ErrorMessages,
+                ConversionItemResult.ErrorMessages);
+                
+            If NOT ConversionItemResult.TypeConverted Then
+                ConversionResult.TypeConverted = False;
+            EndIf;
+                
+        EndDo;
+                    
+    Else
+        
+        ConversionResult = FL_CommonUse.ConvertValueIntoPlatformObject(
+            DTObject.Value, SupportedTypes);
+        
+    EndIf;
+
+    Return ConversionResult;
+        
+EndFunction // ConvertDataTransferObject()
 
 // Returns the structure with template columns which is needed for output processor. 
 //
@@ -1081,17 +1245,19 @@ Function TemplateColumns(DataCompositionSettings,
                 EndIf;    
                     
                 Result = GroupTemplateItem(ItemBody.Group, 
-                    DCExpression.Expression, Not SkipColumn);        
+                    DCExpression.Expression, Not SkipColumn);
                 If Result = Undefined Then
-                    // If it is a resource it must be in place.
-                    If Not ResourcesCache.Property(ColumnName) Then
+                    // If it is a resource it must be in place. 
+                    If NOT ResourcesCache.Property(ColumnName) Then
                         // It isn't a resource, skip.
                         Continue;
-                    EndIf;
+                    EndIf;  
                 Else
+                    
                     // Skip column on next level. 
                     NextLevelColumnsToSkip.Insert(CellKey, 
                         DCExpression.Expression);
+                        
                 EndIf;
                 
             // Detail records
