@@ -386,8 +386,8 @@ EndFunction // ContextValueNoException()
 Function DeserializeContext(Val Message) Export
     
     If TypeOf(Message) = TypeOf("String") Then
-        Message = FL_CommonUse.ReferenceByCode(Metadata.Catalogs.FL_Messages, 
-            Message);     
+        Message = FL_CommonUse.ValueFromXMLTypeAndValue(Message, 
+            "CatalogRef.FL_Messages", "");  
     EndIf;
     
     Query = New Query;
