@@ -127,11 +127,10 @@
 				<ExtendedTooltip name="ListSearchControlExtendedTooltip" id="15"/>
 			</SearchControlAddition>
 			<ChildItems>
-				<LabelField name="Code" id="16">
-					<DataPath>List.Code</DataPath>
-					<DefaultItem>true</DefaultItem>
-					<ContextMenu name="CodeContextMenu" id="17"/>
-					<ExtendedTooltip name="CodeExtendedTooltip" id="18"/>
+				<LabelField name="Timestamp" id="56">
+					<DataPath>List.Timestamp</DataPath>
+					<ContextMenu name="TimestampContextMenu" id="57"/>
+					<ExtendedTooltip name="TimestampExtendedTooltip" id="58"/>
 				</LabelField>
 				<LabelField name="EventSource" id="22">
 					<DataPath>List.EventSource</DataPath>

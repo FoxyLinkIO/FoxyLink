@@ -52,7 +52,7 @@
 			<UseStandardCommands>true</UseStandardCommands>
 			<Owners/>
 			<SubordinationUse>ToItems</SubordinationUse>
-			<CodeLength>15</CodeLength>
+			<CodeLength>0</CodeLength>
 			<DescriptionLength>0</DescriptionLength>
 			<CodeType>String</CodeType>
 			<CodeAllowedLength>Variable</CodeAllowedLength>
@@ -326,9 +326,7 @@
 			<EditType>InDialog</EditType>
 			<QuickChoice>false</QuickChoice>
 			<ChoiceMode>BothWays</ChoiceMode>
-			<InputByString>
-				<xr:Field>Catalog.FL_Messages.StandardAttribute.Code</xr:Field>
-			</InputByString>
+			<InputByString/>
 			<SearchStringModeOnInputByString>Begin</SearchStringModeOnInputByString>
 			<FullTextSearchOnInputByString>DontUse</FullTextSearchOnInputByString>
 			<ChoiceDataGetModeOnInputByString>Directly</ChoiceDataGetModeOnInputByString>
@@ -972,7 +970,7 @@
 					<LinkByType/>
 					<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
 					<Use>ForItem</Use>
-					<Indexing>DontIndex</Indexing>
+					<Indexing>IndexWithAdditionalOrder</Indexing>
 					<FullTextSearch>DontUse</FullTextSearch>
 				</Properties>
 			</Attribute>

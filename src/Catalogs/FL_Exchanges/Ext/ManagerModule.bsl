@@ -192,7 +192,7 @@ Function ProcessMessage(Exchange, Message) Export
         Properties.ContentType = StreamObject.FormatMediaType();
         Properties.ContentEncoding = StreamObject.ContentEncoding;
         Properties.FileExtension = StreamObject.FormatFileExtension();
-        Properties.MessageId = Message.Code;
+        Properties.MessageId = XMLString(Message);
         
         // Close format stream and memory stream.
         StreamObject.Close();
