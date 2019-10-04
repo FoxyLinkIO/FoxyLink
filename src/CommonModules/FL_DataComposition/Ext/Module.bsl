@@ -685,7 +685,7 @@ EndFunction // NewDataCompositionSchemaNestedDataSet()
 // Creates layout template according passed parameters.
 //
 // Parameters:
-//  DCTParameters - Structure - see function FL_DataComposition.NewDataCompositionTemplateParameters.
+//  DCTParameters - Structure - see function FL_DataComposition.NewTemplateComposerParameters.
 //
 // Returns:
 //  DataCompositionTemplate - created layout template.
@@ -753,7 +753,7 @@ EndFunction // NewTemplateComposerParameters()
 //      * CanUseExternalFunctions - Boolean - indicates the possibility to use the function of common configuration
 //                                              modules in expressions of data composition.
 //                                  Default value: False.
-//      * DCTParameters - Structure - see function FL_DataComposition.NewDataCompositionTemplateParameters.
+//      * DCTParameters - Structure - see function FL_DataComposition.NewTemplateComposerParameters.
 //
 // See also:
 //  DataCompositionProcessor.Initialize in the syntax-assistant.

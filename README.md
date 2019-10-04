@@ -76,7 +76,7 @@ If you have any questions, problems related to the FoxyLink subsystem usage or i
 ```1C-Enterprise
 Function OutputInJSON(DataCompositionSchema, DataCompositionSettings)
     
-    DataCompositionTemplate = FL_DataComposition.NewDataCompositionTemplateParameters();
+    DataCompositionTemplate = FL_DataComposition.NewTemplateComposerParameters();
     DataCompositionTemplate.Schema   = DataCompositionSchema;
     DataCompositionTemplate.Template = DataCompositionSettings;
     
@@ -85,13 +85,16 @@ Function OutputInJSON(DataCompositionSchema, DataCompositionSettings)
     OutputParameters.CanUseExternalFunctions = True;
     
     StreamObject = DataProcessors.FL_DataProcessorJSON.Create();
-    StreamObject.Initialize();
+    Stream = New MemoryStream();
+    StreamObject.Initialize(Stream);
 	
-    FL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
+    FL_DataComposition.Output(StreamObject, OutputParameters);
+
+    StreamObject.Close()
     
-    Return StreamObject.Close();
+    Return GetStringFromBinaryData(Stream.CloseAndGetBinaryData());
    
-EndFunction // OutputInJSON()     
+EndFunction // OutputInJSON()
 ```
 
 ## Copyright and license
