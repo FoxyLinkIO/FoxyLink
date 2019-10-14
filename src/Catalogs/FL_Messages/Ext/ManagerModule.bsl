@@ -168,33 +168,32 @@ EndFunction // RouteAndRunOutputResult()
 Function Create(Invocation) Export
     
     If TransactionActive() Then
+        Return CreateMessage(Invocation);
+    EndIf;
         
-        // Creates a message
+    Try
+    
+        BeginTransaction();
+        
+        // Creates a message in transaction
         Message = CreateMessage(Invocation);
         
-    Else
+        CommitTransaction();
+    
+    Except
         
-        Try
-        
-            BeginTransaction();
-            
-            // Creates a message in transaction
-            Message = CreateMessage(Invocation);
-            
-            CommitTransaction();
-        
-        Except
-            
+        If TransactionActive() Then
             RollbackTransaction();
-            
-            FL_InteriorUse.WriteLog("FoxyLink.Integration.Create",
-                EventLogLevel.Error,
-                Metadata.Catalogs.FL_Messages,
-                ErrorDescription());
-            
-        EndTry;
+        EndIf;
         
-    EndIf;
+        FL_InteriorUse.WriteLog("FoxyLink.Integration.Create",
+            EventLogLevel.Error,
+            Metadata.Catalogs.FL_Messages,
+            ErrorDescription());     
+            
+        Message = Undefined;           
+            
+    EndTry;
         
     Return Message;  
     
