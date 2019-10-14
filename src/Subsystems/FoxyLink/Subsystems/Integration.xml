@@ -53,6 +53,8 @@
 		</Properties>
 		<ChildObjects>
 			<Subsystem>DocuSign</Subsystem>
+			<Subsystem>WooCommerce</Subsystem>
+			<Subsystem>WordPress</Subsystem>
 		</ChildObjects>
 	</Subsystem>
 </MetaDataObject>

@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.354</Version>
+			<Version>0.9.9.355</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -215,7 +215,7 @@
 			<ModalityUseMode>DontUse</ModalityUseMode>
 			<SynchronousPlatformExtensionAndAddInCallUseMode>DontUse</SynchronousPlatformExtensionAndAddInCallUseMode>
 			<InterfaceCompatibilityMode>Taxi</InterfaceCompatibilityMode>
-			<CompatibilityMode>Version8_3_7</CompatibilityMode>
+			<CompatibilityMode>Version8_3_10</CompatibilityMode>
 			<DefaultConstantsForm/>
 		</Properties>
 		<ChildObjects>
@@ -280,6 +280,8 @@
 			<CommonPicture>FL_ValidMethodSettings</CommonPicture>
 			<CommonPicture>FL_WooCommerce</CommonPicture>
 			<CommonPicture>FL_WordPress</CommonPicture>
+			<Role>FL_BasicRightsFoxyLink</Role>
+			<Role>FL_FullRightsFoxyLink</Role>
 			<CommonTemplate>FL_LICENSE</CommonTemplate>
 			<CommonModule>FL_BackgroundJob</CommonModule>
 			<CommonModule>FL_BatchJob</CommonModule>
