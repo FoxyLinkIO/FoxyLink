@@ -532,9 +532,7 @@ EndProcedure // SetFormModified()
 Function NewAdditionalParameters(CurrentData)
     
     Identifier = CurrentData.GetID();
-    AdditionalParameters = New Structure("Identifier", Identifier);
-    
-    Return AdditionalParameters;
+    Return New Structure("Identifier", Identifier);
     
 EndFunction // NewAdditionalParameters()
 

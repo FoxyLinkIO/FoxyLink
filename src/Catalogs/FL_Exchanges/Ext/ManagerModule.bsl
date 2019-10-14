@@ -31,16 +31,33 @@
 //
 Procedure OnCreateAtServer(ManagedForm) Export
 
+    Var CopyingValue;
+    
     Object = ManagedForm.Object;
-    If TypeOf(Object.Ref) <> Type("CatalogRef.FL_Exchanges") 
-        OR NOT ValueIsFilled(Object.Ref) Then
-        Return;
+    TypeExchanges = Type("CatalogRef.FL_Exchanges");
+    
+    Ref = Object.Ref;
+    If TypeOf(Ref) <> TypeExchanges 
+        OR NOT ValueIsFilled(Ref) Then
+        
+        Parameters = ManagedForm.Parameters;
+        If NOT Parameters.Property("CopyingValue", CopyingValue) Then
+            Return;
+        EndIf;
+        
+        If TypeOf(CopyingValue) <> TypeExchanges
+            OR NOT ValueIsFilled(CopyingValue) Then
+            Return;    
+        EndIf;
+        
+        Ref = CopyingValue;
+        
     EndIf;
     
     // ManagedForm.UUID is used to remove automatically the value after 
     // closing the form.
-    PlaceEventsDataIntoFormObject(Object, Object.Ref, ManagedForm.UUID);
-    PlaceOperationsDataIntoFormObject(Object, Object.Ref, ManagedForm.UUID);
+    PlaceEventsDataIntoFormObject(Object, Ref, ManagedForm.UUID);
+    PlaceOperationsDataIntoFormObject(Object, Ref, ManagedForm.UUID);
     
 EndProcedure // OnCreateAtServer()
 
