@@ -284,7 +284,7 @@ EndFunction // NewAppEndpointProperties()
 
 // Only for internal use.
 //
-Function AddAvailableChannel(DataProcessor, ValueList)
+Procedure AddAvailableChannel(DataProcessor, ValueList)
     
     PresentationTemplate = NStr("en='%1 (ver. %2)';
         |ru='%1 (вер. %2)';
@@ -298,7 +298,7 @@ Function AddAvailableChannel(DataProcessor, ValueList)
     Presentation = StrTemplate(PresentationTemplate, ChannelName, Version);  
     ValueList.Add(LibraryGuid, Presentation);
    
-EndFunction // AddAvailableChannel()
+EndProcedure // AddAvailableChannel()
 
 // Only for internal use.
 //
