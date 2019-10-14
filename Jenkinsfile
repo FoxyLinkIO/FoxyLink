@@ -14,7 +14,7 @@ pipeline {
         stage('QASonar') {
             steps {
                 script {
-                    sonarCommand = "\"${SONAR_HOME}/bin/sonar-scanner\" -Dsonar.login=${env.SONAR_TOKEN} -Dsonar.SolutionInRussian=false"
+                    sonarCommand = "\"${SONAR_HOME}/bin/sonar-scanner\" -Dsonar.login=${env.SONAR_TOKEN}"
                     if (env.BRANCH_NAME == "master") {
                         echo "Analysing master branch"
                     } else if (env.BRANCH_NAME == "develop") {
