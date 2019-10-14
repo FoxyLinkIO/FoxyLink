@@ -91,11 +91,12 @@ Function ProcessMessage(AppProperties, Payload, Properties) Export
         AppEndpointProcessor.DeliverMessage(Payload, Properties, JobResult);      
             
     Except
-                    
+        
+        ErrorDescription = ErrorDescription();
         FL_InteriorUse.WriteLog("FoxyLink.Integration.ProcessMessage", 
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Channels,
-            ErrorDescription(), 
+            ErrorDescription, 
             JobResult);
     
     EndTry;
@@ -123,11 +124,8 @@ Function AvailableChannels() Export
             
             Try
             
-                DataProcessor = DataProcessors[Item.Name].Create();                
-                ValueList.Add(DataProcessor.LibraryGuid(),
-                    StrTemplate("%1 (ver. %2)", 
-                        DataProcessor.ChannelFullName(),
-                        DataProcessor.Version()));
+                DataProcessor = DataProcessors[Item.Name].Create();
+                AddAvailableChannel(DataProcessor, ValueList);
             
             Except
                 
@@ -286,6 +284,24 @@ EndFunction // NewAppEndpointProperties()
 
 // Only for internal use.
 //
+Function AddAvailableChannel(DataProcessor, ValueList)
+    
+    PresentationTemplate = NStr("en='%1 (ver. %2)';
+        |ru='%1 (вер. %2)';
+        |uk='%1 (вер. %2)';
+        |en_CA='%1 (ver. %2)'");
+    
+    LibraryGuid = DataProcessor.LibraryGuid();
+    ChannelName = DataProcessor.ChannelFullName();
+    Version = DataProcessor.Version();
+    
+    Presentation = StrTemplate(PresentationTemplate, ChannelName, Version);  
+    ValueList.Add(LibraryGuid, Presentation);
+   
+EndFunction // AddAvailableChannel()
+
+// Only for internal use.
+//
 Function NewChannelParametersStructure()
     
     Parameters = New Structure;
@@ -302,7 +318,7 @@ EndFunction // NewChannelParametersStructure()
 // 
 Function QueryTextConnectedAppEndpoints()
     
-    QueryText = "
+    Return "
         |SELECT
         |   AppEndpoints.Ref AS Ref,
         |   AppEndpoints.BasicChannelGuid AS LibraryGuid, 
@@ -313,7 +329,6 @@ Function QueryTextConnectedAppEndpoints()
         |WHERE
         |   AppEndpoints.DeletionMark = False   
         |";
-    Return QueryText;
     
 EndFunction // QueryTextConnectedAppEndpoints()
 
@@ -321,7 +336,7 @@ EndFunction // QueryTextConnectedAppEndpoints()
 // 
 Function QueryTextAppEndpointSettings()
     
-    QueryText = "
+    Return "
         |SELECT
         |   AppEndpoints.Ref              AS Ref,
         |   AppEndpoints.Description      AS Description,
@@ -348,8 +363,7 @@ Function QueryTextAppEndpointSettings()
         |WHERE
         |    AppEndpoints.Ref = &AppEndpoint
         |AND AppEndpoints.DeletionMark = FALSE
-        |";  
-    Return QueryText;
+        |";
     
 EndFunction // QueryTextAppEndpointSettings()
 
