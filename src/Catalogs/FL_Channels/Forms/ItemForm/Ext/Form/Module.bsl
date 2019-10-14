@@ -154,25 +154,8 @@ Procedure DoAfterCloseConnectionForm(ClosureResult, AdditionalParameters) Export
         Modified = True;
         Object.Connected = True;
         
-        If ClosureResult.Property("ChannelData")
-            AND TypeOf(ClosureResult.ChannelData) = Type("FormDataCollection") Then
-            
-            For Each Item In ClosureResult.ChannelData Do
-                NewData = Object.ChannelData.Add();        
-                FillPropertyValues(NewData, Item);
-            EndDo; 
-            
-        EndIf;
-        
-        If ClosureResult.Property("EncryptedData")
-            AND TypeOf(ClosureResult.EncryptedData) = Type("FormDataCollection") Then
-            
-            For Each Item In ClosureResult.EncryptedData Do
-                NewData = Object.EncryptedData.Add();        
-                FillPropertyValues(NewData, Item);
-            EndDo; 
-            
-        EndIf;
+        FillChannelTabularSection(ClosureResult, "ChannelData");
+        FillChannelTabularSection(ClosureResult, "EncryptedData");
         
         LoadBasicChannelInfo();
  
@@ -197,6 +180,26 @@ Procedure DoAfterChannelDisconnect(QuestionResult, AdditionalParameters) Export
     EndIf;
     
 EndProcedure // DoAfterChannelDisconnect()
+
+// Fills channel tabular section with closure result data.
+//
+// Parameters:
+//  DataCollection - Arbitrary - the value transferred when you call the Close 
+//                               method of the connection form. 
+//  Key            - String    - tabular section name.
+//
+&AtClient
+Procedure FillChannelTabularSection(DataCollection, Key)
+    
+    If DataCollection.Property(Key)
+        AND TypeOf(DataCollection[Key]) = Type("FormDataCollection") Then
+        
+        FL_CommonUseClientServer.ExtendValueTable(DataCollection[Key], 
+            Object[Key]);
+            
+    EndIf;
+    
+EndProcedure // FillChannelTabularSection()
 
 // Fills basic channel info.
 //

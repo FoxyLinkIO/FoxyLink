@@ -254,7 +254,7 @@ EndFunction // StateReference()
 &AtServerNoContext
 Function QueryTextJobStatesCount()
     
-    QueryText = "
+    Return "
         |SELECT
         |   States.Ref AS State,
         |   States.Description AS Presentation,
@@ -270,7 +270,6 @@ Function QueryTextJobStatesCount()
         |GROUP BY
         |   States.Ref   
         |";  
-    Return QueryText;
 
 EndFunction // QueryTextJobStatesCount()
 

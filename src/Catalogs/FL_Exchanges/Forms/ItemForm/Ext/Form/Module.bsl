@@ -131,14 +131,16 @@ Procedure EventsSelection(Item, SelectedRow, Field, StandardProcessing)
         
     ElsIf Field.Name = "EventsFilterPresentation" Then
         
+        NotifyDescription = New NotifyDescription("DoAfterSetEventFilter", 
+            ThisObject, SelectedRow); 
+        
         OpenForm("Catalog.FL_Messages.Form.EventsFilterForm", 
             NewEventFilterFormParameters(SelectedRow), 
             ThisObject,
             New UUID, 
             , 
             ,
-            New NotifyDescription("DoAfterSetEventFilter", ThisObject, 
-                SelectedRow), 
+            NotifyDescription, 
             FormWindowOpeningMode.LockOwnerWindow);        
         
     EndIf;
@@ -151,16 +153,17 @@ Procedure EventsEventHandlerStartChoice(Item, ChoiceData, StandardProcessing)
     StandardProcessing = False;
     
     CurrentData = Items.Events.CurrentData;
-    If CurrentData <> Undefined Then
-        
-        Identifier = CurrentData.GetID();   
-        NotifyDescription = New NotifyDescription(
-            "DoAfterChooseEventHandlerToSet", ThisObject, Identifier);
-        ShowChooseFromList(NotifyDescription, AvailableEventHandlers(
-                Identifier), Item);
-            
+    If CurrentData = Undefined Then
+        Return;
     EndIf;
         
+    Identifier = CurrentData.GetID();   
+    NotifyDescription = New NotifyDescription("DoAfterChooseEventHandlerToSet", 
+        ThisObject, Identifier);
+        
+    ShowChooseFromList(NotifyDescription, AvailableEventHandlers(
+            Identifier), Item);
+                    
 EndProcedure // EventsEventHandlerStartChoice()
 
 &AtClient
@@ -189,24 +192,21 @@ EndProcedure // ChannelsSelection()
 &AtClient
 Procedure RowComposerSettingsOnChange(Item)
     
-    Modified = True;
-    RowComposerSettingsModified = True;
+    SetFormModified();
     
 EndProcedure // RowComposerSettingsOnChange()
 
 &AtClient
 Procedure RowComposerSettingsBeforeRowChange(Item, Cancel)
     
-    Modified = True;
-    RowComposerSettingsModified = True;
+    SetFormModified();
     
 EndProcedure // RowComposerSettingsBeforeRowChange()
 
 &AtClient
 Procedure RowComposerSettingsDataParametersOnChange(Item)
     
-    Modified = True;
-    RowComposerSettingsModified = True;    
+    SetFormModified();    
     
 EndProcedure // RowComposerSettingsDataParametersOnChange()
 
@@ -214,16 +214,14 @@ EndProcedure // RowComposerSettingsDataParametersOnChange()
 Procedure RowComposerSettingsSelectionAvailableFieldsSelection(Item, 
     SelectedRow, Field, StandardProcessing)
     
-    Modified = True;
-    RowComposerSettingsModified = True;
+    SetFormModified();
     
 EndProcedure // RowComposerSettingsSelectionAvailableFieldsSelection()
 
 &AtClient
 Procedure RowComposerSettingsSelectionOnChange(Item)
     
-    Modified = True;
-    RowComposerSettingsModified = True;    
+    SetFormModified();    
     
 EndProcedure // RowComposerSettingsSelectionOnChange() 
 
@@ -231,16 +229,14 @@ EndProcedure // RowComposerSettingsSelectionOnChange()
 Procedure RowComposerSettingsFilterAvailableFieldsSelection(Item, SelectedRow, 
     Field, StandardProcessing)
    
-    Modified = True;
-    RowComposerSettingsModified = True;
+    SetFormModified();
     
 EndProcedure // RowComposerSettingsFilterAvailableFieldsSelection()
 
 &AtClient
 Procedure RowComposerSettingsFilterOnChange(Item)
     
-    Modified = True;
-    RowComposerSettingsModified = True;
+    SetFormModified();
     
 EndProcedure // RowComposerSettingsFilterOnChange()
 
@@ -248,16 +244,14 @@ EndProcedure // RowComposerSettingsFilterOnChange()
 Procedure RowComposerSettingsOrderAvailableFieldsSelection(Item, SelectedRow, 
     Field, StandardProcessing)
     
-    Modified = True;
-    RowComposerSettingsModified = True;
+    SetFormModified();
     
 EndProcedure // RowComposerSettingsOrderAvailableFieldsSelection()
 
 &AtClient
 Procedure RowComposerSettingsOrderOnChange(Item)
     
-    Modified = True;
-    RowComposerSettingsModified = True;    
+    SetFormModified();    
     
 EndProcedure // RowComposerSettingsOrderOnChange()
 
@@ -267,8 +261,9 @@ EndProcedure // RowComposerSettingsOrderOnChange()
 Procedure ResultSpreadsheetDocumentDetailProcessing(Item, Details, 
     StandardProcessing)
     
-    FL_InteriorUseClient.DetailProcessing(GetFromTempStorage(DetailsDataAddress), 
-        Details, StandardProcessing);
+    DetailsData = GetFromTempStorage(DetailsDataAddress);
+    FL_InteriorUseClient.DetailProcessing(DetailsData, Details, 
+        StandardProcessing);
         
 EndProcedure // ResultSpreadsheetDocumentDetailProcessing()
 
@@ -290,13 +285,16 @@ EndProcedure // AddAppEndpoint()
 &AtClient
 Procedure AddEvent(Command = Undefined)
     
+    NotifyDescription = New NotifyDescription("DoAfterChooseEventToAdd", 
+        ThisObject);   
+    
     OpenForm("Catalog.FL_Exchanges.Form.EventsSelectionForm", 
         New Structure("Operation, MarkedEvents", RowOperation, MarkedEvents()), 
         ThisObject,
         New UUID, 
         , 
         ,
-        New NotifyDescription("DoAfterChooseEventToAdd", ThisObject), 
+        NotifyDescription, 
         FormWindowOpeningMode.LockOwnerWindow);    
     
 EndProcedure // AddEvent()
@@ -304,38 +302,50 @@ EndProcedure // AddEvent()
 &AtClient
 Procedure AddOperation(Command)
     
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationToAdd",
-        ThisObject), AvailableOperations(), Items.AddOperation);
+    AvailableOperations = AvailableOperations();
+    NotifyDescription = New NotifyDescription("DoAfterChooseOperationToAdd",
+        ThisObject);
+    
+    ShowChooseFromList(NotifyDescription, AvailableOperations, 
+        Items.AddOperation);
         
 EndProcedure // AddOperation()
 
 &AtClient
 Procedure CopyAPI(Command)
     
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationAPIToCopy",
-        ThisObject), CurrentOperationsWithAPISchema(), Items.CopyAPI);    
+    NotifyDescription = New NotifyDescription("DoAfterChooseOperationAPIToCopy",
+        ThisObject);
+    CurrentOperations = CurrentOperationsWithAPISchema();
+    
+    ShowChooseFromList(NotifyDescription, CurrentOperations, Items.CopyAPI);    
     
 EndProcedure // CopyAPI()
 
 &AtClient
 Procedure CopyDataCompositionSchema(Command)
     
-    ShowChooseFromList(New NotifyDescription(
-            "DoAfterChooseDataCompositionSchemaToCopy", ThisObject), 
-        CurrentOperationsWithDataCompositionSchema(), Items.CopyDataCompositionSchema);
+    NotifyDescription = New NotifyDescription(
+        "DoAfterChooseDataCompositionSchemaToCopy", ThisObject);
+    CurrentOperations = CurrentOperationsWithDataCompositionSchema();
+    
+    ShowChooseFromList(NotifyDescription, CurrentOperations, 
+        Items.CopyDataCompositionSchema);
     
 EndProcedure // CopyDataCompositionSchema()
 
 &AtClient
 Procedure DeleteAPI(Command)
     
-    ShowQueryBox(New NotifyDescription("DoAfterChooseAPISchemaToDelete", 
-            ThisObject),
-        NStr("en='Delete API schema from the current operation?';
-            |ru='Удалить API схему из текущей операции?';
-            |en_CA='Delete API schema from the current operation?'"),
-        QuestionDialogMode.YesNo, 
-        , 
+    NotifyDescription = New NotifyDescription("DoAfterChooseAPISchemaToDelete", 
+        ThisObject);
+        
+    QueryText = NStr("en='Delete API schema from the current operation?';
+        |ru='Удалить API схему из текущей операции?';
+        |uk='Видалити API схему з поточної операції?';
+        |en_CA='Delete API schema from the current operation?'");
+        
+    ShowQueryBox(NotifyDescription, QueryText, QuestionDialogMode.YesNo, , 
         DialogReturnCode.No);    
     
 EndProcedure // DeleteAPI()
@@ -344,34 +354,44 @@ EndProcedure // DeleteAPI()
 Procedure DeleteChannel(Command)
     
     CurrentData = Items.Channels.CurrentData;
-    If CurrentData <> Undefined Then
-        
-        ShowQueryBox(New NotifyDescription("DoAfterChooseChannelToDelete", 
-            ThisObject, New Structure("Identifier", CurrentData.GetID())),
-            NStr("en='Permanently delete the selected channel?';
-                |ru='Удалить выбранный канал?';
-                |en_CA='Permanently delete the selected channel?'"),
-            QuestionDialogMode.YesNo, , DialogReturnCode.No);     
-        
+    If CurrentData = Undefined Then
+        Return;
     EndIf;
     
+    AdditionalParameters = NewAdditionalParameters(CurrentData);
+    NotifyDescription = New NotifyDescription("DoAfterChooseChannelToDelete", 
+        ThisObject, AdditionalParameters);
+        
+    QueryText = NStr("en='Permanently delete the selected channel?';
+        |ru='Удалить выбранный канал?';
+        |uk='Видалити вибраний канал?';
+        |en_CA='Permanently delete the selected channel?'");     
+        
+    ShowQueryBox(NotifyDescription, QueryText, QuestionDialogMode.YesNo, , 
+        DialogReturnCode.No);     
+            
 EndProcedure // DeleteChannel()
 
 &AtClient
 Procedure DeleteEvent(Command)
     
     CurrentData = Items.Events.CurrentData;
-    If CurrentData <> Undefined Then
-        
-        ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDelete", 
-            ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en='Permanently delete the selected event?';
-                |ru='Удалить выбранное событие?';
-                |en_CA='Permanently delete the selected event?'"),
-            QuestionDialogMode.YesNo, , DialogReturnCode.No);     
-        
+    If CurrentData = Undefined Then
+        Return;
     EndIf;
     
+    AdditionalParameters = NewAdditionalParameters(CurrentData);
+    NotifyDescription = New NotifyDescription("DoAfterChooseEventToDelete", 
+        ThisObject, AdditionalParameters);
+    
+    ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDelete", 
+        ThisObject, New Structure("Identifier ", CurrentData.GetID())),
+        NStr("en='Permanently delete the selected event?';
+            |ru='Удалить выбранное событие?';
+            |uk='Видалити вибрану подію?';
+            |en_CA='Permanently delete the selected event?'"),
+        QuestionDialogMode.YesNo, , DialogReturnCode.No);     
+        
 EndProcedure // DeleteEvent() 
 
 &AtClient
@@ -382,8 +402,11 @@ Procedure DeleteOperation(Command)
         ExchangeOperations.Add(Item.Operation);   
     EndDo;
 
-    ShowChooseFromList(New NotifyDescription("DoAfterChooseOperationToDelete",
-        ThisObject), ExchangeOperations, Items.DeleteOperation);
+    NotifyDescription = New NotifyDescription("DoAfterChooseOperationToDelete",
+        ThisObject);
+    
+    ShowChooseFromList(NotifyDescription, ExchangeOperations, 
+        Items.DeleteOperation);
     
 EndProcedure // DeleteOperation()
 
@@ -391,13 +414,16 @@ EndProcedure // DeleteOperation()
 Procedure DescribeAPI(Command)
            
     DescribeAPIData = DescribeAPIParameters();
+    NotifyDescription = New NotifyDescription("DoAfterCloseAPICreationForm", 
+        ThisObject);
+    
     OpenForm(DescribeAPIData.FormName, 
         DescribeAPIData.Parameters, 
         ThisObject,
         New UUID, 
         , 
         , 
-        New NotifyDescription("DoAfterCloseAPICreationForm", ThisObject), 
+        NotifyDescription, 
         FormWindowOpeningMode.LockOwnerWindow);
          
 EndProcedure // DescribeAPI()
@@ -490,6 +516,26 @@ EndProcedure // GenerateSpreadsheetDocument()
 
 #Region ServiceProceduresAndFunctions
 
+// Only for internal use.
+//
+&AtClient
+Procedure SetFormModified()
+    
+    Modified = True;
+    RowComposerSettingsModified = True;
+    
+EndProcedure // SetFormModified()
+
+// Only for internal use.
+//
+&AtClient
+Function NewAdditionalParameters(CurrentData)
+    
+    Identifier = CurrentData.GetID();
+    Return New Structure("Identifier", Identifier);
+    
+EndFunction // NewAdditionalParameters()
+
 #Region Formats
 
 // Rewrites the current operation APISchema form the ClosureResult.
@@ -529,25 +575,28 @@ EndProcedure // DoAfterCloseAPICreationForm()
 Procedure DoAfterChooseOperationAPIToCopy(SelectedElement, 
     AdditionalParameters) Export
     
-    If SelectedElement <> Undefined Then
+    If SelectedElement = Undefined Then
+        Return;
+    EndIf;
         
-        FilterResult = Object.Operations.FindRows(SelectedElement.Value);
-        If FilterResult.Count() > 0 Then
-            
-            DescribeAPIData = DescribeAPIParameters();
-            FillPropertyValues(DescribeAPIData.Parameters, FilterResult[0]);
-            
-            OpenForm(DescribeAPIData.FormName, 
-                DescribeAPIData.Parameters, 
-                ThisObject,
-                New UUID, 
-                , 
-                ,                      
-                New NotifyDescription("DoAfterCloseAPICreationForm", ThisObject), 
-                FormWindowOpeningMode.LockOwnerWindow);
-                
-        EndIf;
+    FilterResult = Object.Operations.FindRows(SelectedElement.Value);
+    If ValueIsFilled(FilterResult) Then
         
+        DescribeAPIData = DescribeAPIParameters();
+        FillPropertyValues(DescribeAPIData.Parameters, FilterResult[0]);
+        
+        NotifyDescription = New NotifyDescription(
+            "DoAfterCloseAPICreationForm", ThisObject);
+        
+        OpenForm(DescribeAPIData.FormName, 
+            DescribeAPIData.Parameters, 
+            ThisObject,
+            New UUID, 
+            , 
+            ,                      
+            NotifyDescription, 
+            FormWindowOpeningMode.LockOwnerWindow);
+            
     EndIf;
     
 EndProcedure // DoAfterChooseOperationAPIToCopy()
@@ -586,15 +635,18 @@ Procedure LoadBasicFormatInfo()
     FPMetadata = FormatProcessor.Metadata();
     FormatAPISchemaSupport = FPMetadata.Forms.Find("APICreationForm") <> Undefined;
 
+    TitleTemplate = NStr("en='Generate (%1, ver. %2)';
+        |ru='Сформировать (%1, вер. %2)';
+        |uk='Сформувати (%1, вер. %2)';
+        |en_CA='Generate (%1, ver. %2)'");
+    
+    FormatName = FormatProcessor.FormatShortName();
+    Version = FormatProcessor.Version();
+    
     Items.DescribeAPI.Visible = FormatAPISchemaSupport;
-    Items.GenerateSpecificDocument.Title = StrTemplate(
-        NStr("en='Generate (%1, ver. %2)';
-            |ru='Сформировать (%1, вер. %2)';
-            |uk='Сформувати (%1, вер. %2)';
-            |en_CA='Generate (%1, ver. %2)'"), 
-        FormatProcessor.FormatShortName(), 
-        FormatProcessor.Version());
-                
+    Items.GenerateSpecificDocument.Title = StrTemplate(TitleTemplate, 
+        FormatName, Version);
+                        
 EndProcedure // LoadBasicFormatInfo() 
 
 // Returns link to the formal document from the Internet Engineering Task Force 
@@ -686,7 +738,7 @@ Procedure DoAfterChooseOperationToAdd(SelectedElement,
         FilterParameters = NewOperationFilterParameters();
         FilterParameters.Operation = SelectedElement.Value;    
         FilterResult = Object.Operations.FindRows(FilterParameters);
-        If FilterResult.Count() = 0 Then
+        If NOT ValueIsFilled(FilterResult) Then
             
             Modified = True;
             
@@ -754,7 +806,7 @@ Procedure DoAfterChooseDataCompositionSchemaToCopy(SelectedElement,
     If SelectedElement <> Undefined Then
         
         FilterResult = Object.Operations.FindRows(SelectedElement.Value);
-        If FilterResult.Count() > 0 Then
+        If ValueIsFilled(FilterResult) Then
             
             CopyDataCompositionSchemaAtServer(FilterResult[0].GetId());
             
@@ -967,7 +1019,7 @@ Procedure LoadOperationSettings()
         
     CurrentPage = Items.OperationPages.CurrentPage;
     If CurrentPage = Undefined 
-        AND Items.OperationPages.ChildItems.Count() > 0 Then
+        AND ValueIsFilled(Items.OperationPages.ChildItems) Then
         CurrentPage = Items.OperationPages.ChildItems[0];
     EndIf;
     
@@ -1109,7 +1161,7 @@ Function CurrentOperationData(Val RowOperation)
     FilterParameters = NewOperationFilterParameters();
     FilterParameters.Operation = Operation;
     FilterResult = Object.Operations.FindRows(FilterParameters);
-    If FilterResult.Count() > 0 Then
+    If ValueIsFilled(FilterResult) Then
         CurrentData = FilterResult[0];
     Else
         
@@ -1175,8 +1227,11 @@ Procedure DoAfterChooseEventToDelete(QuestionResult,
     
     Var Identifier;
     
-    If QuestionResult = DialogReturnCode.Yes
-        AND TypeOf(AdditionalParameters) = Type("Structure")
+    If QuestionResult <> DialogReturnCode.Yes Then
+        Return;    
+    EndIf;
+    
+    If TypeOf(AdditionalParameters) = Type("Structure")
         AND AdditionalParameters.Property("Identifier", Identifier) Then
             
         SearchResult = Object.Events.FindByID(Identifier);
@@ -1318,7 +1373,7 @@ Procedure AddEventAtServer(EventValueList)
         
         FilterParameters.MetadataObject = Event.Value;
         FilterResults = Object.Events.FindRows(FilterParameters);
-        If FilterResults.Count() = 0 Then
+        If NOT ValueIsFilled(FilterResults) Then
             Modified = True;
             EventRow = Object.Events.Add();
         Else
@@ -1474,8 +1529,11 @@ Procedure DoAfterChooseChannelToDelete(QuestionResult,
     
     Var Identifier;
     
-    If QuestionResult = DialogReturnCode.Yes
-        AND TypeOf(AdditionalParameters) = Type("Structure")
+    If QuestionResult <> DialogReturnCode.Yes Then
+        Return;
+    EndIf;
+    
+    If TypeOf(AdditionalParameters) = Type("Structure")
         AND AdditionalParameters.Property("Identifier", Identifier) Then
             
         SearchResult = Object.Channels.FindByID(Identifier);
@@ -1568,7 +1626,7 @@ Function AddChannelAtServer(Channel)
     FilterParameters.Channel = Channel;
     
     FilterResults = Object.Channels.FindRows(FilterParameters);
-    If FilterResults.Count() = 0 Then        
+    If NOT ValueIsFilled(FilterResults) Then        
         
         Modified = True;
         ChannelRow = Object.Channels.Add();

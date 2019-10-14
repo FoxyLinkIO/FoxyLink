@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -31,16 +31,33 @@
 //
 Procedure OnCreateAtServer(ManagedForm) Export
 
+    Var CopyingValue;
+    
     Object = ManagedForm.Object;
-    If TypeOf(Object.Ref) <> Type("CatalogRef.FL_Exchanges") 
-        OR NOT ValueIsFilled(Object.Ref) Then
-        Return;
+    TypeExchanges = Type("CatalogRef.FL_Exchanges");
+    
+    Ref = Object.Ref;
+    If TypeOf(Ref) <> TypeExchanges 
+        OR NOT ValueIsFilled(Ref) Then
+        
+        Parameters = ManagedForm.Parameters;
+        If NOT Parameters.Property("CopyingValue", CopyingValue) Then
+            Return;
+        EndIf;
+        
+        If TypeOf(CopyingValue) <> TypeExchanges
+            OR NOT ValueIsFilled(CopyingValue) Then
+            Return;    
+        EndIf;
+        
+        Ref = CopyingValue;
+        
     EndIf;
     
     // ManagedForm.UUID is used to remove automatically the value after 
     // closing the form.
-    PlaceEventsDataIntoFormObject(Object, Object.Ref, ManagedForm.UUID);
-    PlaceOperationsDataIntoFormObject(Object, Object.Ref, ManagedForm.UUID);
+    PlaceEventsDataIntoFormObject(Object, Ref, ManagedForm.UUID);
+    PlaceOperationsDataIntoFormObject(Object, Ref, ManagedForm.UUID);
     
 EndProcedure // OnCreateAtServer()
 
@@ -56,7 +73,7 @@ Procedure UpdateEventsView(ManagedForm, FilterParameters) Export
     Events = ManagedForm.Object.Events;
     
     FilterResults = Events.FindRows(FilterParameters);
-    If FilterResults.Count() = 0 Then
+    If NOT ValueIsFilled(FilterResults) Then
         Return;
     EndIf;
    
@@ -108,7 +125,7 @@ Procedure UpdateOperationsView(ManagedForm) Export
             Metadata.Catalogs.FL_Operations, Item.Name);
         FilterResult = Operations.FindRows(New Structure("Operation", 
             Operation));
-        If FilterResult.Count() = 0 Then
+        If NOT ValueIsFilled(FilterResult) Then
             
             // This code is needed to fix problem with platform bug.
             If Item.ChildItems.Find("HiddenGroupSettings") <> Undefined Then
@@ -123,7 +140,7 @@ Procedure UpdateOperationsView(ManagedForm) Export
     EndDo;
     
     // Hide or unhide delete operation button.
-    Items.DeleteOperation.Visible = Operations.Count() > 0;   
+    Items.DeleteOperation.Visible = ValueIsFilled(Operations);   
     
 EndProcedure // UpdateOperationsView()
 
@@ -205,10 +222,11 @@ Function ProcessMessage(Exchange, Message) Export
 
     Except
         
+        ErrorDescription = ErrorDescription();
         FL_InteriorUse.WriteLog("FoxyLink.Integration.ProcessMessage", 
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Exchanges,
-            ErrorDescription(),
+            ErrorDescription,
             JobResult);
             
     EndTry;
@@ -296,14 +314,22 @@ Function AvailableFormats() Export
         If Metadata.DataProcessors.Contains(Item) Then
             
             Try
-            
-                DataProcessor = DataProcessors[Item.Name].Create();                
-                ValueList.Add(DataProcessor.LibraryGuid(),
-                    StrTemplate("%1 (%2), ver. %3", 
-                        DataProcessor.FormatShortName(),
-                        DataProcessor.FormatStandard(),
-                        DataProcessor.Version()));
-            
+                
+                PresentationTemplate = NStr("en='%1 (%2), ver. %3';
+                    |ru='%1 (%2), вер. %3';
+                    |uk='%1 (%2), вер. %3';
+                    |en_CA='%1 (%2), ver. %3'");
+                
+                DataProcessor = DataProcessors[Item.Name].Create();
+                LibraryGuid = DataProcessor.LibraryGuid();
+                FormatName = DataProcessor.FormatShortName();
+                Standard = DataProcessor.FormatStandard();
+                Version = DataProcessor.Version();
+     
+                Presentation = StrTemplate(PresentationTemplate, FormatName, 
+                    Standard, Version);  
+                ValueList.Add(LibraryGuid, Presentation);
+                
             Except
                 
                 FL_CommonUseClientServer.NotifyUser(ErrorDescription());
@@ -504,18 +530,18 @@ Function EventHandlerInfo() Export
         EventHandlerInfo.Version);
         
     EventSources = New Array;
-    EventSources.Add(Upper("HTTPService.FL_AppEndpoint"));
-    EventSources.Add(Upper("HTTPСервис.FL_AppEndpoint"));
-    EventSources.Add(Upper("Catalog.*"));
-    EventSources.Add(Upper("Справочник.*"));
-    EventSources.Add(Upper("Document.*"));
-    EventSources.Add(Upper("Документ.*"));
-    EventSources.Add(Upper("ChartOfCharacteristicTypes.*"));
-    EventSources.Add(Upper("ПланВидовХарактеристик.*"));
-    EventSources.Add(Upper("InformationRegister.*"));
-    EventSources.Add(Upper("РегистрСведений.*"));
-    EventSources.Add(Upper("AccumulationRegister.*"));
-    EventSources.Add(Upper("РегистрНакопления.*"));
+    EventSources.Add("HTTPSERVICE.FL_APPENDPOINT");
+    EventSources.Add("HTTPСЕРВИС.FL_APPENDPOINT");
+    EventSources.Add("CATALOG.*");
+    EventSources.Add("СПРАВОЧНИК.*");
+    EventSources.Add("DOCUMENT.*");
+    EventSources.Add("ДОКУМЕНТ.*");
+    EventSources.Add("CHARTOFCHARACTERISTICTYPES.*");
+    EventSources.Add("ПЛАНВИДОВХАРАКТЕРИСТИК.*");
+    EventSources.Add("INFORMATIONREGISTER.*");
+    EventSources.Add("РЕГИСТРСВЕДЕНИЙ.*");
+    EventSources.Add("ACCUMULATIONREGISTER.*");
+    EventSources.Add("РЕГИСТРНАКОПЛЕНИЯ.*");
     
     AvailableOperations = Catalogs.FL_Operations.AvailableOperations();
     For Each AvailableOperation In AvailableOperations Do
@@ -720,13 +746,12 @@ Function ExchangeSettingsByQueryResult(QueryResult, Exchange, Operation)
     
     If QueryResult.IsEmpty() Then
         
-        ErrorMessage = StrTemplate(Nstr("
-                |en='Error: Exchange settings {%1} and/or operation {%2} not found.';
-                |ru='Ошибка: Настройки обмена {%1} и/или операция {%2} не найдены.';
-                |uk='Помилка: Настройки обміну {%1} та/чи операція {%2} не знайдені.';
-                |en_CA='Error: Exchange settings {%1} and/or operation {%2} not found.'"),
-            String(Exchange), String(Operation)); 
-            
+        ErrorTemplate = Nstr("en='Error: Exchange settings {%1} and/or operation {%2} not found.';
+            |ru='Ошибка: Настройки обмена {%1} и/или операция {%2} не найдены.';
+            |uk='Помилка: Настройки обміну {%1} та/чи операція {%2} не знайдені.';
+            |en_CA='Error: Exchange settings {%1} and/or operation {%2} not found.'");
+        ErrorMessage = StrTemplate(ErrorTemplate, String(Exchange), 
+            String(Operation));   
         Raise ErrorMessage;
         
     EndIf;
@@ -734,13 +759,12 @@ Function ExchangeSettingsByQueryResult(QueryResult, Exchange, Operation)
     ValueTable = QueryResult.Unload();
     If ValueTable.Count() > 1 Then
         
-        ErrorMessage = StrTemplate(Nstr("
-                |en='Error: Duplicated records of exchange settings {%1} and operation {%2} are found.';
-                |ru='Ошибка: Обнаружены дублирующиеся настройки обмена {%1} и операция {%2}.';
-                |uk='Помилка: Виявлено, що дублюються налаштування обміну {%1} та операція {%2}.';
-                |en_CA='Error: Duplicated records of exchange settings {%1} and operation {%2} are found.'"),
-            String(Exchange), String(Operation));
-            
+        ErrorTemplate = Nstr("en='Error: Duplicated records of exchange settings {%1} and operation {%2} are found.';
+            |ru='Ошибка: Обнаружены дублирующиеся настройки обмена {%1} и операция {%2}.';
+            |uk='Помилка: Виявлено, що дублюються налаштування обміну {%1} та операція {%2}.';
+            |en_CA='Error: Duplicated records of exchange settings {%1} and operation {%2} are found.'");
+        ErrorMessage = StrTemplate(ErrorTemplate, String(Exchange), 
+            String(Operation));  
         Raise ErrorMessage;
         
     EndIf;
@@ -765,7 +789,7 @@ EndFunction // ExchangeSettingsByQueryResult()
 //
 Function QueryTextExchangeSettingsByRefs()
 
-    QueryText = "
+    Return "
         |SELECT
         |   ExchangeSettings.Ref                AS Ref,
         |   ExchangeSettings.Description        AS Description,
@@ -797,8 +821,7 @@ Function QueryTextExchangeSettingsByRefs()
         |WHERE
         |    ExchangeSettings.Ref = &ExchangeRef
         |AND ExchangeSettings.DeletionMark = FALSE
-        |";  
-    Return QueryText;
+        |";
 
 EndFunction // QueryTextExchangeSettingsByRefs()
 
@@ -806,7 +829,7 @@ EndFunction // QueryTextExchangeSettingsByRefs()
 //
 Function QueryTextExchangeSettingsByNames()
 
-    QueryText = "
+    Return "
         |SELECT
         |   ExchangeSettings.Ref                AS Ref,
         |   ExchangeSettings.Description        AS Description,
@@ -836,8 +859,7 @@ Function QueryTextExchangeSettingsByNames()
         |WHERE
         |    ExchangeSettings.Description = &ExchangeName
         |AND ExchangeSettings.DeletionMark = FALSE
-        |";  
-    Return QueryText;
+        |";
 
 EndFunction // QueryTextExchangeSettingsByNames()
 
