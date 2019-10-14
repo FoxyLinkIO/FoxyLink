@@ -383,14 +383,14 @@ Procedure DeleteEvent(Command)
     AdditionalParameters = NewAdditionalParameters(CurrentData);
     NotifyDescription = New NotifyDescription("DoAfterChooseEventToDelete", 
         ThisObject, AdditionalParameters);
+        
+    QueryText = NStr("en='Permanently delete the selected event?';
+        |ru='Удалить выбранное событие?';
+        |uk='Видалити вибрану подію?';
+        |en_CA='Permanently delete the selected event?'"); 
     
-    ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDelete", 
-        ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-        NStr("en='Permanently delete the selected event?';
-            |ru='Удалить выбранное событие?';
-            |uk='Видалити вибрану подію?';
-            |en_CA='Permanently delete the selected event?'"),
-        QuestionDialogMode.YesNo, , DialogReturnCode.No);     
+    ShowQueryBox(NotifyDescription, QueryText, QuestionDialogMode.YesNo, , 
+        DialogReturnCode.No);     
         
 EndProcedure // DeleteEvent() 
 
