@@ -297,10 +297,22 @@ Function AvailableFormats() Export
         If Metadata.DataProcessors.Contains(Item) Then
             
             Try
-            
+                
+                PresentationTemplate = NStr("en='%1 (%2), ver. %3';
+                    |ru='%1 (%2), вер. %3';
+                    |uk='%1 (%2), вер. %3';
+                    |en_CA='%1 (%2), ver. %3'");
+                
                 DataProcessor = DataProcessors[Item.Name].Create();
-                AddAvailableFormat(DataProcessor, ValueList); 
-            
+                LibraryGuid = DataProcessor.LibraryGuid();
+                FormatName = DataProcessor.FormatShortName();
+                Standard = DataProcessor.FormatStandard();
+                Version = DataProcessor.Version();
+     
+                Presentation = StrTemplate(PresentationTemplate, FormatName, 
+                    Standard, Version);  
+                ValueList.Add(LibraryGuid, Presentation);
+                
             Except
                 
                 FL_CommonUseClientServer.NotifyUser(ErrorDescription());
@@ -527,26 +539,6 @@ EndFunction // EventHandlerInfo()
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
-
-// Only for internal use.
-//
-Procedure AddAvailableFormat(DataProcessor, ValueList)
-    
-    PresentationTemplate = NStr("en='%1 (%2), ver. %3';
-        |ru='%1 (%2), вер. %3';
-        |uk='%1 (%2), вер. %3';
-        |en_CA='%1 (%2), ver. %3'");
-    
-    LibraryGuid = DataProcessor.LibraryGuid();
-    FormatName = DataProcessor.FormatShortName();
-    Standard = DataProcessor.FormatStandard();
-    Version = DataProcessor.Version();
-    
-    Presentation = StrTemplate(PresentationTemplate, FormatName, Standard, 
-        Version);  
-    ValueList.Add(LibraryGuid, Presentation);
-       
-EndProcedure // AddAvailableFormat()
 
 #Region ObjectFormInteraction
 

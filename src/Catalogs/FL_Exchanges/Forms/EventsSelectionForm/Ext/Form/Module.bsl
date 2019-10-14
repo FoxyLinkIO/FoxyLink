@@ -35,9 +35,10 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
             Metadata.Catalogs.FL_Operations, Operation);
     EndIf;
 
-    If TypeOf(Operation) <> Type("CatalogRef.FL_Operations") Then
+    TypeCatalogRefOperations = Type("CatalogRef.FL_Operations"); 
+    If TypeOf(Operation) <> TypeCatalogRefOperations Then
         ErrorMessage = FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "Operation", Operation, Type("CatalogRef.FL_Operations"));
+            "Operation", Operation, TypeCatalogRefOperations);
         Raise ErrorMessage;
     EndIf;
     
@@ -103,11 +104,11 @@ Function PublishersArray(Operation)
     Query.Text = QueryTextOperationMessagePublishers();
     Query.SetParameter("Operation", Operation);
     QueryResult = Query.Execute();
-    If QueryResult.IsEmpty() Then
-        Return New Array;
-    Else
+    If NOT QueryResult.IsEmpty() Then
         Return QueryResult.Unload().UnloadColumn("EventSource");
     EndIf;
+    
+    Return New Array;
      
 EndFunction // PublishersArray()
 
@@ -116,7 +117,7 @@ EndFunction // PublishersArray()
 &AtServerNoContext
 Function QueryTextOperationMessagePublishers()
 
-    QueryText = "
+    Return "
         |SELECT 
         |   MessagePublishers.EventSource AS EventSource
         |FROM
@@ -124,8 +125,7 @@ Function QueryTextOperationMessagePublishers()
         |WHERE
         |   MessagePublishers.Operation = &Operation
         |AND MessagePublishers.InUse
-        |";
-    Return QueryText;   
+        |";  
     
 EndFunction // QueryTextOperationMessagePublishers()
 

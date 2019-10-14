@@ -85,17 +85,21 @@ EndProcedure // InstallOrUpdateExchange()
 Procedure DeleteChannel(Command)
     
     CurrentData = Items.Channels.CurrentData;
-    If CurrentData <> Undefined Then
+    If CurrentData = Undefined Then
+        Return;
+    EndIf;
         
-        ShowQueryBox(New NotifyDescription("DoAfterChooseChannelToDelete", 
-            ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en='Permanently delete the selected application endpoint?';
-                |ru='Удалить выбранную конечную точку приложения?';
-                |uk='Видалити вибрану кінцеву точку додатку?';
-                |en_CA='Permanently delete the selected application endpoint?'"),
-            QuestionDialogMode.YesNo, , DialogReturnCode.No);     
+    AdditionalParameters = New Structure("Identifier", CurrentData.GetID()); 
+    NotifyDescription = New NotifyDescription("DoAfterChooseChannelToDelete", 
+        ThisObject, AdditionalParameters);
+    
+    QueryText = NStr("en='Permanently delete the selected application endpoint?';
+        |ru='Удалить выбранную конечную точку приложения?';
+        |uk='Видалити вибрану кінцеву точку додатку?';
+        |en_CA='Permanently delete the selected application endpoint?'");    
         
-    EndIf;   
+    ShowQueryBox(NotifyDescription, QueryText, QuestionDialogMode.YesNo, , 
+        DialogReturnCode.No);       
     
 EndProcedure // DeleteChannel()
 
@@ -103,19 +107,19 @@ EndProcedure // DeleteChannel()
 Procedure InstallChannel(Command)
     
     CurrentData = Items.Channels.CurrentData;
-    If CurrentData <> Undefined Then
+    If CurrentData = Undefined Then
+        Return;
+    EndIf;
         
-        If CurrentData.Ref.IsEmpty() Then
-            InstallOrUpdateChannel(CurrentData);        
-        Else
+    If CurrentData.Ref.IsEmpty() Then
+        InstallOrUpdateChannel(CurrentData);        
+    Else
 
-            Explanation = NStr("en='Application endpoint reference must be empty.';
-                |ru='Ссылка на конечную точку приложения должна быть не заполнена.';
-                |uk='Посилання на кінцеву точку додатку повино бути не заповнене.';
-                |en_CA='Application endpoint reference must be empty.'");    
-            ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
-            
-        EndIf;
+        Explanation = NStr("en='Application endpoint reference must be empty.';
+            |ru='Ссылка на конечную точку приложения должна быть не заполнена.';
+            |uk='Посилання на кінцеву точку додатку повино бути не заповнене.';
+            |en_CA='Application endpoint reference must be empty.'");    
+        ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
         
     EndIf;
         
@@ -125,20 +129,20 @@ EndProcedure // InstallChannel()
 Procedure InstallChannelUpdate(Command)
     
     CurrentData = Items.Channels.CurrentData;
-    If CurrentData <> Undefined Then
+    If CurrentData = Undefined Then
+        Return;
+    EndIf;
         
-        If NOT CurrentData.Ref.IsEmpty() Then
-            InstallOrUpdateChannel(CurrentData);       
-        Else
+    If NOT CurrentData.Ref.IsEmpty() Then
+        InstallOrUpdateChannel(CurrentData);       
+    Else
 
-            Explanation = NStr("en='Application endpoint reference must be filled.';
-                |ru='Ссылка на конечную точку приложения должна быть заполнена.';
-                |uk='Посилання на кінцеву точку додатку повино бути заповнене.';
-                |en_CA='Application endpoint reference must be filled.'");    
-            ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
-            
-        EndIf;
-            
+        Explanation = NStr("en='Application endpoint reference must be filled.';
+            |ru='Ссылка на конечную точку приложения должна быть заполнена.';
+            |uk='Посилання на кінцеву точку додатку повино бути заповнене.';
+            |en_CA='Application endpoint reference must be filled.'");    
+        ShowUserNotification(Title, , Explanation, PictureLib.FL_Logotype64);
+        
     EndIf;
     
 EndProcedure // InstallChannelUpdate()
@@ -147,19 +151,22 @@ EndProcedure // InstallChannelUpdate()
 Procedure SelectChannel(Command)
     
     CurrentData = Items.Channels.CurrentData;
-    If CurrentData <> Undefined Then
-        
-        OpenForm("Catalog.FL_Channels.Form.ChoiceForm", 
-            New Structure("BasicChannelGuid", CurrentData.BasicChannelGuid),
-            ThisObject,
-            New UUID,
-            ,
-            ,
-            New NotifyDescription("DoAfterCloseChannelChoiceForm", ThisObject, 
-                New Structure("Identifier ", CurrentData.GetID())),
-            FormWindowOpeningMode.LockOwnerWindow);
-            
+    If CurrentData = Undefined Then
+        Return;
     EndIf;
+        
+    AdditionalParameters = New Structure("Identifier ", CurrentData.GetID());
+    NotifyDescription = New NotifyDescription("DoAfterCloseChannelChoiceForm", 
+        ThisObject, AdditionalParameters);
+    
+    OpenForm("Catalog.FL_Channels.Form.ChoiceForm", 
+        New Structure("BasicChannelGuid", CurrentData.BasicChannelGuid),
+        ThisObject,
+        New UUID,
+        ,
+        ,
+        NotifyDescription,
+        FormWindowOpeningMode.LockOwnerWindow);
         
 EndProcedure // SelectChannel()
 
@@ -167,17 +174,21 @@ EndProcedure // SelectChannel()
 Procedure DeleteEvent(Command)
     
     CurrentData = Items.Events.CurrentData;
-    If CurrentData <> Undefined Then
+    If CurrentData = Undefined Then
+        Return;
+    EndIf;
         
-        ShowQueryBox(New NotifyDescription("DoAfterChooseEventToDelete", 
-            ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en='Permanently delete the selected event?';
-                |ru='Удалить выбранное событие?';
-                |uk='Видалити обрану подію?';
-                |en_CA='Permanently delete the selected event?'"),
-            QuestionDialogMode.YesNo, , DialogReturnCode.No);     
+    AdditionalParameters = New Structure("Identifier", CurrentData.GetID()); 
+    NotifyDescription = New NotifyDescription("DoAfterChooseEventToDelete", 
+        ThisObject, AdditionalParameters);
         
-    EndIf;    
+    QueryText = NStr("en='Permanently delete the selected event?';
+        |ru='Удалить выбранное событие?';
+        |uk='Видалити обрану подію?';
+        |en_CA='Permanently delete the selected event?'");
+    
+    ShowQueryBox(NotifyDescription, QueryText, QuestionDialogMode.YesNo, , 
+        DialogReturnCode.No);       
     
 EndProcedure // DeleteEvent()
 
@@ -185,37 +196,44 @@ EndProcedure // DeleteEvent()
 Procedure DeleteOperation(Command)
    
     CurrentData = Items.Operations.CurrentData;
-    If CurrentData <> Undefined Then
-        
-        ShowQueryBox(New NotifyDescription("DoAfterChooseOperationToDelete", 
-            ThisObject, New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en='Permanently delete the selected operation?';
-                |ru='Удалить выбранную операцию?';
-                |uk='Видалити обрану операцію?';
-                |en_CA='Permanently delete the selected operation?'"),
-            QuestionDialogMode.YesNo, , DialogReturnCode.No);     
-        
+    If CurrentData = Undefined Then
+        Return;
     EndIf;
     
+    AdditionalParameters = New Structure("Identifier", CurrentData.GetID()); 
+    NotifyDescription = New NotifyDescription("DoAfterChooseOperationToDelete", 
+        ThisObject, AdditionalParameters);
+        
+    QueryText = NStr("en='Permanently delete the selected operation?';
+        |ru='Удалить выбранную операцию?';
+        |uk='Видалити обрану операцію?';
+        |en_CA='Permanently delete the selected operation?'");
+    
+    ShowQueryBox(NotifyDescription, QueryText, QuestionDialogMode.YesNo, , 
+        DialogReturnCode.No);     
+            
 EndProcedure // DeleteOperation()
 
 &AtClient
 Procedure SelectOperation(Command)
     
     CurrentData = Items.Operations.CurrentData;
-    If CurrentData <> Undefined Then
-        
-        OpenForm("Catalog.FL_Operations.Form.ChoiceForm", 
-            ,
-            ThisObject,
-            New UUID,
-            ,
-            ,
-            New NotifyDescription("DoAfterCloseOperationChoiceForm", ThisObject, 
-                New Structure("Identifier ", CurrentData.GetID())),
-            FormWindowOpeningMode.LockOwnerWindow);
-            
-    EndIf;  
+    If CurrentData = Undefined Then
+        Return;
+    EndIf;
+    
+    AdditionalParameters = New Structure("Identifier", CurrentData.GetID()); 
+    NotifyDescription = New NotifyDescription("DoAfterCloseOperationChoiceForm", 
+        ThisObject, AdditionalParameters);
+    
+    OpenForm("Catalog.FL_Operations.Form.ChoiceForm", 
+        ,
+        ThisObject,
+        New UUID,
+        ,
+        ,
+        NotifyDescription,
+        FormWindowOpeningMode.LockOwnerWindow);  
     
 EndProcedure // SelectOperation() 
 
@@ -238,8 +256,11 @@ Procedure DoAfterChooseEventToDelete(QuestionResult,
     
     Var Identifier;
     
-    If QuestionResult = DialogReturnCode.Yes
-        AND TypeOf(AdditionalParameters) = Type("Structure")
+    If QuestionResult <> DialogReturnCode.Yes Then
+        Return;
+    EndIf;
+    
+    If TypeOf(AdditionalParameters) = Type("Structure")
         AND AdditionalParameters.Property("Identifier", Identifier) Then
             
         SearchResult = Events.FindByID(Identifier);
@@ -352,8 +373,11 @@ Procedure DoAfterChooseOperationToDelete(QuestionResult,
     
     Var Identifier;
     
-    If QuestionResult = DialogReturnCode.Yes
-        AND TypeOf(AdditionalParameters) = Type("Structure")
+    If QuestionResult <> DialogReturnCode.Yes Then
+        Return;
+    EndIf;
+    
+    If TypeOf(AdditionalParameters) = Type("Structure")
         AND AdditionalParameters.Property("Identifier", Identifier) Then
             
         SearchResult = Operations.FindByID(Identifier);
@@ -446,9 +470,10 @@ Procedure DoAfterCloseConnectionForm(ClosureResult,
     
     If ClosureResult <> Undefined 
         AND TypeOf(ClosureResult) = Type("FormDataStructure") Then
-            
+        
+        TypeFormDataCollection = Type("FormDataCollection");
         If ClosureResult.Property("ChannelData")
-            AND TypeOf(ClosureResult.ChannelData) = Type("FormDataCollection") Then
+            AND TypeOf(ClosureResult.ChannelData) = TypeFormDataCollection Then
             
             FL_CommonUseClientServer.ExtendValueTable(
                 ClosureResult.ChannelData, ChannelData);
@@ -456,7 +481,7 @@ Procedure DoAfterCloseConnectionForm(ClosureResult,
         EndIf;
         
         If ClosureResult.Property("EncryptedData")
-            AND TypeOf(ClosureResult.EncryptedData) = Type("FormDataCollection") Then
+            AND TypeOf(ClosureResult.EncryptedData) = TypeFormDataCollection Then
             
             FL_CommonUseClientServer.ExtendValueTable(
                 ClosureResult.EncryptedData, EncryptedData);
@@ -484,8 +509,11 @@ Procedure DoAfterChooseChannelToDelete(QuestionResult,
     
     Var Identifier;
     
-    If QuestionResult = DialogReturnCode.Yes
-        AND TypeOf(AdditionalParameters) = Type("Structure")
+    If QuestionResult <> DialogReturnCode.Yes Then
+        Return;
+    EndIf;
+    
+    If TypeOf(AdditionalParameters) = Type("Structure")
         AND AdditionalParameters.Property("Identifier", Identifier) Then
             
         SearchResult = Channels.FindByID(Identifier);
@@ -683,7 +711,7 @@ Procedure ImportOperations(Object, ImportedExchange, OperationTable)
         
         FilterParameters.Operation = Operation.Operation;
         FilterResult = OperationTable.FindRows(FilterParameters);
-        If FilterResult.Count() <> 0 Then
+        If ValueIsFilled(FilterResult) Then
             CorrespondingOperation = FilterResult[0].Ref;    
         Else 
             Continue;
@@ -719,7 +747,7 @@ Procedure ImportEvents(Object, ImportedExchange, OperationTable, EventTable)
         
         FilterParameters.MetadataObject = Event.MetadataObject;
         FilterResult = EventTable.FindRows(FilterParameters);
-        If FilterResult.Count() = 0 Then
+        If NOT ValueIsFilled(FilterResult) Then
             Continue;
         EndIf;
         
@@ -773,7 +801,7 @@ Procedure ImportChannels(Object, ImportedExchange, OperationTable, ChannelTable)
         
         FilterParameters.Channel = Channel.Channel;
         FilterResult = ChannelTable.FindRows(FilterParameters);
-        If FilterResult.Count() = 0 Then
+        If NOT ValueIsFilled(FilterResult) Then
             Continue;
         EndIf;
         
@@ -810,7 +838,7 @@ Procedure ImportChannelResources(Object, ImportedExchange, OperationTable, Chann
         
         FilterParameters.Channel = ChannelResource.Channel;
         FilterResult = ChannelTable.FindRows(FilterParameters);
-        If FilterResult.Count() = 0 Then
+        If NOT ValueIsFilled(FilterResult) Then
             Continue;
         EndIf;
         
@@ -850,7 +878,7 @@ Function FindOperationLines(VTOperations, FDCOperations, FilterParameters)
     
     FilterResult = FDCOperations.FindRows(New Structure("Operation", 
         FilterParameters.Operation));
-    If FilterResult.Count() <> 0 Then
+    If ValueIsFilled(FilterResult) Then
         FilterParameters.Operation = FilterResult[0].Ref;
     Else 
         Return Undefined;

@@ -123,9 +123,21 @@ Function AvailableChannels() Export
         If Metadata.DataProcessors.Contains(Item) Then
             
             Try
-            
+                
+                PresentationTemplate = NStr("en='%1 (ver. %2)';
+                    |ru='%1 (вер. %2)';
+                    |uk='%1 (вер. %2)';
+                    |en_CA='%1 (ver. %2)'");
+                
                 DataProcessor = DataProcessors[Item.Name].Create();
-                AddAvailableChannel(DataProcessor, ValueList);
+                LibraryGuid = DataProcessor.LibraryGuid();
+                ChannelName = DataProcessor.ChannelFullName();
+                Version = DataProcessor.Version();
+                
+                Presentation = StrTemplate(PresentationTemplate, ChannelName, 
+                    Version);
+                
+                ValueList.Add(LibraryGuid, Presentation);
             
             Except
                 
@@ -281,24 +293,6 @@ EndFunction // NewAppEndpointProperties()
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions
-
-// Only for internal use.
-//
-Procedure AddAvailableChannel(DataProcessor, ValueList)
-    
-    PresentationTemplate = NStr("en='%1 (ver. %2)';
-        |ru='%1 (вер. %2)';
-        |uk='%1 (вер. %2)';
-        |en_CA='%1 (ver. %2)'");
-    
-    LibraryGuid = DataProcessor.LibraryGuid();
-    ChannelName = DataProcessor.ChannelFullName();
-    Version = DataProcessor.Version();
-    
-    Presentation = StrTemplate(PresentationTemplate, ChannelName, Version);  
-    ValueList.Add(LibraryGuid, Presentation);
-   
-EndProcedure // AddAvailableChannel()
 
 // Only for internal use.
 //
