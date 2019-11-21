@@ -32,10 +32,10 @@
 
 It's easy to start using it with any configuration on "1C:Enterprise 8" platform, requirements:
 - Platform version: 
-    - 8.3.10.2252 (minimal, SocialNetwork subsystem unsupported)
+    - 8.3.10.2699 (minimal, SocialNetwork subsystem unsupported)
     - **recommended 8.3.11.2924** and higher
 - Data lock control mode: **Managed**
-- Compatibility mode: **8.3.7** and higher
+- Compatibility mode: **8.3.10** and higher
 - «1C:Enterprise 8» server cluster and Database server for the best performance 
 
 FoxyLink subsystem is available as configuration, so you can install it using command:
@@ -76,7 +76,7 @@ If you have any questions, problems related to the FoxyLink subsystem usage or i
 ```1C-Enterprise
 Function OutputInJSON(DataCompositionSchema, DataCompositionSettings)
     
-    DataCompositionTemplate = FL_DataComposition.NewDataCompositionTemplateParameters();
+    DataCompositionTemplate = FL_DataComposition.NewTemplateComposerParameters();
     DataCompositionTemplate.Schema   = DataCompositionSchema;
     DataCompositionTemplate.Template = DataCompositionSettings;
     
@@ -85,13 +85,16 @@ Function OutputInJSON(DataCompositionSchema, DataCompositionSettings)
     OutputParameters.CanUseExternalFunctions = True;
     
     StreamObject = DataProcessors.FL_DataProcessorJSON.Create();
-    StreamObject.Initialize();
+    Stream = New MemoryStream();
+    StreamObject.Initialize(Stream);
 	
-    FL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
+    FL_DataComposition.Output(StreamObject, OutputParameters);
+
+    StreamObject.Close()
     
-    Return StreamObject.Close();
+    Return GetStringFromBinaryData(Stream.CloseAndGetBinaryData());
    
-EndFunction // OutputInJSON()     
+EndFunction // OutputInJSON()
 ```
 
 ## Copyright and license

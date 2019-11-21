@@ -32,10 +32,10 @@
 
 Подсистему легко начать использовать с любой конфигурацией на платформе «1С: Предприятие 8», требования:
 - Версия платформы: 
-    - 8.3.10.2252 (минимальная, подсистема SocialNetwork не поддерживается) 
+    - 8.3.10.2699 (минимальная, подсистема SocialNetwork не поддерживается) 
     - **рекомендуемая 8.3.11.2924** и выше
 - Режим управления блокировкой данных: **Управляемый**
-- Режим совместимости: **8.3.7** и выше
+- Режим совместимости: **8.3.10** и выше
 - Кластер серверов «1С:Предприятие 8» и сервер базы данных для наилучшей производительности 
 
 Подсистема FoxyLink доступна как конфигурация, поэтому вы можете установить ее с помощью команды:
@@ -74,7 +74,7 @@ FoxyLink предоставляет унифицированную модель 
 ```1C-Enterprise
 Function OutputInJSON(DataCompositionSchema, DataCompositionSettings)
     
-    DataCompositionTemplate = FL_DataComposition.NewDataCompositionTemplateParameters();
+    DataCompositionTemplate = FL_DataComposition.NewTemplateComposerParameters();
     DataCompositionTemplate.Schema   = DataCompositionSchema;
     DataCompositionTemplate.Template = DataCompositionSettings;
     
@@ -83,13 +83,16 @@ Function OutputInJSON(DataCompositionSchema, DataCompositionSettings)
     OutputParameters.CanUseExternalFunctions = True;
     
     StreamObject = DataProcessors.FL_DataProcessorJSON.Create();
-    StreamObject.Initialize();
+    Stream = New MemoryStream();
+    StreamObject.Initialize(Stream);
 	
-    FL_DataComposition.Output(Undefined, StreamObject, OutputParameters);
+    FL_DataComposition.Output(StreamObject, OutputParameters);
+
+    StreamObject.Close()
     
-    Return StreamObject.Close();
+    Return GetStringFromBinaryData(Stream.CloseAndGetBinaryData());
    
-EndFunction // OutputInJSON()     
+EndFunction // OutputInJSON()
 ```
 
 ## Авторское право и лицензия

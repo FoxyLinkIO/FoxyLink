@@ -354,6 +354,8 @@ EndFunction // FieldValue()
 //
 Function EncryptedFiledValue(FieldName, Collection) Export
     
+    FieldValue = Undefined;
+    
     FilterParameters = New Structure("FieldName", FieldName);
     FilterResult = Collection.FindRows(FilterParameters);
     If FilterResult.Count() = 1 Then

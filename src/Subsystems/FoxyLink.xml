@@ -94,6 +94,8 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_CollaborationSystem</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_WooCommerce</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_WordPress</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Role.FL_BasicRightsFoxyLink</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Role.FL_FullRightsFoxyLink</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>
