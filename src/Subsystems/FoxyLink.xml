@@ -96,6 +96,9 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_WordPress</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Role.FL_BasicRightsFoxyLink</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Role.FL_FullRightsFoxyLink</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_SaveAs</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_OpenDocument</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_QuickBooks</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

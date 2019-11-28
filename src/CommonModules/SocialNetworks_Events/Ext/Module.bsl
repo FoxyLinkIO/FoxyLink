@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2018 Petro Bazeliuk.
+// Copyright © 2018-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -30,12 +30,18 @@
 //
 Function ProcessMessage(Exchange, Message) Export
     
+    JobResult = Catalogs.FL_Jobs.NewJobResult();
+    
     Operation = FL_CommonUse.ObjectAttributeValue(Message, "Operation");
     If Operation = Catalogs.FL_Operations.Create Then
-        Return CreateSocial(Exchange, Message);
+        CreateSocial(Exchange, Message, JobResult);
     ElsIf Operation = Catalogs.FL_Operations.Merge Then
-        Return MergeSocial(Exchange, Message);
+        MergeSocial(Exchange, Message, JobResult);
     EndIf;
+    
+    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        JobResult.StatusCode);
+    Return JobResult;
   
 EndFunction // ProcessMessage()
 
@@ -50,20 +56,22 @@ EndFunction // ProcessMessage()
 //
 Function EventHandlerInfo() Export
     
+    Version = "1.0.4";
+    
     EventHandlerInfo = FL_InteriorUse.NewExternalEventHandlerInfo();
     EventHandlerInfo.Description = StrTemplate(NStr("
             |en='Social networks event handler, ver. %1.';
             |ru='Обработчик событий социальных сетей, вер. %1.';
             |uk='Обробник подій соціальних мереж, вер. %1.';
             |en_CA='Social networks handler, ver. %1.'"), 
-        EventHandlerInfo.Version);
+        Version);
     EventHandlerInfo.EventHandler = "SocialNetworks_Events.ProcessMessage";
-    EventHandlerInfo.Version = "1.0.4";
+    EventHandlerInfo.Version = Version;
     EventHandlerInfo.Transactional = True;
        
     EventSources = New Array;
-    EventSources.Add(Upper("HTTPService.FL_AppEndpoint"));
-    EventSources.Add(Upper("HTTPСервис.FL_AppEndpoint"));
+    EventSources.Add("HTTPSERVICE.FL_APPENDPOINT");
+    EventSources.Add("HTTPСЕРВИС.FL_APPENDPOINT");
     
     EventHandlerInfo.Publishers.Insert(Catalogs.FL_Operations.Create, 
         EventSources); 
@@ -78,6 +86,36 @@ EndFunction // EventHandlerInfo()
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
+
+// Only for internal use.
+//
+Procedure CreateSocial(Exchange, Message, JobResult)
+    
+    Try
+        
+        Context = Catalogs.FL_Messages.DeserializeContext(Message);
+        
+        SocialNetwork = Enums.SocialNetworks[Context.ChannelName];
+        SocialUser = Catalogs.SocialNetworks_Users.SocialNetworkUser(
+            TrimAll(Context.UserId), SocialNetwork, Context.Description);   
+        SocialConversation = Catalogs.SocialNetworks_Conversations
+            .SocialNetworkConversation(SocialUser, TrimAll(Context.ChatId));  
+        CreateSocialMessage(SocialUser, SocialConversation, Context);
+        
+        JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
+            
+    Except
+
+        ErrorInformation = ErrorInfo();
+        FL_InteriorUse.WriteLog("SocialNetworks_Events.ProcessMessage", 
+            EventLogLevel.Error, 
+            Metadata.CommonModules.SocialNetworks_Events,
+            ErrorInformation, 
+            JobResult);
+        
+    EndTry;
+    
+EndProcedure // CreateSocial()
 
 // Only for internal use.
 //
@@ -123,45 +161,8 @@ EndProcedure // CreateSocialMessage()
 
 // Only for internal use.
 //
-Function CreateSocial(Exchange, Message)
+Procedure MergeSocial(Exchange, Message, JobResult)
     
-    JobResult = Catalogs.FL_Jobs.NewJobResult();
-
-    Try
-        
-        Context = Catalogs.FL_Messages.DeserializeContext(Message);
-        
-        SocialNetwork = Enums.SocialNetworks[Context.ChannelName];
-        SocialUser = Catalogs.SocialNetworks_Users.SocialNetworkUser(
-            TrimAll(Context.UserId), SocialNetwork, Context.Description);   
-        SocialConversation = Catalogs.SocialNetworks_Conversations
-            .SocialNetworkConversation(SocialUser, TrimAll(Context.ChatId));  
-        CreateSocialMessage(SocialUser, SocialConversation, Context);
-        
-        JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
-            
-    Except
-
-        FL_InteriorUse.WriteLog("SocialNetworks_Events.ProcessMessage", 
-            EventLogLevel.Error, 
-            Metadata.CommonModules.SocialNetworks_Events,
-            ErrorDescription(), 
-            JobResult);
-        
-    EndTry;
-    
-    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-        JobResult.StatusCode);
-    Return JobResult;
-    
-EndFunction // CreateSocial()
-
-// Only for internal use.
-//
-Function MergeSocial(Exchange, Message)
-    
-    JobResult = Catalogs.FL_Jobs.NewJobResult();
-
     Try
         
         RequestBody = Catalogs.FL_Messages.DeserializeContext(Message);
@@ -223,18 +224,15 @@ Function MergeSocial(Exchange, Message)
             
     Except
         
+        ErrorInformation = ErrorInfo();
         FL_InteriorUse.WriteLog("SocialNetworks_Events.ProcessMessage", 
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Exchanges,
-            ErrorDescription(),
+            ErrorInformation,
             JobResult);
         
     EndTry;
     
-    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-        JobResult.StatusCode);
-    Return JobResult;
-    
-EndFunction // MergeSocial()
+EndProcedure // MergeSocial()
 
 #EndRegion // ServiceProceduresAndFunctions

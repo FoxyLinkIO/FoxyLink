@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2019 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -76,5 +76,48 @@ Function NewFileProperties(FileName = Undefined) Export
     Return FileProperties;
     
 EndFunction // NewFileProperties()
+
+// Checks if this version is newer than the current one.
+// 
+// Parameters:
+//  VersionToCheck - String - version to check. 
+//  CurrentVersion - String - current version.
+//
+// Returns:
+//   Boolean - True if it is newer version; otherwise - False.
+//
+Function IsNewerVersion(Val NewerVersion, Val CurrentVersion) Export
+
+    For Index = 0 To StrOccurrenceCount(NewerVersion, ".") Do
+        
+        NewerPtPosition = StrFind(NewerVersion, ".");
+        CurrentPtPosition = StrFind(CurrentVersion, ".");
+                
+        Try
+            If NewerPtPosition <> 0 AND CurrentPtPosition <> 0 Then
+                NewerNumber = Number(Left(NewerVersion, NewerPtPosition - 1));
+                CurrentNumber =  Number(Left(CurrentVersion, CurrentPtPosition - 1));
+            Else
+                NewerNumber = Number(NewerVersion);
+                CurrentNumber =  Number(CurrentVersion);
+            EndIf;
+        Except
+            Return False;
+        EndTry;
+        
+        If NewerNumber > CurrentNumber Then
+            Return True;
+        ElsIf NewerNumber < CurrentNumber Then
+            Return False;
+        EndIf;
+                      
+        NewerVersion = Mid(NewerVersion, NewerPtPosition + 1);
+        CurrentVersion = Mid(CurrentVersion, CurrentPtPosition + 1); 
+        
+    EndDo;
+
+    Return False;
+
+EndFunction // IsNewerVersion()
 
 #EndRegion // ProgramInterface

@@ -61,6 +61,7 @@ Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod,
     
     LogObject = Undefined;
     
+    // TODO: Headers logging
     If JobResult.LogAttribute <> Undefined Then
         LogObject = StartLogHTTPRequest(HTTPConnection, HTTPRequest, HTTPMethod);
     EndIf;
@@ -81,7 +82,7 @@ Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod,
         
         If JobResult.LogAttribute <> Undefined Then
             JobResult.LogAttribute = JobResult.LogAttribute + EndLogHTTPRequest(
-                LogObject, JobResult.StatusCode, HTTPResponse.GetBodyAsString());    
+                LogObject, JobResult.StatusCode, HTTPResponse);    
         EndIf;
         
     Except
@@ -442,17 +443,22 @@ EndFunction // NewFormField()
 //  MetadataObject - MetadataObject - the object that is associated with the event.
 //  Commentaries   - String         - arbitrary string of commentary for the event.
 //                 - Array          - commentaries list.
+//                 - ErrorInfo      - display structured information about error (exception).
 //  JobResult      - Structure      - see function Catalogs.FL_Jobs.NewJobResult.
+//                          Default value: Undefined.
+//  StatusCode     - Number         - state (reply) code returned by the service.
 //                          Default value: Undefined.
 //
 Procedure WriteLog(EventName, Level, MetadataObject, Commentaries, 
-    JobResult = Undefined) Export
+    JobResult = Undefined, StatusCode = Undefined) Export
     
     Var Commentary;
      
     If TypeOf(Commentaries) = Type("Array") Then
         Commentary = StrConcat(Commentaries, Chars.CR + Chars.LF);
-    Else 
+    ElsIf TypeOf(Commentaries) = Type("ErrorInfo") Then
+        Commentary = DetailErrorDescription(Commentaries);    
+    Else
         Commentary = Commentaries;
     EndIf;
     
@@ -462,6 +468,10 @@ Procedure WriteLog(EventName, Level, MetadataObject, Commentaries,
         If Level = EventLogLevel.Error Then
             JobResult.StatusCode = FL_InteriorUseReUse
                 .InternalServerErrorStatusCode();                
+        EndIf;
+
+        If StatusCode <> Undefined Then
+            JobResult.StatusCode = StatusCode;    
         EndIf;
 
     EndIf;
@@ -1090,10 +1100,20 @@ EndFunction // StartLogHTTPRequest()
 // Returns:
 //  String - complete log message.
 //
-Function EndLogHTTPRequest(LogObject, StatusCode, ResponseBody)
+Function EndLogHTTPRequest(LogObject, StatusCode, HTTPResponse)
+    
+    MessageSize = HTTPResponse.GetBodyAsStream().Size();
+    If FL_InteriorUseReUse.MaximumMessageSize() < MessageSize Then
+        LogObject.ResponseBody = NStr(
+            "en='The body of the message was deleted as it exceeded the maximum message size.';
+            |ru='Тело сообщения удалено, так как оно превысило максимальный размер сообщения.';
+            |uk='Тіло повідомлення видалено, так як воно перевищило максимальний розмір повідомлення.';
+            |en_CA='The body of the message was deleted as it exceeded the maximum message size.'");         
+    Else
+        LogObject.ResponseBody = HTTPResponse.GetBodyAsString();   
+    EndIf;
     
     LogObject.StatusCode = StatusCode;
-    LogObject.ResponseBody = ResponseBody;
     LogObject.DoneResponse = CurrentUniversalDate();   
     LogObject.Elapsed = CurrentUniversalDateInMilliseconds() - LogObject.Elapsed;
     
@@ -1126,32 +1146,30 @@ Function EndLogHTTPRequest(LogObject, StatusCode, ResponseBody)
             LogObject.DoneResponse,
             LogObject.Elapsed);
         
-    Else
-        
-        Return StrTemplate("BeginRequest: %1
-                |
-                |REQUEST URL
-                |Host URL: %2
-                |Resource: %3 %4
-                |
-                |RESPONSE BODY 
-                |Result: %5
-                |%6
-                |
-                |DoneResponse: %7
-                |Overall Elapsed: %8 ms
-                |----------------------------------------------------------------------
-                |", 
-            LogObject.BeginRequest,
-            LogObject.HostURL,
-            LogObject.HTTPMethod,
-            LogObject.ResourceAddress,
-            LogObject.StatusCode,
-            LogObject.ResponseBody,
-            LogObject.DoneResponse,
-            LogObject.Elapsed);
-        
     EndIf;
+        
+    Return StrTemplate("BeginRequest: %1
+            |
+            |REQUEST URL
+            |Host URL: %2
+            |Resource: %3 %4
+            |
+            |RESPONSE BODY 
+            |Result: %5
+            |%6
+            |
+            |DoneResponse: %7
+            |Overall Elapsed: %8 ms
+            |----------------------------------------------------------------------
+            |", 
+        LogObject.BeginRequest,
+        LogObject.HostURL,
+        LogObject.HTTPMethod,
+        LogObject.ResourceAddress,
+        LogObject.StatusCode,
+        LogObject.ResponseBody,
+        LogObject.DoneResponse,
+        LogObject.Elapsed);
     
 EndFunction // EndLogHTTPRequest()
 

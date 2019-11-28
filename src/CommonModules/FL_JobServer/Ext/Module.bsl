@@ -39,6 +39,26 @@ Procedure RunScheduledJob(ScheduledJob, SafeMode = True) Export
     
 EndProcedure // RunScheduledJob()
 
+// Stops the specified background job by passed UUID in this infobase.
+//
+// Parameters:
+//  UUID - UUID - background job ID.
+//
+Procedure StopBackgroundJob(UUID) Export
+    
+    If NOT ValueIsFilled(UUID) Then
+        Return;
+    EndIf;
+    
+    BackgroundJob = BackgroundJobByUUID(UUID);  
+    If NOT BackgroundJobIsActive(BackgroundJob) Then
+        Return;
+    EndIf;
+
+    CancelBackgroundJob(BackgroundJob);
+    
+EndProcedure // StopBackgroundJob()
+
 // Stops the specified scheduled job in this infobase immediately.
 //
 // Parameters:
@@ -53,10 +73,77 @@ Procedure StopScheduledJob(ScheduledJob) Export
         
     BackgroundJobsByFilter = BackgroundJobsByFilter(BackgroundJobsFilter);
     For Each BackgroundJob In BackgroundJobsByFilter Do
-        BackgroundJob.Cancel();        
+        CancelBackgroundJob(BackgroundJob);        
     EndDo;
             
 EndProcedure // StopScheduledJob()
+
+// Returns array of BackgroundJob objects that in active state.
+//
+// Returns:
+//  Array - array of BackgroundJob objects.
+//
+Function ActiveBackgroundJobs() Export
+    
+    BackgroundJobsFilter = FL_JobServer.NewBackgroundJobsFilter();
+    BackgroundJobsFilter.State = BackgroundJobState.Active;
+    FL_CommonUseClientServer.RemoveValueFromStructure(BackgroundJobsFilter);
+    Return FL_JobServer.BackgroundJobsByFilter(BackgroundJobsFilter);
+    
+EndFunction // ActiveBackgroundJobs()
+
+// Find background job by passed UUID and shows if it was completed. 
+// Only administrator or user who started background job can obtain the job. 
+//
+// Parameters:
+//  UUID - UUID - background job ID.
+//
+// Returns:
+//  Boolean - True if it was completed; otherwise - False.
+//
+Function JobCompleted(UUID) Export
+    
+    BackgroundJob = BackgroundJobByUUID(UUID);
+    If BackgroundJobIsActive(BackgroundJob) Then
+        Return False;
+    EndIf;
+    
+    If BackgroundJob = Undefined Then
+        
+        ErrorMessage = FL_ErrorsClientServer.ErrorBackgroundJobNotFoundByUUID(
+            UUID);
+        FL_InteriorUse.WriteLog("FoxyLink.Tasks.JobCompleted",
+            EventLogLevel.Error,
+            Metadata.CommonModules.FL_JobServer,
+            ErrorMessage);
+                
+    Else
+        
+        If BackgroundJob.State = BackgroundJobState.Failed Then
+            
+            If BackgroundJob.ErrorInfo <> Undefined Then
+                Raise BriefErrorDescription(BackgroundJob.ErrorInfo);
+            EndIf;
+            
+        ElsIf BackgroundJob.State = BackgroundJobState.Canceled Then
+            
+            ErrorMessage = FL_ErrorsClientServer.ErrorBackgroundJobWasCanceled();
+            FL_InteriorUse.WriteLog("FoxyLink.Tasks.JobCompleted",
+                EventLogLevel.Error,
+                Metadata.CommonModules.FL_JobServer,
+                ErrorMessage);
+                
+        Else
+
+            Return True;
+            
+        EndIf;
+        
+    EndIf;
+    
+    Raise FL_ErrorsClientServer.ErrorCannotPerformThisOperation(); 
+    
+EndFunction // JobCompleted() 
 
 // Returns registered or register the job server in the current infobase.
 // 
@@ -151,6 +238,7 @@ Function ScheduledJob(Val ID) Export
     If ScheduledJob = Undefined Then
         Raise NStr("en='Scheduled job is not found. Perhaps, it has been deleted by another user.';
             |ru='Регламентное задание не найдено. Возможно, оно удалено другим пользователем.';
+            |uk='Регламентне завдання не знайдено. Можливо, воно видалене іншим користувачем.';
             |en_CA='Scheduled job is not found. Perhaps, it has been deleted by another user.'");
     EndIf;
 
@@ -172,6 +260,35 @@ Function BackgroundJobByUUID(UUID) Export
     Return BackgroundJobs.FindByUUID(UUID);    
     
 EndFunction // BackgroundJobByUUID()
+
+// Returns an array of UserMessage objects generated in the process of executing 
+// a background job.
+//
+// Parameters:
+//  UUID           - UUID    - background job ID.
+//  DeleteMessages - Boolean - indicates whether to delete received messages.
+//                      Default value: True.
+//
+// Returns:
+//  FixedArray - an array of UserMessage objects.
+//
+Function BackgroundJobMessages(UUID, DeleteMessages = True) Export
+    
+    Messages = New FixedArray(New Array);
+    
+    BackgroundJob = BackgroundJobByUUID(UUID);
+    If BackgroundJob = Undefined Then
+        Return Messages;
+    EndIf;
+    
+    MessagesArray = BackgroundJob.GetUserMessages(DeleteMessages);
+    If MessagesArray = Undefined Then
+        Return Messages;
+    EndIf;
+    
+    Return MessagesArray;
+    
+EndFunction // BackgroundJobMessages()
 
 // Returns array of BackgroundJob objects by specified filter.
 //
@@ -235,11 +352,12 @@ Procedure JobExpirationAction() Export
                 JobObject = QueryResultSelection.Job.GetObject(); 
                 JobObject.Delete();
             Except
-               
+                
+                ErrorInfo = ErrorInfo();
                 FL_InteriorUse.WriteLog("FoxyLink.Tasks.JobExpirationAction", 
                     EventLogLevel.Error,
                     Metadata.ScheduledJobs.FL_JobExpiration,
-                    ErrorDescription());
+                    ErrorInfo);
                 
             EndTry;
             
@@ -477,6 +595,25 @@ EndProcedure // PushJobServerState()
 
 // Only for internal use.
 //
+Procedure CancelBackgroundJob(BackgroundJob)
+    
+    Try
+        BackgroundJob.Cancel();
+    Except
+        
+        // It is possible that the job has completed at that moment and no error has occurred.
+        ErrorInfo = ErrorInfo();
+        FL_InteriorUse.WriteLog("FoxyLink.Tasks.CancelBackgroundJob",
+            EventLogLevel.Error,
+            Metadata.CommonModules.FL_JobServer,
+            ErrorInfo);
+        
+    EndTry;
+    
+EndProcedure // CancelBackgroundJob()
+
+// Only for internal use.
+//
 Procedure ClearJobServerState() 
     
     RecordSet = InformationRegisters.FL_TasksHeartbeat.CreateRecordSet(); 
@@ -580,6 +717,21 @@ Procedure RunBackgroundJobs(JobTable, HeartbeatTable, WorkerCount, Val Limit)
     EndDo;
     
 EndProcedure // RunBackgroundJobs()
+
+// Only for internal use.
+//
+Function BackgroundJobIsActive(BackgroundJob)
+    
+    If BackgroundJob <> Undefined 
+        AND BackgroundJob.State = BackgroundJobState.Active Then
+        
+        Return True;
+        
+    EndIf;
+    
+    Return False;
+    
+EndFunction // BackgroundJobIsActive()
 
 // Only for internal use.
 //
