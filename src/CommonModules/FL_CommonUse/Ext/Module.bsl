@@ -1157,12 +1157,10 @@ Function BaseTypeNameByMetadataObject(MetadataObject) Export
     ElsIf Metadata.CalculationRegisters.Contains(MetadataObject.Parent())
         AND MetadataObject.Parent().Recalculations.Find(MetadataObject.Name) = MetadataObject Then
         Return TypeNameRecalculations();
-        
-    Else
-        
-        Return "";
-        
+                       
     EndIf;
+    
+    Return "";
     
 EndFunction // BaseTypeNameByMetadataObject() 
 
@@ -1508,7 +1506,7 @@ Function ValueFromBase64String(Value) Export
     
 EndFunction // ValueFromBase64String()    
     
-// Serializes the value into JSON string representation.
+// Serializes the value into a JSON string representation.
 //
 // Parameters:
 //  Value - Arbitrary - the value to be serialized.
@@ -1538,7 +1536,7 @@ Function ValueFromJSONString(Value) Export
     JSONReader = New JSONReader();
     JSONReader.SetString(Value);
     
-    // Deserializes a value in JSON format. 
+    // Deserializes a value from JSON format. 
     Object = XDTOSerializer.ReadJSON(JSONReader);
     
     // Clear action.
@@ -1547,6 +1545,48 @@ Function ValueFromJSONString(Value) Export
     Return Object;
 
 EndFunction // ValueFromJSONString()
+
+// Serializes the value into a XML binary data representation.
+//
+// Parameters:
+//  Value - Arbitrary - the value to be serialized.
+//
+// Returns:
+//  BinaryData - XML binary data representation.
+//
+Function ValueToXMLBinaryData(Value) Export
+    
+    MemoryStream = New MemoryStream;              
+    XMLWriter = New XMLWriter;
+    XMLWriter.OpenStream(MemoryStream);
+    XDTOSerializer.WriteXML(XMLWriter, Value, XMLTypeAssignment.Explicit);           
+    XMLWriter.Close();      
+    Return MemoryStream.CloseAndGetBinaryData();
+    
+EndFunction // ValueToXMLBinaryData() 
+
+// Deserializes object from a XML binary data.
+//
+// Parameters:
+//  Value - BinaryData - the value to be deserialized.
+//
+// Returns:
+//  Arbitrary - deserialized object from the XML binary data.
+//
+Function ValueFromXMLBinaryData(Value) Export
+    
+    XMLReader = New XMLReader;
+    XMLReader.OpenStream(Value.OpenStreamForRead());
+    
+    // Deserializes a value from XML binary data format.
+    Object = XDTOSerializer.ReadXML(XMLReader);
+    
+    // Clear action.
+    XMLReader.Close();
+    
+    Return Object;
+    
+EndFunction // ValueFromXMLBinaryData()
 
 // Deserializes object from a XML string and XMLDataType.
 //
@@ -1572,10 +1612,11 @@ Function ValueFromXMLTypeAndValue(XMLValue, TypeName, NamespaceURI) Export
         
     Except
         
+        ErrorInformation = ErrorInfo();
         FL_InteriorUse.WriteLog("FoxyLink", 
             EventLogLevel.Error,
             Metadata.CommonModules.FL_CommonUse,
-            ErrorDescription());
+            ErrorInformation);
         
     EndTry;
     
@@ -3065,22 +3106,12 @@ Function ValueMatchCodeType(Value, TypeEmptyRef, ConversionResult)
     MetadataObject = TypeEmptyRef.Metadata();
     If IsCatalog(MetadataObject) Then
         Return ValueMatchCatalogCodeType(Value, MetadataObject, 
-            ConversionResult);       
-    Else
-            
-        ErrorMessage = StrTemplate(
-            NStr("en='%1 Code in {%2} is not supported in configuration.'; 
-                |ru='%1 Код в {%2} не поддерживается в конфигурации.'; 
-                |uk='%1 Код в {%2} не підтримується в конфігурації.';
-                |en_CA='%1 Code in {%2} is not supported in configuration.'"),
-            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(), 
-            String(TypeOf(TypeEmptyRef))); 
-        ConversionResult.ErrorMessages.Add(ErrorMessage);    
-        Return False;
-                        
+            ConversionResult);              
     EndIf;
 
-    Return True;
+    FL_ErrorsClientServer.CodeIsNotSupportedInFoxyLink(TypeEmptyRef, 
+        ConversionResult); 
+    Return False;
         
 EndFunction // ValueMatchCodeType()
 
@@ -3088,85 +3119,48 @@ EndFunction // ValueMatchCodeType()
 //
 Function ValueMatchCatalogCodeType(Value, MetadataObject, ConversionResult)
     
+    // Regular type of code in this configuration.
+    RegularCodeType = Type("String");
+    
     ObjectProperties = Metadata.ObjectProperties;
     If MetadataObject.CodeLength = 0 Then
-        
-        ErrorMessage =  StrTemplate(
-            NStr("en='%1 Code in configuration has zero length.'; 
-                |ru='%1 Длина поля Код в конфигурации равна нулю.'; 
-                |uk='%1 Довжина поля Код в конфігурації рівна нулю.';
-                |en_CA='%1 Code in configuration has zero length.'"),
-            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate());       
-        ConversionResult.ErrorMessages.Add(ErrorMessage);    
-        Return False;
-            
+        FL_ErrorsClientServer.CodeInConfigurationIsZeroLength(
+            ConversionResult);
+        Return False; 
     EndIf;
 
     CodeType = MetadataObject.CodeType;
-    If CodeType = ObjectProperties.CatalogCodeType.String Then
+    If CodeType = ObjectProperties.CatalogCodeType.String 
+        OR CodeType = ObjectProperties.CatalogCodeType.Number Then
         
-        If TypeOf(Value) <> Type("String") Then 
-            
-            ErrorMessage = StrTemplate(
-                NStr("en='%1 Expected Code type {%2} and received type is {%3}.'; 
-                    |ru='%1 Тип Кода ожидался {%2}, а получили тип {%3}.'; 
-                    |uk='%1 Тип Коду очікувався {%2}, але отримали тип {%3}.';
-                    |en_CA='%1 Expected Code type {%2} and received type is {%3}.'"),
-                FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),                          
-                String(Type("String")), String(TypeOf(Value))); 
-            ConversionResult.ErrorMessages.Add(ErrorMessage);    
-            Return False;
-                            
+        If CodeType = ObjectProperties.CatalogCodeType.Number Then
+            RegularCodeType = Type("Number");    
         EndIf;
         
-    ElsIf CodeType = ObjectProperties.CatalogCodeType.Number Then
-        
-        If TypeOf(Value) <> Type("Number") Then
-            
-            ErrorMessage = StrTemplate(
-                NStr("en='%1 Expected Code type {%2} and received type is {%3}.'; 
-                    |ru='%1 Тип Кода ожидался {%2}, а получили тип {%3}.'; 
-                    |uk='%1 Тип Коду очікувався {%2}, але отримали тип {%3}.';
-                    |en_CA='%1 Expected Code type {%2} and received type is {%3}.'"),                
-                FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),
-                String(Type("String")), String(TypeOf(Value)));    
-            ConversionResult.ErrorMessages.Add(ErrorMessage);    
-            Return False;
-            
+        If TypeOf(Value) <> RegularCodeType Then 
+            FL_ErrorsClientServer.CodeTypeIsDifferentFromExpected(Value, 
+                RegularCodeType, ConversionResult);  
+            Return False;            
         EndIf;
-        
+                
     Else
         
-        ErrorMessage = StrTemplate(
-            NStr("en='%1 Code type {%2} not supported.'; 
-                |ru='%1 Тип Кода {%2} не поддерживается.'; 
-                |uk='%1 Тип Коду {%2} не підтримується.';
-                |en_CA='%1 Code type {%2} not supported.'"),
-            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),     
-            String(CodeType));   
-        ConversionResult.ErrorMessages.Add(ErrorMessage);    
+        FL_ErrorsClientServer.CodeTypeIsNotSupported(CodeType, 
+            ConversionResult);   
         Return False;
         
     EndIf;
         
-    If TypeOf(Value) = Type("Number") Then
+    If RegularCodeType = Type("Number") Then
         CodeLength = StrLen(Format(Value, "NG=0"));
     Else
         CodeLength = StrLen(TrimAll(Value));
     EndIf;
     
     If MetadataObject.CodeLength < CodeLength Then
-        
-        ErrorMessage = StrTemplate(
-            NStr("en='%1 Code lenght is {%2} and maximum length is {%3}.'; 
-                |ru='%1 Длина Кода равна {%2}, что больше максимальной длины {%3}.'; 
-                |uk='%1 Довжина Коду рівна {%2}, що більше максимальної {%3}.';
-                |en_CA='%1 Code lenght is {%2} and maximum length is {%3}.'"),
-            FL_ErrorsClientServer.ErrorFailedToProcessParameterTemplate(),
-            CodeLength, MetadataObject.CodeLength);
-        ConversionResult.ErrorMessages.Add(ErrorMessage);    
-        Return False;
-                        
+        FL_ErrorsClientServer.CodeLengthExceededMaximumLenght(CodeLength, 
+            MetadataObject.CodeLength, ConversionResult);   
+        Return False;             
     EndIf;
     
     Return True;
@@ -3233,7 +3227,7 @@ EndFunction // UniqueIdentifierHypenPosition()
 //
 Function QueryTextReferenceByDescription()
 
-    QueryText = "
+    Return "
         |SELECT
         |   MetadataObject.Ref AS Ref   
         |FROM
@@ -3241,7 +3235,6 @@ Function QueryTextReferenceByDescription()
         |WHERE
         |   MetadataObject.Description = &Description
         |";
-    Return QueryText;
 
 EndFunction // QueryTextReferenceByDescription() 
 
@@ -3249,7 +3242,7 @@ EndFunction // QueryTextReferenceByDescription()
 //
 Function QueryTextReferenceByCode()
 
-    QueryText = "
+    Return "
         |SELECT
         |   MetadataObject.Ref AS Ref   
         |FROM
@@ -3257,7 +3250,6 @@ Function QueryTextReferenceByCode()
         |WHERE
         |   MetadataObject.Code = &Code
         |";
-    Return QueryText;
 
 EndFunction // QueryTextReferenceByCode()
 
@@ -3265,7 +3257,7 @@ EndFunction // QueryTextReferenceByCode()
 //
 Function QueryTextReferenceByPredefinedDataName()
 
-    QueryText = "
+    Return "
         |SELECT
         |   MetadataObject.Ref AS Ref   
         |FROM
@@ -3273,7 +3265,6 @@ Function QueryTextReferenceByPredefinedDataName()
         |WHERE
         |   MetadataObject.PredefinedDataName = &PredefinedDataName
         |";
-    Return QueryText;
 
 EndFunction // QueryTextReferenceByPredefinedDataName()
 

@@ -28,7 +28,7 @@
 Procedure RunDataCompositionSchemaWizard(ManagedForm, 
     DataCompositionSchemaAddress) Export
     
-    #If ThickClientOrdinaryApplication Or ThickClientManagedApplication Then
+    #If ThickClientOrdinaryApplication OR ThickClientManagedApplication OR ТолстыйКлиентОбычноеПриложение OR ТолстыйКлиентУправляемоеПриложение Then
         
         // Copy existing data composition schema.
         DataCompositionSchema = XDTOSerializer.ReadXDTO(XDTOSerializer.WriteXDTO(

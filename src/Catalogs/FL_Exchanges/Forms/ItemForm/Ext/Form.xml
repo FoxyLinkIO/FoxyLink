@@ -450,6 +450,22 @@
 																	<CommandName>Form.Command.CopyDataCompositionSchema</CommandName>
 																	<ExtendedTooltip name="CopyDataCompositionSchemaExtendedTooltip" id="369"/>
 																</Button>
+																<CommandBar name="HiddenCommandBarDCS" id="397">
+																	<HorizontalStretch>false</HorizontalStretch>
+																	<ExtendedTooltip name="HiddenCommandBarDCSExtendedTooltip" id="398"/>
+																	<ChildItems>
+																		<Button name="SaveDataCompositionSchemaToFile" id="395">
+																			<Type>CommandBarButton</Type>
+																			<CommandName>Form.Command.SaveDataCompositionSchemaToFile</CommandName>
+																			<ExtendedTooltip name="SaveDataCompositionSchemaToFileExtendedTooltip" id="396"/>
+																		</Button>
+																		<Button name="LoadDataCompositionSchemaFromFile" id="399">
+																			<Type>CommandBarButton</Type>
+																			<CommandName>Form.Command.LoadDataCompositionSchemaFromFile</CommandName>
+																			<ExtendedTooltip name="LoadDataCompositionSchemaFromFileExtendedTooltip" id="400"/>
+																		</Button>
+																	</ChildItems>
+																</CommandBar>
 															</ChildItems>
 														</UsualGroup>
 														<CheckBoxField name="RowUseExternalFunctions" id="327">
@@ -3046,6 +3062,94 @@
 			</Picture>
 			<Action>CopyDataCompositionSchema</Action>
 			<Representation>TextPicture</Representation>
+		</Command>
+		<Command name="SaveDataCompositionSchemaToFile" id="16">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Save data composition schema to file</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Save data composition schema to file</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Сохранить схему компоновки данных в файл</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Зберегти схему компоновки даних в файд</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Save data composition schema to file</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Save data composition schema to file</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Сохранить схему компоновки данных в файл</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Зберегти схему компоновки даних в файд</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_SaveAs</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>SaveDataCompositionSchemaToFile</Action>
+			<Representation>Picture</Representation>
+		</Command>
+		<Command name="LoadDataCompositionSchemaFromFile" id="17">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Load data composition schema from file</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Load data composition schema from file</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Загрузить схему компоновки данных из файла</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Завантажити схему компоновки даних з файлу</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Load data composition schema from file</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Load data composition schema from file</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Загрузить схему компоновки данных из файла</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Завантажити схему компоновки даних з файлу</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_OpenDocument</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>LoadDataCompositionSchemaFromFile</Action>
+			<Representation>Picture</Representation>
 		</Command>
 	</Commands>
 </Form>

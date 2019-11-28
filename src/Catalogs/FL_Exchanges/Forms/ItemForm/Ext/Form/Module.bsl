@@ -512,6 +512,38 @@ Procedure GenerateSpreadsheetDocument(Command)
     
 EndProcedure // GenerateSpreadsheetDocument()
 
+&AtClient
+Procedure LoadDataCompositionSchemaFromFile(Command)
+    
+    BinaryDataAddress = PutToTempStorage("", UUID);
+    NotifyDescription = New NotifyDescription(
+        "Attachable_LoadDataCompositionSchemaFromFile", 
+        ThisObject, 
+        BinaryDataAddress);
+        
+    FileProperties = FL_InteriorUseClientServer.NewFileProperties();
+    FileProperties.Extension = ".xml";
+    FileProperties.StorageAddress = BinaryDataAddress;
+    FileProperties.Insert("NotifyDescription", NotifyDescription);
+    
+    FL_InteriorUseClient.Attachable_FileSystemExtension(New NotifyDescription(
+        "Attachable_LoadFile", FL_InteriorUseClient, FileProperties));
+    
+EndProcedure // LoadDataCompositionSchemaFromFile()
+
+&AtClient
+Procedure SaveDataCompositionSchemaToFile(Command)
+    
+    FileProperties = ExportDataCompositionSchemaAtServer();
+    If FileProperties = Undefined Then        
+        Return;    
+    EndIf;
+    
+    FL_InteriorUseClient.Attachable_FileSystemExtension(New NotifyDescription(
+        "Attachable_SaveFileAs", FL_InteriorUseClient, FileProperties));
+    
+EndProcedure // SaveDataCompositionSchemaToFile()
+
 #EndRegion // FormCommandHandlers
 
 #Region ServiceProceduresAndFunctions
@@ -719,6 +751,24 @@ EndFunction // CurrentOperationsWithAPISchema()
 
 #Region Operations
 
+// Processes the loaded data composition schema from file.
+//
+// Parameters:
+//  Result               - Boolean   - the result value passed by the second 
+//                                      parameter when the method was called. 
+//  AdditionalParameters – Arbitrary - the value, which was specified when the 
+//                                      notification object was created. 
+//
+&AtClient
+Procedure Attachable_LoadDataCompositionSchemaFromFile(Result, 
+    AdditionalParameters) Export
+    
+    If Result AND IsTempStorageURL(AdditionalParameters) Then
+        LoadDataCompositionSchemaAtServer(AdditionalParameters);      
+    EndIf;
+    
+EndProcedure // Attachable_LoadDataCompositionSchemaFromFile()
+
 // Adds new operation to ThisObject.
 //
 // Parameters:
@@ -841,6 +891,22 @@ Procedure CopyDataCompositionSchemaAtServer(OperationId)
     EndIf;
     
 EndProcedure // CopyDataCompositionSchemaAtServer()
+
+&AtServer
+Procedure LoadDataCompositionSchemaAtServer(BinaryDataAddress)
+    
+    If IsTempStorageURL(BinaryDataAddress) Then
+        
+        BinaryData = GetFromTempStorage(BinaryDataAddress);
+        DeserializedData = FL_CommonUse.ValueFromXMLBinaryData(BinaryData);
+        If TypeOf(DeserializedData) = Type("DataCompositionSchema") Then
+            UpdateDataCompositionSchema(DeserializedData);
+            Modified = True;
+        EndIf;     
+            
+    EndIf;    
+    
+EndProcedure // LoadDataCompositionSchemaAtServer()
 
 &AtServer
 Procedure GenerateSpreadsheetDocumentAtServer()
@@ -1177,6 +1243,17 @@ Function CurrentOperationData(Val RowOperation)
     Return CurrentData;    
 
 EndFunction // CurrentOperationData()  
+
+// Exports current data composition schema to file.
+//
+&AtServer
+Function ExportDataCompositionSchemaAtServer()
+    
+    FileDescription = StrTemplate("%1.%2", Object.Description, RowOperation);
+    Return FL_DataComposition.ExportDataCompositionSchema(
+        DataCompositionSchemaEditAddress, FileDescription);
+    
+EndFunction // ExportDataCompositionSchemaAtServer()
 
 // Only for internal use.
 //

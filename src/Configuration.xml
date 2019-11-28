@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.361</Version>
+			<Version>0.9.9.375</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -226,9 +226,7 @@
 			<Subsystem>FoxyLink</Subsystem>
 			<CommonPicture>FL_Add</CommonPicture>
 			<CommonPicture>FL_AddEvent</CommonPicture>
-			<CommonPicture>FL_AddLink</CommonPicture>
 			<CommonPicture>FL_AddPrivateKey</CommonPicture>
-			<CommonPicture>FL_AddRow</CommonPicture>
 			<CommonPicture>FL_CodeFile</CommonPicture>
 			<CommonPicture>FL_CollaborationSystem</CommonPicture>
 			<CommonPicture>FL_Connected</CommonPicture>
@@ -260,6 +258,7 @@
 			<CommonPicture>FL_Logotype64</CommonPicture>
 			<CommonPicture>FL_MetadataObjects</CommonPicture>
 			<CommonPicture>FL_Ok</CommonPicture>
+			<CommonPicture>FL_OpenDocument</CommonPicture>
 			<CommonPicture>FL_Order</CommonPicture>
 			<CommonPicture>FL_Parameters</CommonPicture>
 			<CommonPicture>FL_Preview</CommonPicture>
@@ -267,10 +266,12 @@
 			<CommonPicture>FL_ProcessingError</CommonPicture>
 			<CommonPicture>FL_ProcessingWarning</CommonPicture>
 			<CommonPicture>FL_Prototype</CommonPicture>
+			<CommonPicture>FL_AddLink</CommonPicture>
 			<CommonPicture>FL_Response</CommonPicture>
 			<CommonPicture>FL_Route</CommonPicture>
 			<CommonPicture>FL_Save</CommonPicture>
 			<CommonPicture>FL_SaveAndClose</CommonPicture>
+			<CommonPicture>FL_AddRow</CommonPicture>
 			<CommonPicture>FL_Schedule</CommonPicture>
 			<CommonPicture>FL_Select</CommonPicture>
 			<CommonPicture>FL_Settings</CommonPicture>
@@ -280,6 +281,8 @@
 			<CommonPicture>FL_ValidMethodSettings</CommonPicture>
 			<CommonPicture>FL_WooCommerce</CommonPicture>
 			<CommonPicture>FL_WordPress</CommonPicture>
+			<CommonPicture>FL_QuickBooks</CommonPicture>
+			<CommonPicture>FL_SaveAs</CommonPicture>
 			<Role>FL_BasicRightsFoxyLink</Role>
 			<Role>FL_FullRightsFoxyLink</Role>
 			<CommonTemplate>FL_LICENSE</CommonTemplate>

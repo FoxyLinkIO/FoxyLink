@@ -132,6 +132,50 @@ Procedure OutputInValueCollection(ValueCollection, OutputParameters) Export
     
 EndProcedure // OutputInValueCollection()
 
+// Exports a data composition schema. 
+//
+// Parameters:
+//  SourceAddress   - String                - the address to export data composition schema from.
+//                  - DataCompositionSchema - the source data composition schema to export from.
+//  FileDescription - String                - the name of the file (without extension).
+//                              Default value: "".
+//
+// Returns:
+//  Structure - see function FL_InteriorUseClientServer.NewFileProperties.
+//
+Function ExportDataCompositionSchema(SourceAddress, FileDescription = "") Export
+    
+    If IsTempStorageURL(SourceAddress) Then
+        DataCompositionSchema = GetFromTempStorage(SourceAddress);
+    Else
+        DataCompositionSchema = SourceAddress;
+    EndIf;
+    
+    If IsBlankString(FileDescription) Then
+        FileDescription = String(New UUID);        
+    EndIf;
+                      
+    FileData = FL_CommonUse.ValueToXMLBinaryData(DataCompositionSchema);
+    
+    FileProperties = FL_InteriorUseClientServer.NewFileProperties();
+    FileProperties.Name = StrTemplate("%1%2", FileDescription, ".xml");
+    FileProperties.BaseName = FileDescription;
+    FileProperties.Extension = ".xml";
+    FileProperties.Size = FileData.Size();
+    FileProperties.IsFile = True;
+    FileProperties.StorageAddress = PutToTempStorage(FileData);
+    
+    #If MobileAppServer OR МобильноеПриложениеСервер Then
+    FileProperties.ModificationTime = CurrentDate();
+    #ElsIf Server OR ThickClientOrdinaryApplication OR ExternalConnection OR Сервер OR ТолстыйКлиентОбычноеПриложение OR ВнешнееСоединение Then
+    FileProperties.ModificationTime = CurrentSessionDate();
+    #EndIf
+
+    FileProperties.ModificationTimeUTC = CurrentUniversalDate();
+    Return FileProperties;
+            
+EndFunction // ExportDataCompositionSchema()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface

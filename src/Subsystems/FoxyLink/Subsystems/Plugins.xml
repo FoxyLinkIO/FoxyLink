@@ -27,6 +27,7 @@
 		<ChildObjects>
 			<Subsystem>Channels</Subsystem>
 			<Subsystem>EventHandlers</Subsystem>
+			<Subsystem>EventLoggers</Subsystem>
 			<Subsystem>Formats</Subsystem>
 		</ChildObjects>
 	</Subsystem>

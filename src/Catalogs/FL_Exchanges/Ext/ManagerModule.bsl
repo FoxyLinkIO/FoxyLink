@@ -222,11 +222,11 @@ Function ProcessMessage(Exchange, Message) Export
 
     Except
         
-        ErrorDescription = ErrorDescription();
+        ErrorInformation = ErrorInfo();
         FL_InteriorUse.WriteLog("FoxyLink.Integration.ProcessMessage", 
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Exchanges,
-            ErrorDescription,
+            ErrorInformation,
             JobResult);
             
     EndTry;
@@ -283,9 +283,9 @@ Function ExportObject(Exchange) Export
         FileProperties.IsFile = True;
         FileProperties.StorageAddress = PutToTempStorage(FileData);
         
-        #If MobileAppServer Then
+        #If MobileAppServer OR МобильноеПриложениеСервер Then
         FileProperties.ModificationTime = CurrentDate();
-        #ElsIf Server Or ThickClientOrdinaryApplication Or ExternalConnection Then
+        #ElsIf Server OR ThickClientOrdinaryApplication OR ExternalConnection OR Сервер OR ТолстыйКлиентОбычноеПриложение OR ВнешнееСоединение Then
         FileProperties.ModificationTime = CurrentSessionDate();
         #EndIf
     
