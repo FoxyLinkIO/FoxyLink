@@ -26,9 +26,8 @@
 //
 Function ExchangeServer() Export
 
-    ExchangeServer = FL_JobServer.ScheduledJob(
+    Return FL_JobServer.ScheduledJob(
         Metadata.ScheduledJobs.SocialNetworks_ExchangeServer);
-    Return ExchangeServer;
 
 EndFunction // ExchangeServer()
 
@@ -111,7 +110,7 @@ Procedure ProcessCollaborationMessages(SocialConversation, Conversation,
         
     CollaborationMessages = DataProcessors.FL_CollaborationSystem
         .CollaborationSystemMessages(Filter);
-    If CollaborationMessages.Count() = 0 Then
+    If NOT ValueIsFilled(CollaborationMessages) Then
         Return;
     EndIf;
     
@@ -185,7 +184,7 @@ EndProcedure // SendMessageReplies()
 //
 Function QueryTextMessagesWithoutMatches()
     
-    QueryText = "
+    Return "
         |SELECT
         |   ValueTable.SocialConversation AS SocialConversation,
         |   ValueTable.CollaborationMessageId AS CollaborationMessageId,
@@ -221,7 +220,6 @@ Function QueryTextMessagesWithoutMatches()
         |;
         |
         |";
-    Return QueryText;
     
 EndFunction // QueryMessagesWithoutMatches()
 

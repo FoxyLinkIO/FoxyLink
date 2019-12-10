@@ -727,7 +727,30 @@ Function StringURI(Val URIStructure) Export
         URIStructure.PathOnServer);
     
 EndFunction // StringURI()
+
+#Region ValueConversion
+
+// Converts timestamp to a local date string.
+//
+// Parameters:
+//   Timestamp - Number - the current universal date in milliseconds 
+//                         (in UTC, starting from 01.01.0001 00:00:00).
+//
+// Returns:
+//  String - converted timestamp to the local date string. 
+//
+Function TimestampToLocalDateString(Timestamp) Export
+     
+    Milliseconds = 1000;
     
+    Remainder = Timestamp % Milliseconds;
+    Integer = (Timestamp - Remainder) / Milliseconds; 
+    Return Format(Date(1, 1, 1) + Integer, "DLF=DDT") + Format(Remainder, "NF=.N");
+    
+EndFunction // TimestampToLocalDateString()
+
+#EndRegion // ValueConversion 
+
 #EndRegion // ProgramInterface
 
 #Region ServiceProceduresAndFunctions

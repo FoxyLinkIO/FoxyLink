@@ -148,6 +148,16 @@ Function IsCalculationRegisterTypeObjectCached(FullName) Export
     
 EndFunction // IsCalculationRegisterTypeObjectCached()
 
+// Defines if an application version is 8.3.13 or higher.
+//
+Function IsAppVersion_8_3_13_OrHigher() Export
+    
+    SystemInfo = New SystemInfo;
+    AppVersion = SystemInfo.AppVersion;
+    Return FL_InteriorUseClientServer.IsNewerVersion(AppVersion, "8.3.13.0");
+    
+EndFunction // IsAppVersion_8_3_13_OrHigher() 
+
 // Returns a fixed map with base reference type name synonyms.
 //
 // Returns:
