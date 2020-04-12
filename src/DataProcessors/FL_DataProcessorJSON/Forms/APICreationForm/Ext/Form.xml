@@ -291,7 +291,6 @@
 						<InputField name="APISchemaDescription" id="20">
 							<DataPath>Object.APISchema.Description</DataPath>
 							<EditMode>EnterOnInput</EditMode>
-							<AutoMarkIncomplete>true</AutoMarkIncomplete>
 							<ContextMenu name="APISchemaDescriptionContextMenu" id="21"/>
 							<ExtendedTooltip name="APISchemaDescriptionExtendedTooltip" id="22"/>
 						</InputField>
@@ -523,12 +522,16 @@
 								<v8:content>Turned off</v8:content>
 							</v8:item>
 							<v8:item>
+								<v8:lang>en_CA</v8:lang>
+								<v8:content>Turned off</v8:content>
+							</v8:item>
+							<v8:item>
 								<v8:lang>ru</v8:lang>
 								<v8:content>Выключено</v8:content>
 							</v8:item>
 							<v8:item>
-								<v8:lang>en_CA</v8:lang>
-								<v8:content>Turned off</v8:content>
+								<v8:lang>uk</v8:lang>
+								<v8:content>Виключено</v8:content>
 							</v8:item>
 						</Title>
 						<Type>
@@ -553,6 +556,33 @@
 					</Column>
 				</AdditionalColumns>
 			</Columns>
+		</Attribute>
+		<Attribute name="SchemaAttributeName" id="2">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Schema attribute name</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Schema attribute name</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Имя атрибута схемы</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Назва атрибута схеми</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
 		</Attribute>
 		<ConditionalAppearance>
 			<dcsset:item>

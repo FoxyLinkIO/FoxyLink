@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -61,10 +61,11 @@ Procedure Route(Source = Undefined, Exchange = Undefined,
             
             RollbackTransaction();
             
+            ErrorInformation = ErrorInfo();
             FL_InteriorUse.WriteLog("FoxyLink.Integration.Route",
                 EventLogLevel.Error,
                 Metadata.Catalogs.FL_Messages,
-                ErrorDescription());        
+                ErrorInformation);        
             
         EndTry;
                 
@@ -109,7 +110,9 @@ EndProcedure // RouteAndRun()
 //  Source      - Structure, FixedStructure - see function Catalogs.FL_Messages.NewInvocation.
 //              - CatalogRef.FL_Messages    - a single message to get result.
 //  Exchange    - CatalogRef.FL_Exchanges   - a routing exchange.
-//  AppEndpoint - CatalogRef.FL_Channels    - a receiver channel.
+//              - String                    - the name of exchange.
+//  AppEndpoint - CatalogRef.FL_Channels    - a receiver app endpoint.
+//              - String                    - the name of receiver app endpoint.
 //                      Default value: Null.
 //
 // Returns:
@@ -117,13 +120,25 @@ EndProcedure // RouteAndRun()
 //
 Function RouteAndRunOutputResult(Source, Exchange, AppEndpoint = Null) Export
     
+    ExchangeRef = Exchange;
+    If TypeOf(ExchangeRef) = Type("String") Then
+        ExchangeRef = FL_CommonUse.ReferenceByDescription(
+            Metadata.Catalogs.FL_Exchanges, ExchangeRef);    
+    EndIf;
+    
+    AppEndpointRef = AppEndpoint;
+    If TypeOf(AppEndpointRef) = Type("String") Then
+        AppEndpointRef = FL_CommonUse.ReferenceByDescription(
+            Metadata.Catalogs.FL_Channels, AppEndpointRef);     
+    EndIf;
+    
     // Copy of the job result, see function Catalogs.FL_Jobs.NewJobResult.
     JobResult = Catalogs.FL_Jobs.NewJobResult();
     
     If TransactionActive() Then
         
         Message = GetMessage(Source);
-        RouteAndRun(Message, Exchange, AppEndpoint, JobResult);    
+        RouteAndRun(Message, ExchangeRef, AppEndpointRef, JobResult);    
         
     Else
         
@@ -132,7 +147,7 @@ Function RouteAndRunOutputResult(Source, Exchange, AppEndpoint = Null) Export
             BeginTransaction();
             
             Message = GetMessage(Source);
-            RouteAndRun(Message, Exchange, AppEndpoint, JobResult); 
+            RouteAndRun(Message, ExchangeRef, AppEndpointRef, JobResult); 
             
             CommitTransaction();
         
@@ -375,14 +390,17 @@ EndFunction // ContextValueNoException()
 // Deserializes a message tabular section or payload into context call.
 //
 // Parameters:
-//  Message - CatalogRef.FL_Messages - reference to the message.
-//          - String                 - message id.
+//  Message           - CatalogRef.FL_Messages - reference to the message.
+//                    - String                 - message id.
+//  StorageAddress    - String                 - the address of the temporary 
+//                          storage where the procedure result must be stored.
+//                                  Default value: "".
 //
 // Returns:
 //  Arbitrary - deserialized context.
 //  Undefined - context is absent.
 //
-Function DeserializeContext(Val Message) Export
+Function DeserializeContext(Val Message, StorageAddress = "") Export
     
     If TypeOf(Message) = TypeOf("String") Then
         Message = FL_CommonUse.ValueFromXMLTypeAndValue(Message, 
@@ -397,6 +415,8 @@ Function DeserializeContext(Val Message) Export
         
         Context = QueryResult.Unload();
         JoinContextValueColumn(Context);
+        
+        FL_Tasks.PutDataToTempStorage(Context, StorageAddress);
         Return Context; 
         
     EndIf;
@@ -413,7 +433,10 @@ Function DeserializeContext(Val Message) Export
     Payload = QueryResult.Payload.Get();
     If TypeOf(Payload) = Type("Structure") 
         OR TypeOf(Payload) = Type("FixedStructure") Then
-        Return Payload;    
+        
+        FL_Tasks.PutDataToTempStorage(Context, StorageAddress);
+        Return Payload; 
+        
     EndIf;
     
     If TypeOf(Payload) <> Type("BinaryData") Then
@@ -431,6 +454,7 @@ Function DeserializeContext(Val Message) Export
     Context = ReadJSON(JSONReader);
     JSONReader.Close();
     
+    FL_Tasks.PutDataToTempStorage(Context, StorageAddress);
     Return Context;
     
 EndFunction // DeserializeContext()
@@ -493,7 +517,8 @@ EndFunction // IsMessagePublisher()
 //      * EventSource       - String                   - provides access to the 
 //                                              event source object name.
 //                                      Default value: "".
-//      * MessageId         - String                   - message identifier as a string. 
+//      * FileExtension     - String                   - message format file extension.
+//      * MessageId         - String                   - message identifier as a string.
 //                                              If applications need to identify messages.
 //      * Operation         - CatalogReg.FL_Operations - the type of change experienced.
 //      * Payload           - Arbitrary                - invocation payload.
@@ -517,6 +542,8 @@ Function NewInvocation() Export
     Invocation.Insert("ContentType", "1C:Enterprise");
     Invocation.Insert("CorrelationId");
     Invocation.Insert("EventSource", "");
+    Invocation.Insert("FileExtension");
+    Invocation.Insert("MessageId");
     Invocation.Insert("Operation");
     Invocation.Insert("Payload");
     Invocation.Insert("ReplyTo");
@@ -868,7 +895,7 @@ EndFunction // AppEndpoints()
 //
 Function QueryTextIsPublisher()
 
-    QueryText = "
+    Return "
         |SELECT 
         |   MessagePublishers.EventSource AS EventSource
         |FROM
@@ -877,7 +904,6 @@ Function QueryTextIsPublisher()
         |   MessagePublishers.EventSource = &EventSource
         |AND MessagePublishers.InUse
         |";
-    Return QueryText;
     
 EndFunction // QueryTextIsPublisher()
 
@@ -885,7 +911,7 @@ EndFunction // QueryTextIsPublisher()
 //
 Function QueryTextIsMessagePublisher()
 
-    QueryText = "
+    Return "
         |SELECT 
         |   MessagePublishers.EventSource AS EventSource,
         |   MessagePublishers.Operation AS Operation,
@@ -897,7 +923,6 @@ Function QueryTextIsMessagePublisher()
         |AND MessagePublishers.Operation = &Operation
         |AND MessagePublishers.InUse
         |";
-    Return QueryText;
     
 EndFunction // QueryTextIsMessagePublisher()
 
@@ -905,7 +930,7 @@ EndFunction // QueryTextIsMessagePublisher()
 //
 Function QueryTextMessages()
 
-    QueryText = "
+    Return "
         |SELECT 
         |   Messages.Ref AS Message
         |
@@ -918,7 +943,6 @@ Function QueryTextMessages()
         |ORDER BY
         |   Messages.Timestamp ASC
         |";
-    Return QueryText;
     
 EndFunction // QueryTextMessages()
 
@@ -926,7 +950,7 @@ EndFunction // QueryTextMessages()
 //
 Function QueryTextExchangeEndpoint()
 
-    QueryText = "
+    Return "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
         |   IsNull(OperationTable.Invoke, False) AS Invoke,
@@ -955,7 +979,6 @@ Function QueryTextExchangeEndpoint()
         |ORDER BY
         |   IsNull(OperationTable.Priority, 5) ASC
         |";
-    Return QueryText;
     
 EndFunction // QueryTextExchangeEndpoint()
 
@@ -963,7 +986,7 @@ EndFunction // QueryTextExchangeEndpoint()
 //
 Function QueryTextExchangeEndpoints()
 
-    QueryText = "
+    Return "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
         |   IsNull(OperationTable.Invoke, False) AS Invoke,
@@ -992,7 +1015,6 @@ Function QueryTextExchangeEndpoints()
         |ORDER BY
         |   IsNull(OperationTable.Priority, 5) ASC
         |";
-    Return QueryText;
     
 EndFunction // QueryTextExchangeEndpoints()
 
@@ -1000,7 +1022,7 @@ EndFunction // QueryTextExchangeEndpoints()
 //
 Function QueryTextAppEndpoint()
     
-    QueryText = "
+    Return "
         |SELECT
         |   &Exchange AS Ref,
         |   &AppEndpoint AS AppEndpoint,
@@ -1043,9 +1065,7 @@ Function QueryTextAppEndpoint()
         |////////////////////////////////////////////////////////////////////////////////
         |DROP AppEndpointsCache
         |;
-        |";
-    
-    Return QueryText;  
+        |"; 
     
 EndFunction // QueryTextAppEndpoint()
 
@@ -1053,7 +1073,7 @@ EndFunction // QueryTextAppEndpoint()
 //
 Function QueryTextAppEndpoints()
     
-    QueryText = "
+    Return "
         |SELECT
         |   AppEndpoints.Ref AS Ref,
         |   AppEndpoints.Channel AS AppEndpoint,
@@ -1101,9 +1121,7 @@ Function QueryTextAppEndpoints()
         |////////////////////////////////////////////////////////////////////////////////
         |DROP AppEndpointsCache
         |;
-        |";
-    
-    Return QueryText;  
+        |"; 
     
 EndFunction // QueryTextAppEndpoints()
 
@@ -1111,7 +1129,7 @@ EndFunction // QueryTextAppEndpoints()
 //
 Function QueryTextMessageContext()
     
-    QueryText = "
+    Return "
         |SELECT
         |   MessageContext.Filter AS Filter,
         |   MessageContext.NamespaceURI AS NamespaceURI,
@@ -1123,7 +1141,6 @@ Function QueryTextMessageContext()
         |WHERE
         |   MessageContext.Ref = &Message  
         |";
-    Return QueryText;
     
 EndFunction // QueryTextMessageContext()
 
@@ -1131,7 +1148,7 @@ EndFunction // QueryTextMessageContext()
 //
 Function QueryTextMessagePayload()
     
-    QueryText = "
+    Return "
         |SELECT
         |   MessagePayload.Message.ContentEncoding AS ContentEncoding,
         |   MessagePayload.Message.ContentType AS ContentType,
@@ -1141,7 +1158,6 @@ Function QueryTextMessagePayload()
         |WHERE
         |   MessagePayload.Message = &Message  
         |";
-    Return QueryText;
     
 EndFunction // QueryTextMessagePayload()
     

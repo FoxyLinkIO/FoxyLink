@@ -5,16 +5,20 @@
 			<Name>FL_JobServer</Name>
 			<Synonym>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Сервер заданий</v8:content>
-				</v8:item>
-				<v8:item>
 					<v8:lang>en</v8:lang>
 					<v8:content>Job server</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
 					<v8:content>Job server</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Сервер заданий</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Сервер завдань</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>

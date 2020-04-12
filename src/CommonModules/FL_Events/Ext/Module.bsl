@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -25,7 +25,7 @@
 //
 // Parameters:
 //  Source - ConstantValueManager.FL_LicenseAccepted - constant object.
-//  Cancel - Boolean - write cancel flag. If this parameter is set to True in 
+//  Cancel - Boolean - a write cancel flag. If this parameter is set to True in 
 //                     the body of the handler procedure, the write transaction 
 //                     will not be completed.
 //
@@ -230,6 +230,8 @@ EndProcedure // DocumentOnWrite()
 //
 Procedure RegisterBeforeWrite(Source, Cancel, Replacing) Export
    
+    Var DBSource, DBTablePrimaryKeys;
+    
     If Source.DataExchange.Load OR Cancel Then
         Return;
     EndIf;
@@ -241,17 +243,26 @@ Procedure RegisterBeforeWrite(Source, Cancel, Replacing) Export
     EndIf;
     
     RecordsCount = Source.Count();
-    PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(SourceMetadata);
-    AttributeValues = FL_CommonUse.RegisterAttributeValues(SourceMetadata, 
-        Source.Filter, PrimaryKeys);
+    DBRecordsCount = 0; 
+    
+    // If Replacing = True, it is needed to check database records if exists
+    // to make desicion about the type of operation.
+    If Replacing Then
+        
+        DBTablePrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
+            SourceMetadata);
+        DBSource = FL_CommonUse.RegisterAttributeValues(SourceMetadata, 
+            Source.Filter, DBTablePrimaryKeys);
+        DBRecordsCount = DBSource.Count();
+        
+    EndIf;
         
     // It is nothing to register, return.
-    ValuesCount = AttributeValues.Count();
-    If RecordsCount = 0 AND ValuesCount = 0 Then
+    If RecordsCount = 0 AND DBRecordsCount = 0 Then
         Return;
     EndIf;
     
-    Operation = RegisterMessageOperation(RecordsCount, ValuesCount, Replacing);
+    Operation = RegisterMessageOperation(RecordsCount, DBRecordsCount, Replacing);
     If NOT Catalogs.FL_Messages.IsMessagePublisher(EventSource, Operation) Then
         Return;    
     EndIf;
@@ -262,8 +273,8 @@ Procedure RegisterBeforeWrite(Source, Cancel, Replacing) Export
     
     // Saving invocation context.
     If Replacing Then
-        FillRegisterContext(Invocation, PrimaryKeys, Source.Filter, 
-            AttributeValues);   
+        FillRegisterContext(Invocation, DBTablePrimaryKeys, Source.Filter, 
+            DBSource);   
     EndIf;
 
     Source.AdditionalProperties.Insert("Invocation", Invocation); 
@@ -360,12 +371,12 @@ EndProcedure // FillRegisterContext()
 
 // Only for internal use.
 //
-Function RegisterMessageOperation(RecordsCount, ValuesCount, Replacing)
+Function RegisterMessageOperation(RecordsCount, DBRecordsCount, Replacing)
     
     Operation = Catalogs.FL_Operations.Create;    
     If Replacing Then
         
-        If RecordsCount > 0 AND ValuesCount > 0 Then
+        If RecordsCount > 0 AND DBRecordsCount > 0 Then
             
             // Rewriting records to the database.
             Operation = Catalogs.FL_Operations.Update;

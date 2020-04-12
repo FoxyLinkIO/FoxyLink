@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.375</Version>
+			<Version>1.0.0.7</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -226,7 +226,9 @@
 			<Subsystem>FoxyLink</Subsystem>
 			<CommonPicture>FL_Add</CommonPicture>
 			<CommonPicture>FL_AddEvent</CommonPicture>
+			<CommonPicture>FL_AddLink</CommonPicture>
 			<CommonPicture>FL_AddPrivateKey</CommonPicture>
+			<CommonPicture>FL_AddRow</CommonPicture>
 			<CommonPicture>FL_CodeFile</CommonPicture>
 			<CommonPicture>FL_CollaborationSystem</CommonPicture>
 			<CommonPicture>FL_Connected</CommonPicture>
@@ -263,15 +265,18 @@
 			<CommonPicture>FL_Parameters</CommonPicture>
 			<CommonPicture>FL_Preview</CommonPicture>
 			<CommonPicture>FL_Processing</CommonPicture>
+			<CommonPicture>FL_Processing16</CommonPicture>
+			<CommonPicture>FL_Processing32</CommonPicture>
+			<CommonPicture>FL_Processing48</CommonPicture>
 			<CommonPicture>FL_ProcessingError</CommonPicture>
 			<CommonPicture>FL_ProcessingWarning</CommonPicture>
 			<CommonPicture>FL_Prototype</CommonPicture>
-			<CommonPicture>FL_AddLink</CommonPicture>
+			<CommonPicture>FL_QuickBooks</CommonPicture>
 			<CommonPicture>FL_Response</CommonPicture>
 			<CommonPicture>FL_Route</CommonPicture>
 			<CommonPicture>FL_Save</CommonPicture>
 			<CommonPicture>FL_SaveAndClose</CommonPicture>
-			<CommonPicture>FL_AddRow</CommonPicture>
+			<CommonPicture>FL_SaveAs</CommonPicture>
 			<CommonPicture>FL_Schedule</CommonPicture>
 			<CommonPicture>FL_Select</CommonPicture>
 			<CommonPicture>FL_Settings</CommonPicture>
@@ -281,8 +286,7 @@
 			<CommonPicture>FL_ValidMethodSettings</CommonPicture>
 			<CommonPicture>FL_WooCommerce</CommonPicture>
 			<CommonPicture>FL_WordPress</CommonPicture>
-			<CommonPicture>FL_QuickBooks</CommonPicture>
-			<CommonPicture>FL_SaveAs</CommonPicture>
+			<SessionParameter>FL_CanceledBackgroundJobs</SessionParameter>
 			<Role>FL_BasicRightsFoxyLink</Role>
 			<Role>FL_FullRightsFoxyLink</Role>
 			<CommonTemplate>FL_LICENSE</CommonTemplate>

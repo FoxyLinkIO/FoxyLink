@@ -1,0 +1,1023 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
+	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
+	<AutoCommandBar name="FormCommandBar" id="-1"/>
+	<Events>
+		<Event name="OnOpen">OnOpen</Event>
+		<Event name="OnCreateAtServer">OnCreateAtServer</Event>
+	</Events>
+	<ChildItems>
+		<CheckBoxField name="PropRouted" id="22">
+			<DataPath>Object.Routed</DataPath>
+			<ReadOnly>true</ReadOnly>
+			<TitleLocation>None</TitleLocation>
+			<ToolTipRepresentation>Button</ToolTipRepresentation>
+			<EditMode>EnterOnInput</EditMode>
+			<CheckBoxType>Tumbler</CheckBoxType>
+			<EditFormat>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>BF='Message in queue'; BT='Message routed'</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>BF='Message in queue'; BT='Message routed'</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>BF='Сообщение в очереди'; BT='Сообщение маршрутизировано'</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>BF='Повідомлення в черзі'; BT='Повідомлення маршрутизовано'</v8:content>
+				</v8:item>
+			</EditFormat>
+			<ContextMenu name="PropRoutedContextMenu" id="23"/>
+			<ExtendedTooltip name="PropRoutedExtendedTooltip" id="24"/>
+		</CheckBoxField>
+		<UsualGroup name="GroupMessageProperties" id="141">
+			<ReadOnly>true</ReadOnly>
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Message properties</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Message properties</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Свойства сообщения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Властивості повідомлення</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Message properties</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Message properties</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Свойства сообщения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Властивості повідомлення</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Group>Horizontal</Group>
+			<Collapsed>true</Collapsed>
+			<Representation>None</Representation>
+			<ExtendedTooltip name="GroupMessagePropertiesExtendedTooltip" id="142"/>
+			<ChildItems>
+				<UsualGroup name="Group1" id="143">
+					<Group>Vertical</Group>
+					<Representation>None</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="Group1ExtendedTooltip" id="144"/>
+					<ChildItems>
+						<UsualGroup name="Group3" id="183">
+							<Group>Horizontal</Group>
+							<Representation>None</Representation>
+							<ShowTitle>false</ShowTitle>
+							<ExtendedTooltip name="Group3ExtendedTooltip" id="184"/>
+							<ChildItems>
+								<InputField name="PropTimestamp" id="180">
+									<DataPath>Object.Timestamp</DataPath>
+									<ToolTipRepresentation>Button</ToolTipRepresentation>
+									<ContextMenu name="PropTimestampContextMenu" id="181"/>
+									<ExtendedTooltip name="PropTimestampExtendedTooltip" id="182"/>
+									<Events>
+										<Event name="OnChange">PropTimestampOnChange</Event>
+									</Events>
+								</InputField>
+								<LabelDecoration name="Timestamp" id="185">
+									<TextColor>style:FieldSelectionBackColor</TextColor>
+									<ContextMenu name="TimestampContextMenu" id="186"/>
+									<ExtendedTooltip name="TimestampExtendedTooltip" id="187"/>
+								</LabelDecoration>
+							</ChildItems>
+						</UsualGroup>
+						<InputField name="PropAppId" id="145">
+							<DataPath>Object.AppId</DataPath>
+							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<ContextMenu name="PropAppIdContextMenu" id="146"/>
+							<ExtendedTooltip name="PropAppIdExtendedTooltip" id="147"/>
+						</InputField>
+						<InputField name="PropMessageId" id="171">
+							<DataPath>MessageId</DataPath>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Message identifier as a string. If applications need to identify messages, it is recommended that they use this attribute instead of putting it into the message payload.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Message identifier as a string. If applications need to identify messages, it is recommended that they use this attribute instead of putting it into the message payload.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Идентификатор сообщения как строка. Если приложениям необходимо идентифицировать сообщения, рекомендуется использовать этот атрибут вместо того, чтобы помещать его в тело сообщения.</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Ідентифікатор повідомлення як рядок. Якщо додаткам необхідно ідентифікувати повідомлення, рекомендується використовувати цей атрибут замість того, щоб поміщати його в тіло повідомлення.</v8:content>
+								</v8:item>
+							</ToolTip>
+							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<ContextMenu name="PropMessageIdContextMenu" id="172"/>
+							<ExtendedTooltip name="PropMessageIdExtendedTooltip" id="173"/>
+						</InputField>
+						<InputField name="PropOperation" id="154">
+							<DataPath>Object.Operation</DataPath>
+							<TitleLocation>Left</TitleLocation>
+							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<ContextMenu name="PropOperationContextMenu" id="155"/>
+							<ExtendedTooltip name="PropOperationExtendedTooltip" id="156"/>
+						</InputField>
+						<InputField name="PropEventSource" id="151">
+							<DataPath>Object.EventSource</DataPath>
+							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<ContextMenu name="PropEventSourceContextMenu" id="152"/>
+							<ExtendedTooltip name="PropEventSourceExtendedTooltip" id="153"/>
+						</InputField>
+						<Pages name="ContextPages" id="241">
+							<Title>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Context pages</v8:content>
+								</v8:item>
+							</Title>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Context pages</v8:content>
+								</v8:item>
+							</ToolTip>
+							<PagesRepresentation>None</PagesRepresentation>
+							<ExtendedTooltip name="ContextPagesExtendedTooltip" id="242"/>
+							<ChildItems>
+								<Page name="ContextLoadingPage" id="245">
+									<ExtendedTooltip name="ContextLoadingPageExtendedTooltip" id="246"/>
+									<ChildItems>
+										<UsualGroup name="GroupLoadingContext" id="250">
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Message context</v8:content>
+												</v8:item>
+											</Title>
+											<ToolTip>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Message context</v8:content>
+												</v8:item>
+											</ToolTip>
+											<HorizontalStretch>true</HorizontalStretch>
+											<VerticalStretch>true</VerticalStretch>
+											<HorizontalAlign>Center</HorizontalAlign>
+											<VerticalAlign>Center</VerticalAlign>
+											<Representation>None</Representation>
+											<ExtendedTooltip name="GroupLoadingContextExtendedTooltip" id="251"/>
+											<ChildItems>
+												<PictureDecoration name="LoadingContextPicture" id="247">
+													<Height>3</Height>
+													<Picture>
+														<xr:Ref>CommonPicture.FL_Processing48</xr:Ref>
+														<xr:LoadTransparent>true</xr:LoadTransparent>
+													</Picture>
+													<ContextMenu name="LoadingContextPictureContextMenu" id="248"/>
+													<ExtendedTooltip name="LoadingContextPictureExtendedTooltip" id="249"/>
+												</PictureDecoration>
+												<LabelDecoration name="LoadingContextMessage" id="252">
+													<TextColor>style:FieldSelectionBackColor</TextColor>
+													<Title formatted="false">
+														<v8:item>
+															<v8:lang>en</v8:lang>
+															<v8:content>Loading data, please wait...</v8:content>
+														</v8:item>
+														<v8:item>
+															<v8:lang>en_CA</v8:lang>
+															<v8:content>Loading data, please wait...</v8:content>
+														</v8:item>
+														<v8:item>
+															<v8:lang>ru</v8:lang>
+															<v8:content>Загрузка данных, пожалуйста, подождите ...</v8:content>
+														</v8:item>
+														<v8:item>
+															<v8:lang>uk</v8:lang>
+															<v8:content>Завантаження даних, будь ласка, зачекайте ...</v8:content>
+														</v8:item>
+													</Title>
+													<GroupVerticalAlign>Center</GroupVerticalAlign>
+													<ContextMenu name="LoadingContextMessageContextMenu" id="253"/>
+													<ExtendedTooltip name="LoadingContextMessageExtendedTooltip" id="254"/>
+												</LabelDecoration>
+											</ChildItems>
+										</UsualGroup>
+										<CommandBar name="GroupLoadingContextCommandBar" id="255">
+											<HorizontalLocation>Right</HorizontalLocation>
+											<ExtendedTooltip name="GroupLoadingContextCommandBarExtendedTooltip" id="256"/>
+											<ChildItems>
+												<Button name="CancelLoadingContext" id="257">
+													<Type>CommandBarButton</Type>
+													<CommandName>Form.Command.CancelLoadingContext</CommandName>
+													<ExtendedTooltip name="CancelLoadingContextExtendedTooltip" id="258"/>
+												</Button>
+											</ChildItems>
+										</CommandBar>
+									</ChildItems>
+								</Page>
+								<Page name="ContextPage" id="212">
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Message context</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>en_CA</v8:lang>
+											<v8:content>Message context</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Контекст сообщения</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>uk</v8:lang>
+											<v8:content>Контекст повідомлення</v8:content>
+										</v8:item>
+									</Title>
+									<ToolTip>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Message context</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>en_CA</v8:lang>
+											<v8:content>Message context</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Контекст сообщения</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>uk</v8:lang>
+											<v8:content>Контекст повідомлення</v8:content>
+										</v8:item>
+									</ToolTip>
+									<Group>HorizontalIfPossible</Group>
+									<ExtendedTooltip name="ContextPageExtendedTooltip" id="213"/>
+									<ChildItems>
+										<UsualGroup name="GroupContext" id="243">
+											<Title>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Message context</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Message context</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Контекст сообщения</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Контекст повідомлення</v8:content>
+												</v8:item>
+											</Title>
+											<ToolTip>
+												<v8:item>
+													<v8:lang>en</v8:lang>
+													<v8:content>Message context</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>en_CA</v8:lang>
+													<v8:content>Message context</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>ru</v8:lang>
+													<v8:content>Контекст сообщения</v8:content>
+												</v8:item>
+												<v8:item>
+													<v8:lang>uk</v8:lang>
+													<v8:content>Контекст повідомлення</v8:content>
+												</v8:item>
+											</ToolTip>
+											<Representation>None</Representation>
+											<ExtendedTooltip name="GroupContextExtendedTooltip" id="244"/>
+											<ChildItems>
+												<Table name="Context" id="190">
+													<Representation>List</Representation>
+													<ChangeRowSet>false</ChangeRowSet>
+													<ChangeRowOrder>false</ChangeRowOrder>
+													<AutoInsertNewRow>true</AutoInsertNewRow>
+													<EnableStartDrag>true</EnableStartDrag>
+													<EnableDrag>true</EnableDrag>
+													<DataPath>Context</DataPath>
+													<RowFilter xsi:nil="true"/>
+													<ContextMenu name="ContextContextMenu" id="191">
+														<Autofill>false</Autofill>
+													</ContextMenu>
+													<AutoCommandBar name="ContextCommandBar" id="192">
+														<Autofill>false</Autofill>
+													</AutoCommandBar>
+													<ExtendedTooltip name="ContextExtendedTooltip" id="193"/>
+													<SearchStringAddition name="ContextSearchString" id="194">
+														<AdditionSource>
+															<Item>Context</Item>
+															<Type>SearchStringRepresentation</Type>
+														</AdditionSource>
+														<ContextMenu name="ContextSearchStringContextMenu" id="195"/>
+														<ExtendedTooltip name="ContextSearchStringExtendedTooltip" id="196"/>
+													</SearchStringAddition>
+													<ViewStatusAddition name="ContextViewStatus" id="197">
+														<AdditionSource>
+															<Item>Context</Item>
+															<Type>ViewStatusRepresentation</Type>
+														</AdditionSource>
+														<ContextMenu name="ContextViewStatusContextMenu" id="198"/>
+														<ExtendedTooltip name="ContextViewStatusExtendedTooltip" id="199"/>
+													</ViewStatusAddition>
+													<SearchControlAddition name="ContextSearchControl" id="200">
+														<AdditionSource>
+															<Item>Context</Item>
+															<Type>SearchControl</Type>
+														</AdditionSource>
+														<ContextMenu name="ContextSearchControlContextMenu" id="201"/>
+														<ExtendedTooltip name="ContextSearchControlExtendedTooltip" id="202"/>
+													</SearchControlAddition>
+													<Events>
+														<Event name="Selection">ContextSelection</Event>
+														<Event name="ChoiceProcessing">ContextChoiceProcessing</Event>
+													</Events>
+													<ChildItems>
+														<CheckBoxField name="ContextFilter" id="203">
+															<DataPath>Context.Filter</DataPath>
+															<EditMode>EnterOnInput</EditMode>
+															<CheckBoxType>Auto</CheckBoxType>
+															<ContextMenu name="ContextFilterContextMenu" id="204"/>
+															<ExtendedTooltip name="ContextFilterExtendedTooltip" id="205"/>
+														</CheckBoxField>
+														<InputField name="ContextPrimaryKey" id="206">
+															<DataPath>Context.PrimaryKey</DataPath>
+															<EditMode>EnterOnInput</EditMode>
+															<ContextMenu name="ContextPrimaryKeyContextMenu" id="207"/>
+															<ExtendedTooltip name="ContextPrimaryKeyExtendedTooltip" id="208"/>
+														</InputField>
+														<InputField name="ContextValue" id="209">
+															<DataPath>Context.Value</DataPath>
+															<EditMode>EnterOnInput</EditMode>
+															<CellHyperlink>true</CellHyperlink>
+															<ContextMenu name="ContextValueContextMenu" id="210"/>
+															<ExtendedTooltip name="ContextValueExtendedTooltip" id="211"/>
+														</InputField>
+														<InputField name="ContextTypeName" id="259">
+															<DataPath>Context.TypeName</DataPath>
+															<EditMode>EnterOnInput</EditMode>
+															<ContextMenu name="ContextTypeNameContextMenu" id="260"/>
+															<ExtendedTooltip name="ContextTypeNameExtendedTooltip" id="261"/>
+														</InputField>
+													</ChildItems>
+												</Table>
+											</ChildItems>
+										</UsualGroup>
+									</ChildItems>
+								</Page>
+							</ChildItems>
+						</Pages>
+					</ChildItems>
+				</UsualGroup>
+				<UsualGroup name="Group2" id="163">
+					<Group>Vertical</Group>
+					<Representation>None</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="Group2ExtendedTooltip" id="164"/>
+					<ChildItems>
+						<InputField name="PropContentType" id="174">
+							<DataPath>Object.ContentType</DataPath>
+							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<ContextMenu name="PropContentTypeContextMenu" id="175"/>
+							<ExtendedTooltip name="PropContentTypeExtendedTooltip" id="176"/>
+						</InputField>
+						<InputField name="PropContentEncoding" id="177">
+							<DataPath>Object.ContentEncoding</DataPath>
+							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<ContextMenu name="PropContentEncodingContextMenu" id="178"/>
+							<ExtendedTooltip name="PropContentEncodingExtendedTooltip" id="179"/>
+						</InputField>
+						<InputField name="PropReplyTo" id="165">
+							<DataPath>Object.ReplyTo</DataPath>
+							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<ContextMenu name="PropReplyToContextMenu" id="166"/>
+							<ExtendedTooltip name="PropReplyToExtendedTooltip" id="167"/>
+						</InputField>
+						<InputField name="PropCorrelationId" id="168">
+							<DataPath>Object.CorrelationId</DataPath>
+							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<ContextMenu name="PropCorrelationIdContextMenu" id="169"/>
+							<ExtendedTooltip name="PropCorrelationIdExtendedTooltip" id="170"/>
+						</InputField>
+						<InputField name="PropUserId" id="160">
+							<DataPath>Object.UserId</DataPath>
+							<ToolTipRepresentation>Button</ToolTipRepresentation>
+							<ContextMenu name="PropUserIdContextMenu" id="161"/>
+							<ExtendedTooltip name="PropUserIdExtendedTooltip" id="162"/>
+						</InputField>
+						<UsualGroup name="GroupRoutes" id="214">
+							<Title>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Routes</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Routes</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Маршруты</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Маршрути</v8:content>
+								</v8:item>
+							</Title>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Routes</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Routes</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Маршруты</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Маршрути</v8:content>
+								</v8:item>
+							</ToolTip>
+							<Representation>None</Representation>
+							<ExtendedTooltip name="GroupRoutesExtendedTooltip" id="215"/>
+							<ChildItems>
+								<Table name="Routes" id="216">
+									<Representation>Tree</Representation>
+									<ChangeRowSet>false</ChangeRowSet>
+									<ChangeRowOrder>false</ChangeRowOrder>
+									<AutoInsertNewRow>true</AutoInsertNewRow>
+									<InitialTreeView>ExpandTopLevel</InitialTreeView>
+									<EnableStartDrag>true</EnableStartDrag>
+									<EnableDrag>true</EnableDrag>
+									<DataPath>Routes</DataPath>
+									<ContextMenu name="RoutesContextMenu" id="217">
+										<Autofill>false</Autofill>
+									</ContextMenu>
+									<AutoCommandBar name="RoutesCommandBar" id="218">
+										<Autofill>false</Autofill>
+									</AutoCommandBar>
+									<ExtendedTooltip name="RoutesExtendedTooltip" id="219"/>
+									<SearchStringAddition name="RoutesSearchString" id="220">
+										<AdditionSource>
+											<Item>Routes</Item>
+											<Type>SearchStringRepresentation</Type>
+										</AdditionSource>
+										<ContextMenu name="RoutesSearchStringContextMenu" id="221"/>
+										<ExtendedTooltip name="RoutesSearchStringExtendedTooltip" id="222"/>
+									</SearchStringAddition>
+									<ViewStatusAddition name="RoutesViewStatus" id="223">
+										<AdditionSource>
+											<Item>Routes</Item>
+											<Type>ViewStatusRepresentation</Type>
+										</AdditionSource>
+										<ContextMenu name="RoutesViewStatusContextMenu" id="224"/>
+										<ExtendedTooltip name="RoutesViewStatusExtendedTooltip" id="225"/>
+									</ViewStatusAddition>
+									<SearchControlAddition name="RoutesSearchControl" id="226">
+										<AdditionSource>
+											<Item>Routes</Item>
+											<Type>SearchControl</Type>
+										</AdditionSource>
+										<ContextMenu name="RoutesSearchControlContextMenu" id="227"/>
+										<ExtendedTooltip name="RoutesSearchControlExtendedTooltip" id="228"/>
+									</SearchControlAddition>
+									<ChildItems>
+										<InputField name="RoutesExchange" id="229">
+											<DataPath>Routes.Exchange</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<ContextMenu name="RoutesExchangeContextMenu" id="230"/>
+											<ExtendedTooltip name="RoutesExchangeExtendedTooltip" id="231"/>
+										</InputField>
+										<InputField name="RoutesEndpoint" id="232">
+											<DataPath>Routes.Endpoint</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<ContextMenu name="RoutesEndpointContextMenu" id="233"/>
+											<ExtendedTooltip name="RoutesEndpointExtendedTooltip" id="234"/>
+										</InputField>
+										<InputField name="RoutesJob" id="235">
+											<DataPath>Routes.Job</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<ContextMenu name="RoutesJobContextMenu" id="236"/>
+											<ExtendedTooltip name="RoutesJobExtendedTooltip" id="237"/>
+										</InputField>
+										<InputField name="RoutesJobState" id="238">
+											<DataPath>Routes.Job.State</DataPath>
+											<EditMode>EnterOnInput</EditMode>
+											<ContextMenu name="RoutesJobStateContextMenu" id="239"/>
+											<ExtendedTooltip name="RoutesJobStateExtendedTooltip" id="240"/>
+										</InputField>
+									</ChildItems>
+								</Table>
+							</ChildItems>
+						</UsualGroup>
+					</ChildItems>
+				</UsualGroup>
+			</ChildItems>
+		</UsualGroup>
+		<UsualGroup name="GroupTabularSections" id="188">
+			<Group>Horizontal</Group>
+			<ShowTitle>false</ShowTitle>
+			<ExtendedTooltip name="GroupTabularSectionsExtendedTooltip" id="189"/>
+		</UsualGroup>
+		<Pages name="Pages" id="31">
+			<Visible>false</Visible>
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Pages</v8:content>
+				</v8:item>
+			</Title>
+			<ExtendedTooltip name="PagesExtendedTooltip" id="32"/>
+			<ChildItems>
+				<Page name="GroupAppEndpoints" id="66">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>App endpoints</v8:content>
+						</v8:item>
+					</Title>
+					<ExtendedTooltip name="GroupAppEndpointsExtendedTooltip" id="67"/>
+					<ChildItems>
+						<Table name="AppEndpoints" id="68">
+							<Representation>List</Representation>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Object.AppEndpoints</DataPath>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="AppEndpointsContextMenu" id="69"/>
+							<AutoCommandBar name="AppEndpointsCommandBar" id="70"/>
+							<ExtendedTooltip name="AppEndpointsExtendedTooltip" id="71"/>
+							<SearchStringAddition name="AppEndpointsSearchString" id="72">
+								<AdditionSource>
+									<Item>AppEndpoints</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="AppEndpointsSearchStringContextMenu" id="73"/>
+								<ExtendedTooltip name="AppEndpointsSearchStringExtendedTooltip" id="74"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="AppEndpointsViewStatus" id="75">
+								<AdditionSource>
+									<Item>AppEndpoints</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="AppEndpointsViewStatusContextMenu" id="76"/>
+								<ExtendedTooltip name="AppEndpointsViewStatusExtendedTooltip" id="77"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="AppEndpointsSearchControl" id="78">
+								<AdditionSource>
+									<Item>AppEndpoints</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="AppEndpointsSearchControlContextMenu" id="79"/>
+								<ExtendedTooltip name="AppEndpointsSearchControlExtendedTooltip" id="80"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<LabelField name="AppEndpointsLineNumber" id="81">
+									<DataPath>Object.AppEndpoints.LineNumber</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="AppEndpointsLineNumberContextMenu" id="82"/>
+									<ExtendedTooltip name="AppEndpointsLineNumberExtendedTooltip" id="83"/>
+								</LabelField>
+								<InputField name="AppEndpointsEndpoint" id="84">
+									<DataPath>Object.AppEndpoints.Endpoint</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="AppEndpointsEndpointContextMenu" id="85"/>
+									<ExtendedTooltip name="AppEndpointsEndpointExtendedTooltip" id="86"/>
+								</InputField>
+								<InputField name="AppEndpointsExchange" id="87">
+									<DataPath>Object.AppEndpoints.Exchange</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="AppEndpointsExchangeContextMenu" id="88"/>
+									<ExtendedTooltip name="AppEndpointsExchangeExtendedTooltip" id="89"/>
+								</InputField>
+								<InputField name="AppEndpointsJob" id="90">
+									<DataPath>Object.AppEndpoints.Job</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="AppEndpointsJobContextMenu" id="91"/>
+									<ExtendedTooltip name="AppEndpointsJobExtendedTooltip" id="92"/>
+								</InputField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+				<Page name="GroupExchanges" id="93">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Exchanges</v8:content>
+						</v8:item>
+					</Title>
+					<ExtendedTooltip name="GroupExchangesExtendedTooltip" id="94"/>
+					<ChildItems>
+						<Table name="Exchanges" id="95">
+							<Representation>List</Representation>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>Object.Exchanges</DataPath>
+							<RowFilter xsi:nil="true"/>
+							<ContextMenu name="ExchangesContextMenu" id="96"/>
+							<AutoCommandBar name="ExchangesCommandBar" id="97"/>
+							<ExtendedTooltip name="ExchangesExtendedTooltip" id="98"/>
+							<SearchStringAddition name="ExchangesSearchString" id="99">
+								<AdditionSource>
+									<Item>Exchanges</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ExchangesSearchStringContextMenu" id="100"/>
+								<ExtendedTooltip name="ExchangesSearchStringExtendedTooltip" id="101"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="ExchangesViewStatus" id="102">
+								<AdditionSource>
+									<Item>Exchanges</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="ExchangesViewStatusContextMenu" id="103"/>
+								<ExtendedTooltip name="ExchangesViewStatusExtendedTooltip" id="104"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="ExchangesSearchControl" id="105">
+								<AdditionSource>
+									<Item>Exchanges</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="ExchangesSearchControlContextMenu" id="106"/>
+								<ExtendedTooltip name="ExchangesSearchControlExtendedTooltip" id="107"/>
+							</SearchControlAddition>
+							<ChildItems>
+								<LabelField name="ExchangesLineNumber" id="108">
+									<DataPath>Object.Exchanges.LineNumber</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="ExchangesLineNumberContextMenu" id="109"/>
+									<ExtendedTooltip name="ExchangesLineNumberExtendedTooltip" id="110"/>
+								</LabelField>
+								<InputField name="ExchangesExchange" id="111">
+									<DataPath>Object.Exchanges.Exchange</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="ExchangesExchangeContextMenu" id="112"/>
+									<ExtendedTooltip name="ExchangesExchangeExtendedTooltip" id="113"/>
+								</InputField>
+								<InputField name="ExchangesJob" id="114">
+									<DataPath>Object.Exchanges.Job</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="ExchangesJobContextMenu" id="115"/>
+									<ExtendedTooltip name="ExchangesJobExtendedTooltip" id="116"/>
+								</InputField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+			</ChildItems>
+		</Pages>
+	</ChildItems>
+	<Attributes>
+		<Attribute name="Object" id="1">
+			<Type>
+				<v8:Type>cfg:CatalogObject.FL_Messages</v8:Type>
+			</Type>
+			<MainAttribute>true</MainAttribute>
+			<SavedData>true</SavedData>
+		</Attribute>
+		<Attribute name="MessageId" id="2">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Message id</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Message id</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Идентификатор сообщения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Ідентифікатор повідомлення</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="Context" id="3">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Context</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>v8:ValueTable</v8:Type>
+			</Type>
+			<Columns>
+				<Column name="Filter" id="1">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Filter</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Filter</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Фильтр</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Фільтр</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Column>
+				<Column name="PrimaryKey" id="2">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Primary key</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Primary key</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Основной ключ</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Основний ключ</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>30</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="Value" id="3">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Value</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Value</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Значение</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Значення</v8:content>
+						</v8:item>
+					</Title>
+					<Type/>
+				</Column>
+				<Column name="TypeName" id="4">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Type name</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Type name</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Имя типа</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Назва типу</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>100</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+			</Columns>
+		</Attribute>
+		<Attribute name="Routes" id="4">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Routes</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Routes</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Маршруты</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Маршрути</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>v8:ValueTree</v8:Type>
+			</Type>
+			<Columns>
+				<Column name="Exchange" id="1">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Exchange</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Exchange</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Обмен</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Обмін</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>cfg:CatalogRef.FL_Exchanges</v8:Type>
+					</Type>
+				</Column>
+				<Column name="Endpoint" id="2">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Endpoint</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Endpoint</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Конечная точка</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Кінцева точка</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>cfg:CatalogRef.FL_Channels</v8:Type>
+					</Type>
+				</Column>
+				<Column name="Job" id="3">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Job</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Job</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Задание</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Завдання</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>cfg:CatalogRef.FL_Jobs</v8:Type>
+					</Type>
+				</Column>
+			</Columns>
+		</Attribute>
+		<Attribute name="ContextTaskResult" id="7">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Task result (message context)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Task result (message context)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Результат задания (контекст сообщения)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Результат завдання (контекст повідомлення)</v8:content>
+				</v8:item>
+			</Title>
+			<Type/>
+		</Attribute>
+	</Attributes>
+	<Commands>
+		<Command name="ManualRoute" id="1">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Manual route</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Manual route</v8:content>
+				</v8:item>
+			</ToolTip>
+		</Command>
+		<Command name="CancelLoadingContext" id="2">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Cancel</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Cancel</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Отменить</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Скасувати</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Cancel loading context</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Cancel loading context</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Отменить загрузку контекста</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Скасувати завантаження контексту</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Action>CancelLoadingContext</Action>
+		</Command>
+	</Commands>
+</Form>

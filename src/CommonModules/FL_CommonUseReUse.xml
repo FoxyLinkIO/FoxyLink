@@ -5,16 +5,20 @@
 			<Name>FL_CommonUseReUse</Name>
 			<Synonym>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Общего назначения (повт. исп.)</v8:content>
-				</v8:item>
-				<v8:item>
 					<v8:lang>en</v8:lang>
 					<v8:content>Common use (reuse)</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
 					<v8:content>Common use (reuse)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Общего назначения (повт. исп.)</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Загального призначення (повт. вик.)</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment>Cached server-based general-purpose procedures and functions.</Comment>

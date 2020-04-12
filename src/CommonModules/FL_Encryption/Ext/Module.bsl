@@ -45,6 +45,26 @@ Procedure AddBasicAuthorizationHeader(Headers, Val Login, Val Password,
     
 EndProcedure // AddBasicAuthorizationHeader()
 
+// Adds bearer authorization header.
+//
+// Parameters:
+//  Headers       - Map        - headers that will be sent to server as a correspondence.
+//  Bearer        - String     - connection bearer token or name of the field in encrypted data.
+//  EncryptedData - ValueTable - collection with encrypted data.
+//                      Default value: Undefined.
+//
+Procedure AddBearerAuthorizationHeader(Headers, Val Bearer, 
+    EncryptedData = Undefined) Export
+    
+    If EncryptedData <> Undefined Then
+        Bearer = EncryptedFiledValue(Bearer, EncryptedData);    
+    EndIf;
+    
+    Headers.Insert("Authorization", StrTemplate("Bearer %1", Bearer));
+    
+EndProcedure // AddBearerAuthorizationHeader()
+
+
 // Calculates OAuth signature. 
 //
 // Parameters:

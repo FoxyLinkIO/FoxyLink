@@ -130,9 +130,10 @@ EndProcedure // ExtendValueTable()
 // Extends the receiver array with values from the source array.
 //
 // Parameters:
-//  Receiver - Array   - array in which new values will be added.
-//  Source   - Array   - array of values for filling. 
-//  Unique   - Boolean - if True - only unique values will be added to the receiver
+//  Receiver - Array      - array in which new values will be added.
+//  Source   - Array      - array of values for filling.
+//             FixedArray - fixed array of values for filling.
+//  Unique   - Boolean    - if True - only unique values will be added to the receiver
 //                          array, otherwise all values from the source.
 // 
 Procedure ExtendArray(Receiver, Source, Unique = False) Export

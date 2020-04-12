@@ -412,6 +412,13 @@
 		</right>
 	</object>
 	<object>
+		<name>SessionParameter.FL_CanceledBackgroundJobs</name>
+		<right>
+			<name>Get</name>
+			<value>true</value>
+		</right>
+	</object>
+	<object>
 		<name>InformationRegister.FL_JobContinuations</name>
 		<right>
 			<name>Read</name>

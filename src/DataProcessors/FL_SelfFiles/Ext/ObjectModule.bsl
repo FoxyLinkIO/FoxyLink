@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -185,7 +185,7 @@ Function SuppliedIntegrations() Export
         |en_CA='Exchange description service'");
     PluggableSettings.Template = "Self";
     PluggableSettings.ToolTip = StrConcat(BasicPhrases);
-    PluggableSettings.Version = "1.2.10";
+    PluggableSettings.Version = "1.0.10";
     SuppliedIntegrations.Add(PluggableSettings);
     
     Return SuppliedIntegrations;

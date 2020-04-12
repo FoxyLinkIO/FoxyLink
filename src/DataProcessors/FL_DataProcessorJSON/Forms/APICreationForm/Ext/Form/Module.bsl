@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -24,6 +24,8 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
     
     Var APISchemaAddress;
     
+    SchemaAttributeName = "Object.APISchema";
+    
     MainObject = FormAttributeToValue("Object");
     Items.APISchemaType.ChoiceList.LoadValues(
         MainObject.SupportedTypes().UnloadValues());
@@ -33,7 +35,7 @@ Procedure OnCreateAtServer(Cancel, StandardProcessing)
             
         ValueTree = GetFromTempStorage(APISchemaAddress);
         If TypeOf(ValueTree) = Type("ValueTree") Then
-            ValueToFormAttribute(ValueTree, "Object.APISchema");        
+            ValueToFormAttribute(ValueTree, SchemaAttributeName);        
         EndIf;
             
     EndIf;
@@ -87,13 +89,14 @@ Procedure APISchemaTypeChoiceProcessing(Item, SelectedValue, StandardProcessing)
           AND NOT IsStructuredType(SelectedValue) Then
           
             APISchemaItems = CurrentData.GetItems();        
-            If APISchemaItems.Count() > 0 Then
+            If ValueIsFilled(APISchemaItems) Then
                 
                 APISchemaItems.Clear();
                 
                 Explanation = StrTemplate(
                     NStr("en='The new type {%1} cannot have nested items. Nested items have just been cleared.';
                         |ru='Новый тип {%1} не может иметь вложенные элементы. Вложенные элементы были удалены.';
+                        |uk='Новий тип {%1} не може мати вкладені елементи. Вкладені елементи були видалені.';
                         |en_CA='The new type {%1} cannot have nested items. Nested items have just been cleared.'"), 
                     SelectedValue);
                 
@@ -115,13 +118,18 @@ EndProcedure // APISchemaTypeChoiceProcessing()
 &AtClient
 Procedure LoadSample(Command)
     
-    If Object.APISchema.GetItems().Count() > 0 Then
+    If ValueIsFilled(Object.APISchema.GetItems()) Then
         
-        ShowQueryBox(New NotifyDescription("DoAfterChooseSampleToLoad", 
-                ThisObject),
-            NStr("en='The existing API schema description will be erased, continue loading sample?';
-                |ru='Существующее описание схемы API будет стерто, продолжить загрузку образца?';
-                |en_CA='The existing API schema description will be erased, continue loading sample?'"),
+        NotifyDescriptionOnCompletion = New NotifyDescription(
+            "DoAfterChooseSampleToLoad", ThisObject); 
+        
+        QueryText = NStr("en='The existing API schema description will be erased, continue loading sample?';
+            |ru='Существующее описание API схемы будет замещено, продолжить загрузку образца?';
+            |uk='Наявний опис API схеми буде заміщено, продовжити завантаження зразка?';
+            |en_CA='The existing API schema description will be erased, continue loading sample?'");
+        
+        ShowQueryBox(NotifyDescriptionOnCompletion, 
+            QueryText,
             QuestionDialogMode.OKCancel, 
             , 
             DialogReturnCode.Cancel);
@@ -135,7 +143,7 @@ EndProcedure // LoadSample()
 &AtClient
 Procedure SaveAndClose(Command)
     
-    If Object.APISchema.GetItems().Count() > 0 Then
+    If ValueIsFilled(Object.APISchema.GetItems()) Then
         Close(PutValueTreeToTempStorage(ThisObject.FormOwner.UUID));
     Else
         Close("");    
@@ -197,13 +205,19 @@ Procedure DeleteRowAPITable(Command)
     
     CurrentData = Items.APISchema.CurrentData;
     If CurrentData <> Undefined Then
-    
-        ShowQueryBox(New NotifyDescription("DoAfterChooseRowToDelete", 
-            ThisObject, 
-            New Structure("Identifier ", CurrentData.GetID())),
-            NStr("en='Delete the selected row?';
-                |ru='Удалить выбранную строку?';
-                |en_CA='Delete the selected row?'"),
+        
+        AdditionalParameters = New Structure("Identifier", CurrentData.GetID());
+        
+        NotifyDescriptionOnCompletion = New NotifyDescription(
+            "DoAfterChooseRowToDelete", ThisObject, AdditionalParameters);
+        
+        QueryText = NStr("en='Delete the selected row?';
+            |ru='Удалить выбранную строку?';
+            |uk='Видалити вибраний рядок?';
+            |en_CA='Delete the selected row?'");
+        
+        ShowQueryBox(NotifyDescriptionOnCompletion,
+            QueryText,
             QuestionDialogMode.YesNo, 
             , 
             DialogReturnCode.No);
@@ -230,14 +244,15 @@ Procedure DoAfterChooseSampleToLoad(QuestionResult, AdditionalParameters) Export
     
     If QuestionResult = DialogReturnCode.OK Then
         
-        ShowInputString(New NotifyDescription("DoAfterInputStringSample", 
-                ThisObject),
-            ,
-            NStr("en='Insert JSON format sample';
-                |ru='Вставьте образец формата JSON';
-                |en_CA='Insert JSON format sample'"),
-            ,
-            True);
+        NotifyDescriptionOnCompletion = New NotifyDescription(
+            "DoAfterInputStringSample", ThisObject);
+        
+        Tooltip = NStr("en='Insert JSON format sample';
+            |ru='Вставьте образец формата JSON';
+            |uk='Вставте зразок формату JSON';
+            |en_CA='Insert JSON format sample'");
+        
+        ShowInputString(NotifyDescriptionOnCompletion, , Tooltip, , True);
                 
     EndIf;
     
@@ -257,7 +272,7 @@ Procedure DoAfterInputStringSample(String, AdditionalParameters) Export
         
         LoadSampleAtServer(String);
         APISchemaItems = Object.APISchema.GetItems();
-        If APISchemaItems.Count() > 0 Then
+        If ValueIsFilled(APISchemaItems) Then
             Items.APISchema.Expand(APISchemaItems.Get(0).GetID(), True);
         EndIf;
         
@@ -305,7 +320,7 @@ Procedure AddRowToAPISchema(Type)
     CurrentData = Items.APISchema.CurrentData;
     If CurrentData = Undefined Then
         
-        If Object.APISchema.GetItems().Count() = 0 Then 
+        If NOT ValueIsFilled(Object.APISchema.GetItems()) Then 
             
             NewItem = NewAPISchemaRow(Object.APISchema.GetItems(), "RootItem", 
                 Type);
@@ -317,7 +332,8 @@ Procedure AddRowToAPISchema(Type)
         Else
             
             Explanation = NStr("en='Failed to add another root item. The root item already exists.';
-                |ru='Не удалось добавить еще один корневой элемент. Корневой элемент уже существует';
+                |ru='Не удалось добавить еще один корневой элемент. Корневой элемент уже существует.';
+                |uk='Не вдалося додати ще один кореневий елемент. Кореневий елемент вже існує.';
                 |en_CA='Failed to add another root item. The root item already exists.'");
                 
             ShowUserNotification(Title, , Explanation, 
@@ -331,6 +347,7 @@ Procedure AddRowToAPISchema(Type)
             
             Explanation = NStr("en='Failed to add new item. Type is empty.';
                 |ru='Не удалось добавить новый элемент. Тип не заполнен.';
+                |uk='Не вдалося додати новий елемент. Тип не заповнений.';
                 |en_CA='Failed to add new item. Type is empty.'");
 
             ShowUserNotification(Title, , Explanation, 
@@ -340,17 +357,8 @@ Procedure AddRowToAPISchema(Type)
             
         EndIf;
         
-        If Not IsStructuredType(CurrentData.Type) Then
+        If IsStructuredType(CurrentData.Type) Then
          
-            Explanation = NStr("en='Failed to add new item. Type can not have nested items.';
-                |ru='Не удалось добавить новый элемент. Тип не может иметь вложенных элементов.';
-                |en_CA='Failed to add new item. Type can not have nested items.'");
-
-            ShowUserNotification(Title, , Explanation, 
-                PictureLib.FL_Logotype64);
-            
-        Else
-            
             CurrentId = CurrentData.GetId();
             Parent = Object.APISchema.FindByID(CurrentId);
             
@@ -360,6 +368,16 @@ Procedure AddRowToAPISchema(Type)
             If Not Items.APISchema.Expanded(CurrentId) Then
                 Items.APISchema.Expand(CurrentId);    
             EndIf;    
+            
+        Else
+            
+            Explanation = NStr("en='Failed to add new item. Type can not have nested items.';
+                |ru='Не удалось добавить новый элемент. Тип не может иметь вложенных элементов.';
+                |uk='Не вдалося додати новий елемент. Тип не може мати вкладених елементів.';
+                |en_CA='Failed to add new item. Type can not have nested items.'");
+
+            ShowUserNotification(Title, , Explanation, 
+                PictureLib.FL_Logotype64);
           
         EndIf; 
                 
@@ -379,20 +397,24 @@ Procedure LoadSampleAtServer(String)
         JSONReader.Close();
     Except
         
-        ErrorMessage = StrTemplate(NStr("en='Error: Failed to read JSON sample. %1.';
-            |ru='Ошибка: Не удалось прочитать JSON образец. %1.';
-            |en_CA='Error: Failed to read JSON sample. %1.'"),
-            ErrorDescription());  
-        Raise ErrorMessage;
+        ErrorMessage = NStr("en='Error: Failed to read JSON sample. {%1}.';
+            |ru='Ошибка: Не удалось прочитать JSON образец. {%1}.';
+            |uk='Помилка: Неможливо прочитати JSON зразок. {%1}.';
+            |en_CA='Error: Failed to read JSON sample. {%1}.'");
+        
+        ErrorInformation = ErrorInfo();
+        ErrorDescription = DetailErrorDescription(ErrorInformation);
+                
+        Raise StrTemplate(ErrorMessage, ErrorDescription);
         
     EndTry;
     
-    ValueTree = FormAttributeToValue("Object.APISchema", Type("ValueTree"));
+    ValueTree = FormAttributeToValue(SchemaAttributeName, Type("ValueTree"));
     ValueTree.Rows.Clear();
     
     FillAPISchema(ValueTree.Rows, "RootItem", SampleResult);
     
-    ValueToFormAttribute(ValueTree, "Object.APISchema");
+    ValueToFormAttribute(ValueTree, SchemaAttributeName);
     
 EndProcedure // LoadSampleAtServer()
 
@@ -401,7 +423,7 @@ EndProcedure // LoadSampleAtServer()
 &AtServer
 Function PutValueTreeToTempStorage(Val OwnerUUID)
     
-    ValueTree = FormAttributeToValue("Object.APISchema", Type("ValueTree"));
+    ValueTree = FormAttributeToValue(SchemaAttributeName, Type("ValueTree"));
     FillCheckAPISchema(ValueTree.Rows); 
     Return PutToTempStorage(ValueTree, OwnerUUID);
     
@@ -428,7 +450,8 @@ EndFunction // IsStructuredType()
 &AtServerNoContext
 Procedure FillAPISchema(Rows, Name, SampleResult)
     
-    If TypeOf(SampleResult) = Type("Map") Then
+    SampleResultType = TypeOf(SampleResult);
+    If SampleResultType = Type("Map") Then
         
         ObjectRows = NewAPISchemaRow(Rows, Name, "Object");
         ObjectRows.StructuredType = True;
@@ -436,7 +459,7 @@ Procedure FillAPISchema(Rows, Name, SampleResult)
             FillAPISchema(ObjectRows.Rows, Item.Key, Item.Value);             
         EndDo;
         
-    ElsIf TypeOf(SampleResult) = Type("Array") Then
+    ElsIf SampleResultType = Type("Array") Then
         
         ObjectRows = NewAPISchemaRow(Rows, Name, "Array");
         ObjectRows.StructuredType = True;
@@ -444,11 +467,11 @@ Procedure FillAPISchema(Rows, Name, SampleResult)
             FillAPISchema(ObjectRows.Rows, "ArrayItem", Item);             
         EndDo;
         
-    ElsIf TypeOf(SampleResult) = Type("String") Then
+    ElsIf SampleResultType = Type("String") Then
         NewAPISchemaRow(Rows, Name, "String");
-    ElsIf TypeOf(SampleResult) = Type("Number") Then
+    ElsIf SampleResultType = Type("Number") Then
         NewAPISchemaRow(Rows, Name, "Number");
-    ElsIf TypeOf(SampleResult) = Type("Boolean") Then
+    ElsIf SampleResultType = Type("Boolean") Then
         NewAPISchemaRow(Rows, Name, "Boolean");
     Else
         NewAPISchemaRow(Rows, Name, "Null");    
@@ -467,13 +490,14 @@ Procedure FillCheckAPISchema(Rows)
             
             ErrorMessage = NStr("en='Content type or field name is empty. Cannot save API schema.';
                 |ru='Тип или имя поля не заданы. Невозможно сохранить схему API.';
+                |uk='Тип або назва поля не задані. Неможливо зберегти схему API.';
                 |en_CA='Content type or field name is empty. Cannot save API schema.'");
             
             Raise ErrorMessage;
             
         EndIf;
         
-        If Row.Rows.Count() > 0 Then
+        If ValueIsFilled(Row.Rows) Then
             FillCheckAPISchema(Row.Rows);        
         EndIf;
         
