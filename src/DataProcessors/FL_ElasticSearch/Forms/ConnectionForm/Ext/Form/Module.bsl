@@ -70,9 +70,10 @@ Procedure ConnectToElasticSearchAtServer()
     FL_EncryptionClientServer.SetFieldValue(MainObject.ChannelResources, 
         "Resource", "/_cat/indices?v");
     
+    Invocation = Catalogs.FL_Messages.NewInvocation();
     JobResult = Catalogs.FL_Jobs.NewJobResult(True);
-    MainObject.DeliverMessage(Undefined, Catalogs.FL_Exchanges.NewProperties(), 
-        JobResult);
+    
+    MainObject.DeliverMessage(Invocation, JobResult);
     
     LogAttribute = JobResult.LogAttribute;
     If JobResult.Success Then     

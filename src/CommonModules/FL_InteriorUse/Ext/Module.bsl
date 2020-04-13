@@ -70,16 +70,14 @@ Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod,
         
         HTTPResponse = HTTPConnection.CallHTTPMethod(HTTPMethod, HTTPRequest);
         
-        Headers = HTTPResponse.Headers;
-        Payload = HTTPResponse.GetBodyAsBinaryData();
+        Invocation = Catalogs.FL_Messages.NewInvocation();
+        Invocation.Payload = HTTPResponse.GetBodyAsBinaryData(); 
+        Catalogs.FL_Messages.FillContentTypeFromHeaders(Invocation, 
+            HTTPResponse.Headers);
+            
         JobResult.StatusCode = HTTPResponse.StatusCode;
-        
-        Properties = Catalogs.FL_Exchanges.NewProperties();
-        Properties.ContentType = Headers.Get("Content-Type");
-        
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Payload", Payload);
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", Properties);    
-        
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Invocation", Invocation);
+           
         If JobResult.LogAttribute <> Undefined Then
             JobResult.LogAttribute = JobResult.LogAttribute + EndLogHTTPRequest(
                 LogObject, JobResult.StatusCode, HTTPResponse);    

@@ -25,13 +25,12 @@
 //
 // Parameters:
 //  AppProperties - Structure - see function Catalogs.FL_Channels.NewAppEndpointProperties.
-//  Payload       - Arbitrary - payload.
-//  Properties    - Structure - see function Catalogs.FL_Exchanges.NewProperties.
+//  Invocation    - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //
 // Returns:
 //  Structure - see fucntion Catalogs.FL_Jobs.NewJobResult. 
 //
-Function ProcessMessage(AppProperties, Payload, Properties) Export
+Function ProcessMessage(AppProperties, Invocation) Export
     
     JobResult = Catalogs.FL_Jobs.NewJobResult();
     JobResult.AppEndpoint = AppProperties.AppEndpoint;
@@ -88,7 +87,7 @@ Function ProcessMessage(AppProperties, Payload, Properties) Export
         AppEndpointProcessor.EncryptedData.Load(
             AppEndpointSettings.EncryptedData.Unload());
                     
-        AppEndpointProcessor.DeliverMessage(Payload, Properties, JobResult);      
+        AppEndpointProcessor.DeliverMessage(Invocation, JobResult);      
             
     Except
         

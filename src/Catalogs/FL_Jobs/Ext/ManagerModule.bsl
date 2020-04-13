@@ -634,11 +634,17 @@ EndFunction // BuildAlgorithm()
 //
 Function MessageSizeExceeded(JobResult)
     
+    Var Value;
+    
     MaximunMessageSize = FL_InteriorUseReUse.MaximumMessageSize();
     For Each Result In JobResult.Output Do
         
-        If TypeOf(Result.Value) = Type("BinaryData") 
-            AND Result.Value.Size() > MaximunMessageSize Then
+        If TypeOf(Result.Value) = Type("Structure") Then
+            Result.Value.Property("Payload", Value);
+        EndIf;
+        
+        If TypeOf(Value) = Type("BinaryData") 
+            AND Value.Size() > MaximunMessageSize Then
             Return True;
         EndIf;
         

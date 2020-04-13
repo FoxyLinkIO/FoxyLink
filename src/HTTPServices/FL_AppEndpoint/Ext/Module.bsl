@@ -28,24 +28,7 @@ Function MessageHandler(Request)
     Headers = Request.Headers;
     Invocation = Catalogs.FL_Messages.NewInvocation();
     
-    // https://tools.ietf.org/html/rfc1049 
-    // Content-type header field for internet messages.
-    ContentType = Headers.Get("Content-Type");
-    If ValueIsFilled(ContentType) Then
-        
-        SplitResults = StrSplit(ContentType, ";");    
-        Invocation.ContentType = SplitResults[0];
-        For Each SplitResult In SplitResults Do
-            
-            Position = StrFind(SplitResult, "charset=");
-            If Position > 0 Then
-                Position = Position + StrLen("charset=");    
-                Invocation.ContentEncoding = Upper(Mid(SplitResult, Position));         
-            EndIf;
-            
-        EndDo;
-        
-    EndIf;
+    Catalogs.FL_Messages.FillContentTypeFromHeaders(Invocation, Headers);
     
     // Helps to resolve problem with english and russian configurations. 
     Invocation.EventSource = Metadata.HTTPServices.FL_AppEndpoint.Fullname();

@@ -221,16 +221,16 @@ EndFunction // Create()
 // Adds data to invocation context.
 //
 // Parameters:
-//  Context    - ValueTable - see function FL_BackgroundJob.NewContext. 
-//  PrimaryKey - String     - the name of primary key.
-//  Value      - Arbitrary  - the value of primary key.
-//  Filter     - Boolean    - defines if primary key is used.
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation.  
+//  PrimaryKey - String    - the name of primary key.
+//  Value      - Arbitrary - the value of primary key.
+//  Filter     - Boolean   - defines if primary key is used.
 //                  Default value: False.
 //
-Procedure AddToContext(Context, PrimaryKey, Value, 
+Procedure AddToContext(Invocation, PrimaryKey, Value, 
     Filter = False) Export
       
-    NewContextItem = Context.Add();
+    NewContextItem = Invocation.Context.Add();
     NewContextItem.Filter = Filter;
     NewContextItem.PrimaryKey = Upper(PrimaryKey);
     NewContextItem.XMLValue = XMLString(Value);
@@ -241,6 +241,42 @@ Procedure AddToContext(Context, PrimaryKey, Value,
     EndIf;
     
 EndProcedure // AddToContext()
+
+// The procedure fills content-type and content-encoding of invocation structure.
+// Content-type header field for internet messages (https://tools.ietf.org/html/rfc1049).
+//
+// Parameters:
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation. 
+//  Headers    - Map       - HTTP headers of server response with the 
+//                           following mapping: Header name - Value.
+//
+Procedure FillContentTypeFromHeaders(Invocation, Headers) Export
+    
+    Var ContentType; 
+    
+    For Each Header In Headers Do
+        If Upper(Header.Key) = "CONTENT-TYPE" Then
+            ContentType = Header.Value;    
+        EndIf;    
+    EndDo;
+    
+    If ValueIsFilled(ContentType) Then
+        
+        SplitResults = StrSplit(ContentType, ";");    
+        Invocation.ContentType = SplitResults[0];
+        For Each SplitResult In SplitResults Do
+            
+            Position = StrFind(SplitResult, "charset=");
+            If Position > 0 Then
+                Position = Position + StrLen("charset=");    
+                Invocation.ContentEncoding = Upper(Mid(SplitResult, Position));         
+            EndIf;
+            
+        EndDo;
+        
+    EndIf;    
+    
+EndProcedure // FillContentTypeFromHeaders()
 
 // Fills invocation context data.
 //
@@ -253,7 +289,7 @@ Procedure FillContext(Source, Invocation) Export
     EventSource = Invocation.EventSource;
     If FL_CommonUseReUse.IsReferenceTypeObjectCached(EventSource) Then
         
-        AddToContext(Invocation.Context, "Ref", Source.Ref, True); 
+        AddToContext(Invocation, "Ref", Source.Ref, True); 
         
     ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(EventSource)
         OR FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(EventSource) Then
@@ -503,33 +539,34 @@ Function IsMessagePublisher(EventSource, Operation) Export
     
 EndFunction // IsMessagePublisher()
 
-// Returns a new invocation data for a service method.
-//
+// The function returns a new invocation request\response structure for 
+// a service method.
+// 
 // Returns:
 //  Structure - the invocation data structure with keys:
-//      * AppId             - String                   - identifier of the application
+//      * AppId           - String                   - identifier of the application
 //                                              that produced the message.
 //                                      Default value: "ThisConfiguration".
-//      * ContentEncoding   - String                   - message content encoding.
+//      * ContentEncoding - String                   - message content encoding.
 //                                      Default value: "UTF-8". 
-//      * ContentType       - String                   - message content type.
+//      * ContentType     - String                   - message content type.
 //                                      Default value: "1C:Enterprise".
-//      * EventSource       - String                   - provides access to the 
+//      * EventSource     - String                   - provides access to the 
 //                                              event source object name.
 //                                      Default value: "".
-//      * FileExtension     - String                   - message format file extension.
-//      * MessageId         - String                   - message identifier as a string.
+//      * FileExtension   - String                   - message format file extension.
+//      * MessageId       - String                   - message identifier as a string.
 //                                              If applications need to identify messages.
-//      * Operation         - CatalogReg.FL_Operations - the type of change experienced.
-//      * Payload           - Arbitrary                - invocation payload.
-//      * Routed            - Boolean                  - shows if message was routed.
+//      * Operation       - CatalogReg.FL_Operations - the type of change experienced.
+//      * Payload         - Arbitrary                - invocation payload.
+//      * Routed          - Boolean                  - shows if message was routed.
 //                                      Default value: Boolean.
-//      * Timestamp         - Number                   - timestamp of the moment 
+//      * Timestamp       - Number                   - timestamp of the moment 
 //                                              when message was created.
-//      * UserId            - String                   - user identifier.
-//      * InvocationContext - ValueTable               - invocation context.
-//      * SessionContext    - ValueTable               - session context.
-//      * Source            - AnyRef                   - an event source object.
+//      * UserId          - String                   - user identifier.
+//      * Context         - ValueTable               - invocation context.
+//      * SessionContext  - ValueTable               - session context.
+//      * Source          - AnyRef                   - an event source object.
 //                                      Default value: Undefined.
 //
 Function NewInvocation() Export

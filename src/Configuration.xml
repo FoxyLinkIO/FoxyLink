@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>1.0.0.7</Version>
+			<Version>1.0.0.8</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -281,6 +281,7 @@
 			<CommonPicture>FL_Select</CommonPicture>
 			<CommonPicture>FL_Settings</CommonPicture>
 			<CommonPicture>FL_Structure</CommonPicture>
+			<CommonPicture>FL_Swagger</CommonPicture>
 			<CommonPicture>FL_Untested</CommonPicture>
 			<CommonPicture>FL_Update</CommonPicture>
 			<CommonPicture>FL_ValidMethodSettings</CommonPicture>
@@ -292,7 +293,6 @@
 			<CommonTemplate>FL_LICENSE</CommonTemplate>
 			<CommonModule>FL_BackgroundJob</CommonModule>
 			<CommonModule>FL_BatchJob</CommonModule>
-			<CommonModule>FL_CommonUse</CommonModule>
 			<CommonModule>FL_CommonUseClientServer</CommonModule>
 			<CommonModule>FL_CommonUseReUse</CommonModule>
 			<CommonModule>FL_DataComposition</CommonModule>
@@ -308,8 +308,10 @@
 			<CommonModule>FL_JobServer</CommonModule>
 			<CommonModule>FL_RunInSafeMode</CommonModule>
 			<CommonModule>FL_Tasks</CommonModule>
+			<CommonModule>FL_CommonUse</CommonModule>
 			<CommonModule>SocialNetworks_Events</CommonModule>
 			<CommonModule>SocialNetworks_ExchangeServer</CommonModule>
+			<CommonModule>FL_TasksClientServer</CommonModule>
 			<HTTPService>FL_AppEndpoint</HTTPService>
 			<EventSubscription>FL_CatalogsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>

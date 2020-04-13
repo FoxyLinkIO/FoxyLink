@@ -226,7 +226,7 @@ Procedure EnqueueEventsTable(Events)
     //For Each Event In Events Do
     //    
     //    For Each Column In Events.Columns Do
-    //        Catalogs.FL_Messages.AddToContext(Invocation.Context, 
+    //        Catalogs.FL_Messages.AddToContext(Invocation, 
     //            Column.Name, Event[Column.Name], True);
     //    EndDo;
     //
@@ -236,7 +236,7 @@ Procedure EnqueueEventsTable(Events)
     //    
     //EndDo;
     
-    For Each Event In Events Do For Each Column In Events.Columns Do Catalogs.FL_Messages.AddToContext(Invocation.Context, Column.Name, Event[Column.Name], True); EndDo; Catalogs.FL_Messages.Route(Invocation, Exchange); Invocation.Context.Clear(); EndDo;
+    For Each Event In Events Do For Each Column In Events.Columns Do Catalogs.FL_Messages.AddToContext(Invocation, Column.Name, Event[Column.Name], True); EndDo; Catalogs.FL_Messages.Route(Invocation, Exchange); Invocation.Context.Clear(); EndDo;
       
 EndProcedure // EnqueueEventsTable()
 

@@ -206,21 +206,20 @@ Procedure MergeSocial(Exchange, Message, JobResult)
         FL_DataComposition.Output(StreamObject, OutputParameters);
         
         // Fill MIME-type information.
-        Properties = Catalogs.FL_Exchanges.NewProperties();
-        FillPropertyValues(Properties, Message);
-        Properties.ContentType = StreamObject.FormatMediaType();
-        Properties.ContentEncoding = StreamObject.ContentEncoding;
-        Properties.FileExtension = StreamObject.FormatFileExtension();
-        Properties.MessageId = Message.Code;
+        Invocation = Catalogs.FL_Messages.NewInvocation();
+        FillPropertyValues(Invocation, Message);
+        Invocation.ContentType = StreamObject.FormatMediaType();
+        Invocation.ContentEncoding = StreamObject.ContentEncoding;
+        Invocation.FileExtension = StreamObject.FormatFileExtension();
+        Invocation.MessageId = XMLString(Message);
         
         // Close format stream and memory stream.
         StreamObject.Close();
-        Payload = Stream.CloseAndGetBinaryData();
+        Invocation.Payload = Stream.CloseAndGetBinaryData();
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
         
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Payload", Payload);     
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", Properties); 
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Invocation", Invocation);     
             
     Except
         

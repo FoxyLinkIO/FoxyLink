@@ -204,21 +204,28 @@ Function ProcessMessage(Exchange, Message) Export
         FL_DataComposition.Output(StreamObject, OutputParameters);
         
         // Fill MIME-type information.
-        Properties = NewProperties();
-        FillPropertyValues(Properties, Message);
-        Properties.ContentType = StreamObject.FormatMediaType();
-        Properties.ContentEncoding = StreamObject.ContentEncoding;
-        Properties.FileExtension = StreamObject.FormatFileExtension();
-        Properties.MessageId = XMLString(Message);
-        
+        //Properties = NewProperties();
+        //FillPropertyValues(Properties, Message);
+        //Properties.ContentType = StreamObject.FormatMediaType();
+        //Properties.ContentEncoding = StreamObject.ContentEncoding;
+        //Properties.FileExtension = StreamObject.FormatFileExtension();
+        //Properties.MessageId = XMLString(Message);
+        OutInvocation = Catalogs.FL_Messages.NewInvocation();
+        FillPropertyValues(OutInvocation, Message, , "Context, SessionContext");
+        OutInvocation.ContentType = StreamObject.FormatMediaType();
+        OutInvocation.ContentEncoding = StreamObject.ContentEncoding;
+        OutInvocation.FileExtension = StreamObject.FormatFileExtension();
+        OutInvocation.MessageId = XMLString(Message);
+
         // Close format stream and memory stream.
         StreamObject.Close();
-        Payload = Stream.CloseAndGetBinaryData();
+        OutInvocation.Payload = Stream.CloseAndGetBinaryData();
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Invocation", OutInvocation);  
         
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Payload", Payload);     
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", Properties); 
+        //Catalogs.FL_Jobs.AddToJobResult(JobResult, "Payload", Payload);     
+        //Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", Properties); 
 
     Except
         
@@ -253,8 +260,7 @@ Function ExportObject(Exchange) Export
     Invocation = Catalogs.FL_Messages.NewInvocation();
     Invocation.EventSource = "Catalogs.FL_Exchanges.Commands.ExportExchange";
     Invocation.Operation = Catalogs.FL_Operations.Read;
-    Catalogs.FL_Messages.AddToContext(Invocation.Context, "Ref", Exchange, 
-        True);
+    Catalogs.FL_Messages.AddToContext(Invocation, "Ref", Exchange, True);
     
     JobResult = Catalogs.FL_Messages.RouteAndRunOutputResult(Invocation, 
         Catalogs.FL_Exchanges.Self);    

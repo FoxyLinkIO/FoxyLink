@@ -64,7 +64,6 @@ Procedure AddBearerAuthorizationHeader(Headers, Val Bearer,
     
 EndProcedure // AddBearerAuthorizationHeader()
 
-
 // Calculates OAuth signature. 
 //
 // Parameters:
