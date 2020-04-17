@@ -262,13 +262,14 @@ Procedure FillContentTypeFromHeaders(Invocation, Headers) Export
     
     If ValueIsFilled(ContentType) Then
         
+        CharsetLen = 8;
         SplitResults = StrSplit(ContentType, ";");    
         Invocation.ContentType = SplitResults[0];
         For Each SplitResult In SplitResults Do
             
             Position = StrFind(SplitResult, "charset=");
             If Position > 0 Then
-                Position = Position + StrLen("charset=");    
+                Position = Position + CharsetLen;    
                 Invocation.ContentEncoding = Upper(Mid(SplitResult, Position));         
             EndIf;
             
@@ -297,7 +298,7 @@ Procedure FillContext(Source, Invocation) Export
         PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
             Source.Metadata());
         
-        FillRegisterContext(Invocation.Context, Source.Filter, PrimaryKeys, 
+        FillRegisterContext(Invocation, Source.Filter, PrimaryKeys, 
             Source.Unload());
               
     EndIf;
@@ -310,13 +311,13 @@ EndProcedure // FillContext()
 // Fills accumulation register invocation context.
 //
 // Parameters:
-//  Context         - ValueTable - see function Catalogs.FL_Messages.NewContext.
+//  Invocation      - Structure  - see function Catalogs.FL_Messages.NewInvocation.
 //  Filter          - Filter     - it contains the object Filter, for which 
 //                                  current filtration of records is performed.
 //  PrimaryKeys     - Structure  - see function FL_CommonUse.PrimaryKeysByMetadataObject.
 //  AttributeValues - ValueTable - value table with primary keys values.
 //
-Procedure FillRegisterContext(Context, Filter, PrimaryKeys, 
+Procedure FillRegisterContext(Invocation, Filter, PrimaryKeys, 
     AttributeValues) Export
     
     SynonymsEN = FL_CommonUseReUse.StandardAttributeSynonymsEN();
@@ -324,7 +325,7 @@ Procedure FillRegisterContext(Context, Filter, PrimaryKeys,
             
         FilterValue = Filter.Find(PrimaryKey.Key);
         If FilterValue <> Undefined AND FilterValue.Use Then
-            AddToContext(Context, PrimaryKey.Key, FilterValue.Value, 
+            AddToContext(Invocation, PrimaryKey.Key, FilterValue.Value, 
                 FilterValue.Use);
             Continue;
         EndIf;
@@ -337,7 +338,7 @@ Procedure FillRegisterContext(Context, Filter, PrimaryKeys,
         
         ColumnValues = AttributeValues.UnloadColumn(KeyName);
         For Each ColumnValue In ColumnValues Do
-            AddToContext(Context, PrimaryKey.Key, ColumnValue);   
+            AddToContext(Invocation, PrimaryKey.Key, ColumnValue);   
         EndDo;
         
     EndDo;    
@@ -347,8 +348,8 @@ EndProcedure // FillRegisterContext()
 // Returns deserialized context value if exists.
 //
 // Parameters:
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //  PrimaryKey - String    - the name of primary key.
-//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //                      Default value: Undefined.
 //
@@ -356,13 +357,13 @@ EndProcedure // FillRegisterContext()
 //  Arbitrary - deserialized context value if exists.
 //  Undefined - context value is absent.
 //
-Function ContextValue(PrimaryKey, Properties, JobResult = Undefined) Export
+Function ContextValue(Invocation, PrimaryKey, JobResult = Undefined) Export
     
-    Context = DeserializeContext(Properties.MessageId);
-    If Context = Undefined OR Context.Count() = 0 Then  
+    Context = Invocation.Context;
+    If NOT ValueIsFilled(Context) Then  
         
         ErrorDescription = StrTemplate(FL_ErrorsClientServer
-            .ErrorFailedToProcessMessageContext(), Properties.MessageId);
+            .ErrorFailedToProcessMessageContext(), Invocation.MessageId);
         FL_InteriorUse.WriteLog("FoxyLink.Integration.ContextValue",
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Messages,
@@ -393,24 +394,24 @@ EndFunction // ContextValue()
 // Returns deserialized context value if exists or undefined.
 //
 // Parameters:
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //  PrimaryKey - String    - the name of primary key.
-//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
 //
 // Returns:
 //  Arbitrary - deserialized context value if exists.
 //  Undefined - context value is absent.
 //
-Function ContextValueNoException(PrimaryKey, Properties) Export
+Function ContextValueNoException(Invocation, PrimaryKey) Export
 
     Var MessageId;
 
-    If TypeOf(Properties) <> Type("Structure") 
-        OR NOT Properties.Property("MessageId", MessageId) Then
+    If TypeOf(Invocation) <> Type("Structure") 
+        OR NOT Invocation.Property("MessageId", MessageId) Then
         Return Undefined;
     EndIf;
 
-    Context = DeserializeContext(MessageId);
-    If Context = Undefined OR Context.Count() = 0 Then  
+    Context = Invocation.Context;
+    If NOT ValueIsFilled(Context) Then  
         Return Undefined;      
     EndIf;
         
@@ -423,7 +424,7 @@ Function ContextValueNoException(PrimaryKey, Properties) Export
     
 EndFunction // ContextValueNoException()
 
-// Deserializes a message tabular section or payload into context call.
+// Deprecated. Deserializes a message tabular section or payload into context call.
 //
 // Parameters:
 //  Message           - CatalogRef.FL_Messages - reference to the message.
@@ -539,7 +540,7 @@ Function IsMessagePublisher(EventSource, Operation) Export
     
 EndFunction // IsMessagePublisher()
 
-// The function returns a new invocation request\response structure for 
+// This function returns a new invocation request\response structure for 
 // a service method.
 // 
 // Returns:
@@ -551,6 +552,7 @@ EndFunction // IsMessagePublisher()
 //                                      Default value: "UTF-8". 
 //      * ContentType     - String                   - message content type.
 //                                      Default value: "1C:Enterprise".
+//      * CorrelationId   - String                   - message correlation id.
 //      * EventSource     - String                   - provides access to the 
 //                                              event source object name.
 //                                      Default value: "".
@@ -604,6 +606,76 @@ Function NewInvocation() Export
     
 EndFunction // NewInvocation()
 
+// This function returns a new invocation structure for 
+// a service method from message object.
+//
+// Parameters:
+//  Message        - CatalogObject.FL_Messages - message object.
+//                 - CatalogRef.FL_Messages    - message reference.
+//  StorageAddress - String                    - the address of the temporary 
+//                          storage where the procedure result must be stored.
+//                                  Default value: "".
+//
+// Returns:
+//  Structure - see function Catalogs.FL_Messages.NewInvocation.
+//
+Function NewInvocationFromMessage(Message, StorageAddress = "") Export
+    
+    If Typeof(Message) = Type("CatalogRef.FL_Messages") Then
+        MessageObject = Message.GetObject();
+    Else
+        MessageObject = Message;    
+    EndIf;
+    
+    Invocation = NewInvocation();
+    Invocation.MessageId = XMLString(MessageObject.Ref);
+    FillPropertyValues(Invocation, MessageObject, , "Context, SessionContext");
+    
+    FL_CommonUse.ExtendValueTableFromArray(MessageObject.Context, 
+        Invocation.Context); 
+    FL_CommonUse.ExtendValueTableFromArray(MessageObject.SessionContext, 
+        Invocation.SessionContext);
+        
+    JoinContextValueColumn(Invocation.Context);    
+    
+    Query = New Query;
+    Query.Text = QueryTextMessagePayload();
+    Query.SetParameter("Message", MessageObject.Ref);
+    QueryResult = Query.Execute();
+    If NOT QueryResult.IsEmpty() Then
+        QueryResult = QueryResult.Select();
+        QueryResult.Next();
+        Invocation.Payload = QueryResult.Payload.Get();    
+    EndIf;
+    
+    FL_Tasks.PutDataToTempStorage(Invocation, StorageAddress);    
+        
+    Return Invocation;    
+         
+EndFunction // NewInvocationFromObject()
+
+// The function reads the value from the invocation payload. 
+//
+// Parameters:
+//   Invocation           - Structure - see function Catalogs.FL_Messages.NewInvocation
+//   AdditionalParameters - Structure - additional parameters for format translation.
+//                              Default value: Undefined.
+// Returns:
+//  Arbitrary - a value read from the invocation payload. 
+// 
+Function ReadInvocationPayload(Invocation, 
+    AdditionalParameters = Undefined) Export
+    
+    Handler = ResolveFormatHandler(Invocation.ContentType, 
+        Invocation.FileExtension);
+    If Handler = Undefined Then
+        Return Undefined;
+    EndIf;
+    
+    Return Handler.ReadFormat(Invocation, AdditionalParameters);
+    
+EndFunction // ReadInvocationPayload()
+
 #EndRegion // ServiceInterface
 
 #Region ServiceProceduresAndFunctions
@@ -650,11 +722,13 @@ EndFunction // CreateMessage()
 //
 Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
     
+    Invocation = NewInvocationFromMessage(Source);
+    
     ExchangeEndpoints = ExchangeEndpoints(Source, Exchange);  
     For Each Endpoint In ExchangeEndpoints Do
         
         // Checks whether message is passed through event filter 
-        If NOT PassedByEventFilter(Source, Endpoint) Then
+        If NOT PassedByEventFilter(Invocation, Endpoint) Then
             Continue;
         EndIf;
         
@@ -668,14 +742,14 @@ Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
             JobData.State = Catalogs.FL_States.Processing;    
         EndIf;
         
-        InputParameter = JobData.Input.Add();
-        InputParameter.Name = "Exchange";
-        InputParameter.Value = Endpoint.Exchange;
+        AppProperties = Catalogs.FL_Channels.NewAppProperties();
+        AppProperties.AppEndpoint = Endpoint.Exchange;
         
-        InputParameter = JobData.Input.Add();
-        InputParameter.Name = "Message";
-        InputParameter.Value = Source.Ref;
-        
+        FL_BackgroundJob.AddToJobInputData(JobData, "AppProperties", 
+            AppProperties);
+        FL_BackgroundJob.AddToJobInputData(JobData, "Invocation", 
+            Invocation);
+                
         ExchangeJob = FL_BackgroundJob.Enqueue(JobData);
         NewRow = Source.Exchanges.Add();
         NewRow.Exchange = Endpoint.Exchange;
@@ -704,7 +778,7 @@ Procedure RouteToAppEndpoints(Source, Exchange, AppEndpoint, ExchangeJob)
     Filter = New Structure("AppEndpoint");
     For Each TableRow In AppEndpoints Do
         
-        AppProperties = Catalogs.FL_Channels.NewAppEndpointProperties();
+        AppProperties = Catalogs.FL_Channels.NewAppProperties();
         AppProperties.AppEndpoint = TableRow.AppEndpoint;
         
         Filter.AppEndpoint = TableRow.AppEndpoint;
@@ -717,10 +791,9 @@ Procedure RouteToAppEndpoints(Source, Exchange, AppEndpoint, ExchangeJob)
         JobData.Priority = TableRow.Priority;
         JobData.State = Catalogs.FL_States.Awaiting;
 
-        InputParameter = JobData.Input.Add();
-        InputParameter.Name = "AppProperties";
-        InputParameter.Value = AppProperties;
-        
+        FL_BackgroundJob.AddToJobInputData(JobData, "AppProperties", 
+            AppProperties);
+                
         AppEndpointJob = FL_BackgroundJob.ContinueWith(ExchangeJob, JobData);
         NewRow = Source.AppEndpoints.Add();
         NewRow.Endpoint = TableRow.AppEndpoint;
@@ -866,15 +939,12 @@ EndFunction // ExchangeEndpoints()
 
 // Only for internal use.
 //
-Function PassedByEventFilter(Source, Endpoint)
-    
-    FilterPassed = True;
-    FilterNotPassed = False;
+Function PassedByEventFilter(Invocation, Endpoint)
     
     // Event source isn't set or unknown. 
     If Endpoint.EventFilterDCSchema = Undefined
         OR Endpoint.EventFilterDCSettings = Undefined Then
-        Return FilterPassed;
+        Return True;
     EndIf;
     
     DataCompositionSchema = Endpoint.EventFilterDCSchema.Get();
@@ -882,15 +952,7 @@ Function PassedByEventFilter(Source, Endpoint)
     
     // Event filter isn't set.
     If TypeOf(DataCompositionSchema) <> Type("DataCompositionSchema") Then
-        Return FilterPassed;
-    EndIf;
-    
-    If Source.Context.Count() <> 0 Then
-        Context = Source.Context.Unload();
-        JoinContextValueColumn(Context);
-    Else
-        // HTTP endpoint context.
-        Context = DeserializeContext(Source.Ref);    
+        Return True;
     EndIf;
     
     Settings = Catalogs.FL_Exchanges.NewExchangeSettings();
@@ -898,15 +960,11 @@ Function PassedByEventFilter(Source, Endpoint)
     Settings.DataCompositionSettings = DataCompositionSettings;
     
     OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(Settings, 
-        Context);
+        Invocation);
         
     ValueTable = New ValueTable;
-    FL_DataComposition.OutputInValueCollection(ValueTable, OutputParameters);    
-    If ValueTable.Count() > 0 Then
-        Return FilterPassed;
-    EndIf;
-    
-    Return FilterNotPassed;
+    FL_DataComposition.OutputInValueCollection(ValueTable, OutputParameters);
+    Return ValueIsFilled(ValueTable);
     
 EndFunction // PassedByEventFilter()
 
@@ -927,6 +985,25 @@ Function AppEndpoints(Source, Exchange, AppEndpoint)
     Return Query.ExecuteBatch();
     
 EndFunction // AppEndpoints()
+
+#Region FormatHandlers
+
+// Only for internal use.
+//
+Function ResolveFormatHandler(ContentType, FileExtension)
+    
+    Handler = Catalogs.FL_Handlers.NewRegisteredHandlerForContentType(
+        ContentType); 
+    If Handler <> Undefined Then
+        Return Handler;
+    EndIf;
+    
+    Return Catalogs.FL_Handlers.NewRegisteredHandlerForFileExtension(
+        FileExtension);
+    
+EndFunction // ResolveFormatHandler()
+
+#EndRegion // FormatHandlers 
 
 // Only for internal use.
 //

@@ -181,7 +181,37 @@ EndFunction // ChangeState()
 
 #Region ServiceInterface
 
-// Adds result to the output parameters table.
+// This procedure adds the value into input data parameters.
+//
+// Parameters:
+//  JobData - Structure - see function Catalogs.FL_Jobs.NewJobData.
+//  Name    - String    - parameter name.
+//  Value   - Arbitrary - parameter value.
+//
+Procedure AddToJobInputData(JobData, Name, Value) Export
+    
+    InputParameter = JobData.Input.Add();
+    InputParameter.Name = Name;
+    InputParameter.Value = Value;
+    
+EndProcedure // AddToJobInputData()
+
+// This procedure adds the value into output data parameters.
+//
+// Parameters:
+//  JobData - Structure - see function Catalogs.FL_Jobs.NewJobData.
+//  Name    - String    - parameter name.
+//  Value   - Arbitrary - parameter value.
+//
+Procedure AddToJobOutputData(JobData, Name, Value) Export
+    
+    OutputParameter = JobData.Output.Add();
+    OutputParameter.Name = Name;
+    OutputParameter.Value = Value;
+    
+EndProcedure // AddToJobOutputData()
+
+// This procedure adds the result to the output parameters table.
 //
 // Parameters:
 //  JobResult - Structure - see function Catalogs.FL_Jobs.NewJobResult.
@@ -195,6 +225,30 @@ Procedure AddToJobResult(JobResult, Name, Value) Export
     NewOutputRow.Value = Value;
     
 EndProcedure // AddToJobResult()
+
+// The function returns field value by the passed field name from the job result.
+//
+// Parameters:
+//  JobResult    - Structure - see function Catalogs.FL_Jobs.NewJobResult.
+//  Name         - String    - parameter name.
+//  DefaultValue - Arbitrary - default value if exist.
+//                      Default value: Undefined.
+//
+// Returns:
+//  Arbitrary - parameter value.
+//  Undefined, Arbitrary - field value not found; default value returns.
+// 
+Function GetFromJobResult(JobResult, Name, DefaultValue = Undefined) Export
+    
+    FilterParameters = New Structure("Name", Name);
+    FilterResults = JobResult.Output.FindRows(FilterParameters);
+    If FilterResults.Count() = 1 Then
+        Return FilterResults[0].Value;   
+    EndIf;
+    
+    Return DefaultValue;
+    
+EndFunction // GetFromJobResult()
 
 // Returns a new job data for a service method.
 //
@@ -303,7 +357,7 @@ EndProcedure // AddToInputOutputTable()
 Procedure CopyToInputOutputTable(TabularSection, ValueTable)
     
     If TypeOf(ValueTable) <> Type("ValueTable") 
-        OR ValueTable.Count() = 0 Then
+        OR NOT ValueIsFilled(ValueTable) Then
         Return;
     EndIf;
     

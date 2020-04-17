@@ -2050,15 +2050,15 @@
 			</Command>
 			<Command uuid="77309055-991c-4e92-9ba4-4293ec37c0e8">
 				<Properties>
-					<Name>ManualRouting</Name>
+					<Name>ManualRoute</Name>
 					<Synonym>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>Manual routing</v8:content>
+							<v8:content>Manual route</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>Manual routing</v8:content>
+							<v8:content>Manual route</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>

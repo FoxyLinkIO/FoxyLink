@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -20,15 +20,22 @@
 #Region CommandHandlers
 
 &AtClient
-Procedure CommandProcessing(CommandParameter, CommandExecuteParameters)
+Procedure CommandProcessing(Messages, CommandExecuteParameters)
     
-    //For Each Message In Messages Do
-    //    Catalogs.FL_Messages.Route(Message);
-    //EndDo;
-    
-    // Insert handler content.
-    //FormParameters = New Structure("", );
-    //OpenForm("Catalog.FL_Messages.ListForm", FormParameters, CommandExecuteParameters.Source, CommandExecuteParameters.Uniqueness, CommandExecuteParameters.Window, CommandExecuteParameters.URL);
+    If ValueIsFilled(Messages) Then
+        
+        ManualRoutingInBackground(Messages);    
+        
+    Else
+        
+        UserMessage = NStr("en='Select a message to route from the list.';
+            |ru='Выберите сообщение для маршрутизации из списка.';
+            |uk='Виберіть повідомлення для маршрутизації зі списку.';
+            |en_CA='Select a message to route from the list.'"); 
+        FL_CommonUseClientServer.NotifyUser(UserMessage);
+        
+    EndIf;
+
 EndProcedure // CommandProcessing()
 
 #EndRegion // CommandHandlers
@@ -36,7 +43,7 @@ EndProcedure // CommandProcessing()
 #Region ServiceProceduresAndFunctions
 
 &AtServer
-Function ManualRoutingInBackground(Val Source)
+Function ManualRoutingInBackground(Messages)
     
     Task = FL_TasksClientServer.NewTask();
     Task.Description = NStr("en='Manual message routing - is in a progress';
@@ -44,7 +51,7 @@ Function ManualRoutingInBackground(Val Source)
         |uk='Ручна маршрутизація повідомлень - триває';
         |en_CA='Manual message routing - is in a progress'");
     Task.MethodName = "Catalogs.FL_Messages.Route";
-    Task.Parameters.Add(Source);
+    Task.Parameters.Add(Messages);
     BackgroundJob = FL_Tasks.Run(Task);
     
 EndFunction // ManualRoutingInBackground() 

@@ -145,7 +145,7 @@ Procedure FillContextDataInBackground()
     
     Task = FL_TasksClientServer.NewTask();
     Task.Context = UUID;
-    Task.MethodName = "Catalogs.FL_Messages.DeserializeContext";
+    Task.MethodName = "Catalogs.FL_Messages.NewInvocationFromMessage";
     Task.Parameters.Add(Object.Ref);
     ContextTaskResult = FL_Tasks.Run(Task);
                                  
@@ -160,9 +160,9 @@ Procedure AfterContextTaskComplete()
     
     If IsTempStorageURL(ContextTaskResult.StorageAddress) Then
         
-        ContextData = GetFromTempStorage(ContextTaskResult.StorageAddress);
-        If TypeOf(ContextData) = Type("ValueTable") Then
-            Context.Load(ContextData);
+        Invocation = GetFromTempStorage(ContextTaskResult.StorageAddress);
+        If TypeOf(Invocation) = Type("Structure") Then
+            Context.Load(Invocation.Context);
         EndIf;
         
     EndIf;

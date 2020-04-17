@@ -22,21 +22,21 @@
 // Returns a processing result.
 //
 // Parameters:
-//  Exchange - CatalogRef.FL_Exchanges - reference of the FL_Exchanges catalog.
-//  Message  - CatalogRef.FL_Messages  - reference of the FL_Messages catalog.
+//  AppProperties - Structure - see function Catalogs.FL_Channels.NewAppProperties.
+//  Invocation    - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //
 // Returns:
 //  Structure - see fucntion Catalogs.FL_Jobs.NewJobResult. 
 //
-Function ProcessMessage(Exchange, Message) Export
+Function ProcessMessage(AppProperties, Invocation) Export
     
     JobResult = Catalogs.FL_Jobs.NewJobResult();
     
-    Operation = FL_CommonUse.ObjectAttributeValue(Message, "Operation");
+    Operation = Invocation.Operation;
     If Operation = Catalogs.FL_Operations.Create Then
-        CreateSocial(Exchange, Message, JobResult);
+        CreateSocial(Invocation, JobResult);
     ElsIf Operation = Catalogs.FL_Operations.Merge Then
-        MergeSocial(Exchange, Message, JobResult);
+        MergeSocial(AppProperties.AppEndpoint, Invocation, JobResult);
     EndIf;
     
     JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
@@ -89,13 +89,17 @@ EndFunction // EventHandlerInfo()
 
 // Only for internal use.
 //
-Procedure CreateSocial(Exchange, Message, JobResult)
+Procedure CreateSocial(Invocation, JobResult)
     
     Try
         
-        Context = Catalogs.FL_Messages.DeserializeContext(Message);
+        AdditionalParameters = New Structure;
+        AdditionalParameters.Insert("ReadToMap", False);
         
-        SocialNetwork = Enums.SocialNetworks[Context.ChannelName];
+        Context = Catalogs.FL_Messages.ReadInvocationPayload(Invocation,
+            AdditionalParameters);
+        
+        SocialNetwork = Enums.SocialNetworks[Context.Get("ChannelName")];
         SocialUser = Catalogs.SocialNetworks_Users.SocialNetworkUser(
             TrimAll(Context.UserId), SocialNetwork, Context.Description);   
         SocialConversation = Catalogs.SocialNetworks_Conversations
@@ -161,11 +165,15 @@ EndProcedure // CreateSocialMessage()
 
 // Only for internal use.
 //
-Procedure MergeSocial(Exchange, Message, JobResult)
+Procedure MergeSocial(Exchange, Invocation, JobResult)
     
     Try
         
-        RequestBody = Catalogs.FL_Messages.DeserializeContext(Message);
+        AdditionalParameters = New Structure;
+        AdditionalParameters.Insert("ReadToMap", False);
+        
+        RequestBody = Catalogs.FL_Messages.ReadInvocationPayload(Invocation,
+            AdditionalParameters);
         Context = RequestBody.Object;   
         
         SupportedTypes = New Array;
@@ -188,7 +196,7 @@ Procedure MergeSocial(Exchange, Message, JobResult)
         EndIf;        
         
         Settings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(Exchange, 
-            Message.Operation);
+            Invocation.Operation);
         StreamObject = FL_InteriorUse.NewFormatProcessor(
             Settings.BasicFormatGuid);
         
@@ -206,20 +214,19 @@ Procedure MergeSocial(Exchange, Message, JobResult)
         FL_DataComposition.Output(StreamObject, OutputParameters);
         
         // Fill MIME-type information.
-        Invocation = Catalogs.FL_Messages.NewInvocation();
-        FillPropertyValues(Invocation, Message);
-        Invocation.ContentType = StreamObject.FormatMediaType();
-        Invocation.ContentEncoding = StreamObject.ContentEncoding;
-        Invocation.FileExtension = StreamObject.FormatFileExtension();
-        Invocation.MessageId = XMLString(Message);
+        OutInvocation = Catalogs.FL_Messages.NewInvocation();
+        FillPropertyValues(OutInvocation, Invocation);
+        OutInvocation.ContentType = StreamObject.FormatMediaType();
+        OutInvocation.ContentEncoding = StreamObject.ContentEncoding;
+        OutInvocation.FileExtension = StreamObject.FormatFileExtension();
         
         // Close format stream and memory stream.
         StreamObject.Close();
-        Invocation.Payload = Stream.CloseAndGetBinaryData();
+        OutInvocation.Payload = Stream.CloseAndGetBinaryData();
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
         
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Invocation", Invocation);     
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Invocation", OutInvocation);     
             
     Except
         

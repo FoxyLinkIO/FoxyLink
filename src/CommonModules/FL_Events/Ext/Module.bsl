@@ -359,7 +359,7 @@ Procedure FillRegisterContext(Invocation, PrimaryKeys, Filter, Values)
     If FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(Invocation.EventSource) 
         OR FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(Invocation.EventSource) Then
                
-        Catalogs.FL_Messages.FillRegisterContext(Invocation.Context, Filter, 
+        Catalogs.FL_Messages.FillRegisterContext(Invocation, Filter, 
             PrimaryKeys, Values);
             
         // Do not change this line. It is easy to break passing by reference.

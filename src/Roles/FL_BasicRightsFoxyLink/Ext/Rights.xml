@@ -208,6 +208,17 @@
 		</right>
 	</object>
 	<object>
+		<name>Catalog.FL_Handlers</name>
+		<right>
+			<name>Read</name>
+			<value>true</value>
+		</right>
+		<right>
+			<name>View</name>
+			<value>true</value>
+		</right>
+	</object>
+	<object>
 		<name>Catalog.FL_Operations</name>
 		<right>
 			<name>Read</name>

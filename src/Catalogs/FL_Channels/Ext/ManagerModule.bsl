@@ -24,7 +24,7 @@
 // Returns a processing result.
 //
 // Parameters:
-//  AppProperties - Structure - see function Catalogs.FL_Channels.NewAppEndpointProperties.
+//  AppProperties - Structure - see function Catalogs.FL_Channels.NewAppProperties.
 //  Invocation    - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //
 // Returns:
@@ -91,11 +91,11 @@ Function ProcessMessage(AppProperties, Invocation) Export
             
     Except
         
-        ErrorDescription = ErrorDescription();
+        ErrorInformation = ErrorInfo();
         FL_InteriorUse.WriteLog("FoxyLink.Integration.ProcessMessage", 
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Channels,
-            ErrorDescription, 
+            ErrorInformation, 
             JobResult);
     
     EndTry;
@@ -273,21 +273,22 @@ EndFunction // NewChannelParameters()
 //
 // Returns:
 //  Structure - app endpoint properties with keys:
-//      * AppEndpoint  - CatalogRef.FL_Channels - reference to the app endpoint.
-//      * AppResources - ValueTable             - build from the mock app resources table. 
+//      * AppEndpoint  - CatalogRef.FL_Channels  - reference to the app endpoint.
+//                     - CatalogRef.FL_Exchanges - reference to the data composition app endpoint.
+//      * AppResources - ValueTable              - build from the mock app resources table. 
 //
-Function NewAppEndpointProperties() Export
+Function NewAppProperties() Export
     
     AppResources = Metadata.Catalogs.FL_Channels.TabularSections.AppResources;
     
-    AppEndpointProperties = New Structure;
-    AppEndpointProperties.Insert("AppEndpoint");
-    AppEndpointProperties.Insert("AppResources", FL_CommonUse
+    AppProperties = New Structure;
+    AppProperties.Insert("AppEndpoint");
+    AppProperties.Insert("AppResources", FL_CommonUse
         .NewMockOfMetadataObjectAttributes(AppResources));
     
-    Return AppEndpointProperties;
+    Return AppProperties;
     
-EndFunction // NewAppEndpointProperties()
+EndFunction // NewAppProperties()
 
 #EndRegion // ProgramInterface
 

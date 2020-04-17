@@ -148,6 +148,69 @@ Procedure Initialize(Stream, APISchema = Undefined) Export
     
 EndProcedure // Initialize()
 
+// The function reads the value from the invocation payload. 
+//
+// Parameters:
+//  Invocation           - Structure - see function Catalogs.FL_Messages.NewInvocation
+//  AdditionalParameters - Structure - additional parameters for format translation.
+//                              Default value: Undefined.
+// Returns:
+//  Arbitrary - a value read from the invocation payload. 
+// 
+Function ReadFormat(Invocation, AdditionalParameters) Export
+    
+    ReadToMap = True;
+    PropertiesWithDateValuesNames = Undefined;
+    ExpectedDateFormat = JSONDateFormat.ISO;
+    ReviverFunctionName = Undefined;
+    ReviverFunctionModule = Undefined;
+    ReviverFunctionAdditionalParameters = Undefined;
+    RetriverPropertiesNames = Undefined;
+    
+    Payload = Invocation.Payload;
+    If TypeOf(Payload) <> Type("BinaryData") Then
+        Return Undefined;    
+    EndIf;
+    
+    If TypeOf(AdditionalParameters) = Type("Structure") Then
+        
+        If AdditionalParameters.Property("ReadToMap") Then
+            ReadToMap = AdditionalParameters.ReadToMap;           
+        EndIf;
+        
+        AdditionalParameters.Property("PropertiesWithDateValuesNames", 
+            PropertiesWithDateValuesNames);
+            
+        If AdditionalParameters.Property("ExpectedDateFormat") 
+            AND TypeOf(AdditionalParameters.ExpectedDateFormat) = Type("JSONDateFormat") Then
+            ExpectedDateFormat = AdditionalParameters.ExpectedDateFormat;    
+            
+        EndIf;
+            
+        AdditionalParameters.Property("ReviverFunctionName", 
+            ReviverFunctionName);
+        AdditionalParameters.Property("ReviverFunctionModule", 
+            ReviverFunctionModule);
+        AdditionalParameters.Property("ReviverFunctionAdditionalParameters", 
+            ReviverFunctionAdditionalParameters);
+        AdditionalParameters.Property("RetriverPropertiesNames", 
+            RetriverPropertiesNames);
+        
+    EndIf;
+    
+    JSONReader = New JSONReader;    
+    JSONReader.OpenStream(Payload.OpenStreamForRead());
+    Return ReadJSON(JSONReader, 
+        ReadToMap, 
+        PropertiesWithDateValuesNames,
+        ExpectedDateFormat,
+        ReviverFunctionName,
+        ReviverFunctionModule,
+        ReviverFunctionAdditionalParameters,
+        RetriverPropertiesNames);
+    
+EndFunction // ReadFormat()
+
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
@@ -187,15 +250,15 @@ Procedure Output(Item, DataCompositionProcessor, ReportStructure,
     
     If ValueIsFilled(APISchema.Rows) Then
         
-        // It is used when API format is not provided.
-        BasicOutput(Item, DataCompositionProcessor, 
-            ReportStructure.Names, TemplateColumns);
-            
-    Else
-
         // It is used when API format is provided.
         APISchemaOutput(Item, DataCompositionProcessor, 
             ReportStructure, TemplateColumns);
+            
+    Else
+
+        // It is used when API format is not provided.
+        BasicOutput(Item, DataCompositionProcessor, 
+            ReportStructure.Names, TemplateColumns);   
             
     EndIf;
         

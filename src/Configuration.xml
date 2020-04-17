@@ -293,8 +293,10 @@
 			<CommonTemplate>FL_LICENSE</CommonTemplate>
 			<CommonModule>FL_BackgroundJob</CommonModule>
 			<CommonModule>FL_BatchJob</CommonModule>
+			<CommonModule>FL_CommonUse</CommonModule>
 			<CommonModule>FL_CommonUseClientServer</CommonModule>
 			<CommonModule>FL_CommonUseReUse</CommonModule>
+			<CommonModule>FL_ConfigurationUpdate</CommonModule>
 			<CommonModule>FL_DataComposition</CommonModule>
 			<CommonModule>FL_DataCompositionClient</CommonModule>
 			<CommonModule>FL_Encryption</CommonModule>
@@ -308,10 +310,9 @@
 			<CommonModule>FL_JobServer</CommonModule>
 			<CommonModule>FL_RunInSafeMode</CommonModule>
 			<CommonModule>FL_Tasks</CommonModule>
-			<CommonModule>FL_CommonUse</CommonModule>
+			<CommonModule>FL_TasksClientServer</CommonModule>
 			<CommonModule>SocialNetworks_Events</CommonModule>
 			<CommonModule>SocialNetworks_ExchangeServer</CommonModule>
-			<CommonModule>FL_TasksClientServer</CommonModule>
 			<HTTPService>FL_AppEndpoint</HTTPService>
 			<EventSubscription>FL_CatalogsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
@@ -344,6 +345,7 @@
 			<Constant>SocialNetworks_LastDate</Constant>
 			<Catalog>FL_Channels</Catalog>
 			<Catalog>FL_Exchanges</Catalog>
+			<Catalog>FL_Handlers</Catalog>
 			<Catalog>FL_Jobs</Catalog>
 			<Catalog>FL_Messages</Catalog>
 			<Catalog>FL_Operations</Catalog>
@@ -351,6 +353,7 @@
 			<Catalog>SocialNetworks_Conversations</Catalog>
 			<Catalog>SocialNetworks_Users</Catalog>
 			<Enum>FL_CRUDMethods</Enum>
+			<Enum>FL_HandlerTypes</Enum>
 			<Enum>FL_RESTMethods</Enum>
 			<Enum>SocialNetworks</Enum>
 			<DataProcessor>FL_AdministrationPanel</DataProcessor>

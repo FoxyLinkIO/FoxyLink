@@ -124,6 +124,49 @@ Function ObjectAttributeValue(Ref, AttributeName) Export
 
 EndFunction // ObjectAttributeValue()
 
+// The function returns reference by the specified unique identifier.
+//
+// Parameters:
+//  MetadataObject - MetadataObject - metadata object from which it is required 
+//                                    to receive reference by UUID. 
+//  UUID           - String, UUID   - the unique identifier of the reference. 
+//
+// Returns:
+//  AnyRef - reference by the UUID. 
+//
+Function ReferenceByUUID(MetadataObject, Val UUID) Export
+    
+    If TypeOf(UUID) = Type("String") Then
+        UUID = New UUID(UUID);    
+    EndIf;
+    
+    Manager = ObjectManagerByMetadataObject(MetadataObject);
+    Return Manager.GetRef(UUID);
+    
+EndFunction // ReferenceByUUID()
+
+// Returns reference by the specified code.
+//
+// Parameters:
+//  MetadataObject - MetadataObject - metadata object from which it is required 
+//                                      to receive reference by code. 
+//  Code           - String, Number - the code of reference. 
+//
+// Returns:
+//  AnyRef, Undefined - reference by the description. 
+//
+Function ReferenceByCode(MetadataObject, Code) Export
+    
+    Query = New Query;
+    Query.Text = StrTemplate(QueryTextReferenceByCode(), 
+        MetadataObject.FullName());
+    Query.SetParameter("Code", Code);
+    QueryResultSelection = Query.Execute().Select();
+    
+    Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
+    
+EndFunction // ReferenceByCode()
+
 // Returns reference by the specified description.
 //
 // Parameters:
@@ -145,28 +188,6 @@ Function ReferenceByDescription(MetadataObject, Description) Export
     Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
     
 EndFunction // ReferenceByDescription()
-
-// Returns reference by the specified code.
-//
-// Parameters:
-//  MetadataObject - MetadataObject - metadata object from which it is required 
-//                                      to receive reference by description. 
-//  Code           - String, Number - the code of reference. 
-//
-// Returns:
-//  AnyRef, Undefined - reference by the description. 
-//
-Function ReferenceByCode(MetadataObject, Code) Export
-    
-    Query = New Query;
-    Query.Text = StrTemplate(QueryTextReferenceByCode(), 
-        MetadataObject.FullName());
-    Query.SetParameter("Code", Code);
-    QueryResultSelection = Query.Execute().Select();
-    
-    Return ?(QueryResultSelection.Next(), QueryResultSelection.Ref, Undefined);
-    
-EndFunction // ReferenceByCode()
 
 // Returns reference by the specified predefined data name.
 //
@@ -1247,14 +1268,14 @@ Function CommonModule(Val ModuleName) Export
 
 EndFunction // CommonModule()
 
-// Returns the object manager by a full metadata object name.
+// The function returns the object manager by a full metadata object name.
 //
 // Parameters:
 //  FullName - String - full metadata object name. 
 //                  Example: "AccumulationRegister.Inventory".
 //
 // Returns:
-//  ObjectManager.
+//  ObjectManager - object manager received by the fullname of object.
 //
 Function ObjectManagerByFullName(FullName) Export
     
@@ -1344,13 +1365,29 @@ Function ObjectManagerByFullName(FullName) Export
     
 EndFunction // ObjectManagerByFullName()
 
-// Returns the object manager by a reference to object.
+// The function returns the object manager by a full metadata object name.
+//
+// Parameters:
+//  MetadataObject - MetadataObject - metadata object from which it is required 
+//                                    to receive object manager.
+//
+// Returns:
+//  ObjectManager - object manager received by the metadata object.
+//
+Function ObjectManagerByMetadataObject(MetadataObject) Export
+    
+    FullName = MetadataObject.FullName();
+    Return ObjectManagerByFullName(FullName);
+    
+EndFunction // ObjectManagerByMetadataObject() 
+
+// The function returns the object manager by a reference to object.
 //
 // Parameters:
 //  Ref - AnyRef - the object for which it is required to receive object manager.
 //
 // Returns:
-//  ObjectManager - object manager received by a reference to object.
+//  ObjectManager - object manager received by the reference to object.
 //
 Function ObjectManagerByReference(Ref) Export
     

@@ -315,10 +315,10 @@ Function NewCompressionMethod()
     If CompressionMethod = "BZIP2" Then
         Return ZIPCompressionMethod.BZIP2;    
     ElsIf CompressionMethod = "Copy" Then
-        Return ZIPCompressionMethod.Copy;    
-    Else
-        Return ZIPCompressionMethod.Deflate;    
-    EndIf;   
+        Return ZIPCompressionMethod.Copy;      
+    EndIf;  
+    
+    Return ZIPCompressionMethod.Deflate;
     
 EndFunction // NewCompressionMethod()
 
@@ -331,10 +331,10 @@ Function NewCompressionLevel()
     If CompressionLevel = "Maximum" Then
         Return ZIPCompressionLevel.Maximum;    
     ElsIf CompressionLevel = "Minimum" Then
-        Return ZIPCompressionLevel.Minimum;    
-    Else
-        Return ZIPCompressionLevel.Optimal;    
+        Return ZIPCompressionLevel.Minimum;       
     EndIf;
+    
+    Return ZIPCompressionLevel.Optimal;
     
 EndFunction // NewCompressionLevel()
 
@@ -349,10 +349,10 @@ Function NewEncryptionMethod()
     ElsIf EncryptionMethod = "AES192" Then
         Return ZipEncryptionMethod.AES192;    
     ElsIf EncryptionMethod = "AES256" Then
-        Return ZipEncryptionMethod.AES256;
-    Else
-        Return ZipEncryptionMethod.Zip20;    
+        Return ZipEncryptionMethod.AES256;  
     EndIf;
+    
+    Return ZipEncryptionMethod.Zip20;
     
 EndFunction // NewEncryptionMethod()
 

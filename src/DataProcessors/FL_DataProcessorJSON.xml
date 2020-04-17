@@ -129,6 +129,7 @@
 				</Properties>
 			</Attribute>
 			<Form>APICreationForm</Form>
+			<Form>LoadFromSwaggerForm</Form>
 		</ChildObjects>
 	</DataProcessor>
 </MetaDataObject>

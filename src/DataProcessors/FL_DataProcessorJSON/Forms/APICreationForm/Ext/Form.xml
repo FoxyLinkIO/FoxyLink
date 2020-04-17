@@ -97,27 +97,6 @@
 								<CommandName>Form.Command.SaveAndClose</CommandName>
 								<ExtendedTooltip name="SaveAndCloseExtendedTooltip" id="42"/>
 							</Button>
-							<ButtonGroup name="APISchemaMoreActions" id="59">
-								<Title>
-									<v8:item>
-										<v8:lang>en</v8:lang>
-										<v8:content>APISchema more actions</v8:content>
-									</v8:item>
-									<v8:item>
-										<v8:lang>en_CA</v8:lang>
-										<v8:content>APISchema more actions</v8:content>
-									</v8:item>
-								</Title>
-								<ExtendedTooltip name="APISchemaMoreActionsExtendedTooltip" id="60"/>
-								<ChildItems>
-									<Button name="LoadSample" id="57">
-										<Type>CommandBarButton</Type>
-										<OnlyInAllActions>false</OnlyInAllActions>
-										<CommandName>Form.Command.LoadSample</CommandName>
-										<ExtendedTooltip name="LoadSampleExtendedTooltip" id="58"/>
-									</Button>
-								</ChildItems>
-							</ButtonGroup>
 							<ButtonGroup name="APISchemaAddItem" id="63">
 								<EnableContentChange>true</EnableContentChange>
 								<ExtendedTooltip name="APISchemaAddItemExtendedTooltip" id="64"/>
@@ -178,6 +157,40 @@
 									</Button>
 								</ChildItems>
 							</ButtonGroup>
+							<Popup name="APISchemaMoreActions" id="59">
+								<Title>
+									<v8:item>
+										<v8:lang>en</v8:lang>
+										<v8:content>Load from</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>en_CA</v8:lang>
+										<v8:content>Load from</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>ru</v8:lang>
+										<v8:content>Загрузить из</v8:content>
+									</v8:item>
+									<v8:item>
+										<v8:lang>uk</v8:lang>
+										<v8:content>Завантажити з</v8:content>
+									</v8:item>
+								</Title>
+								<ExtendedTooltip name="APISchemaMoreActionsExtendedTooltip" id="60"/>
+								<ChildItems>
+									<Button name="LoadFromText" id="57">
+										<Type>CommandBarButton</Type>
+										<OnlyInAllActions>true</OnlyInAllActions>
+										<CommandName>Form.Command.LoadFromText</CommandName>
+										<ExtendedTooltip name="LoadFromTextExtendedTooltip" id="58"/>
+									</Button>
+									<Button name="LoadFromSwagger" id="75">
+										<Type>CommandBarButton</Type>
+										<CommandName>Form.Command.LoadFromSwagger</CommandName>
+										<ExtendedTooltip name="LoadFromSwaggerExtendedTooltip" id="76"/>
+									</Button>
+								</ChildItems>
+							</Popup>
 						</ChildItems>
 					</AutoCommandBar>
 					<ExtendedTooltip name="APISchemaExtendedTooltip" id="4"/>
@@ -811,40 +824,48 @@
 			<Action>DeleteRowAPITable</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
-		<Command name="LoadSample" id="4">
+		<Command name="LoadFromText" id="4">
 			<Title>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Load sample</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Загрузить образец</v8:content>
+					<v8:content>From text</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Load sample</v8:content>
+					<v8:content>From text</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Из текста</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>З тексту</v8:content>
 				</v8:item>
 			</Title>
 			<ToolTip>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Load sample</v8:content>
-				</v8:item>
-				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Загрузить образец</v8:content>
+					<v8:content>Load from text</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Load sample</v8:content>
+					<v8:content>Load from text</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Загрузить из текста</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Завантажити з тексту</v8:content>
 				</v8:item>
 			</ToolTip>
 			<Picture>
 				<xr:Ref>CommonPicture.FL_CodeFile</xr:Ref>
 				<xr:LoadTransparent>true</xr:LoadTransparent>
 			</Picture>
-			<Action>LoadSample</Action>
+			<Action>LoadFromText</Action>
 			<Representation>TextPicture</Representation>
 		</Command>
 		<Command name="AddStringItem" id="5">
@@ -1038,6 +1059,50 @@
 			</ToolTip>
 			<Action>AddArrayItem</Action>
 			<Representation>Picture</Representation>
+		</Command>
+		<Command name="LoadFromSwagger" id="11">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>From Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>From Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Из Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>З Swagger</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Load from Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Load from Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Загрузить из Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Завантажити з Swagger</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Swagger</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>LoadFromSwagger</Action>
+			<Representation>TextPicture</Representation>
 		</Command>
 	</Commands>
 </Form>

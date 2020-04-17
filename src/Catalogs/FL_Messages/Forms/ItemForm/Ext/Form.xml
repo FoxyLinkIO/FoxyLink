@@ -966,20 +966,6 @@
 		</Attribute>
 	</Attributes>
 	<Commands>
-		<Command name="ManualRoute" id="1">
-			<Title>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Manual route</v8:content>
-				</v8:item>
-			</Title>
-			<ToolTip>
-				<v8:item>
-					<v8:lang>en</v8:lang>
-					<v8:content>Manual route</v8:content>
-				</v8:item>
-			</ToolTip>
-		</Command>
 		<Command name="CancelLoadingContext" id="2">
 			<Title>
 				<v8:item>

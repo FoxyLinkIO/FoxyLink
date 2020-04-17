@@ -37,22 +37,6 @@ EndProcedure // OnOpen()
 
 #Region FormCommandHandlers
 
-&AtClient
-Procedure ManualRouting(Command)
-    
-    CurrentData = Items.List.CurrentData;
-    If CurrentData <> Undefined Then
-        ManualRoutingAtServer(Items.List.SelectedRows);
-    Else
-        UserMessage = NStr("en='Select a message to route from the list.';
-            |ru='Выберите сообщение для маршрутизации из списка.';
-            |uk='Виберіть повідомлення для маршрутизації зі списку.';
-            |en_CA='Select a message to route from the list.'"); 
-        FL_CommonUseClientServer.NotifyUser(UserMessage);
-     EndIf;
-
-EndProcedure // ManualRouting()
-
 // See procedure FL_JobServer.RunScheduledJob.
 //
 &AtClient
@@ -141,15 +125,6 @@ Procedure StopJobRoutingAtServer()
     FL_JobServer.StopScheduledJob(FL_JobServer.JobRouting());
     
 EndProcedure // StopJobRoutingAtServer() 
-
-&AtServerNoContext
-Procedure ManualRoutingAtServer(Val Messages)
-    
-    For Each Message In Messages Do
-        Catalogs.FL_Messages.Route(Message);
-    EndDo;
-    
-EndProcedure // ManualRoutingAtServer()
 
 #EndRegion // ServiceProceduresAndFunctions
 

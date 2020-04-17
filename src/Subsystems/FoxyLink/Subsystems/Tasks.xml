@@ -42,6 +42,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobExpiration</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobRouting</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">SessionParameter.FL_CanceledBackgroundJobs</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_TasksClientServer</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

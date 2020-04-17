@@ -226,14 +226,13 @@ EndProcedure // CheckRunModeForFileInfobase()
 //
 Procedure FillStorageAddress(Task)
     
-    If TypeOf(Task.Context) = Type("UUID") Then
-        If NOT IsTempStorageURL(Task.StorageAddress) Then
+    If TypeOf(Task.Context) = Type("UUID")
+        AND NOT IsTempStorageURL(Task.StorageAddress) Then
             
-            StorageAddress = PutToTempStorage(Undefined, Task.Context);
-            Task.StorageAddress = StorageAddress; 
-            Task.Parameters.Add(StorageAddress);
+        StorageAddress = PutToTempStorage(Undefined, Task.Context);
+        Task.StorageAddress = StorageAddress; 
+        Task.Parameters.Add(StorageAddress);
             
-        EndIf;
     EndIf;
     
 EndProcedure // FillStorageAddress()
@@ -356,8 +355,7 @@ EndFunction // RunTaskAsynchronously()
 // background task with assigned job for asynchronous execution.
 //
 // Parameters:
-//  BackgroundJob - BackgroundJob - background job that performs asynchronous 
-//                                      operation. 
+//  Task - Structure - see function FL_TasksClientServer.NewTask. 
 //
 // Returns:
 //  Structure - with values: 

@@ -116,42 +116,6 @@ EndProcedure // APISchemaTypeChoiceProcessing()
 #Region FormCommandHandlers
 
 &AtClient
-Procedure LoadSample(Command)
-    
-    If ValueIsFilled(Object.APISchema.GetItems()) Then
-        
-        NotifyDescriptionOnCompletion = New NotifyDescription(
-            "DoAfterChooseSampleToLoad", ThisObject); 
-        
-        QueryText = NStr("en='The existing API schema description will be erased, continue loading sample?';
-            |ru='Существующее описание API схемы будет замещено, продолжить загрузку образца?';
-            |uk='Наявний опис API схеми буде заміщено, продовжити завантаження зразка?';
-            |en_CA='The existing API schema description will be erased, continue loading sample?'");
-        
-        ShowQueryBox(NotifyDescriptionOnCompletion, 
-            QueryText,
-            QuestionDialogMode.OKCancel, 
-            , 
-            DialogReturnCode.Cancel);
-            
-    Else
-        DoAfterChooseSampleToLoad(DialogReturnCode.OK, Undefined);
-    EndIf;
-    
-EndProcedure // LoadSample() 
-
-&AtClient
-Procedure SaveAndClose(Command)
-    
-    If ValueIsFilled(Object.APISchema.GetItems()) Then
-        Close(PutValueTreeToTempStorage(ThisObject.FormOwner.UUID));
-    Else
-        Close("");    
-    EndIf;
-    
-EndProcedure // SaveAndClose()
-
-&AtClient
 Procedure AddObjectItem(Command)
     
     AddRowToAPISchema("Object");
@@ -226,6 +190,59 @@ Procedure DeleteRowAPITable(Command)
     
 EndProcedure // DeleteRowAPITable()
 
+&AtClient
+Procedure LoadFromText(Command)
+    
+    If ValueIsFilled(Object.APISchema.GetItems()) Then
+        
+        NotifyDescriptionOnCompletion = New NotifyDescription(
+            "DoAfterChooseLoadFromText", ThisObject); 
+        
+        QueryText = NStr("en='The existing API schema description will be erased, continue loading sample?';
+            |ru='Существующее описание API схемы будет замещено, продолжить загрузку образца?';
+            |uk='Наявний опис API схеми буде заміщено, продовжити завантаження зразка?';
+            |en_CA='The existing API schema description will be erased, continue loading sample?'");
+        
+        ShowQueryBox(NotifyDescriptionOnCompletion, 
+            QueryText,
+            QuestionDialogMode.OKCancel, 
+            , 
+            DialogReturnCode.Cancel);
+            
+    Else
+        DoAfterChooseLoadFromText(DialogReturnCode.OK, Undefined);
+    EndIf;
+    
+EndProcedure // LoadFromText() 
+
+&AtClient
+Procedure LoadFromSwagger(Command)
+    
+    NotifyOnCloseDescription = New NotifyDescription(
+        "NotifyOnCloseLoadFromSwagger", ThisObject);   
+    
+    OpenForm("DataProcessor.FL_DataProcessorJSON.Form.LoadFromSwaggerForm", 
+        , 
+        ThisObject,
+        New UUID, 
+        , 
+        ,
+        NotifyOnCloseDescription, 
+        FormWindowOpeningMode.LockOwnerWindow);
+
+EndProcedure // LoadFromSwagger()
+
+&AtClient
+Procedure SaveAndClose(Command)
+    
+    If ValueIsFilled(Object.APISchema.GetItems()) Then
+        Close(PutValueTreeToTempStorage(ThisObject.FormOwner.UUID));
+    Else
+        Close("");    
+    EndIf;
+    
+EndProcedure // SaveAndClose()
+
 #EndRegion // FormCommandHandlers
 
 #Region ServiceProceduresAndFunctions
@@ -240,12 +257,12 @@ EndProcedure // DeleteRowAPITable()
 //                              NotifyDescription object was created.
 //
 &AtClient
-Procedure DoAfterChooseSampleToLoad(QuestionResult, AdditionalParameters) Export
+Procedure DoAfterChooseLoadFromText(QuestionResult, AdditionalParameters) Export
     
     If QuestionResult = DialogReturnCode.OK Then
         
         NotifyDescriptionOnCompletion = New NotifyDescription(
-            "DoAfterInputStringSample", ThisObject);
+            "DoAfterInputStringLoadFromText", ThisObject);
         
         Tooltip = NStr("en='Insert JSON format sample';
             |ru='Вставьте образец формата JSON';
@@ -256,21 +273,51 @@ Procedure DoAfterChooseSampleToLoad(QuestionResult, AdditionalParameters) Export
                 
     EndIf;
     
-EndProcedure // DoAfterChooseSampleToLoad()
+EndProcedure // DoAfterChooseLoadFromText()
+
+// The procedure fills JSON API schema from OpenAPI Specification 
+// (formerly Swagger Specification) is an API description format for REST APIs.
+//
+// Parameters:
+//  ClosureResult        - Arbitrary - the value transferred when you call 
+//                                      the Close method of the opened form.
+//  AdditionalParameters - Arbitrary - the value specified when the 
+//                                      NotifyDescription object was created.
+//
+&AtClient
+Procedure NotifyOnCloseLoadFromSwagger(ClosureResult, 
+    AdditionalParameters) Export
+    
+    //If QuestionResult = DialogReturnCode.OK Then
+    //    
+    //    NotifyDescriptionOnCompletion = New NotifyDescription(
+    //        "DoAfterInputStringLoadFromText", ThisObject);
+    //    
+    //    Tooltip = NStr("en='Insert JSON format sample';
+    //        |ru='Вставьте образец формата JSON';
+    //        |uk='Вставте зразок формату JSON';
+    //        |en_CA='Insert JSON format sample'");
+    //    
+    //    ShowInputString(NotifyDescriptionOnCompletion, , Tooltip, , True);
+    //            
+    //EndIf;
+    
+EndProcedure // NotifyOnCloseLoadFromSwagger()
 
 // Procedure that will be called after the string entry window is closed.
 //
-// String               - String, Undefined - the entered string value or 
+// Parameters:
+//  String               - String, Undefined - the entered string value or 
 //                              undefined if the user has not entered anything. 
-// AdditionalParameters - Arbitrary         - the value specified when the 
+//  AdditionalParameters - Arbitrary         - the value specified when the 
 //                              NotifyDescription object was created.
 //
 &AtClient
-Procedure DoAfterInputStringSample(String, AdditionalParameters) Export
+Procedure DoAfterInputStringLoadFromText(String, AdditionalParameters) Export
     
     If String <> Undefined AND TypeOf(String) = Type("String") Then
         
-        LoadSampleAtServer(String);
+        LoadFromTextAtServer(String);
         APISchemaItems = Object.APISchema.GetItems();
         If ValueIsFilled(APISchemaItems) Then
             Items.APISchema.Expand(APISchemaItems.Get(0).GetID(), True);
@@ -278,7 +325,7 @@ Procedure DoAfterInputStringSample(String, AdditionalParameters) Export
         
     EndIf;
     
-EndProcedure // DoAfterInputStringSample()
+EndProcedure // DoAfterInputStringLoadFromText()
 
 // Deletes the selected row if user has clicked «OK» button.
 //
@@ -388,7 +435,7 @@ EndProcedure // AddRowToAPISchema()
 // Only for internal use.
 //
 &AtServer
-Procedure LoadSampleAtServer(String)
+Procedure LoadFromTextAtServer(String)
     
     JSONReader = New JSONReader;
     JSONReader.SetString(String);
@@ -416,7 +463,7 @@ Procedure LoadSampleAtServer(String)
     
     ValueToFormAttribute(ValueTree, SchemaAttributeName);
     
-EndProcedure // LoadSampleAtServer()
+EndProcedure // LoadFromTextAtServer()
 
 // Only for internal use.
 //

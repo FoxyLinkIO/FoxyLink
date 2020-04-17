@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -43,129 +43,6 @@ Function SetOfConstants(Set) Export
 EndFunction // SetOfConstants()
 
 #EndRegion // ConstantsInteraction
-
-#Region HTTPInteraction
-
-// Sends data at the specified address to be processed using the specified HTTP-method.
-//
-// Parameters:
-//  HTTPConnection - HTTPConnection - an object to interact with external 
-//                          systems by HTTP protocol, including file transfer.
-//  HTTPRequest    - HTTPRequest    - describes the HTTP-requests sent using 
-//                                      the HTTPConnection object.
-//  HTTPMethod     - HTTPMethod     - HTTP method name.
-//  JobResult      - Structure      - see function Catalogs.FL_Jobs.NewJobResult.
-//
-Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, 
-    JobResult) Export
-    
-    LogObject = Undefined;
-    
-    // TODO: Headers logging
-    If JobResult.LogAttribute <> Undefined Then
-        LogObject = StartLogHTTPRequest(HTTPConnection, HTTPRequest, HTTPMethod);
-    EndIf;
-
-    Try
-        
-        HTTPResponse = HTTPConnection.CallHTTPMethod(HTTPMethod, HTTPRequest);
-        
-        Invocation = Catalogs.FL_Messages.NewInvocation();
-        Invocation.Payload = HTTPResponse.GetBodyAsBinaryData(); 
-        Catalogs.FL_Messages.FillContentTypeFromHeaders(Invocation, 
-            HTTPResponse.Headers);
-            
-        JobResult.StatusCode = HTTPResponse.StatusCode;
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Invocation", Invocation);
-           
-        If JobResult.LogAttribute <> Undefined Then
-            JobResult.LogAttribute = JobResult.LogAttribute + EndLogHTTPRequest(
-                LogObject, JobResult.StatusCode, HTTPResponse);    
-        EndIf;
-        
-    Except
-        
-        JobResult.StatusCode = FL_InteriorUseReUse
-            .InternalServerErrorStatusCode();
-        JobResult.LogAttribute = ErrorDescription();
-        
-    EndTry;
-    
-    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
-        JobResult.StatusCode);
-        
-EndProcedure // CallHTTPMethod()
-
-// Creates HTTPConnection object. 
-//
-// Parameters:
-//  StringURI           - String        - reference to the resource in the format:
-//    <schema>://<login>:<password>@<host>:<port>/<path>?<parameters>#<anchor>.
-//  Proxy               - InternetProxy - proxy used to connect to server.
-//                              Default value: Undefined.
-//  Timeout             - Number        - defines timeout for connection and 
-//                                        operations in seconds.
-//                              Default value: 0 - timeout is not set.
-//  UseOSAuthentication - Boolean       - enables NTLM or Negotiate authentication on the server.
-//                              Default value: False. 
-//
-// Returns:
-//  HTTPConnection - an object to interact with external systems by HTTP 
-//                   protocol, including file transfer.  
-//
-Function NewHTTPConnection(StringURI, Proxy = Undefined, Timeout = 0, 
-    UseOSAuthentication = False) Export
-    
-    URIStructure = FL_CommonUseClientServer.URIStructure(StringURI);
-    If Upper(URIStructure.Schema) = Upper("https") Then 
-        SecureConnection = New OpenSSLSecureConnection(Undefined, Undefined);      
-    Else 
-        SecureConnection = Undefined;
-    EndIf;
-
-    HTTPConnection = New HTTPConnection(
-        URIStructure.Host,
-        URIStructure.Port,
-        URIStructure.Login,
-        URIStructure.Password,
-        Proxy,
-        Timeout,
-        SecureConnection,
-        UseOSAuthentication);
-        
-    Return HTTPConnection;        
-    
-EndFunction // NewHTTPConnection()
-
-// Creates HTTPRequest object.
-//
-// Parameters:
-//  ResourceAddress - String     - line of the http resource.
-//  Headers         - Map        - request headers.
-//                          Default value: Undefined.
-//  BinaryBody      - BinaryData - contains a request body as binary data. 
-//                          Default value: Undefined.
-//
-// Returns:
-//  HTTPRequest - describes the HTTP-requests. 
-//
-Function NewHTTPRequest(ResourceAddress, Headers = Undefined, 
-    BinaryBody = Undefined) Export
-    
-    If Headers = Undefined Then
-        Headers = New Map;
-    EndIf;
-    
-    HTTPRequest = New HTTPRequest(ResourceAddress, Headers);
-    If TypeOf(BinaryBody) = Type("BinaryData") Then 
-        HTTPRequest.SetBodyFromBinaryData(BinaryBody);
-    EndIf;
-    
-    Return HTTPRequest;
-    
-EndFunction // NewHTTPRequest()
-
-#EndRegion // HTTPInteraction
 
 #Region FormInteraction
 
@@ -430,6 +307,129 @@ EndFunction // NewFormField()
 
 #Endregion // FormInteraction
 
+#Region HTTPInteraction
+
+// Sends data at the specified address to be processed using the specified HTTP-method.
+//
+// Parameters:
+//  HTTPConnection - HTTPConnection - an object to interact with external 
+//                          systems by HTTP protocol, including file transfer.
+//  HTTPRequest    - HTTPRequest    - describes the HTTP-requests sent using 
+//                                      the HTTPConnection object.
+//  HTTPMethod     - HTTPMethod     - HTTP method name.
+//  JobResult      - Structure      - see function Catalogs.FL_Jobs.NewJobResult.
+//
+Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod, 
+    JobResult) Export
+    
+    LogObject = Undefined;
+    
+    // TODO: Headers logging
+    If JobResult.LogAttribute <> Undefined Then
+        LogObject = StartLogHTTPRequest(HTTPConnection, HTTPRequest, HTTPMethod);
+    EndIf;
+
+    Try
+        
+        HTTPResponse = HTTPConnection.CallHTTPMethod(HTTPMethod, HTTPRequest);
+        
+        Invocation = Catalogs.FL_Messages.NewInvocation();
+        Invocation.Payload = HTTPResponse.GetBodyAsBinaryData(); 
+        Catalogs.FL_Messages.FillContentTypeFromHeaders(Invocation, 
+            HTTPResponse.Headers);
+            
+        JobResult.StatusCode = HTTPResponse.StatusCode;
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Invocation", Invocation);
+           
+        If JobResult.LogAttribute <> Undefined Then
+            JobResult.LogAttribute = JobResult.LogAttribute + EndLogHTTPRequest(
+                LogObject, JobResult.StatusCode, HTTPResponse);    
+        EndIf;
+        
+    Except
+        
+        JobResult.StatusCode = FL_InteriorUseReUse
+            .InternalServerErrorStatusCode();
+        JobResult.LogAttribute = ErrorDescription();
+        
+    EndTry;
+    
+    JobResult.Success = FL_InteriorUseReUse.IsSuccessHTTPStatusCode(
+        JobResult.StatusCode);
+        
+EndProcedure // CallHTTPMethod()
+
+// Creates HTTPConnection object. 
+//
+// Parameters:
+//  StringURI           - String        - reference to the resource in the format:
+//    <schema>://<login>:<password>@<host>:<port>/<path>?<parameters>#<anchor>.
+//  Proxy               - InternetProxy - proxy used to connect to server.
+//                              Default value: Undefined.
+//  Timeout             - Number        - defines timeout for connection and 
+//                                        operations in seconds.
+//                              Default value: 0 - timeout is not set.
+//  UseOSAuthentication - Boolean       - enables NTLM or Negotiate authentication on the server.
+//                              Default value: False. 
+//
+// Returns:
+//  HTTPConnection - an object to interact with external systems by HTTP 
+//                   protocol, including file transfer.  
+//
+Function NewHTTPConnection(StringURI, Proxy = Undefined, Timeout = 0, 
+    UseOSAuthentication = False) Export
+    
+    URIStructure = FL_CommonUseClientServer.URIStructure(StringURI);
+    If Upper(URIStructure.Schema) = Upper("https") Then 
+        SecureConnection = New OpenSSLSecureConnection(Undefined, Undefined);      
+    Else 
+        SecureConnection = Undefined;
+    EndIf;
+
+    HTTPConnection = New HTTPConnection(
+        URIStructure.Host,
+        URIStructure.Port,
+        URIStructure.Login,
+        URIStructure.Password,
+        Proxy,
+        Timeout,
+        SecureConnection,
+        UseOSAuthentication);
+        
+    Return HTTPConnection;        
+    
+EndFunction // NewHTTPConnection()
+
+// Creates HTTPRequest object.
+//
+// Parameters:
+//  ResourceAddress - String     - line of the http resource.
+//  Headers         - Map        - request headers.
+//                          Default value: Undefined.
+//  BinaryBody      - BinaryData - contains a request body as binary data. 
+//                          Default value: Undefined.
+//
+// Returns:
+//  HTTPRequest - describes the HTTP-requests. 
+//
+Function NewHTTPRequest(ResourceAddress, Headers = Undefined, 
+    BinaryBody = Undefined) Export
+    
+    If Headers = Undefined Then
+        Headers = New Map;
+    EndIf;
+    
+    HTTPRequest = New HTTPRequest(ResourceAddress, Headers);
+    If TypeOf(BinaryBody) = Type("BinaryData") Then 
+        HTTPRequest.SetBodyFromBinaryData(BinaryBody);
+    EndIf;
+    
+    Return HTTPRequest;
+    
+EndFunction // NewHTTPRequest()
+
+#EndRegion // HTTPInteraction
+
 #Region LogInteraction
 
 // Writes an event in the event log and updates job result state if passed. 
@@ -481,17 +481,6 @@ EndProcedure // WriteLog()
 #EndRegion // LogInteraction
 
 #Region SubsystemInteraction
-
-// Performs initial filling of the subsystem.
-//
-Procedure InitializeSubsystem() Export
-    
-    Catalogs.FL_States.InitializeStates();
-    InitializeOperations();
-    InitializeChannels();
-    InitializeConstants();
-    
-EndProcedure // InitializeSubsystem() 
 
 // Loads imported exchange data into a mock object.
 //
@@ -848,102 +837,6 @@ EndFunction // ParametersPropertyValue()
 #EndRegion // FormInteraction
 
 #Region SubsystemInteraction
-
-// Only for internal use.
-//
-Procedure InitializeOperations()
-    
-    CreateOperation = Catalogs.FL_Operations.Create.GetObject();
-    If CreateOperation.RESTMethod.IsEmpty() 
-        AND CreateOperation.CRUDMethod.IsEmpty() Then
-        
-        CreateOperation.RESTMethod = Enums.FL_RESTMethods.POST;
-        CreateOperation.CRUDMethod = Enums.FL_CRUDMethods.CREATE;
-        CreateOperation.Write();
-        
-    EndIf;
-    
-    ReadOperation = Catalogs.FL_Operations.Read.GetObject();
-    If ReadOperation.RESTMethod.IsEmpty() 
-        AND ReadOperation.CRUDMethod.IsEmpty() Then
-        
-        ReadOperation.RESTMethod = Enums.FL_RESTMethods.GET;
-        ReadOperation.CRUDMethod = Enums.FL_CRUDMethods.READ;
-        ReadOperation.Write();
-        
-    EndIf;
-    
-    UpdateOperation = Catalogs.FL_Operations.Update.GetObject();
-    If UpdateOperation.RESTMethod.IsEmpty() 
-        AND UpdateOperation.CRUDMethod.IsEmpty() Then
-        
-        UpdateOperation.RESTMethod = Enums.FL_RESTMethods.PUT;
-        UpdateOperation.CRUDMethod = Enums.FL_CRUDMethods.UPDATE;
-        UpdateOperation.Write();
-        
-    EndIf;
-    
-    DeleteOperation = Catalogs.FL_Operations.Delete.GetObject();
-    If DeleteOperation.RESTMethod.IsEmpty() 
-        AND DeleteOperation.CRUDMethod.IsEmpty() Then
-        
-        DeleteOperation.RESTMethod = Enums.FL_RESTMethods.DELETE;
-        DeleteOperation.CRUDMethod = Enums.FL_CRUDMethods.DELETE;
-        DeleteOperation.Write();
-        
-    EndIf;
-    
-EndProcedure // InitializeOperations()
-
-// Only for internal use.
-//
-Procedure InitializeChannels()
-    
-    Try
-    
-        SelfFilesProcessor = NewAppEndpointProcessor(
-            "595e752d-57f4-4398-a1cb-e6c5a6aaa65c");
-        
-        SelfFiles = Catalogs.FL_Channels.SelfFiles.GetObject();
-        SelfFiles.DataExchange.Load = True;
-        SelfFiles.BasicChannelGuid = SelfFilesProcessor.LibraryGuid();
-        SelfFiles.Connected = True;
-        SelfFiles.Log = False;
-        SelfFiles.Version = SelfFilesProcessor.Version();
-        SelfFiles.Write();
-        
-    Except
-        
-        FL_InteriorUse.WriteLog(
-            "FoxyLink.InitializeSubsystem.InitializeChannels", 
-            EventLogLevel.Error,
-            Metadata.Catalogs.FL_Channels,
-            ErrorDescription());
-        
-    EndTry;
-        
-EndProcedure // InitializeChannels() 
-
-// Only for internal use.
-//
-Procedure InitializeConstants()
-    
-    RetryAttempts = Constants.FL_RetryAttempts.Get();
-    If RetryAttempts = 0 Then
-        FL_JobServer.SetRetryAttempts(FL_JobServer.DefaultRetryAttempts());    
-    EndIf;
-    
-    WorkerCount = Constants.FL_WorkerCount.Get();
-    If WorkerCount = 0 Then
-        FL_JobServer.SetWorkerCount(FL_JobServer.DefaultWorkerCount());    
-    EndIf;
-    
-    WorkerJobsLimit = Constants.FL_WorkerJobsLimit.Get();
-    If WorkerJobsLimit = 0 Then
-        FL_JobServer.SetWorkerJobsLimit(FL_JobServer.DefaultWorkerJobsLimit());    
-    EndIf;
-    
-EndProcedure // InitializeConstants() 
 
 // Returns mock object (ValueTable) with imported operations.
 //
