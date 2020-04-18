@@ -17,11 +17,42 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#Region FormItemsEventHandlers
+
+&AtClient
+Procedure OpenAPISelection(Item, SelectedRow, Field, StandardProcessing)
+    
+    TreeItem = OpenApi.FindByID(SelectedRow);
+    If TreeItem = Undefined Then
+        Return;
+    EndIf;
+    
+    If StrFind(TreeItem.Type, "requestBody") = 0 
+        AND StrFind(TreeItem.Type, "response") = 0 Then
+        Return;    
+    EndIf;
+    
+    If IsTempStorageURL(OpenAPIStorage) Then
+        
+        Path = New Map;
+        AddToPath(Path, TreeItem.GetItems());
+        
+        ClosureResult = New Structure;
+        ClosureResult.Insert("OpenAPI", GetFromTempStorage(OpenAPIStorage));
+        ClosureResult.Insert("Path", Path);
+        Close(ClosureResult);
+                
+    EndIf;
+    
+EndProcedure // OpenAPISelection() 
+
+#EndRegion // FormItemsEventHandlers
+
 #Region FormCommandHandlers
 
 &AtClient
 Procedure ConnectToSwagger(Command)
-    
+
     If IsBlankString(ConnectionPath) Then
         
         FL_CommonUseClientServer.NotifyUser(NStr("
@@ -43,6 +74,23 @@ EndProcedure // ConnectToSwagger()
 
 #Region ServiceProceduresAndFunctions
 
+&AtClient
+Procedure AddToPath(Path, TreeItems)
+    
+    For Each Item In TreeItems Do
+        
+        If ValueIsFilled(Item.Schema) Then
+            Path.Insert(Item.Type, Item.Schema);       
+        Else
+            SubPath = New Map;
+            Path.Insert(Item.Type, SubPath);
+            AddToPath(SubPath, Item.GetItems());
+        EndIf;
+        
+    EndDo;
+    
+EndProcedure // AddToPath()
+
 &AtServer
 Procedure ConnectToSwaggerAtServer()
 
@@ -63,15 +111,116 @@ Procedure ConnectToSwaggerAtServer()
         JobResult);
         
     If JobResult.Success Then
-        
         Invocation = Catalogs.FL_Jobs.GetFromJobResult(JobResult, "Invocation");
-        DataObject = Catalogs.FL_Messages.ReadInvocationPayload(Invocation);
-        
-        
+        OpenApiObject = Catalogs.FL_Messages.ReadInvocationPayload(Invocation);
+        FillOpenAPITree(OpenApiObject);
     Else
         LogAttribute = JobResult.LogAttribute;
     EndIf;
     
 EndProcedure // ConnectToSwaggerAtServer()
+
+&AtServer
+Procedure FillOpenAPITree(OpenApiObject)
+    
+    OpenApiTree = FormAttributeToValue("OpenAPI", Type("ValueTree"));
+    
+    Paths = OpenApiObject.Get("paths");
+    OpenAPIStorage = PutToTempStorage(OpenApiObject, UUID);
+    For Each Path In Paths Do
+        AddPathMethods(Path.Key, Path.Value, OpenApiTree);      
+    EndDo;
+    
+    ValueToFormAttribute(OpenApiTree, "OpenAPI");
+    Items.Pages.CurrentPage = Items.OpenApiPage;   
+    
+EndProcedure // FillOpenAPITree()
+
+&AtServerNoContext
+Procedure AddPathMethods(Path, Methods, ValueTree)
+    
+    PathTemplate = "%1 %2";
+    For Each Method In Methods Do
+            
+        NewRow = ValueTree.Rows.Add();
+        NewRow.Path = StrTemplate(PathTemplate, Upper(Method.Key), Path);
+        
+        AddTypes(Method.Value, NewRow);
+        
+    EndDo;   
+    
+EndProcedure // AddPathMethods()
+
+&AtServerNoContext
+Procedure AddTypes(Types, ValueTree)
+    
+    Responses = Types.Get("responses");
+    If ValueIsFilled(Responses) Then
+        
+        ResponseTemplate = "response:%1";
+        For Each Response In Responses Do
+            NewRow = ValueTree.Rows.Add();
+            NewRow.Type = StrTemplate(ResponseTemplate, Response.Key);
+            ProcessSchema(Response.Value, NewRow);
+        EndDo;
+        
+    EndIf;
+          
+    RequestBody = Types.Get("requestBody");
+    If ValueIsFilled(RequestBody) Then
+        NewRow = ValueTree.Rows.Add();
+        NewRow.Type = "requestBody"; 
+        ProcessSchema(RequestBody, NewRow);
+    EndIf;
+    
+EndProcedure // AddMethods()
+
+&AtServerNoContext
+Procedure ProcessSchema(Map, ValueTree)
+    
+    Content = Map.Get("content");
+    If NOT ValueIsFilled(Content) Then
+        Return;
+    EndIf;
+    
+    ContentType = Content.Get("application/json");
+    If NOT ValueIsFilled(Content) Then
+        Return;
+    EndIf;
+    
+    Schema = ContentType.Get("schema");
+    If NOT ValueIsFilled(Schema) Then
+        Return;
+    EndIf;
+    
+    AddToSchema(Schema, ValueTree);
+    
+EndProcedure // ProcessSchema()
+
+&AtServerNoContext
+Procedure AddToSchema(Schema, ValueTree)
+    
+    Type = Schema.Get("type");
+    If ValueIsFilled(Type) Then
+        
+        NewRow = ValueTree.Rows.Add();
+        NewRow.Type = Type;
+        
+        Items = Schema.Get("items");
+        If ValueIsFilled(Items) Then
+            AddToSchema(Items, NewRow);     
+        EndIf;
+        
+    Else
+        
+        For Each Item In Schema Do
+            NewRow = ValueTree.Rows.Add();
+            NewRow.Type = Item.Key;
+            NewRow.Schema = Item.Value;    
+        EndDo;
+        
+    EndIf;
+    
+EndProcedure // AddToSchema()
 
 #EndRegion // ServiceProceduresAndFunctions

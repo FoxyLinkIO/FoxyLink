@@ -309,7 +309,7 @@ EndFunction // NewFormField()
 
 #Region HTTPInteraction
 
-// Sends data at the specified address to be processed using the specified HTTP-method.
+// Deprecated. Sends data at the specified address to be processed using the specified HTTP-method.
 //
 // Parameters:
 //  HTTPConnection - HTTPConnection - an object to interact with external 
@@ -359,7 +359,7 @@ Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod,
         
 EndProcedure // CallHTTPMethod()
 
-// Creates HTTPConnection object. 
+// Deprecated. Creates HTTPConnection object. 
 //
 // Parameters:
 //  StringURI           - String        - reference to the resource in the format:
@@ -400,7 +400,7 @@ Function NewHTTPConnection(StringURI, Proxy = Undefined, Timeout = 0,
     
 EndFunction // NewHTTPConnection()
 
-// Creates HTTPRequest object.
+// Deprecated. Creates HTTPRequest object.
 //
 // Parameters:
 //  ResourceAddress - String     - line of the http resource.

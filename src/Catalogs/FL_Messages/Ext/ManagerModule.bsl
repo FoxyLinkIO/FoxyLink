@@ -201,10 +201,11 @@ Function Create(Invocation) Export
             RollbackTransaction();
         EndIf;
         
+        ErrorMessage = ErrorDescription();
         FL_InteriorUse.WriteLog("FoxyLink.Integration.Create",
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Messages,
-            ErrorDescription());     
+            ErrorMessage);     
             
         Message = Undefined;           
             
@@ -837,10 +838,11 @@ Procedure FillAppResources(Source, AppProperties, AppResources)
                 
             Except
 
+                ErrorMessage = ErrorDescription();
                 FL_InteriorUse.WriteLog("FoxyLink.Integration.FillAppResources", 
                     EventLogLevel.Error,
                     Metadata.Catalogs.FL_Messages,
-                    ErrorDescription());
+                    ErrorMessage);
                      
             EndTry;
                 
@@ -866,22 +868,21 @@ EndProcedure // JoinContextValueColumn()
 //
 Function GetMessage(Source)
     
-    If TypeOf(Source) = Type("CatalogRef.FL_Messages") Then
+    SourceType = TypeOf(Source);
+    If SourceType = Type("CatalogRef.FL_Messages") Then
         
         Return Source;
         
-    ElsIf TypeOf(Source) = Type("Structure") 
-        OR TypeOf(Source) = Type("FixedStructure") Then
+    ElsIf SourceType = Type("Structure") 
+        OR SourceType = Type("FixedStructure") Then
         
         Return Create(Source);
         
-    Else
-        
-        ErrorMessage = FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "Source", Source, Type("CatalogRef.FL_Messages"));
-        Raise ErrorMessage;
-        
     EndIf;
+        
+    ErrorMessage = FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
+        "Source", Source, Type("CatalogRef.FL_Messages"));
+    Raise ErrorMessage;
         
 EndFunction // GetMessage()
 
@@ -890,16 +891,17 @@ EndFunction // GetMessage()
 Function Messages(Source)
     
     Messages = New Array;
-    If TypeOf(Source) = Type("Array") Then
+    SourceType = TypeOf(Source);
+    If SourceType = Type("Array") Then
         
         Messages = FL_CommonUseClientServer.CopyArray(Source); 
         
-    ElsIf TypeOf(Source) = Type("CatalogRef.FL_Messages") Then
+    ElsIf SourceType = Type("CatalogRef.FL_Messages") Then
         
         Messages.Add(Source);
         
-    ElsIf TypeOf(Source) = Type("Structure") 
-        OR TypeOf(Source) = Type("FixedStructure") Then
+    ElsIf SourceType = Type("Structure") 
+        OR SourceType = Type("FixedStructure") Then
         
         Messages.Add(Create(Source));
         

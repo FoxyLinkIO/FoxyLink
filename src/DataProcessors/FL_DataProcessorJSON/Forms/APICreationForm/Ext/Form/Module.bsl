@@ -275,6 +275,24 @@ Procedure DoAfterChooseLoadFromText(QuestionResult, AdditionalParameters) Export
     
 EndProcedure // DoAfterChooseLoadFromText()
 
+// Procedure that will be called after the string entry window is closed.
+//
+// Parameters:
+//  String               - String, Undefined - the entered string value or 
+//                              undefined if the user has not entered anything. 
+//  AdditionalParameters - Arbitrary         - the value specified when the 
+//                              NotifyDescription object was created.
+//
+&AtClient
+Procedure DoAfterInputStringLoadFromText(String, AdditionalParameters) Export
+    
+    If String <> Undefined AND TypeOf(String) = Type("String") Then
+        LoadFromTextAtServer(String);
+        ExpandAPISchema();
+    EndIf;
+    
+EndProcedure // DoAfterInputStringLoadFromText()
+
 // The procedure fills JSON API schema from OpenAPI Specification 
 // (formerly Swagger Specification) is an API description format for REST APIs.
 //
@@ -288,44 +306,12 @@ EndProcedure // DoAfterChooseLoadFromText()
 Procedure NotifyOnCloseLoadFromSwagger(ClosureResult, 
     AdditionalParameters) Export
     
-    //If QuestionResult = DialogReturnCode.OK Then
-    //    
-    //    NotifyDescriptionOnCompletion = New NotifyDescription(
-    //        "DoAfterInputStringLoadFromText", ThisObject);
-    //    
-    //    Tooltip = NStr("en='Insert JSON format sample';
-    //        |ru='Вставьте образец формата JSON';
-    //        |uk='Вставте зразок формату JSON';
-    //        |en_CA='Insert JSON format sample'");
-    //    
-    //    ShowInputString(NotifyDescriptionOnCompletion, , Tooltip, , True);
-    //            
-    //EndIf;
-    
-EndProcedure // NotifyOnCloseLoadFromSwagger()
-
-// Procedure that will be called after the string entry window is closed.
-//
-// Parameters:
-//  String               - String, Undefined - the entered string value or 
-//                              undefined if the user has not entered anything. 
-//  AdditionalParameters - Arbitrary         - the value specified when the 
-//                              NotifyDescription object was created.
-//
-&AtClient
-Procedure DoAfterInputStringLoadFromText(String, AdditionalParameters) Export
-    
-    If String <> Undefined AND TypeOf(String) = Type("String") Then
-        
-        LoadFromTextAtServer(String);
-        APISchemaItems = Object.APISchema.GetItems();
-        If ValueIsFilled(APISchemaItems) Then
-            Items.APISchema.Expand(APISchemaItems.Get(0).GetID(), True);
-        EndIf;
-        
+    If TypeOf(ClosureResult) = Type("Structure") Then
+        LoadFromSwaggerAtServer(ClosureResult);
+        ExpandAPISchema();
     EndIf;
     
-EndProcedure // DoAfterInputStringLoadFromText()
+EndProcedure // NotifyOnCloseLoadFromSwagger()
 
 // Deletes the selected row if user has clicked «OK» button.
 //
@@ -434,6 +420,18 @@ EndProcedure // AddRowToAPISchema()
 
 // Only for internal use.
 //
+&AtClient
+Procedure ExpandAPISchema()
+    
+    APISchemaItems = Object.APISchema.GetItems();
+    If ValueIsFilled(APISchemaItems) Then
+        Items.APISchema.Expand(APISchemaItems.Get(0).GetID(), True);
+    EndIf;    
+    
+EndProcedure // ExpandAPISchema() 
+
+// Only for internal use.
+//
 &AtServer
 Procedure LoadFromTextAtServer(String)
     
@@ -459,11 +457,26 @@ Procedure LoadFromTextAtServer(String)
     ValueTree = FormAttributeToValue(SchemaAttributeName, Type("ValueTree"));
     ValueTree.Rows.Clear();
     
-    FillAPISchema(ValueTree.Rows, "RootItem", SampleResult);
+    FillAPISchemaFromText(ValueTree.Rows, "RootItem", SampleResult);
     
     ValueToFormAttribute(ValueTree, SchemaAttributeName);
     
 EndProcedure // LoadFromTextAtServer()
+
+// Only for internal use.
+//
+&AtServer
+Procedure LoadFromSwaggerAtServer(ClosureResult)
+    
+    ValueTree = FormAttributeToValue(SchemaAttributeName, Type("ValueTree"));
+    ValueTree.Rows.Clear();
+    
+    FillAPISchemaFromSwagger(ValueTree.Rows, "RootItem", ClosureResult.Path, 
+        ClosureResult.OpenAPI);
+    
+    ValueToFormAttribute(ValueTree, SchemaAttributeName);
+    
+EndProcedure // LoadFromSwaggerAtServer()
 
 // Only for internal use.
 //
@@ -495,7 +508,7 @@ EndFunction // IsStructuredType()
 // Only for internal use.
 //
 &AtServerNoContext
-Procedure FillAPISchema(Rows, Name, SampleResult)
+Procedure FillAPISchemaFromText(Rows, Name, SampleResult)
     
     SampleResultType = TypeOf(SampleResult);
     If SampleResultType = Type("Map") Then
@@ -503,7 +516,7 @@ Procedure FillAPISchema(Rows, Name, SampleResult)
         ObjectRows = NewAPISchemaRow(Rows, Name, "Object");
         ObjectRows.StructuredType = True;
         For Each Item In SampleResult Do
-            FillAPISchema(ObjectRows.Rows, Item.Key, Item.Value);             
+            FillAPISchemaFromText(ObjectRows.Rows, Item.Key, Item.Value);             
         EndDo;
         
     ElsIf SampleResultType = Type("Array") Then
@@ -511,7 +524,7 @@ Procedure FillAPISchema(Rows, Name, SampleResult)
         ObjectRows = NewAPISchemaRow(Rows, Name, "Array");
         ObjectRows.StructuredType = True;
         For Each Item In SampleResult Do
-            FillAPISchema(ObjectRows.Rows, "ArrayItem", Item);             
+            FillAPISchemaFromText(ObjectRows.Rows, "ArrayItem", Item);             
         EndDo;
         
     ElsIf SampleResultType = Type("String") Then
@@ -524,8 +537,93 @@ Procedure FillAPISchema(Rows, Name, SampleResult)
         NewAPISchemaRow(Rows, Name, "Null");    
     EndIf;    
     
-EndProcedure // FillAPISchema() 
+EndProcedure // FillAPISchemaFromText()
 
+// Only for internal use.
+//
+&AtServerNoContext
+Procedure FillAPISchemaFromSwagger(Rows, Name, Path, OpenAPI, 
+    RecursiveRef = Undefined)
+
+    For Each Item In Path Do
+        
+        If TypeOf(Item.Value) = Type("Map") Then
+            
+            If Item.Key = "array" Or Item.Key = "items" Then
+                ObjectRows = NewAPISchemaRow(Rows, Name, "Array");
+                FillAPISchemaFromSwagger(ObjectRows.Rows, "ArrayItem", 
+                    Item.Value, OpenAPI, RecursiveRef);
+            EndIf;
+
+        ElsIf Item.Key = "$ref" Then
+            ProcessRefValue(Rows, Name, Item, OpenAPI, RecursiveRef);            
+        ElsIf Item.Key = "type" AND Item.Value = "string" Then
+            NewAPISchemaRow(Rows, Name, "String");
+        ElsIf Item.Key = "type" AND Item.Value = "integer" Then
+            NewAPISchemaRow(Rows, Name, "Number");
+        ElsIf Item.Key = "type" AND Item.Value = "number" Then
+            NewAPISchemaRow(Rows, Name, "Number");
+        ElsIf Item.Key = "type" AND Item.Value = "boolean" Then
+            NewAPISchemaRow(Rows, Name, "Boolean");
+        EndIf;
+        
+    EndDo;
+    
+EndProcedure // FillAPISchemaFromSwagger()
+
+// Only for internal use.
+//
+&AtServerNoContext
+Procedure ProcessRefValue(Rows, Name, Item, OpenAPI, RecursiveRef = Undefined) 
+
+    If RecursiveRef = Undefined Then
+        RecursiveRef = New Array;
+    EndIf;
+    RecursiveRef.Add(Item.Value);
+    
+    ResolvedValue = ResolveRefValue(OpenAPI, Item.Value);    
+    If ResolvedValue.Get("type") = "object" Then
+        
+        ObjectRows = NewAPISchemaRow(Rows, Name, "Object");
+        For Each Property In ResolvedValue.Get("properties") Do
+            
+            Type = Property.Value.Get("$ref");
+            If RecursiveRef.Find(Type) <> Undefined Then
+                NewAPISchemaRow(ObjectRows.Rows, Property.Key, "Object");  
+                Continue;
+            EndIf;
+            
+            FillAPISchemaFromSwagger(ObjectRows.Rows, Property.Key, 
+                Property.Value, OpenAPI, RecursiveRef); 
+                
+        EndDo;
+                
+    EndIf;
+    
+EndProcedure // ProcessRefValue()    
+    
+// Only for internal use.
+//
+&AtServerNoContext
+Function ResolveRefValue(OpenAPI, Ref)
+
+    CurrentItem = OpenAPI;
+    
+    Path = StrSplit(Ref, "/");
+    For Each PathItem In Path Do
+        
+        If PathItem = "#" Then
+            Continue;
+        EndIf;
+        
+        CurrentItem = CurrentItem.Get(PathItem);
+        
+    EndDo;
+    
+    Return CurrentItem;
+    
+EndFunction // ResolveRefValue()    
+    
 // Only for internal use.
 //
 &AtServerNoContext
