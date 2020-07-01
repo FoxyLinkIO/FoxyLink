@@ -32,7 +32,7 @@
 
 It's easy to start using it with any configuration on "1C:Enterprise 8" platform, requirements:
 - Platform version: 
-    - 8.3.10.2699 (minimal, SocialNetwork subsystem unsupported)
+    - 8.3.10.2772 (minimal, SocialNetwork subsystem unsupported)
     - **recommended 8.3.11.2924** and higher
 - Data lock control mode: **Managed**
 - Compatibility mode: **8.3.10** and higher
