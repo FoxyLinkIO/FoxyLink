@@ -9,20 +9,27 @@
 					<v8:content>Plugins</v8:content>
 				</v8:item>
 				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Plugins</v8:content>
+				</v8:item>
+				<v8:item>
 					<v8:lang>ru</v8:lang>
 					<v8:content>Плагины</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>en_CA</v8:lang>
-					<v8:content>Plugins</v8:content>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Плагіни</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>
 			<IncludeHelpInContents>true</IncludeHelpInContents>
-			<IncludeInCommandInterface>false</IncludeInCommandInterface>
+			<IncludeInCommandInterface>true</IncludeInCommandInterface>
 			<Explanation/>
 			<Picture/>
-			<Content/>
+			<Content>
+				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Handlers</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">Enum.FL_HandlerTypes</xr:Item>
+			</Content>
 		</Properties>
 		<ChildObjects>
 			<Subsystem>Channels</Subsystem>

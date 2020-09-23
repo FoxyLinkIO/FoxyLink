@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -45,9 +45,8 @@ Procedure Route(Source = Undefined, Exchange = Undefined,
             Continue;
         EndIf;
         
+        BeginTransaction();
         Try
-            
-            BeginTransaction();
             
             MessageObject = Message.GetObject();
             MessageObject.Routed = True;
@@ -61,10 +60,11 @@ Procedure Route(Source = Undefined, Exchange = Undefined,
             
             RollbackTransaction();
             
+            ErrorInformation = ErrorInfo();
             FL_InteriorUse.WriteLog("FoxyLink.Integration.Route",
                 EventLogLevel.Error,
                 Metadata.Catalogs.FL_Messages,
-                ErrorDescription());        
+                ErrorInformation);        
             
         EndTry;
                 
@@ -109,7 +109,9 @@ EndProcedure // RouteAndRun()
 //  Source      - Structure, FixedStructure - see function Catalogs.FL_Messages.NewInvocation.
 //              - CatalogRef.FL_Messages    - a single message to get result.
 //  Exchange    - CatalogRef.FL_Exchanges   - a routing exchange.
-//  AppEndpoint - CatalogRef.FL_Channels    - a receiver channel.
+//              - String                    - the name of exchange.
+//  AppEndpoint - CatalogRef.FL_Channels    - a receiver app endpoint.
+//              - String                    - the name of receiver app endpoint.
 //                      Default value: Null.
 //
 // Returns:
@@ -117,22 +119,34 @@ EndProcedure // RouteAndRun()
 //
 Function RouteAndRunOutputResult(Source, Exchange, AppEndpoint = Null) Export
     
+    ExchangeRef = Exchange;
+    If TypeOf(ExchangeRef) = Type("String") Then
+        ExchangeRef = FL_CommonUse.ReferenceByDescription(
+            Metadata.Catalogs.FL_Exchanges, ExchangeRef);    
+    EndIf;
+    
+    AppEndpointRef = AppEndpoint;
+    If TypeOf(AppEndpointRef) = Type("String") Then
+        AppEndpointRef = FL_CommonUse.ReferenceByDescription(
+            Metadata.Catalogs.FL_Channels, AppEndpointRef);     
+    EndIf;
+    
     // Copy of the job result, see function Catalogs.FL_Jobs.NewJobResult.
     JobResult = Catalogs.FL_Jobs.NewJobResult();
     
     If TransactionActive() Then
         
         Message = GetMessage(Source);
-        RouteAndRun(Message, Exchange, AppEndpoint, JobResult);    
+        RouteAndRun(Message, ExchangeRef, AppEndpointRef, JobResult);    
         
     Else
         
+        BeginTransaction();
+        
         Try
         
-            BeginTransaction();
-            
             Message = GetMessage(Source);
-            RouteAndRun(Message, Exchange, AppEndpoint, JobResult); 
+            RouteAndRun(Message, ExchangeRef, AppEndpointRef, JobResult); 
             
             CommitTransaction();
         
@@ -170,11 +184,10 @@ Function Create(Invocation) Export
     If TransactionActive() Then
         Return CreateMessage(Invocation);
     EndIf;
-        
+    
+    BeginTransaction();
     Try
     
-        BeginTransaction();
-        
         // Creates a message in transaction
         Message = CreateMessage(Invocation);
         
@@ -182,14 +195,13 @@ Function Create(Invocation) Export
     
     Except
         
-        If TransactionActive() Then
-            RollbackTransaction();
-        EndIf;
+        RollbackTransaction();
         
+        ErrorInfo = ErrorInfo();
         FL_InteriorUse.WriteLog("FoxyLink.Integration.Create",
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Messages,
-            ErrorDescription());     
+            ErrorInfo);     
             
         Message = Undefined;           
             
@@ -206,16 +218,16 @@ EndFunction // Create()
 // Adds data to invocation context.
 //
 // Parameters:
-//  Context    - ValueTable - see function FL_BackgroundJob.NewContext. 
-//  PrimaryKey - String     - the name of primary key.
-//  Value      - Arbitrary  - the value of primary key.
-//  Filter     - Boolean    - defines if primary key is used.
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation.  
+//  PrimaryKey - String    - the name of primary key.
+//  Value      - Arbitrary - the value of primary key.
+//  Filter     - Boolean   - defines if primary key is used.
 //                  Default value: False.
 //
-Procedure AddToContext(Context, PrimaryKey, Value, 
+Procedure AddToContext(Invocation, PrimaryKey, Value, 
     Filter = False) Export
       
-    NewContextItem = Context.Add();
+    NewContextItem = Invocation.Context.Add();
     NewContextItem.Filter = Filter;
     NewContextItem.PrimaryKey = Upper(PrimaryKey);
     NewContextItem.XMLValue = XMLString(Value);
@@ -226,6 +238,43 @@ Procedure AddToContext(Context, PrimaryKey, Value,
     EndIf;
     
 EndProcedure // AddToContext()
+
+// The procedure fills content-type and content-encoding of invocation structure.
+// Content-type header field for internet messages (https://tools.ietf.org/html/rfc1049).
+//
+// Parameters:
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation. 
+//  Headers    - Map       - HTTP headers of server response with the 
+//                           following mapping: Header name - Value.
+//
+Procedure FillContentTypeFromHeaders(Invocation, Headers) Export
+    
+    Var ContentType; 
+    
+    For Each Header In Headers Do
+        If Header.Key = "CONTENT-TYPE" Then
+            ContentType = Header.Value;    
+        EndIf;    
+    EndDo;
+    
+    If ValueIsFilled(ContentType) Then
+        
+        CharsetLen = 8;
+        SplitResults = StrSplit(ContentType, ";");    
+        Invocation.ContentType = SplitResults[0];
+        For Each SplitResult In SplitResults Do
+            
+            Position = StrFind(SplitResult, "charset=");
+            If Position > 0 Then
+                Position = Position + CharsetLen;    
+                Invocation.ContentEncoding = Upper(Mid(SplitResult, Position));         
+            EndIf;
+            
+        EndDo;
+        
+    EndIf;    
+    
+EndProcedure // FillContentTypeFromHeaders()
 
 // Fills invocation context data.
 //
@@ -238,7 +287,7 @@ Procedure FillContext(Source, Invocation) Export
     EventSource = Invocation.EventSource;
     If FL_CommonUseReUse.IsReferenceTypeObjectCached(EventSource) Then
         
-        AddToContext(Invocation.Context, "Ref", Source.Ref, True); 
+        AddToContext(Invocation, "Ref", Source.Ref, True); 
         
     ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(EventSource)
         OR FL_CommonUseReUse.IsAccumulationRegisterTypeObjectCached(EventSource) Then
@@ -246,7 +295,7 @@ Procedure FillContext(Source, Invocation) Export
         PrimaryKeys = FL_CommonUse.PrimaryKeysByMetadataObject(
             Source.Metadata());
         
-        FillRegisterContext(Invocation.Context, Source.Filter, PrimaryKeys, 
+        FillRegisterContext(Invocation, Source.Filter, PrimaryKeys, 
             Source.Unload());
               
     EndIf;
@@ -259,13 +308,13 @@ EndProcedure // FillContext()
 // Fills accumulation register invocation context.
 //
 // Parameters:
-//  Context         - ValueTable - see function Catalogs.FL_Messages.NewContext.
+//  Invocation      - Structure  - see function Catalogs.FL_Messages.NewInvocation.
 //  Filter          - Filter     - it contains the object Filter, for which 
 //                                  current filtration of records is performed.
 //  PrimaryKeys     - Structure  - see function FL_CommonUse.PrimaryKeysByMetadataObject.
 //  AttributeValues - ValueTable - value table with primary keys values.
 //
-Procedure FillRegisterContext(Context, Filter, PrimaryKeys, 
+Procedure FillRegisterContext(Invocation, Filter, PrimaryKeys, 
     AttributeValues) Export
     
     SynonymsEN = FL_CommonUseReUse.StandardAttributeSynonymsEN();
@@ -273,7 +322,7 @@ Procedure FillRegisterContext(Context, Filter, PrimaryKeys,
             
         FilterValue = Filter.Find(PrimaryKey.Key);
         If FilterValue <> Undefined AND FilterValue.Use Then
-            AddToContext(Context, PrimaryKey.Key, FilterValue.Value, 
+            AddToContext(Invocation, PrimaryKey.Key, FilterValue.Value, 
                 FilterValue.Use);
             Continue;
         EndIf;
@@ -286,7 +335,7 @@ Procedure FillRegisterContext(Context, Filter, PrimaryKeys,
         
         ColumnValues = AttributeValues.UnloadColumn(KeyName);
         For Each ColumnValue In ColumnValues Do
-            AddToContext(Context, PrimaryKey.Key, ColumnValue);   
+            AddToContext(Invocation, PrimaryKey.Key, ColumnValue);   
         EndDo;
         
     EndDo;    
@@ -296,8 +345,8 @@ EndProcedure // FillRegisterContext()
 // Returns deserialized context value if exists.
 //
 // Parameters:
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //  PrimaryKey - String    - the name of primary key.
-//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //                      Default value: Undefined.
 //
@@ -305,13 +354,13 @@ EndProcedure // FillRegisterContext()
 //  Arbitrary - deserialized context value if exists.
 //  Undefined - context value is absent.
 //
-Function ContextValue(PrimaryKey, Properties, JobResult = Undefined) Export
+Function ContextValue(Invocation, PrimaryKey, JobResult = Undefined) Export
     
-    Context = DeserializeContext(Properties.MessageId);
-    If Context = Undefined OR Context.Count() = 0 Then  
+    Context = Invocation.Context;
+    If NOT ValueIsFilled(Context) Then  
         
         ErrorDescription = StrTemplate(FL_ErrorsClientServer
-            .ErrorFailedToProcessMessageContext(), Properties.MessageId);
+            .ErrorFailedToProcessMessageContext(), Invocation.MessageId);
         FL_InteriorUse.WriteLog("FoxyLink.Integration.ContextValue",
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Messages,
@@ -342,24 +391,24 @@ EndFunction // ContextValue()
 // Returns deserialized context value if exists or undefined.
 //
 // Parameters:
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //  PrimaryKey - String    - the name of primary key.
-//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
 //
 // Returns:
 //  Arbitrary - deserialized context value if exists.
 //  Undefined - context value is absent.
 //
-Function ContextValueNoException(PrimaryKey, Properties) Export
+Function ContextValueNoException(Invocation, PrimaryKey) Export
 
     Var MessageId;
 
-    If TypeOf(Properties) <> Type("Structure") 
-        OR NOT Properties.Property("MessageId", MessageId) Then
+    If TypeOf(Invocation) <> Type("Structure") 
+        OR NOT Invocation.Property("MessageId", MessageId) Then
         Return Undefined;
     EndIf;
 
-    Context = DeserializeContext(MessageId);
-    If Context = Undefined OR Context.Count() = 0 Then  
+    Context = Invocation.Context;
+    If NOT ValueIsFilled(Context) Then  
         Return Undefined;      
     EndIf;
         
@@ -372,17 +421,20 @@ Function ContextValueNoException(PrimaryKey, Properties) Export
     
 EndFunction // ContextValueNoException()
 
-// Deserializes a message tabular section or payload into context call.
+// Deprecated. Deserializes a message tabular section or payload into context call.
 //
 // Parameters:
-//  Message - CatalogRef.FL_Messages - reference to the message.
-//          - String                 - message id.
+//  Message           - CatalogRef.FL_Messages - reference to the message.
+//                    - String                 - message id.
+//  StorageAddress    - String                 - the address of the temporary 
+//                          storage where the procedure result must be stored.
+//                                  Default value: "".
 //
 // Returns:
 //  Arbitrary - deserialized context.
 //  Undefined - context is absent.
 //
-Function DeserializeContext(Val Message) Export
+Function DeserializeContext(Val Message, StorageAddress = "") Export
     
     If TypeOf(Message) = TypeOf("String") Then
         Message = FL_CommonUse.ValueFromXMLTypeAndValue(Message, 
@@ -397,6 +449,8 @@ Function DeserializeContext(Val Message) Export
         
         Context = QueryResult.Unload();
         JoinContextValueColumn(Context);
+        
+        FL_Tasks.PutDataToTempStorage(Context, StorageAddress);
         Return Context; 
         
     EndIf;
@@ -413,7 +467,10 @@ Function DeserializeContext(Val Message) Export
     Payload = QueryResult.Payload.Get();
     If TypeOf(Payload) = Type("Structure") 
         OR TypeOf(Payload) = Type("FixedStructure") Then
-        Return Payload;    
+        
+        FL_Tasks.PutDataToTempStorage(Context, StorageAddress);
+        Return Payload; 
+        
     EndIf;
     
     If TypeOf(Payload) <> Type("BinaryData") Then
@@ -431,80 +488,40 @@ Function DeserializeContext(Val Message) Export
     Context = ReadJSON(JSONReader);
     JSONReader.Close();
     
+    FL_Tasks.PutDataToTempStorage(Context, StorageAddress);
     Return Context;
     
 EndFunction // DeserializeContext()
 
-// Defines if event is a publisher.
-//
-// Parameters:
-//  EventSource - String - the full name of a event object as a term.
-//
-// Returns:
-//  Boolean - True, if it is publisher, otherwise False.
-//
-Function IsPublisher(EventSource) Export
-    
-    Query = New Query;
-    Query.Text = QueryTextIsPublisher();
-    Query.SetParameter("EventSource", EventSource);
-    Return NOT Query.Execute().IsEmpty();
-    
-EndFunction // IsPublisher()
-
-// Defines if event is a message publisher.
-//
-// Parameters:
-//  EventSource - String                   - the full name of a event object as a term.
-//  Operation   - CatalogRef.FL_Operations - reference to the FL_Operations catalog.
-//              - String                   - item name of FL_Operations catalog.
-//
-// Returns:
-//  Boolean - True, if it is message publisher, otherwise False.
-//
-Function IsMessagePublisher(EventSource, Operation) Export
-    
-    OperationRef = Operation;
-    If TypeOf(OperationRef) = Type("String") Then
-        OperationRef = FL_CommonUse.ReferenceByDescription(
-            Metadata.Catalogs.FL_Operations, OperationRef);
-    EndIf;
-    
-    Query = New Query;
-    Query.Text = QueryTextIsMessagePublisher();
-    Query.SetParameter("EventSource", EventSource);
-    Query.SetParameter("Operation", OperationRef);
-    
-    Return NOT Query.Execute().IsEmpty();
-    
-EndFunction // IsMessagePublisher()
-
-// Returns a new invocation data for a service method.
-//
+// This function returns a new invocation request\response structure for 
+// a service method.
+// 
 // Returns:
 //  Structure - the invocation data structure with keys:
-//      * AppId             - String                   - identifier of the application
+//      * AppId           - String                   - identifier of the application
 //                                              that produced the message.
 //                                      Default value: "ThisConfiguration".
-//      * ContentEncoding   - String                   - message content encoding.
+//      * ContentEncoding - String                   - message content encoding.
 //                                      Default value: "UTF-8". 
-//      * ContentType       - String                   - message content type.
+//      * ContentType     - String                   - message content type.
 //                                      Default value: "1C:Enterprise".
-//      * EventSource       - String                   - provides access to the 
+//      * CorrelationId   - String                   - message correlation id.
+//      * EventSource     - String                   - provides access to the 
 //                                              event source object name.
 //                                      Default value: "".
-//      * MessageId         - String                   - message identifier as a string. 
+//      * FileExtension   - String                   - message format file extension.
+//      * MessageId       - String                   - message identifier as a string.
 //                                              If applications need to identify messages.
-//      * Operation         - CatalogReg.FL_Operations - the type of change experienced.
-//      * Payload           - Arbitrary                - invocation payload.
-//      * Routed            - Boolean                  - shows if message was routed.
+//      * Operation       - CatalogReg.FL_Operations - the type of change experienced.
+//      * Payload         - Arbitrary                - invocation payload.
+//      * Routed          - Boolean                  - shows if message was routed.
 //                                      Default value: Boolean.
-//      * Timestamp         - Number                   - timestamp of the moment 
+//      * Timestamp       - Number                   - timestamp of the moment 
 //                                              when message was created.
-//      * UserId            - String                   - user identifier.
-//      * InvocationContext - ValueTable               - invocation context.
-//      * SessionContext    - ValueTable               - session context.
-//      * Source            - AnyRef                   - an event source object.
+//      * UserId          - String                   - user identifier.
+//      * Context         - ValueTable               - invocation context.
+//      * SessionContext  - ValueTable               - session context.
+//      * Source          - AnyRef                   - an event source object.
 //                                      Default value: Undefined.
 //
 Function NewInvocation() Export
@@ -517,6 +534,8 @@ Function NewInvocation() Export
     Invocation.Insert("ContentType", "1C:Enterprise");
     Invocation.Insert("CorrelationId");
     Invocation.Insert("EventSource", "");
+    Invocation.Insert("FileExtension");
+    Invocation.Insert("MessageId");
     Invocation.Insert("Operation");
     Invocation.Insert("Payload");
     Invocation.Insert("ReplyTo");
@@ -539,6 +558,76 @@ Function NewInvocation() Export
     Return Invocation;
     
 EndFunction // NewInvocation()
+
+// This function returns a new invocation structure for 
+// a service method from message object.
+//
+// Parameters:
+//  Message        - CatalogObject.FL_Messages - message object.
+//                 - CatalogRef.FL_Messages    - message reference.
+//  StorageAddress - String                    - the address of the temporary 
+//                          storage where the procedure result must be stored.
+//                                  Default value: "".
+//
+// Returns:
+//  Structure - see function Catalogs.FL_Messages.NewInvocation.
+//
+Function NewInvocationFromMessage(Message, StorageAddress = "") Export
+    
+    If Typeof(Message) = Type("CatalogRef.FL_Messages") Then
+        MessageObject = Message.GetObject();
+    Else
+        MessageObject = Message;    
+    EndIf;
+    
+    Invocation = NewInvocation();
+    Invocation.MessageId = XMLString(MessageObject.Ref);
+    FillPropertyValues(Invocation, MessageObject, , "Context, SessionContext");
+    
+    FL_CommonUse.ExtendValueTableFromArray(MessageObject.Context, 
+        Invocation.Context); 
+    FL_CommonUse.ExtendValueTableFromArray(MessageObject.SessionContext, 
+        Invocation.SessionContext);
+        
+    JoinContextValueColumn(Invocation.Context);    
+    
+    Query = New Query;
+    Query.Text = QueryTextMessagePayload();
+    Query.SetParameter("Message", MessageObject.Ref);
+    QueryResult = Query.Execute();
+    If NOT QueryResult.IsEmpty() Then
+        QueryResult = QueryResult.Select();
+        QueryResult.Next();
+        Invocation.Payload = QueryResult.Payload.Get();    
+    EndIf;
+    
+    FL_Tasks.PutDataToTempStorage(Invocation, StorageAddress);    
+        
+    Return Invocation;    
+         
+EndFunction // NewInvocationFromObject()
+
+// The function reads the value from the invocation payload. 
+//
+// Parameters:
+//   Invocation           - Structure - see function Catalogs.FL_Messages.NewInvocation
+//   AdditionalParameters - Structure - additional parameters for format translation.
+//                              Default value: Undefined.
+// Returns:
+//  Arbitrary - a value read from the invocation payload. 
+// 
+Function ReadInvocationPayload(Invocation, 
+    AdditionalParameters = Undefined) Export
+    
+    Handler = ResolveFormatHandler(Invocation.ContentType, 
+        Invocation.FileExtension);
+    If Handler = Undefined Then
+        Return Undefined;
+    EndIf;
+    
+    Return Handler.ReadFormat(Invocation, AdditionalParameters);
+    
+EndFunction // ReadInvocationPayload()
 
 #EndRegion // ServiceInterface
 
@@ -586,11 +675,13 @@ EndFunction // CreateMessage()
 //
 Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
     
-    ExchangeEndpoints = ExchangeEndpoints(Source, Exchange);  
+    Invocation = NewInvocationFromMessage(Source);
+    
+    ExchangeEndpoints = ExchangeEndpoints(Invocation, Exchange);  
     For Each Endpoint In ExchangeEndpoints Do
         
         // Checks whether message is passed through event filter 
-        If NOT PassedByEventFilter(Source, Endpoint) Then
+        If NOT PassedByEventFilter(Invocation, Endpoint) Then
             Continue;
         EndIf;
         
@@ -604,14 +695,14 @@ Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
             JobData.State = Catalogs.FL_States.Processing;    
         EndIf;
         
-        InputParameter = JobData.Input.Add();
-        InputParameter.Name = "Exchange";
-        InputParameter.Value = Endpoint.Exchange;
+        AppProperties = Catalogs.FL_Channels.NewAppProperties();
+        AppProperties.AppEndpoint = Endpoint.Exchange;
         
-        InputParameter = JobData.Input.Add();
-        InputParameter.Name = "Message";
-        InputParameter.Value = Source.Ref;
-        
+        FL_BackgroundJob.AddToJobInputData(JobData, "AppProperties", 
+            AppProperties);
+        FL_BackgroundJob.AddToJobInputData(JobData, "Invocation", 
+            Invocation);
+                
         ExchangeJob = FL_BackgroundJob.Enqueue(JobData);
         NewRow = Source.Exchanges.Add();
         NewRow.Exchange = Endpoint.Exchange;
@@ -640,7 +731,7 @@ Procedure RouteToAppEndpoints(Source, Exchange, AppEndpoint, ExchangeJob)
     Filter = New Structure("AppEndpoint");
     For Each TableRow In AppEndpoints Do
         
-        AppProperties = Catalogs.FL_Channels.NewAppEndpointProperties();
+        AppProperties = Catalogs.FL_Channels.NewAppProperties();
         AppProperties.AppEndpoint = TableRow.AppEndpoint;
         
         Filter.AppEndpoint = TableRow.AppEndpoint;
@@ -653,10 +744,9 @@ Procedure RouteToAppEndpoints(Source, Exchange, AppEndpoint, ExchangeJob)
         JobData.Priority = TableRow.Priority;
         JobData.State = Catalogs.FL_States.Awaiting;
 
-        InputParameter = JobData.Input.Add();
-        InputParameter.Name = "AppProperties";
-        InputParameter.Value = AppProperties;
-        
+        FL_BackgroundJob.AddToJobInputData(JobData, "AppProperties", 
+            AppProperties);
+                
         AppEndpointJob = FL_BackgroundJob.ContinueWith(ExchangeJob, JobData);
         NewRow = Source.AppEndpoints.Add();
         NewRow.Endpoint = TableRow.AppEndpoint;
@@ -700,10 +790,11 @@ Procedure FillAppResources(Source, AppProperties, AppResources)
                 
             Except
 
+                ErrorMessage = ErrorDescription();
                 FL_InteriorUse.WriteLog("FoxyLink.Integration.FillAppResources", 
                     EventLogLevel.Error,
                     Metadata.Catalogs.FL_Messages,
-                    ErrorDescription());
+                    ErrorMessage);
                      
             EndTry;
                 
@@ -729,22 +820,21 @@ EndProcedure // JoinContextValueColumn()
 //
 Function GetMessage(Source)
     
-    If TypeOf(Source) = Type("CatalogRef.FL_Messages") Then
+    SourceType = TypeOf(Source);
+    If SourceType = Type("CatalogRef.FL_Messages") Then
         
         Return Source;
         
-    ElsIf TypeOf(Source) = Type("Structure") 
-        OR TypeOf(Source) = Type("FixedStructure") Then
+    ElsIf SourceType = Type("Structure") 
+        OR SourceType = Type("FixedStructure") Then
         
         Return Create(Source);
         
-    Else
-        
-        ErrorMessage = FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
-            "Source", Source, Type("CatalogRef.FL_Messages"));
-        Raise ErrorMessage;
-        
     EndIf;
+        
+    ErrorMessage = FL_ErrorsClientServer.ErrorTypeIsDifferentFromExpected(
+        "Source", Source, Type("CatalogRef.FL_Messages"));
+    Raise ErrorMessage;
         
 EndFunction // GetMessage()
 
@@ -753,16 +843,17 @@ EndFunction // GetMessage()
 Function Messages(Source)
     
     Messages = New Array;
-    If TypeOf(Source) = Type("Array") Then
+    SourceType = TypeOf(Source);
+    If SourceType = Type("Array") Then
         
         Messages = FL_CommonUseClientServer.CopyArray(Source); 
         
-    ElsIf TypeOf(Source) = Type("CatalogRef.FL_Messages") Then
+    ElsIf SourceType = Type("CatalogRef.FL_Messages") Then
         
         Messages.Add(Source);
         
-    ElsIf TypeOf(Source) = Type("Structure") 
-        OR TypeOf(Source) = Type("FixedStructure") Then
+    ElsIf SourceType = Type("Structure") 
+        OR SourceType = Type("FixedStructure") Then
         
         Messages.Add(Create(Source));
         
@@ -783,34 +874,42 @@ EndFunction // Messages()
 
 // Only for internal use.
 //
-Function ExchangeEndpoints(Source, Exchange)
+Function ExchangeEndpoints(Invocation, Exchange)
     
     Query = New Query;
     Query.Text = QueryTextExchangeEndpoints();
-    Query.SetParameter("EventSource", Source.EventSource);
-    Query.SetParameter("Operation", Source.Operation);
-        
+    Query.SetParameter("EventSource", Invocation.EventSource);
+    Query.SetParameter("Operation", Invocation.Operation);
+    
+    // If an exchange is defined, it is needed to process only this one 
+    // exchange item.
     If Exchange <> Undefined Then 
+        
         Query.Text = QueryTextExchangeEndpoint();
-        Query.SetParameter("Exchange", Exchange);
+        
+        // This parameter is used to set a default handler if another doesn't exist.
         Query.SetParameter("EventHandler", "Catalogs.FL_Exchanges.ProcessMessage");
+        Query.SetParameter("Exchange", Exchange);
+        
     EndIf;
     
-    Return Query.Execute().Unload();
+    QueryResult = Query.Execute();
+    If NOT QueryResult.IsEmpty() Then
+        Return QueryResult.Unload();
+    EndIf;
+    
+    Return New ValueTable;
         
 EndFunction // ExchangeEndpoints()
 
 // Only for internal use.
 //
-Function PassedByEventFilter(Source, Endpoint)
-    
-    FilterPassed = True;
-    FilterNotPassed = False;
+Function PassedByEventFilter(Invocation, Endpoint)
     
     // Event source isn't set or unknown. 
     If Endpoint.EventFilterDCSchema = Undefined
         OR Endpoint.EventFilterDCSettings = Undefined Then
-        Return FilterPassed;
+        Return True;
     EndIf;
     
     DataCompositionSchema = Endpoint.EventFilterDCSchema.Get();
@@ -818,15 +917,7 @@ Function PassedByEventFilter(Source, Endpoint)
     
     // Event filter isn't set.
     If TypeOf(DataCompositionSchema) <> Type("DataCompositionSchema") Then
-        Return FilterPassed;
-    EndIf;
-    
-    If Source.Context.Count() <> 0 Then
-        Context = Source.Context.Unload();
-        JoinContextValueColumn(Context);
-    Else
-        // HTTP endpoint context.
-        Context = DeserializeContext(Source.Ref);    
+        Return True;
     EndIf;
     
     Settings = Catalogs.FL_Exchanges.NewExchangeSettings();
@@ -834,15 +925,11 @@ Function PassedByEventFilter(Source, Endpoint)
     Settings.DataCompositionSettings = DataCompositionSettings;
     
     OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(Settings, 
-        Context);
+        Invocation);
         
     ValueTable = New ValueTable;
-    FL_DataComposition.OutputInValueCollection(ValueTable, OutputParameters);    
-    If ValueTable.Count() > 0 Then
-        Return FilterPassed;
-    EndIf;
-    
-    Return FilterNotPassed;
+    FL_DataComposition.OutputInValueCollection(ValueTable, OutputParameters);
+    Return ValueIsFilled(ValueTable);
     
 EndFunction // PassedByEventFilter()
 
@@ -864,48 +951,30 @@ Function AppEndpoints(Source, Exchange, AppEndpoint)
     
 EndFunction // AppEndpoints()
 
-// Only for internal use.
-//
-Function QueryTextIsPublisher()
-
-    QueryText = "
-        |SELECT 
-        |   MessagePublishers.EventSource AS EventSource
-        |FROM
-        |   InformationRegister.FL_MessagePublishers AS MessagePublishers 
-        |WHERE
-        |   MessagePublishers.EventSource = &EventSource
-        |AND MessagePublishers.InUse
-        |";
-    Return QueryText;
-    
-EndFunction // QueryTextIsPublisher()
+#Region FormatHandlers
 
 // Only for internal use.
 //
-Function QueryTextIsMessagePublisher()
-
-    QueryText = "
-        |SELECT 
-        |   MessagePublishers.EventSource AS EventSource,
-        |   MessagePublishers.Operation AS Operation,
-        |   MessagePublishers.InUse AS InUse
-        |FROM
-        |   InformationRegister.FL_MessagePublishers AS MessagePublishers 
-        |WHERE
-        |   MessagePublishers.EventSource = &EventSource
-        |AND MessagePublishers.Operation = &Operation
-        |AND MessagePublishers.InUse
-        |";
-    Return QueryText;
+Function ResolveFormatHandler(ContentType, FileExtension)
     
-EndFunction // QueryTextIsMessagePublisher()
+    Handler = Catalogs.FL_Handlers.NewRegisteredHandlerForContentType(
+        ContentType); 
+    If Handler <> Undefined Then
+        Return Handler;
+    EndIf;
+    
+    Return Catalogs.FL_Handlers.NewRegisteredHandlerForFileExtension(
+        FileExtension);
+    
+EndFunction // ResolveFormatHandler()
+
+#EndRegion // FormatHandlers 
 
 // Only for internal use.
 //
 Function QueryTextMessages()
 
-    QueryText = "
+    Return "
         |SELECT 
         |   Messages.Ref AS Message
         |
@@ -918,7 +987,6 @@ Function QueryTextMessages()
         |ORDER BY
         |   Messages.Timestamp ASC
         |";
-    Return QueryText;
     
 EndFunction // QueryTextMessages()
 
@@ -926,7 +994,7 @@ EndFunction // QueryTextMessages()
 //
 Function QueryTextExchangeEndpoint()
 
-    QueryText = "
+    Return "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
         |   IsNull(OperationTable.Invoke, False) AS Invoke,
@@ -955,7 +1023,6 @@ Function QueryTextExchangeEndpoint()
         |ORDER BY
         |   IsNull(OperationTable.Priority, 5) ASC
         |";
-    Return QueryText;
     
 EndFunction // QueryTextExchangeEndpoint()
 
@@ -963,7 +1030,7 @@ EndFunction // QueryTextExchangeEndpoint()
 //
 Function QueryTextExchangeEndpoints()
 
-    QueryText = "
+    Return "
         |SELECT 
         |   Exchanges.Ref AS Exchange,
         |   IsNull(OperationTable.Invoke, False) AS Invoke,
@@ -992,7 +1059,6 @@ Function QueryTextExchangeEndpoints()
         |ORDER BY
         |   IsNull(OperationTable.Priority, 5) ASC
         |";
-    Return QueryText;
     
 EndFunction // QueryTextExchangeEndpoints()
 
@@ -1000,7 +1066,7 @@ EndFunction // QueryTextExchangeEndpoints()
 //
 Function QueryTextAppEndpoint()
     
-    QueryText = "
+    Return "
         |SELECT
         |   &Exchange AS Ref,
         |   &AppEndpoint AS AppEndpoint,
@@ -1043,9 +1109,7 @@ Function QueryTextAppEndpoint()
         |////////////////////////////////////////////////////////////////////////////////
         |DROP AppEndpointsCache
         |;
-        |";
-    
-    Return QueryText;  
+        |"; 
     
 EndFunction // QueryTextAppEndpoint()
 
@@ -1053,7 +1117,7 @@ EndFunction // QueryTextAppEndpoint()
 //
 Function QueryTextAppEndpoints()
     
-    QueryText = "
+    Return "
         |SELECT
         |   AppEndpoints.Ref AS Ref,
         |   AppEndpoints.Channel AS AppEndpoint,
@@ -1101,9 +1165,7 @@ Function QueryTextAppEndpoints()
         |////////////////////////////////////////////////////////////////////////////////
         |DROP AppEndpointsCache
         |;
-        |";
-    
-    Return QueryText;  
+        |"; 
     
 EndFunction // QueryTextAppEndpoints()
 
@@ -1111,7 +1173,7 @@ EndFunction // QueryTextAppEndpoints()
 //
 Function QueryTextMessageContext()
     
-    QueryText = "
+    Return "
         |SELECT
         |   MessageContext.Filter AS Filter,
         |   MessageContext.NamespaceURI AS NamespaceURI,
@@ -1123,7 +1185,6 @@ Function QueryTextMessageContext()
         |WHERE
         |   MessageContext.Ref = &Message  
         |";
-    Return QueryText;
     
 EndFunction // QueryTextMessageContext()
 
@@ -1131,7 +1192,7 @@ EndFunction // QueryTextMessageContext()
 //
 Function QueryTextMessagePayload()
     
-    QueryText = "
+    Return "
         |SELECT
         |   MessagePayload.Message.ContentEncoding AS ContentEncoding,
         |   MessagePayload.Message.ContentType AS ContentType,
@@ -1141,7 +1202,6 @@ Function QueryTextMessagePayload()
         |WHERE
         |   MessagePayload.Message = &Message  
         |";
-    Return QueryText;
     
 EndFunction // QueryTextMessagePayload()
     

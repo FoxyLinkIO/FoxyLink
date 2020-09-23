@@ -73,12 +73,10 @@ EndFunction // ChannelFullName()
 // Delivers a data object to the RabbitMQ application.
 //
 // Parameters:
-//  Payload    - Arbitrary - the data that can be read successively and 
-//                               delivered to the app endpoint.
-//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
-Procedure DeliverMessage(Payload, Properties, JobResult) Export
+Procedure DeliverMessage(Invocation, JobResult) Export
         
     Path = FL_EncryptionClientServer.FieldValueNoException(ChannelResources, 
         "Path");
@@ -87,7 +85,7 @@ Procedure DeliverMessage(Payload, Properties, JobResult) Export
         AMQPNetAliveness(JobResult);
         HTTPManagementAPIAliveness(JobResult);       
     ElsIf Path = "PublishToExchange" OR Path = Undefined Then
-        PublishMessage(Payload, Properties, JobResult);    
+        PublishMessage(Invocation, JobResult);    
     Else
         HTTPManagementAPI(Path, JobResult);
     EndIf;
@@ -145,28 +143,6 @@ EndFunction // SuppliedIntegration()
 
 #EndRegion // ProgramInterface
 
-#Region ServiceInterface
-
-// Converts a JSON stream into Map or Array object.
-//
-// Parameters:
-//  Stream - Stream - JSON stream to be read and converted.  
-//
-// Returns:
-//  Map, Array - converted object.
-//
-Function ConvertResponseToMap(Stream) Export
-    
-    JSONReader = New JSONReader;
-    JSONReader.OpenStream(Stream);
-    Response = ReadJSON(JSONReader, True);
-    JSONReader.Close();
-    Return Response; 
-    
-EndFunction // ConvertResponseToMap()
-
-#EndRegion // ServiceInterface
-
 #Region ServiceProceduresAndFunctions
 
 #Region HTTPManagementAPI
@@ -197,8 +173,8 @@ Procedure HTTPManagementAPIAliveness(JobResult)
         FL_InteriorUse.CallHTTPMethod(FL_InteriorUse.NewHTTPConnection(
                 StringURI), HTTPRequest, "GET", JobResult);
                 
-        BinaryData = JobResult.Output[0].Value;
-        Response = ConvertResponseToMap(BinaryData.OpenStreamForRead());
+        Invocation = Catalogs.FL_Jobs.GetFromJobResult(JobResult, "Invocation");        
+        Response = Catalogs.FL_Messages.ReadInvocationPayload(Invocation);
         If TypeOf(Response) <> Type("Map")
             OR TypeOf(Response.Get("status")) <> Type("String")
             OR Upper(Response.Get("status")) <> "OK" Then
@@ -264,13 +240,13 @@ EndProcedure // HTTPManagementAPI()
 
 // Only for internal use.
 //
-Procedure HTTPManagementAPIPublish(Payload, Properties, StringURI, JobResult)
+Procedure HTTPManagementAPIPublish(Invocation, StringURI, JobResult)
     
-    PreparedPayload = NewPublishToExchangePayload(Payload, Properties); 
+    PreparedPayload = NewPublishToExchangePayload(Invocation); 
     
     Exchange = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "Exchange");
-    If ValueIsFilled(Properties.ReplyTo)
+    If ValueIsFilled(Invocation.ReplyTo)
         OR NOT ValueIsFilled(Exchange) Then
         Exchange = "amq.default";
     EndIf;
@@ -293,7 +269,7 @@ EndProcedure // HTTPManagementAPIPublish()
 
 // Only for internal use.
 //
-Procedure HTTPManagementAPIProcessProps(JSONWriter, Properties)
+Procedure HTTPManagementAPIProcessProps(JSONWriter, Invocation)
     
     // Properties
     JSONWriter.WritePropertyName("properties");
@@ -301,7 +277,7 @@ Procedure HTTPManagementAPIProcessProps(JSONWriter, Properties)
     
         // Identifier of the application that produced the message. 
         JSONWriter.WritePropertyName("app_id");
-        JSONWriter.WriteValue(Properties.AppId);
+        JSONWriter.WriteValue(Invocation.AppId);
         
         // Non-persistent (1) or persistent (2).
         PropDeliveryMode = FL_EncryptionClientServer.FieldValueNoException(
@@ -313,16 +289,16 @@ Procedure HTTPManagementAPIProcessProps(JSONWriter, Properties)
 
         // MIME content type. 
         JSONWriter.WritePropertyName("content_type");
-        JSONWriter.WriteValue(Properties.ContentType);
+        JSONWriter.WriteValue(Invocation.ContentType);
     
         // MIME content encoding. 
         JSONWriter.WritePropertyName("content_encoding");
-        JSONWriter.WriteValue(Properties.ContentEncoding);
+        JSONWriter.WriteValue(Invocation.ContentEncoding);
         
         // Message correlated to this one, e.g. what request this message is a reply to. 
-        If ValueIsFilled(Properties.CorrelationId) Then
+        If ValueIsFilled(Invocation.CorrelationId) Then
             JSONWriter.WritePropertyName("correlation_id");
-            JSONWriter.WriteValue(Properties.CorrelationId);
+            JSONWriter.WriteValue(Invocation.CorrelationId);
         EndIf;
         
         // Expiration time after which the message will be deleted.
@@ -335,7 +311,7 @@ Procedure HTTPManagementAPIProcessProps(JSONWriter, Properties)
         
         // Application message identifier.
         JSONWriter.WritePropertyName("message_id");
-        JSONWriter.WriteValue(Properties.MessageId);
+        JSONWriter.WriteValue(Invocation.MessageId);
         
         // Message priority.
         PropPriority = FL_EncryptionClientServer.FieldValueNoException(
@@ -355,7 +331,7 @@ Procedure HTTPManagementAPIProcessProps(JSONWriter, Properties)
     
         // Message timestamp.
         JSONWriter.WritePropertyName("timestamp");
-        JSONWriter.WriteValue(Properties.Timestamp);
+        JSONWriter.WriteValue(Invocation.Timestamp);
         
         // Optional user ID.
         PropUserId = FL_EncryptionClientServer.FieldValueNoException(
@@ -370,17 +346,17 @@ Procedure HTTPManagementAPIProcessProps(JSONWriter, Properties)
         
             // Provides access to the event source name.
             JSONWriter.WritePropertyName("EventSource");
-            JSONWriter.WriteValue(Properties.EventSource);
+            JSONWriter.WriteValue(Invocation.EventSource);
             
             JSONWriter.WritePropertyName("FileExtension");
-            JSONWriter.WriteValue(Properties.FileExtension);
+            JSONWriter.WriteValue(Invocation.FileExtension);
 
             JSONWriter.WritePropertyName("Operation");
-            JSONWriter.WriteValue(String(Properties.Operation));
+            JSONWriter.WriteValue(String(Invocation.Operation));
             
             // The user id of change experienced.
             JSONWriter.WritePropertyName("UserId");
-            JSONWriter.WriteValue(Properties.UserId);
+            JSONWriter.WriteValue(Invocation.UserId);
 
         JSONWriter.WriteEndObject();
     
@@ -390,10 +366,10 @@ EndProcedure // HTTPManagementAPIProcessProps()
 
 // Only for internal use.
 //
-Function NewPublishToExchangePayload(Payload, Properties)
+Function NewPublishToExchangePayload(Invocation)
     
-    If ValueIsFilled(Properties.ReplyTo) Then
-        RoutingKey = Properties.ReplyTo;
+    If ValueIsFilled(Invocation.ReplyTo) Then
+        RoutingKey = Invocation.ReplyTo;
     Else
         RoutingKey = FL_EncryptionClientServer.FieldValue(ChannelResources, 
             "RoutingKey");
@@ -421,12 +397,12 @@ Function NewPublishToExchangePayload(Payload, Properties)
     
     JSONWriter.WritePropertyName("payload");
     If PayloadEncoding = "string" Then
-        JSONWriter.WriteValue(GetStringFromBinaryData(Payload));    
+        JSONWriter.WriteValue(GetStringFromBinaryData(Invocation.Payload));    
     Else
-        JSONWriter.WriteValue(Base64String(Payload));
+        JSONWriter.WriteValue(Base64String(Invocation.Payload));
     EndIf;
         
-    HTTPManagementAPIProcessProps(JSONWriter, Properties);
+    HTTPManagementAPIProcessProps(JSONWriter, Invocation);
     
     JSONWriter.WriteEndObject();
     JSONWriter.Close();
@@ -458,7 +434,7 @@ EndProcedure // AMQPNetAliveness()
 
 // Only for internal use.
 //
-Procedure AMQPNetPublish(Payload, Properties, AMQPURI, JobResult)
+Procedure AMQPNetPublish(Invocation, AMQPURI, JobResult)
     
     V8Publisher = NewV8Publisher(AMQPURI, JobResult);
     If V8Publisher = Undefined Then
@@ -471,17 +447,17 @@ Procedure AMQPNetPublish(Payload, Properties, AMQPURI, JobResult)
         Exchange = "";
     EndIf;
 
-    If ValueIsFilled(Properties.ReplyTo) Then
+    If ValueIsFilled(Invocation.ReplyTo) Then
         Exchange = "";
-        RoutingKey = Properties.ReplyTo;
+        RoutingKey = Invocation.ReplyTo;
     Else
         RoutingKey = FL_EncryptionClientServer.FieldValue(ChannelResources, 
             "RoutingKey");
     EndIf;
     
-    AMQPNetProcessProps(V8Publisher, Properties);
+    AMQPNetProcessProps(V8Publisher, Invocation);
     
-    Result = V8Publisher.SendMessage(Payload, Exchange, RoutingKey);
+    Result = V8Publisher.SendMessage(Invocation.Payload, Exchange, RoutingKey);
     If Result = "Delivered successfully." Then
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
@@ -503,10 +479,10 @@ EndProcedure // AMQPNetPublish()
 
 // Only for internal use.
 //
-Procedure AMQPNetProcessProps(V8Publisher, Properties)
+Procedure AMQPNetProcessProps(V8Publisher, Invocation)
     
     // Identifier of the application that produced the message.
-    V8Publisher.AppId = Properties.AppId;
+    V8Publisher.AppId = Invocation.AppId;
     
     // Non-persistent (1) or persistent (2).
     PropDeliveryMode = FL_EncryptionClientServer.FieldValueNoException(
@@ -516,14 +492,14 @@ Procedure AMQPNetProcessProps(V8Publisher, Properties)
     EndIf;
     
     // MIME content type.
-    V8Publisher.ContentType = Properties.ContentType;
+    V8Publisher.ContentType = Invocation.ContentType;
 
     // MIME content encoding.
-    V8Publisher.ContentEncoding = Properties.ContentEncoding;
+    V8Publisher.ContentEncoding = Invocation.ContentEncoding;
             
     // Message correlated to this one, e.g. what request this message is a reply to.
-    If ValueIsFilled(Properties.CorrelationId) Then
-        V8Publisher.CorrelationId = Properties.CorrelationId;
+    If ValueIsFilled(Invocation.CorrelationId) Then
+        V8Publisher.CorrelationId = Invocation.CorrelationId;
     EndIf;
     
     // Expiration time after which the message will be deleted.
@@ -534,7 +510,7 @@ Procedure AMQPNetProcessProps(V8Publisher, Properties)
     EndIf;
     
     // Application message identifier.
-    V8Publisher.MessageId = Properties.MessageId;
+    V8Publisher.MessageId = Invocation.MessageId;
     
     // Message priority.
     PropPriority = FL_EncryptionClientServer.FieldValueNoException(
@@ -551,7 +527,7 @@ Procedure AMQPNetProcessProps(V8Publisher, Properties)
     EndIf;
     
     // Message timestamp.
-    V8Publisher.Timestamp = Format(Properties.Timestamp, "NG=0");
+    V8Publisher.Timestamp = Format(Invocation.Timestamp, "NG=0");
     
     // Optional user ID.
     PropUserId = FL_EncryptionClientServer.FieldValueNoException(
@@ -560,10 +536,10 @@ Procedure AMQPNetProcessProps(V8Publisher, Properties)
         V8Publisher.UserId = PropUserId;
     EndIf;
     
-    V8Publisher.AddHeader("EventSource", Properties.EventSource);
-    V8Publisher.AddHeader("FileExtension", Properties.FileExtension);
-    V8Publisher.AddHeader("Operation", String(Properties.Operation));
-    V8Publisher.AddHeader("UserId", Properties.UserId);
+    V8Publisher.AddHeader("EventSource", Invocation.EventSource);
+    V8Publisher.AddHeader("FileExtension", Invocation.FileExtension);
+    V8Publisher.AddHeader("Operation", String(Invocation.Operation));
+    V8Publisher.AddHeader("UserId", Invocation.UserId);
     
 EndProcedure // AMQPNetProcessProps() 
 
@@ -619,11 +595,11 @@ EndFunction // NewV8Publisher()
 
 // Only for internal use.
 //
-Procedure PublishMessage(Payload, Properties, JobResult)
+Procedure PublishMessage(Invocation, JobResult)
     
     Mib = 1048576;
     Mib300 = 314572800;
-    Size = PayloadSize(Payload);
+    Size = PayloadSize(Invocation.Payload);
     
     AMQPURI = FL_EncryptionClientServer.FieldValueNoException(ChannelData, 
         "AMQPURI");
@@ -631,9 +607,9 @@ Procedure PublishMessage(Payload, Properties, JobResult)
         "StringURI");
     
     If Size <= Mib AND ValueIsFilled(StringURI) Then
-        HTTPManagementAPIPublish(Payload, Properties, StringURI, JobResult);   
+        HTTPManagementAPIPublish(Invocation, StringURI, JobResult);   
     ElsIf Size <= Mib300 AND ValueIsFilled(AMQPURI) Then
-        AMQPNetPublish(Payload, Properties, AMQPURI, JobResult);
+        AMQPNetPublish(Invocation, AMQPURI, JobResult);
     Else
         
         JobResult.StatusCode = FL_InteriorUseReUse

@@ -96,9 +96,14 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_WordPress</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Role.FL_BasicRightsFoxyLink</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Role.FL_FullRightsFoxyLink</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Processing16</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Processing32</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Processing48</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_SaveAs</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_OpenDocument</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_QuickBooks</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonPicture.FL_Swagger</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_ConfigurationUpdate</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects>

@@ -323,15 +323,15 @@ Function DeliverToAppEndpoint(MainObject, ResourceName)
         "Path", ResourceName);
     
     JobResult = Catalogs.FL_Jobs.NewJobResult(True);
-    MainObject.DeliverMessage(Undefined, Undefined, JobResult); 
+    MainObject.DeliverMessage(Undefined, JobResult); 
         
     LogAttribute = LogAttribute + JobResult.LogAttribute;
     If NOT JobResult.Success Then
         Return Undefined;
     EndIf;
     
-    BinaryData = JobResult.Output[0].Value;
-    Return MainObject.ConvertResponseToMap(BinaryData.OpenStreamForRead());
+    Invocation = Catalogs.FL_Jobs.GetFromJobResult(JobResult, "Invocation");        
+    Return Catalogs.FL_Messages.ReadInvocationPayload(Invocation);
     
 EndFunction // DeliverToAppEndpoint()
 

@@ -159,15 +159,15 @@ Procedure SendMessageReplies(SocialConversation, CollaborationMessages,
             "CollaborationMessageId");
         If SearchResult <> Undefined Then
             
-            Catalogs.FL_Messages.AddToContext(Invocation.Context, "Ref", 
+            Catalogs.FL_Messages.AddToContext(Invocation, "Ref", 
                 SocialConversation, True);
-            Catalogs.FL_Messages.AddToContext(Invocation.Context, 
+            Catalogs.FL_Messages.AddToContext(Invocation, 
                 "CollaborationMessageId", CollaborationMessageId);
-            Catalogs.FL_Messages.AddToContext(Invocation.Context, "Date", 
+            Catalogs.FL_Messages.AddToContext(Invocation, "Date", 
                 SearchResult.Date);
-            Catalogs.FL_Messages.AddToContext(Invocation.Context, "Text", 
+            Catalogs.FL_Messages.AddToContext(Invocation, "Text", 
                 String(CollaborationMessage.Text));
-            Catalogs.FL_Messages.AddToContext(Invocation.Context, "User", 
+            Catalogs.FL_Messages.AddToContext(Invocation, "User", 
                 String(CollaborationMessage.Author));
                 
             Catalogs.FL_Messages.Route(Invocation, Exchange);

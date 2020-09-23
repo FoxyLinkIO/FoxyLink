@@ -5,16 +5,20 @@
 			<Name>FL_RunInSafeMode</Name>
 			<Synonym>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Работа в безопасном режиме</v8:content>
-				</v8:item>
-				<v8:item>
 					<v8:lang>en</v8:lang>
 					<v8:content>Run in safe mode</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
 					<v8:content>Run in safe mode</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Работа в безопасном режиме</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Робота в безпечному режимі</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>

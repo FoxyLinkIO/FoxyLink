@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -130,9 +130,10 @@ EndProcedure // ExtendValueTable()
 // Extends the receiver array with values from the source array.
 //
 // Parameters:
-//  Receiver - Array   - array in which new values will be added.
-//  Source   - Array   - array of values for filling. 
-//  Unique   - Boolean - if True - only unique values will be added to the receiver
+//  Receiver - Array      - array in which new values will be added.
+//  Source   - Array      - array of values for filling.
+//             FixedArray - fixed array of values for filling.
+//  Unique   - Boolean    - if True - only unique values will be added to the receiver
 //                          array, otherwise all values from the source.
 // 
 Procedure ExtendArray(Receiver, Source, Unique = False) Export
@@ -388,6 +389,24 @@ Function IsObjectAttribute(Object, AttributeName) Export
     Return AttributeStructure[AttributeName] <> UniquenessKey;
 
 EndFunction // IsObjectAttribute()
+
+#Region DateOperations
+
+// Converts Unix time to 1C date.
+//
+// Parameters:
+//  UnixTime - Number - Unix time.
+//
+// Returns:
+//  Date - converted date.
+//
+Function UnixTimeToDate(Val UnixTime) Export
+    
+    Return Date(1970, 1, 1, 0, 0, 0) + UnixTime;         
+    
+EndFunction // UnixDateToDate()
+
+#EndRegion // DateOperations
 
 #Region FilterOperations
 

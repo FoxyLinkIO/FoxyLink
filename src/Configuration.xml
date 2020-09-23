@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>0.9.9.375</Version>
+			<Version>0.9.9.1488</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -123,7 +123,7 @@
 			<BriefInformation>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>FoxyLink, version 1.0</v8:content>
+					<v8:content>FoxyLink, version 0.9</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
@@ -141,7 +141,7 @@
 			<DetailedInformation>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>FoxyLink, version 1.0</v8:content>
+					<v8:content>FoxyLink, version 0.9</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
@@ -159,19 +159,19 @@
 			<Copyright>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Copyright © Petro Bazeliuk, 2016-2018. All rights reserved</v8:content>
+					<v8:content>Copyright © Petro Bazeliuk, 2016-2020. All rights reserved</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Copyright © Petro Bazeliuk, 2016-2018. All rights reserved</v8:content>
+					<v8:content>Copyright © Petro Bazeliuk, 2016-2020. All rights reserved</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Копирайт © Петр Базелюк, 2016-2018. Все права защищены</v8:content>
+					<v8:content>Копирайт © Петр Базелюк, 2016-2020. Все права защищены</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Копірайт © Петро Базелюк, 2016-2018. Всі права захищені</v8:content>
+					<v8:content>Копірайт © Петро Базелюк, 2016-2020. Всі права захищені</v8:content>
 				</v8:item>
 			</Copyright>
 			<VendorInformationAddress>
@@ -226,7 +226,9 @@
 			<Subsystem>FoxyLink</Subsystem>
 			<CommonPicture>FL_Add</CommonPicture>
 			<CommonPicture>FL_AddEvent</CommonPicture>
+			<CommonPicture>FL_AddLink</CommonPicture>
 			<CommonPicture>FL_AddPrivateKey</CommonPicture>
+			<CommonPicture>FL_AddRow</CommonPicture>
 			<CommonPicture>FL_CodeFile</CommonPicture>
 			<CommonPicture>FL_CollaborationSystem</CommonPicture>
 			<CommonPicture>FL_Connected</CommonPicture>
@@ -263,40 +265,44 @@
 			<CommonPicture>FL_Parameters</CommonPicture>
 			<CommonPicture>FL_Preview</CommonPicture>
 			<CommonPicture>FL_Processing</CommonPicture>
+			<CommonPicture>FL_Processing16</CommonPicture>
+			<CommonPicture>FL_Processing32</CommonPicture>
+			<CommonPicture>FL_Processing48</CommonPicture>
 			<CommonPicture>FL_ProcessingError</CommonPicture>
 			<CommonPicture>FL_ProcessingWarning</CommonPicture>
 			<CommonPicture>FL_Prototype</CommonPicture>
-			<CommonPicture>FL_AddLink</CommonPicture>
+			<CommonPicture>FL_QuickBooks</CommonPicture>
 			<CommonPicture>FL_Response</CommonPicture>
 			<CommonPicture>FL_Route</CommonPicture>
 			<CommonPicture>FL_Save</CommonPicture>
 			<CommonPicture>FL_SaveAndClose</CommonPicture>
-			<CommonPicture>FL_AddRow</CommonPicture>
+			<CommonPicture>FL_SaveAs</CommonPicture>
 			<CommonPicture>FL_Schedule</CommonPicture>
 			<CommonPicture>FL_Select</CommonPicture>
 			<CommonPicture>FL_Settings</CommonPicture>
 			<CommonPicture>FL_Structure</CommonPicture>
+			<CommonPicture>FL_Swagger</CommonPicture>
 			<CommonPicture>FL_Untested</CommonPicture>
 			<CommonPicture>FL_Update</CommonPicture>
 			<CommonPicture>FL_ValidMethodSettings</CommonPicture>
 			<CommonPicture>FL_WooCommerce</CommonPicture>
 			<CommonPicture>FL_WordPress</CommonPicture>
-			<CommonPicture>FL_QuickBooks</CommonPicture>
-			<CommonPicture>FL_SaveAs</CommonPicture>
+			<SessionParameter>FL_CanceledBackgroundJobs</SessionParameter>
 			<Role>FL_BasicRightsFoxyLink</Role>
 			<Role>FL_FullRightsFoxyLink</Role>
 			<CommonTemplate>FL_LICENSE</CommonTemplate>
 			<CommonModule>FL_BackgroundJob</CommonModule>
-			<CommonModule>FL_BatchJob</CommonModule>
-			<CommonModule>FL_CommonUse</CommonModule>
 			<CommonModule>FL_CommonUseClientServer</CommonModule>
-			<CommonModule>FL_CommonUseReUse</CommonModule>
+			<CommonModule>FL_BatchJob</CommonModule>
+			<CommonModule>FL_ConfigurationUpdate</CommonModule>
 			<CommonModule>FL_DataComposition</CommonModule>
 			<CommonModule>FL_DataCompositionClient</CommonModule>
 			<CommonModule>FL_Encryption</CommonModule>
 			<CommonModule>FL_EncryptionClientServer</CommonModule>
 			<CommonModule>FL_ErrorsClientServer</CommonModule>
 			<CommonModule>FL_Events</CommonModule>
+			<CommonModule>FL_CommonUse</CommonModule>
+			<CommonModule>FL_CommonUseReUse</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
 			<CommonModule>FL_InteriorUseClient</CommonModule>
 			<CommonModule>FL_InteriorUseClientServer</CommonModule>
@@ -304,8 +310,11 @@
 			<CommonModule>FL_JobServer</CommonModule>
 			<CommonModule>FL_RunInSafeMode</CommonModule>
 			<CommonModule>FL_Tasks</CommonModule>
+			<CommonModule>FL_TasksClientServer</CommonModule>
 			<CommonModule>SocialNetworks_Events</CommonModule>
 			<CommonModule>SocialNetworks_ExchangeServer</CommonModule>
+			<CommonModule>FL_EventsReUse</CommonModule>
+			<CommonModule>FL_Exchange</CommonModule>
 			<HTTPService>FL_AppEndpoint</HTTPService>
 			<EventSubscription>FL_CatalogsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
@@ -324,8 +333,8 @@
 			<ScheduledJob>FL_JobRouting</ScheduledJob>
 			<ScheduledJob>FL_JobServer</ScheduledJob>
 			<ScheduledJob>SocialNetworks_ExchangeServer</ScheduledJob>
-			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
 			<FunctionalOption>FL_UseFoxyLink</FunctionalOption>
+			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
 			<Constant>FL_AppIdentifier</Constant>
 			<Constant>FL_JobExpirationTimeout</Constant>
 			<Constant>FL_LicenseAccepted</Constant>
@@ -338,6 +347,7 @@
 			<Constant>SocialNetworks_LastDate</Constant>
 			<Catalog>FL_Channels</Catalog>
 			<Catalog>FL_Exchanges</Catalog>
+			<Catalog>FL_Handlers</Catalog>
 			<Catalog>FL_Jobs</Catalog>
 			<Catalog>FL_Messages</Catalog>
 			<Catalog>FL_Operations</Catalog>
@@ -345,6 +355,7 @@
 			<Catalog>SocialNetworks_Conversations</Catalog>
 			<Catalog>SocialNetworks_Users</Catalog>
 			<Enum>FL_CRUDMethods</Enum>
+			<Enum>FL_HandlerTypes</Enum>
 			<Enum>FL_RESTMethods</Enum>
 			<Enum>SocialNetworks</Enum>
 			<DataProcessor>FL_AdministrationPanel</DataProcessor>

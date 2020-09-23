@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -157,6 +157,42 @@ Function ErrorKeyIsMissingInObject(VarName, VarValue, KeyName) Export
     
 EndFunction // ErrorKeyIsMissingInObject()
 
+// Returns configuration object not found error description.
+//
+// Parameters:
+//  Name - String - object name.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorConfigurationObjectNotFound(Name) Export
+    
+    ErrorMessage = NStr("en='Error: Configuration object {%1} not found.';
+        |ru='Ошибка: Объект конфигурации {%1} не найден.';
+        |uk='Помилка: Елемент конфігурації {%1} не знайдено.';
+        |en_CA='Error: Configuration object {%1} {%1} not found.'");
+    Return StrTemplate(ErrorMessage, Name);
+    
+EndFunction // ErrorConfigurationObjectNotFound()
+
+// Returns metadata object not supported error description.
+//
+// Parameters:
+//  Name - String - metadata name.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorMetadataObjectIsNotSupported(Name) Export
+    
+    ErrorMessage = NStr("en='Error: Metadata object {%1} not supported.';
+        |ru='Ошибка: Объект метаданных {%1} не поддерживается.';
+        |uk='Помилка: Елемент метаданих {%1} не підтримується.';
+        |en_CA='Error: Metadata object {%1} {%1} not supported.'");
+    Return StrTemplate(ErrorMessage, Name);
+    
+EndFunction // ErrorMetadataObjectIsNotSupported()
+
 // Returns wrong type error description.
 //
 // Parameters:
@@ -179,7 +215,42 @@ Function ErrorTypeIsDifferentFromExpected(VarName, VarValue,
     
 EndFunction // ErrorTypeIsDifferentFromExpected()
 
+// Returns wrong type error description.
+//
+// Parameters:
+//  VarName      - String    - variable name.
+//  VarValue     - Arbitrary - variable value.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorTypeIsDifferentFromReferenceType(VarName, VarValue) Export
+    
+    ErrorMessage = NStr("
+        |en='Error: Failed to process parameter {%1}. Expected type {AnyRef} and received type is {%2}.';
+        |ru='Ошибка: Не удалось обработать параметр {%1}. Ожидался тип {ЛюбаяСсылка}, а получили тип {%2}.';
+        |uk='Помилка: Не вдалось опрацювати параметр {%1}. Очікувався тип {ЛюбаяСсылка}, а отримали тип {%2}.';
+        |en_CA='Error: Failed to process parameter {%1}. Expected type {AnyRef} and received type is {%2}.'");
+    Return StrTemplate(ErrorMessage, VarName, String(TypeOf(VarValue)));  
+    
+EndFunction // ErrorTypeIsDifferentFromReferenceType()
+
 #Region BackgroundJobs
+
+// Returns {background job abnormal termination} error description. 
+//
+// Returns:
+//  String - error description message.
+//
+Function BackgroundJobAbnormalTermination() Export
+    
+    Return NStr(
+        "en='Cannot perform the operation due to abnormal termination of a background job.';
+        |ru='Операция не выполнена из-за аварийного завершения фонового задания.';
+        |uk='Операція не виконано через аварійний завершення фонового завдання.';
+        |en_CA='Cannot perform the operation due to abnormal termination of a background job.'");
+
+EndFunction // BackgroundJobAbnormalTermination()
 
 // Returns {background job not found by UUID} error description.
 //
@@ -189,7 +260,7 @@ EndFunction // ErrorTypeIsDifferentFromExpected()
 // Returns:
 //  String - error description message.
 //
-Function ErrorBackgroundJobNotFoundByUUID(UUID) Export
+Function BackgroundJobNotFoundByUUID(UUID) Export
     
     ErrorMessage = NStr("en='Error: Background job not found by UUID {%1}.';
         |ru='Ошибка: Фоновое задание не найдено с помощью уникального идентификатора {%1}.';
@@ -197,28 +268,28 @@ Function ErrorBackgroundJobNotFoundByUUID(UUID) Export
         |en_CA='Error: Background job not found by UUID {%1}.'");
     Return StrTemplate(ErrorMessage, String(UUID));  
     
-EndFunction // ErrorBackgroundJobNotFoundByUUID()
+EndFunction // BackgroundJobNotFoundByUUID()
 
 // Returns {background job was canceled} error description.
 //
 // Returns:
 //  String - error description message.
 //
-Function ErrorBackgroundJobWasCanceled() Export
+Function BackgroundJobWasCanceled() Export
     
     Return NStr("en='Error: Background job was canceled by administrator.';
         |ru='Ошибка: Фоновое задание отменено администратором.';
         |uk='Помилка: Фонове завдання відмінено адміністратором.';
         |en_CA='Error: Background job was canceled by administrator.'");
     
-EndFunction // ErrorBackgroundJobNotFoundByUUID()
+EndFunction // BackgroundJobNotFoundByUUID()
 
 // Returns {cannot execute simultaneouslyB background job} error description.
 //
 // Returns:
 //  String - error description message.
 //
-Function ErrorCannotExecuteSimultaneouslyBackgroundJob() Export
+Function CannotExecuteSimultaneouslyBackgroundJob() Export
     
     Return NStr(
         "en='Error: In file IB, it is impossible simultaneously to execute more than one background job.'; 
@@ -226,14 +297,14 @@ Function ErrorCannotExecuteSimultaneouslyBackgroundJob() Export
         |uk='Помилка: В файловій ІБ неможливо одночасно виконувати більше одного фонового завдання.';
         |en_CA='Error: In file IB, it is impossible simultaneously to execute more than one background job.'");
 
-EndFunction // ErrorCannotExecuteSimultaneouslyBackgroundJob()
+EndFunction // CannotExecuteSimultaneouslyBackgroundJob()
 
 // Returns {cannot start background job in COMConnection} error description.
 //
 // Returns:
 //  String - error description message.
 //
-Function ErrorCannotStartBackgroundJobInCOMConnection() Export
+Function CannotStartBackgroundJobInCOMConnection() Export
     
     Return NStr(
         "en='Error: In file IB, background jobs can only be started from the client application.';
@@ -241,15 +312,14 @@ Function ErrorCannotStartBackgroundJobInCOMConnection() Export
         |uk='Помилка: В файловій ІБ можна запустити фонове завдання тільки з клієнтського додатку.';
         |en_CA='Error: In file IB, background jobs can only be started from the client application.'");
 
-EndFunction // ErrorCannotStartBackgroundJobInCOMConnection()
-
+EndFunction // CannotStartBackgroundJobInCOMConnection()
 
 // Returns {cannot start background job without extensions} error description.
 //
 // Returns:
 //  String - error description message.
 //
-Function ErrorCannotStartBackgroundJobWithoutExtensions() Export
+Function CannotStartBackgroundJobWithoutExtensions() Export
     
     Return NStr(
         "en='Cannot start a background job with {WithoutExtensions} parameter in a file infobase.';
@@ -257,7 +327,7 @@ Function ErrorCannotStartBackgroundJobWithoutExtensions() Export
         |uk='Неможливо запустити фонове завдання з параметром {WithoutExtensions} в файловій інформаційній базі.';
         |en_CA='Cannot start a background job with {WithoutExtensions} parameter in a file infobase.'");
 
-EndFunction // ErrorCannotStartBackgroundJobWithoutExtensions()
+EndFunction // CannotStartBackgroundJobWithoutExtensions()
 
 #EndRegion // BackgroundJobs
 

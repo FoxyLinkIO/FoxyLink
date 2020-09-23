@@ -49,7 +49,14 @@ EndFunction // ConfigurationSplitters()
 //
 Function IsReferenceTypeObjectCached(FullName) Export
     
-    BaseName = StrSplit(FullName, ".")[0];
+    MetadataObjectParts = 2;
+    
+    Parts = StrSplit(FullName, ".");
+    If Parts.Count() <> MetadataObjectParts Then
+        Return False;    
+    EndIf;
+    
+    BaseName = Parts[0];
     BaseTypes = FL_CommonUseReUse.BaseReferenceTypeNameSynonyms();
     Return IsValueInFixedMapCollection(BaseName, BaseTypes);
     

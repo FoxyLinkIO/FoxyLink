@@ -25,42 +25,25 @@ Function MessageHandler(Request)
     
     ProcessURLParameters(Request.URLParameters, Exchange, Operation, Async);
     
-    Headers = Request.Headers;
+    Headers = FL_InteriorUse.HeadersFromRequestResponse(Request);
     Invocation = Catalogs.FL_Messages.NewInvocation();
     
-    // https://tools.ietf.org/html/rfc1049 
-    // Content-type header field for internet messages.
-    ContentType = Headers.Get("Content-Type");
-    If ValueIsFilled(ContentType) Then
-        
-        SplitResults = StrSplit(ContentType, ";");    
-        Invocation.ContentType = SplitResults[0];
-        For Each SplitResult In SplitResults Do
-            
-            Position = StrFind(SplitResult, "charset=");
-            If Position > 0 Then
-                Position = Position + StrLen("charset=");    
-                Invocation.ContentEncoding = Upper(Mid(SplitResult, Position));         
-            EndIf;
-            
-        EndDo;
-        
-    EndIf;
+    Catalogs.FL_Messages.FillContentTypeFromHeaders(Invocation, Headers);
     
     // Helps to resolve problem with english and russian configurations. 
     Invocation.EventSource = Metadata.HTTPServices.FL_AppEndpoint.Fullname();
     
     Invocation.Operation = Operation;
     Invocation.Payload = Request.GetBodyAsBinaryData(); 
-    Invocation.ReplyTo = Headers.Get("ReplyTo");
-    Invocation.CorrelationId = Headers.Get("CorrelationId");
+    Invocation.ReplyTo = Headers.Get("REPLYTO");
+    Invocation.CorrelationId = Headers.Get("CORRELATIONID");
     
-    Timestamp = Headers.Get("Timestamp");
+    Timestamp = Headers.Get("TIMESTAMP");
     If ValueIsFilled(Timestamp) Then
         Invocation.Timestamp = Timestamp;
     EndIf;
     
-    UserId = Headers.Get("UserId");
+    UserId = Headers.Get("USERID");
     If ValueIsFilled(UserId) Then 
         Invocation.UserId = UserId;
     EndIf;
@@ -68,7 +51,7 @@ Function MessageHandler(Request)
     AppEndpoint = Undefined;
     If ValueIsFilled(Invocation.ReplyTo) Then
         AppEndpoint = FL_CommonUse.ReferenceByDescription(
-            Metadata.Catalogs.FL_Channels, Headers.Get("AppId"));
+            Metadata.Catalogs.FL_Channels, Headers.Get("APPID"));
     EndIf;
     
     // Avoid using hierarchical transactions. 

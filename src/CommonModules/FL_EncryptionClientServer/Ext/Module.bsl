@@ -102,7 +102,7 @@ Function FieldValue(Collection, FieldName) Export
     
 EndFunction // FieldValue()
 
-// Returns field value by the passed field name without exception.
+// The function returns field value by the passed field name without exception.
 //
 // Parameters:
 //  Collection   - FormDataCollection - collection with channel data.

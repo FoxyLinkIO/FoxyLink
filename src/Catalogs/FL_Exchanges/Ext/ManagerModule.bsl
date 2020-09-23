@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -178,19 +178,20 @@ EndProcedure // FillFormatDescription()
 // Returns a processing result.
 //
 // Parameters:
-//  Exchange - CatalogRef.FL_Exchanges - reference of the FL_Exchanges catalog.
-//  Message  - CatalogRef.FL_Messages  - reference of the FL_Messages catalog.
+//  AppProperties - Structure - see function Catalogs.FL_Channels.NewAppProperties.
+//  Invocation    - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //
 // Returns:
 //  Structure - see fucntion Catalogs.FL_Jobs.NewJobResult. 
 //
-Function ProcessMessage(Exchange, Message) Export
+Function ProcessMessage(AppProperties, Invocation) Export
     
     JobResult = Catalogs.FL_Jobs.NewJobResult();
     
     Try
         
-        Settings = ExchangeSettingsByRefs(Exchange, Message.Operation);
+        Settings = ExchangeSettingsByRefs(AppProperties.AppEndpoint, 
+            Invocation.Operation);
         StreamObject = FL_InteriorUse.NewFormatProcessor(
             Settings.BasicFormatGuid);
         
@@ -198,27 +199,23 @@ Function ProcessMessage(Exchange, Message) Export
         Stream = New MemoryStream;
         StreamObject.Initialize(Stream, Settings.APISchema);
         
-        OutputParameters = NewOutputParameters(Settings, 
-            Catalogs.FL_Messages.DeserializeContext(Message));
+        OutputParameters = NewOutputParameters(Settings, Invocation);
                     
         FL_DataComposition.Output(StreamObject, OutputParameters);
         
-        // Fill MIME-type information.
-        Properties = NewProperties();
-        FillPropertyValues(Properties, Message);
-        Properties.ContentType = StreamObject.FormatMediaType();
-        Properties.ContentEncoding = StreamObject.ContentEncoding;
-        Properties.FileExtension = StreamObject.FormatFileExtension();
-        Properties.MessageId = XMLString(Message);
-        
+        // Fill out invocation fields.
+        OutInvocation = Catalogs.FL_Messages.NewInvocation();
+        FillPropertyValues(OutInvocation, Invocation);
+        OutInvocation.ContentType = StreamObject.FormatMediaType();
+        OutInvocation.ContentEncoding = StreamObject.ContentEncoding;
+        OutInvocation.FileExtension = StreamObject.FormatFileExtension();
+
         // Close format stream and memory stream.
         StreamObject.Close();
-        Payload = Stream.CloseAndGetBinaryData();
+        OutInvocation.Payload = Stream.CloseAndGetBinaryData();
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
-        
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Payload", Payload);     
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", Properties); 
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Invocation", OutInvocation); 
 
     Except
         
@@ -246,52 +243,41 @@ EndFunction // ProcessMessage()
 //  Structure - see function FL_InteriorUseClientServer.NewFileProperties.
 //
 Function ExportObject(Exchange) Export
-    
-    PayloadRow = Undefined;
-    PropertiesRow = Undefined;
-    
+       
     Invocation = Catalogs.FL_Messages.NewInvocation();
     Invocation.EventSource = "Catalogs.FL_Exchanges.Commands.ExportExchange";
     Invocation.Operation = Catalogs.FL_Operations.Read;
-    Catalogs.FL_Messages.AddToContext(Invocation.Context, "Ref", Exchange, 
-        True);
+    Catalogs.FL_Messages.AddToContext(Invocation, "Ref", Exchange, True);
     
     JobResult = Catalogs.FL_Messages.RouteAndRunOutputResult(Invocation, 
         Catalogs.FL_Exchanges.Self);    
         
-    If JobResult.Success 
-        AND TypeOf(JobResult.Output) = Type("ValueTable") Then
-        PayloadRow = JobResult.Output.Find("Payload", "Name");
-        PropertiesRow = JobResult.Output.Find("Properties", "Name");
-    EndIf;
-        
-    If PayloadRow <> Undefined 
-        AND PropertiesRow <> Undefined Then 
-        
-        FileData = PayloadRow.Value;
-        Properties = PropertiesRow.Value;
-        
-        FileDescription = FL_CommonUse.ObjectAttributeValue(Exchange, 
-            "Description");
+    If JobResult.Success Then
     
-        FileProperties = FL_InteriorUseClientServer.NewFileProperties();
-        FileProperties.Name = StrTemplate("%1%2", FileDescription, 
-            Properties.FileExtension);
-        FileProperties.BaseName = FileDescription;
-        FileProperties.Extension = Properties.FileExtension;
-        FileProperties.Size = FileData.Size();
-        FileProperties.IsFile = True;
-        FileProperties.StorageAddress = PutToTempStorage(FileData);
+        Invocation = Catalogs.FL_Jobs.GetFromJobResult(JobResult, 
+            "Invocation");
         
-        #If MobileAppServer OR МобильноеПриложениеСервер Then
-        FileProperties.ModificationTime = CurrentDate();
-        #ElsIf Server OR ThickClientOrdinaryApplication OR ExternalConnection OR Сервер OR ТолстыйКлиентОбычноеПриложение OR ВнешнееСоединение Then
-        FileProperties.ModificationTime = CurrentSessionDate();
-        #EndIf
+        FileData = Invocation.Payload; 
+        If TypeOf(FileData) = Type("BinaryData") Then 
+            
+            FileDescription = FL_CommonUse.ObjectAttributeValue(Exchange, 
+                "Description");
+        
+            FileProperties = FL_InteriorUseClientServer.NewFileProperties();
+            FileProperties.Name = StrTemplate("%1%2", FileDescription, 
+                Invocation.FileExtension);
+            FileProperties.BaseName = FileDescription;
+            FileProperties.Extension = Invocation.FileExtension;
+            FileProperties.Size = FileData.Size();
+            FileProperties.IsFile = True;
+            FileProperties.StorageAddress = PutToTempStorage(FileData);
+            FileProperties.ModificationTime = CurrentSessionDate();
+            FileProperties.ModificationTimeUTC = CurrentUniversalDate();
+            
+            Return FileProperties;
+            
+        EndIf;
     
-        FileProperties.ModificationTimeUTC = CurrentUniversalDate();
-        Return FileProperties;
-        
     EndIf;
     
     Return Undefined;
@@ -385,8 +371,8 @@ EndFunction // NewExchangeSettings()
 // Returns filled structure with output parameters.
 // 
 // Parameters:
-//  Settings - Structure  - see function Catalog.FL_Exchanges.NewExchangeSettings.
-//  Context  - ValueTable - see function Catalogs.FL_Messages.NewContext.
+//  Settings   - Structure - see function Catalog.FL_Exchanges.NewExchangeSettings.
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //                  Default value: Undefined.
 //
 // Returns:
@@ -403,15 +389,31 @@ EndFunction // NewExchangeSettings()
 // See also:
 //  DataCompositionProcessor.Initialize in the syntax-assistant.
 //
-Function NewOutputParameters(Settings, Context = Undefined) Export
+Function NewOutputParameters(Settings, Invocation = Undefined) Export
     
     SettingsComposer = New DataCompositionSettingsComposer;
     FL_DataComposition.InitSettingsComposer(SettingsComposer,
         Settings.DataCompositionSchema,
         Settings.DataCompositionSettings);
         
-    If Context <> Undefined Then
-        FL_DataComposition.SetDataToSettingsComposer(SettingsComposer, Context);
+    If Invocation <> Undefined Then
+        
+        Context = Invocation.Context;
+        If NOT ValueIsFilled(Invocation.Context) 
+            AND ValueIsFilled(Invocation.Payload) Then
+            
+            AdditionalParameters = New Structure;
+            AdditionalParameters.Insert("ReadToMap", False);
+            Context = Catalogs.FL_Messages.ReadInvocationPayload(Invocation, 
+                AdditionalParameters);
+                     
+        EndIf;
+
+        If ValueIsFilled(Context) Then
+            FL_DataComposition.SetDataToSettingsComposer(SettingsComposer, 
+                Context);
+        EndIf;
+        
     EndIf;
    
     DataCompositionTemplate = FL_DataComposition.NewTemplateComposerParameters();
@@ -473,43 +475,6 @@ EndFunction // ExchangeSettingsByNames()
 #EndRegion // ProgramInterface
 
 #Region ServiceInterface
-
-// Returns a new message properties.
-//
-// Returns: 
-//  Structure - the new message properties with keys:
-//      * AppId           - String - identifier of the application that 
-//                                   produced the message.
-//      * ContentEncoding - String - message content encoding.
-//      * ContentType     - String - message content type.
-//      * CorrelationId   - String - message correlated to this one.
-//      * EventSource     - String - provides access to the event source object name.
-//      * FileExtension   - String - message format file extension.
-//      * MessageId       - String - message identifier as a string. 
-//                                   If applications need to identify messages.
-//      * Operation       - CatalogRef.FL_Operations - the type of change experienced.
-//      * ReplyTo         - String - resource name other apps should send the response to.
-//      * Timestamp       - Number - timestamp of the moment when message was created.
-//      * UserId          - String - user id.
-//
-Function NewProperties() Export
-    
-    Properties = New Structure;
-    Properties.Insert("AppId");
-    Properties.Insert("ContentEncoding");
-    Properties.Insert("ContentType");
-    Properties.Insert("CorrelationId");
-    Properties.Insert("EventSource");
-    Properties.Insert("FileExtension");
-    Properties.Insert("MessageId");
-    Properties.Insert("Operation");
-    Properties.Insert("ReplyTo");
-    Properties.Insert("Timestamp");
-    Properties.Insert("UserId");
-
-    Return Properties;
-    
-EndFunction // NewProperties()
 
 // Returns the external event handler info structure for this module.
 //

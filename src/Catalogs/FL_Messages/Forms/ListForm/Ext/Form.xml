@@ -86,10 +86,11 @@
 			<ContextMenu name="ListContextMenu" id="4">
 				<Autofill>false</Autofill>
 				<ChildItems>
-					<Button name="ContextMenuManualRouting" id="32">
+					<Button name="ContextMenuManualRouting" id="59">
 						<Type>CommandBarButton</Type>
-						<CommandName>Form.Command.ManualRouting</CommandName>
-						<ExtendedTooltip name="ContextMenuManualRoutingExtendedTooltip" id="33"/>
+						<CommandName>Catalog.FL_Messages.Command.ManualRoute</CommandName>
+						<DataPath>Items.List.CurrentData.Ref</DataPath>
+						<ExtendedTooltip name="ContextMenuManualRoutingExtendedTooltip" id="60"/>
 					</Button>
 					<Button name="ContextMenuRefresh" id="34">
 						<Type>CommandBarButton</Type>

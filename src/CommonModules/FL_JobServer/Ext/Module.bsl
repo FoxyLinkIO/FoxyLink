@@ -29,10 +29,10 @@
 //
 Procedure RunScheduledJob(ScheduledJob, SafeMode = True) Export
     
-    Task = FL_Tasks.NewTask();
+    Task = FL_TasksClientServer.NewTask();
     Task.Description = ScheduledJob.Description;
     Task.Key = ScheduledJob.Key;
-    Task.MethodName = ScheduledJob.Metadata.MethodName; 
+    Task.MethodName = ScheduledJob.Metadata.MethodName;
     Task.SafeMode = SafeMode;
     
     FL_Tasks.Run(Task); 
@@ -110,8 +110,7 @@ Function JobCompleted(UUID) Export
     
     If BackgroundJob = Undefined Then
         
-        ErrorMessage = FL_ErrorsClientServer.ErrorBackgroundJobNotFoundByUUID(
-            UUID);
+        ErrorMessage = FL_ErrorsClientServer.BackgroundJobNotFoundByUUID(UUID);
         FL_InteriorUse.WriteLog("FoxyLink.Tasks.JobCompleted",
             EventLogLevel.Error,
             Metadata.CommonModules.FL_JobServer,
@@ -127,7 +126,7 @@ Function JobCompleted(UUID) Export
             
         ElsIf BackgroundJob.State = BackgroundJobState.Canceled Then
             
-            ErrorMessage = FL_ErrorsClientServer.ErrorBackgroundJobWasCanceled();
+            ErrorMessage = FL_ErrorsClientServer.BackgroundJobWasCanceled();
             FL_InteriorUse.WriteLog("FoxyLink.Tasks.JobCompleted",
                 EventLogLevel.Error,
                 Metadata.CommonModules.FL_JobServer,
@@ -265,24 +264,28 @@ EndFunction // BackgroundJobByUUID()
 // a background job.
 //
 // Parameters:
-//  UUID           - UUID    - background job ID.
-//  DeleteMessages - Boolean - indicates whether to delete received messages.
+//  Object         - UUID          - background job ID.
+//                 - BackgroundJob - background job.
+//  DeleteMessages - Boolean       - indicates whether to delete received messages.
 //                      Default value: True.
 //
 // Returns:
 //  FixedArray - an array of UserMessage objects.
 //
-Function BackgroundJobMessages(UUID, DeleteMessages = True) Export
+Function BackgroundJobMessages(Object, DeleteMessages = True) Export
     
     Messages = New FixedArray(New Array);
     
-    BackgroundJob = BackgroundJobByUUID(UUID);
-    If BackgroundJob = Undefined Then
-        Return Messages;
+    BackgroundJob = Object; 
+    If TypeOf(Object) = Type("UUID") Then
+        BackgroundJob = BackgroundJobByUUID(Object);
+        If BackgroundJob = Undefined Then
+            Return Messages;
+        EndIf;
     EndIf;
     
     MessagesArray = BackgroundJob.GetUserMessages(DeleteMessages);
-    If MessagesArray = Undefined Then
+    If NOT ValueIsFilled(MessagesArray) Then
         Return Messages;
     EndIf;
     
@@ -598,7 +601,21 @@ EndProcedure // PushJobServerState()
 Procedure CancelBackgroundJob(BackgroundJob)
     
     Try
+        
         BackgroundJob.Cancel();
+        
+        SetPrivilegedMode(True);
+    
+        FL_InteriorUseReUse.SetSessionParameters();
+        SearchResult = SessionParameters.FL_CanceledBackgroundJobs.Find(BackgroundJob.UUID);
+        If SearchResult = Undefined Then
+            CanceledBackgroundJobs = New Array(SessionParameters.FL_CanceledBackgroundJobs);
+            CanceledBackgroundJobs.Add(BackgroundJob.UUID);
+            SessionParameters.FL_CanceledBackgroundJobs = New FixedArray(CanceledBackgroundJobs);
+        EndIf;
+        
+        SetPrivilegedMode(False);
+        
     Except
         
         // It is possible that the job has completed at that moment and no error has occurred.
@@ -609,7 +626,7 @@ Procedure CancelBackgroundJob(BackgroundJob)
             ErrorInfo);
         
     EndTry;
-    
+
 EndProcedure // CancelBackgroundJob()
 
 // Only for internal use.
@@ -689,7 +706,7 @@ Procedure RunBackgroundJobs(JobTable, HeartbeatTable, WorkerCount, Val Limit)
             
             NewItem = HeartbeatTable.Add();
             FillPropertyValues(NewItem, JobTable[Index]);
-            NewItem.TaskId = BackgroundJob.UUID;
+            NewItem.TaskId = BackgroundJob.TaskId;
             
         Else
             
@@ -704,7 +721,7 @@ Procedure RunBackgroundJobs(JobTable, HeartbeatTable, WorkerCount, Val Limit)
                 WorkerCount);
             
             For Each Item In BoostTable Do
-                Item.TaskId = BackgroundJob.UUID;        
+                Item.TaskId = BackgroundJob.TaskId;        
             EndDo;
             
             FL_CommonUseClientServer.ExtendValueTable(BoostTable, 
@@ -748,11 +765,12 @@ Function TriggerJobs(Jobs, WorkerCount)
         EndDo;     
     EndIf;
     
-    Task = FL_Tasks.NewTask();
+    Task = FL_TasksClientServer.NewTask();
+    Task.Description = "Background job task (FoxyLink)";
     Task.MethodName = "Catalogs.FL_Jobs.Trigger";
     Task.Parameters.Add(Jobs);
-    Task.Description = "Background job task (FoxyLink)";
     Task.SafeMode = False;
+    
     Return FL_Tasks.Run(Task);
         
 EndFunction // TriggerJobs()

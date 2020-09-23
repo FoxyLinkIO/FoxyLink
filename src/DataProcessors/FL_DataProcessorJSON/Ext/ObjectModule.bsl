@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -102,6 +102,14 @@ EndFunction // FormatMediaType()
 
 #Region ProgramInterface
 
+// Completes JSON text writing. 
+//
+Procedure Close() Export
+    
+    StreamWriter.Close();
+    
+EndProcedure // Close() 
+
 // Constructor of stream object.
 //
 // Parameters:
@@ -129,7 +137,7 @@ Procedure Initialize(Stream, APISchema = Undefined) Export
     If APISchema <> Undefined Then
         If TypeOf(ThisObject.APISchema) = TypeOf(APISchema) Then    
             ThisObject.APISchema = APISchema.Copy();
-        Else
+        // Else
             // Old version schema support could be implemented at this place.
         EndIf;
     EndIf;
@@ -140,13 +148,68 @@ Procedure Initialize(Stream, APISchema = Undefined) Export
     
 EndProcedure // Initialize()
 
-// Completes JSON text writing. 
+// The function reads the value from the invocation payload. 
 //
-Procedure Close() Export
+// Parameters:
+//  Invocation           - Structure - see function Catalogs.FL_Messages.NewInvocation
+//  AdditionalParameters - Structure - additional parameters for format translation.
+//                              Default value: Undefined.
+// Returns:
+//  Arbitrary - a value read from the invocation payload. 
+// 
+Function ReadFormat(Invocation, AdditionalParameters) Export
     
-    StreamWriter.Close();
+    ReadToMap = True;
+    PropertiesWithDateValuesNames = Undefined;
+    ExpectedDateFormat = JSONDateFormat.ISO;
+    ReviverFunctionName = Undefined;
+    ReviverFunctionModule = Undefined;
+    ReviverFunctionAdditionalParameters = Undefined;
+    RetriverPropertiesNames = Undefined;
     
-EndProcedure // Close() 
+    Payload = Invocation.Payload;
+    If TypeOf(Payload) <> Type("BinaryData") Then
+        Return Undefined;    
+    EndIf;
+    
+    If TypeOf(AdditionalParameters) = Type("Structure") Then
+        
+        If AdditionalParameters.Property("ReadToMap") Then
+            ReadToMap = AdditionalParameters.ReadToMap;           
+        EndIf;
+        
+        AdditionalParameters.Property("PropertiesWithDateValuesNames", 
+            PropertiesWithDateValuesNames);
+            
+        If AdditionalParameters.Property("ExpectedDateFormat") 
+            AND TypeOf(AdditionalParameters.ExpectedDateFormat) = Type("JSONDateFormat") Then
+            ExpectedDateFormat = AdditionalParameters.ExpectedDateFormat;    
+            
+        EndIf;
+            
+        AdditionalParameters.Property("ReviverFunctionName", 
+            ReviverFunctionName);
+        AdditionalParameters.Property("ReviverFunctionModule", 
+            ReviverFunctionModule);
+        AdditionalParameters.Property("ReviverFunctionAdditionalParameters", 
+            ReviverFunctionAdditionalParameters);
+        AdditionalParameters.Property("RetriverPropertiesNames", 
+            RetriverPropertiesNames);
+        
+    EndIf;
+    
+    JSONReader = New JSONReader;    
+    JSONReader.OpenStream(Payload.OpenStreamForRead());
+    Return ReadJSON(JSONReader, 
+        ReadToMap, 
+        PropertiesWithDateValuesNames,
+        ExpectedDateFormat,
+        ReviverFunctionName,
+        ReviverFunctionModule,
+        ReviverFunctionAdditionalParameters,
+        RetriverPropertiesNames);
+    
+EndFunction // ReadFormat()
 
 #EndRegion // ProgramInterface
 
@@ -185,17 +248,17 @@ EndProcedure // VerifyColumnNames()
 Procedure Output(Item, DataCompositionProcessor, ReportStructure, 
     TemplateColumns) Export
     
-    If APISchema.Rows.Count() = 0 Then
+    If ValueIsFilled(APISchema.Rows) Then
         
-        // It is used when API format is not provided.
-        BasicOutput(Item, DataCompositionProcessor, 
-            ReportStructure.Names, TemplateColumns);
-            
-    Else
-
         // It is used when API format is provided.
         APISchemaOutput(Item, DataCompositionProcessor, 
             ReportStructure, TemplateColumns);
+            
+    Else
+
+        // It is used when API format is not provided.
+        BasicOutput(Item, DataCompositionProcessor, 
+            ReportStructure.Names, TemplateColumns);   
             
     EndIf;
         
@@ -231,11 +294,7 @@ EndFunction // SupportedTypes()
 //
 Function IsStructuredType(TypeName) Export
     
-    If TypeName = "Object" Or TypeName = "Array" Then
-        Return True;
-    EndIf;
-    
-    Return False;
+    Return TypeName = "Object" Or TypeName = "Array";
     
 EndFunction // IsStructuredType()
 
@@ -575,7 +634,7 @@ Procedure FillParamNameRecursively(Rows, Hierarchy, APITemplateColumns)
     //    EndIf;
     //    
     //    If Row.Parent = Undefined Then
-    //        If Row.Rows.Count() > 0 Then
+    //        If ValueIsFilled(Row.Rows) Then
     //            FillParamNameRecursively(Row.Rows, Hierarchy, 
     //                APITemplateColumns);    
     //        Else
@@ -592,7 +651,7 @@ Procedure FillParamNameRecursively(Rows, Hierarchy, APITemplateColumns)
     //            FillParameterName(Row, APITemplateColumns); 
     //        Else
     //            FillTemplateName(Row, Hierarchy, NestedHierarchy);
-    //            If Row.Rows.Count() > 0 Then
+    //            If ValueIsFilled(Row.Rows) Then
     //                FillParamNameRecursively(Row.Rows, NestedHierarchy, 
     //                    APITemplateColumns);        
     //            EndIf;    
@@ -601,7 +660,7 @@ Procedure FillParamNameRecursively(Rows, Hierarchy, APITemplateColumns)
     //            
     //EndDo;
     
-    Var NestedHierarchy; Shift = 0; RowsCount = Rows.Count() - 1; For Index = 0 To RowsCount Do Row = Rows[Index - Shift]; If Row.TurnedOff = 1 Then Rows.Delete(Row);Shift = Shift + 1; Continue; EndIf; If Row.Parent = Undefined Then If Row.Rows.Count() > 0 Then FillParamNameRecursively(Row.Rows, Hierarchy, APITemplateColumns); Else FillTemplateName(Row, Hierarchy); FillParameterName(Row, APITemplateColumns); EndIf; Else If NOT Row.StructuredType Then RowParent = Row.Parent; If IsBlankString(RowParent.Template) Then FillTemplateName(RowParent, Hierarchy); EndIf; Row.Template = RowParent.Template; FillParameterName(Row, APITemplateColumns); Else FillTemplateName(Row, Hierarchy, NestedHierarchy); If Row.Rows.Count() > 0 Then FillParamNameRecursively(Row.Rows, NestedHierarchy, APITemplateColumns); EndIf; EndIf; EndIf; EndDo;
+    Var NestedHierarchy; Shift = 0; RowsCount = Rows.Count() - 1; For Index = 0 To RowsCount Do Row = Rows[Index - Shift]; If Row.TurnedOff = 1 Then Rows.Delete(Row);Shift = Shift + 1; Continue; EndIf; If Row.Parent = Undefined Then If ValueIsFilled(Row.Rows) Then FillParamNameRecursively(Row.Rows, Hierarchy, APITemplateColumns); Else FillTemplateName(Row, Hierarchy); FillParameterName(Row, APITemplateColumns); EndIf; Else If NOT Row.StructuredType Then RowParent = Row.Parent; If IsBlankString(RowParent.Template) Then FillTemplateName(RowParent, Hierarchy); EndIf; Row.Template = RowParent.Template; FillParameterName(Row, APITemplateColumns); Else FillTemplateName(Row, Hierarchy, NestedHierarchy); If ValueIsFilled(Row.Rows) Then FillParamNameRecursively(Row.Rows, NestedHierarchy, APITemplateColumns); EndIf; EndIf; EndIf; EndDo;
     
 EndProcedure // FillParamNameRecursively()
 
@@ -617,15 +676,15 @@ Procedure FillTemplateName(Row, Hierarchy, NestedHierarchy = Undefined)
     //If NestedHierarchy <> Undefined Then
     //    Row.Template = NestedHierarchy.Template;    
     //Else
-    //    ErrorMessage = StrTemplate(NStr(
-    //            "en = 'Error: Failed to find grouping in the report structure with name: '{%1}'.';
-    //            |ru = 'Ошибка: Не удалось найти группировку в структуре отчета с именем: '{%1}'.'"),
-    //        Row.Name);
-    //    Raise ErrorMessage;    
+    //    ErrorMessage = NStr("en='Error: Failed to find grouping in the report structure with name: {%1}.';
+    //        |ru='Ошибка: Не удалось найти группировку в структуре отчета с именем: {%1}.';
+    //        |uk='Помилка: Не вдалось знайти груповання в структурі звіту з іменем: {%1}.';
+    //        |en_CA='Error: Failed to find grouping in the report structure with name: {%1}.'");
+    //    Raise StrTemplate(ErrorMessage, Row.Name);    
     //EndIf;
     
-    NestedHierarchy = Hierarchy.Rows.Find(Row.Name, "Name"); If NestedHierarchy <> Undefined Then Row.Template = NestedHierarchy.Template; Else ErrorMessage = StrTemplate(NStr("en='Error: Failed to find grouping in the report structure with name: {%1}.';ru='Ошибка: Не удалось найти группировку в структуре отчета с именем: {%1}.';en_CA='Error: Failed to find grouping in the report structure with name: {%1}.'"), Row.Name); Raise ErrorMessage; EndIf; 
-    
+    NestedHierarchy = Hierarchy.Rows.Find(Row.Name, "Name"); If NestedHierarchy <> Undefined Then Row.Template = NestedHierarchy.Template; Else ErrorMessage = NStr("en='Error: Failed to find grouping in the report structure with name: {%1}.';ru='Ошибка: Не удалось найти группировку в структуре отчета с именем: {%1}.';uk='Помилка: Не вдалось знайти груповання в структурі звіту з іменем: {%1}.';en_CA='Error: Failed to find grouping in the report structure with name: {%1}.'"); Raise StrTemplate(ErrorMessage, Row.Name); EndIf;
+        
 EndProcedure // FillTemplateName()
 
 // Only for internal use.
@@ -638,16 +697,16 @@ Procedure FillParameterName(Row, TemplateColumns)
     //
     //ColumnItem = TemplateColumns[Row.Template][Upper(Row.Name)];
     //If ColumnItem = Undefined AND NOT Row.StructuredType Then
-    //    ErrorMessage = StrTemplate(NStr(
-    //            "en = 'Error: Failed to find field in report structure with name: '{%1}', grouping: '{%2}'.';
-    //            |ru = 'Ошибка: Не удалось найти поле в структуре отчета с именем: '{%1}', группировка: '{%2}'.'"),
-    //        Row.Name, ?(Row.Parent = Undefined, Row.Name, Row.Parent.Name));
-    //    Raise ErrorMessage;        
+    //    ErrorMessage = NStr("en='Error: Failed to find field in report structure with name: {%1}, grouping: {%2}.';
+    //        |ru='Ошибка: Не удалось найти поле в структуре отчета с именем: {%1}, группировка: {%2}.';
+    //        |uk='Помилка: Не вдалось знайти поле в структурі звіту з іменем: {%1}, групування: {%2}.';
+    //        |en_CA='Error: Failed to find field in report structure with name: {%1}, grouping: {%2}.'");
+    //    Raise StrTemplate(ErrorMessage, Row.Name, ?(Row.Parent = Undefined, Row.Name, Row.Parent.Name));        
     //EndIf;
     //
     //Row.Parameter = ColumnItem;
     
-    ColumnItem = TemplateColumns[Row.Template][Upper(Row.Name)]; If ColumnItem = Undefined AND NOT Row.StructuredType Then ErrorMessage = StrTemplate(NStr("en='Error: Failed to find field in report structure with name: {%1}, grouping: {%2}.';ru='Ошибка: Не удалось найти поле в структуре отчета с именем: {%1}, группировка: {%2}.';en_CA='Error: Failed to find field in report structure with name: {%1}, grouping: {%2}.'"), Row.Name, ?(Row.Parent = Undefined, Row.Name, Row.Parent.Name)); Raise ErrorMessage; EndIf; Row.Parameter = ColumnItem;
+    ColumnItem = TemplateColumns[Row.Template][Upper(Row.Name)]; If ColumnItem = Undefined AND NOT Row.StructuredType Then ErrorMessage = NStr("en='Error: Failed to find field in report structure with name: {%1}, grouping: {%2}.';ru='Ошибка: Не удалось найти поле в структуре отчета с именем: {%1}, группировка: {%2}.';uk='Помилка: Не вдалось знайти поле в структурі звіту з іменем: {%1}, групування: {%2}.';en_CA='Error: Failed to find field in report structure with name: {%1}, grouping: {%2}.'"); Raise StrTemplate(ErrorMessage, Row.Name, ?(Row.Parent = Undefined, Row.Name, Row.Parent.Name)); EndIf; Row.Parameter = ColumnItem;
     
 EndProcedure // FillParameterName()
 
@@ -658,11 +717,11 @@ Procedure CheckDublicateProperty(Listed, Name, Group)
     If Listed.Get(Name) = Undefined Then
         Listed.Insert(Name, True);    
     Else
-        ErrorMessage = StrTemplate(NStr("en='SyntaxError: Duplicate property with name: {%1}, grouping: {%2}.';
-            |ru='СинтаксическаяОшибка: Дублируемое свойство с именем: {%1}, группировка: {%2}.';
-            |en_CA='SyntaxError: Duplicate property with name: {%1}, grouping: {%2}.'"),
-            Name, Group);
-        Raise ErrorMessage;     
+        ErrorMessage = NStr("en='SyntaxError: Duplicate property with name: {%1}, grouping: {%2}.';
+            |ru='СинтаксическаяОшибка: Дублирующее свойство с именем: {%1}, группировка: {%2}.';
+            |uk='СинтаксичнаПомилка: Дублювана властивість з іменем: {%1}, групування: {%2}.';
+            |en_CA='SyntaxError: Duplicate property with name: {%1}, grouping: {%2}.'");
+        Raise StrTemplate(ErrorMessage, Name, Group);     
     EndIf;
     
 EndProcedure // CheckDublicateProperty()
@@ -678,7 +737,7 @@ EndProcedure // CheckDublicateProperty()
 //
 Function Version() Export
     
-    Return "1.0.3";
+    Return "1.0.6";
     
 EndFunction // Version()
 
@@ -691,9 +750,9 @@ Function BaseDescription() Export
     
     BaseDescription = NStr("en='JSON (%1) format data processor, ver. %2';
         |ru='Обработчик формата JSON (%1), вер. %2';
+        |uk='Обробник формату JSON (%1), вер. %2';
         |en_CA='JSON (%1) format data processor, ver. %2'");
-    BaseDescription = StrTemplate(BaseDescription, FormatStandard(), Version());      
-    Return BaseDescription;    
+    Return StrTemplate(BaseDescription, FormatStandard(), Version());   
     
 EndFunction // BaseDescription()
 

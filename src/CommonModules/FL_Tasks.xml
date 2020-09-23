@@ -9,12 +9,16 @@
 					<v8:content>Tasks</v8:content>
 				</v8:item>
 				<v8:item>
-					<v8:lang>ru</v8:lang>
-					<v8:content>Задачи</v8:content>
-				</v8:item>
-				<v8:item>
 					<v8:lang>en_CA</v8:lang>
 					<v8:content>Tasks</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Задания</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Завдання</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>

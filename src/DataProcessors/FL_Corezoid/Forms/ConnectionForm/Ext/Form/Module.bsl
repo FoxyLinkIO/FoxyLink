@@ -73,8 +73,10 @@ Procedure ConnectToCorezoidAtServer()
     FL_EncryptionClientServer.AddFieldValue(MainObject.ChannelResources, 
         "Resource", "");
     
+    Invocation = Catalogs.FL_Messages.NewInvocation();
     JobResult = Catalogs.FL_Jobs.NewJobResult(True);
-    MainObject.DeliverMessage(Undefined, Undefined, JobResult);
+    
+    MainObject.DeliverMessage(Invocation, JobResult);
     
     LogAttribute = JobResult.LogAttribute;
     If JobResult.Success Then     

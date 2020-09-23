@@ -28,7 +28,6 @@
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_RunInSafeMode</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Tasks</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_JobServer</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">ac1744d5-82eb-42a3-b19a-20e9e83872da</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobServer</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_RetryAttempts</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_WorkerCount</xr:Item>
@@ -42,6 +41,8 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Constant.FL_JobExpirationTimeout</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobExpiration</xr:Item>
 				<xr:Item xsi:type="xr:MDObjectRef">ScheduledJob.FL_JobRouting</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">SessionParameter.FL_CanceledBackgroundJobs</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_TasksClientServer</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

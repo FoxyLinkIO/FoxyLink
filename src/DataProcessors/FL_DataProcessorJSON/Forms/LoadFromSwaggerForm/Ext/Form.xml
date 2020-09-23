@@ -1,0 +1,574 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+	<Title>
+		<v8:item>
+			<v8:lang>en</v8:lang>
+			<v8:content>Connection form</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>en_CA</v8:lang>
+			<v8:content>Connection form</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>ru</v8:lang>
+			<v8:content>Форма подключения</v8:content>
+		</v8:item>
+		<v8:item>
+			<v8:lang>uk</v8:lang>
+			<v8:content>Форма підключення</v8:content>
+		</v8:item>
+	</Title>
+	<AutoTitle>false</AutoTitle>
+	<AutoCommandBar name="FormCommandBar" id="-1">
+		<Autofill>false</Autofill>
+	</AutoCommandBar>
+	<ChildItems>
+		<Pages name="Pages" id="29">
+			<PagesRepresentation>None</PagesRepresentation>
+			<ExtendedTooltip name="PagesExtendedTooltip" id="30"/>
+			<ChildItems>
+				<Page name="ConnectionPage" id="31">
+					<ExtendedTooltip name="ConnectionPageExtendedTooltip" id="32"/>
+					<ChildItems>
+						<CommandBar name="CommandBar" id="35">
+							<ExtendedTooltip name="CommandBarExtendedTooltip" id="36"/>
+							<ChildItems>
+								<Button name="ConnectToSwagger" id="10">
+									<Type>CommandBarButton</Type>
+									<DefaultButton>true</DefaultButton>
+									<CommandName>Form.Command.ConnectToSwagger</CommandName>
+									<ExtendedTooltip name="ConnectToSwaggerExtendedTooltip" id="11"/>
+								</Button>
+							</ChildItems>
+						</CommandBar>
+						<UsualGroup name="GroupConnectionPath" id="12">
+							<Title>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Путь для подключения</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Connection path</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Connection path</v8:content>
+								</v8:item>
+							</Title>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Group connection path</v8:content>
+								</v8:item>
+							</ToolTip>
+							<Representation>None</Representation>
+							<ExtendedTooltip name="GroupConnectionPathExtendedTooltip" id="13"/>
+							<ChildItems>
+								<InputField name="ConnectionPath" id="7">
+									<DataPath>ConnectionPath</DataPath>
+									<TitleLocation>None</TitleLocation>
+									<QuickChoice>false</QuickChoice>
+									<AutoMarkIncomplete>true</AutoMarkIncomplete>
+									<ChoiceHistoryOnInput>DontUse</ChoiceHistoryOnInput>
+									<ContextMenu name="ConnectionPathContextMenu" id="8"/>
+									<ExtendedTooltip name="ConnectionPathExtendedTooltip" id="9"/>
+								</InputField>
+							</ChildItems>
+						</UsualGroup>
+						<UsualGroup name="GroupLoginPassword" id="17">
+							<Representation>None</Representation>
+							<ShowTitle>false</ShowTitle>
+							<ExtendedTooltip name="GroupLoginPasswordExtendedTooltip" id="18"/>
+							<ChildItems>
+								<UsualGroup name="GroupLogin" id="19">
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Login</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>en_CA</v8:lang>
+											<v8:content>Login</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Логин</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>uk</v8:lang>
+											<v8:content>Логін</v8:content>
+										</v8:item>
+									</Title>
+									<ToolTip>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Group login</v8:content>
+										</v8:item>
+									</ToolTip>
+									<Representation>None</Representation>
+									<ExtendedTooltip name="GroupLoginExtendedTooltip" id="20"/>
+									<ChildItems>
+										<InputField name="Login" id="21">
+											<DataPath>Login</DataPath>
+											<TitleLocation>None</TitleLocation>
+											<ContextMenu name="LoginContextMenu" id="22"/>
+											<ExtendedTooltip name="LoginExtendedTooltip" id="23"/>
+										</InputField>
+									</ChildItems>
+								</UsualGroup>
+								<UsualGroup name="GroupPassword" id="24">
+									<Title>
+										<v8:item>
+											<v8:lang>en</v8:lang>
+											<v8:content>Password</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>en_CA</v8:lang>
+											<v8:content>Password</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Пароль</v8:content>
+										</v8:item>
+										<v8:item>
+											<v8:lang>uk</v8:lang>
+											<v8:content>Пароль</v8:content>
+										</v8:item>
+									</Title>
+									<ToolTip>
+										<v8:item>
+											<v8:lang>ru</v8:lang>
+											<v8:content>Group password</v8:content>
+										</v8:item>
+									</ToolTip>
+									<Representation>None</Representation>
+									<ExtendedTooltip name="GroupPasswordExtendedTooltip" id="25"/>
+									<ChildItems>
+										<InputField name="Password" id="26">
+											<DataPath>Password</DataPath>
+											<TitleLocation>None</TitleLocation>
+											<PasswordMode>true</PasswordMode>
+											<ContextMenu name="PasswordContextMenu" id="27"/>
+											<ExtendedTooltip name="PasswordExtendedTooltip" id="28"/>
+										</InputField>
+									</ChildItems>
+								</UsualGroup>
+							</ChildItems>
+						</UsualGroup>
+						<InputField name="OperationLog" id="14">
+							<DataPath>LogAttribute</DataPath>
+							<ReadOnly>true</ReadOnly>
+							<TitleLocation>None</TitleLocation>
+							<ToolTip>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Лог подключения</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Connection log</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>en_CA</v8:lang>
+									<v8:content>Connection log</v8:content>
+								</v8:item>
+							</ToolTip>
+							<Height>10</Height>
+							<MultiLine>true</MultiLine>
+							<ContextMenu name="OperationLogContextMenu" id="15"/>
+							<ExtendedTooltip name="OperationLogExtendedTooltip" id="16"/>
+						</InputField>
+					</ChildItems>
+				</Page>
+				<Page name="OpenApiPage" id="33">
+					<ExtendedTooltip name="OpenApiPageExtendedTooltip" id="34"/>
+					<ChildItems>
+						<Table name="OpenAPI" id="37">
+							<Representation>Tree</Representation>
+							<ReadOnly>true</ReadOnly>
+							<ChangeRowSet>false</ChangeRowSet>
+							<ChangeRowOrder>false</ChangeRowOrder>
+							<AutoInsertNewRow>true</AutoInsertNewRow>
+							<EnableStartDrag>true</EnableStartDrag>
+							<EnableDrag>true</EnableDrag>
+							<DataPath>OpenAPI</DataPath>
+							<ContextMenu name="OpenAPIContextMenu" id="38">
+								<Autofill>false</Autofill>
+							</ContextMenu>
+							<AutoCommandBar name="OpenAPICommandBar" id="39">
+								<Autofill>false</Autofill>
+							</AutoCommandBar>
+							<ExtendedTooltip name="OpenAPIExtendedTooltip" id="40"/>
+							<SearchStringAddition name="OpenAPISearchString" id="41">
+								<AdditionSource>
+									<Item>OpenAPI</Item>
+									<Type>SearchStringRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="OpenAPISearchStringContextMenu" id="42"/>
+								<ExtendedTooltip name="OpenAPISearchStringExtendedTooltip" id="43"/>
+							</SearchStringAddition>
+							<ViewStatusAddition name="OpenAPIViewStatus" id="44">
+								<AdditionSource>
+									<Item>OpenAPI</Item>
+									<Type>ViewStatusRepresentation</Type>
+								</AdditionSource>
+								<ContextMenu name="OpenAPIViewStatusContextMenu" id="45"/>
+								<ExtendedTooltip name="OpenAPIViewStatusExtendedTooltip" id="46"/>
+							</ViewStatusAddition>
+							<SearchControlAddition name="OpenAPISearchControl" id="47">
+								<AdditionSource>
+									<Item>OpenAPI</Item>
+									<Type>SearchControl</Type>
+								</AdditionSource>
+								<ContextMenu name="OpenAPISearchControlContextMenu" id="48"/>
+								<ExtendedTooltip name="OpenAPISearchControlExtendedTooltip" id="49"/>
+							</SearchControlAddition>
+							<Events>
+								<Event name="Selection">OpenAPISelection</Event>
+							</Events>
+							<ChildItems>
+								<InputField name="OpenAPIPath" id="50">
+									<DataPath>OpenAPI.Path</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="OpenAPIPathContextMenu" id="51"/>
+									<ExtendedTooltip name="OpenAPIPathExtendedTooltip" id="52"/>
+								</InputField>
+								<InputField name="OpenAPIType" id="56">
+									<DataPath>OpenAPI.Type</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="OpenAPITypeContextMenu" id="57"/>
+									<ExtendedTooltip name="OpenAPITypeExtendedTooltip" id="58"/>
+								</InputField>
+								<InputField name="OpenAPISchema" id="59">
+									<DataPath>OpenAPI.Schema</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="OpenAPISchemaContextMenu" id="60"/>
+									<ExtendedTooltip name="OpenAPISchemaExtendedTooltip" id="61"/>
+								</InputField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+			</ChildItems>
+		</Pages>
+	</ChildItems>
+	<Attributes>
+		<Attribute name="Object" id="1">
+			<Type>
+				<v8:Type>cfg:DataProcessorObject.FL_DataProcessorJSON</v8:Type>
+			</Type>
+			<MainAttribute>true</MainAttribute>
+			<Columns>
+				<AdditionalColumns table="Object.APISchema"/>
+			</Columns>
+		</Attribute>
+		<Attribute name="ConnectionPath" id="2">
+			<Title>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Путь для подключения</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Connection path</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Connection path</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="LogAttribute" id="3">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Log attribute</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Log attribute</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Реквизит лога</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Реквізит логу</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="Login" id="4">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Login</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Login</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Логин</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Логін</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="Password" id="5">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Password</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Password</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Пароль</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Пароль</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+				<v8:StringQualifiers>
+					<v8:Length>0</v8:Length>
+					<v8:AllowedLength>Variable</v8:AllowedLength>
+				</v8:StringQualifiers>
+			</Type>
+		</Attribute>
+		<Attribute name="OpenAPI" id="6">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Open API</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Open API</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Open API</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Open API</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>v8:ValueTree</v8:Type>
+			</Type>
+			<Columns>
+				<Column name="Path" id="1">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Path</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Path</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Путь</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Шлях</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="Type" id="3">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Type</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Type</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Тип</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Тип</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+				<Column name="Schema" id="4">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Schema</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Schema</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Схема</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Схема</v8:content>
+						</v8:item>
+					</Title>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Column>
+			</Columns>
+		</Attribute>
+		<Attribute name="OpenAPIStorage" id="7">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Open API storage</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Open API storage</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Хранилище Open API</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Сховище Open API</v8:content>
+				</v8:item>
+			</Title>
+			<Type/>
+		</Attribute>
+		<ConditionalAppearance>
+			<dcsset:item>
+				<dcsset:selection>
+					<dcsset:item>
+						<dcsset:field>OpenAPI</dcsset:field>
+					</dcsset:item>
+				</dcsset:selection>
+				<dcsset:filter>
+					<dcsset:item xsi:type="dcsset:FilterItemGroup">
+						<dcsset:groupType>OrGroup</dcsset:groupType>
+						<dcsset:item xsi:type="dcsset:FilterItemComparison">
+							<dcsset:left xsi:type="dcscor:Field">OpenAPI.Type</dcsset:left>
+							<dcsset:comparisonType>Contains</dcsset:comparisonType>
+							<dcsset:right xsi:type="xs:string">requestBody</dcsset:right>
+						</dcsset:item>
+						<dcsset:item xsi:type="dcsset:FilterItemComparison">
+							<dcsset:left xsi:type="dcscor:Field">OpenAPI.Type</dcsset:left>
+							<dcsset:comparisonType>Contains</dcsset:comparisonType>
+							<dcsset:right xsi:type="xs:string">response</dcsset:right>
+						</dcsset:item>
+					</dcsset:item>
+				</dcsset:filter>
+				<dcsset:appearance>
+					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
+						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:value xsi:type="v8ui:Color">web:HoneyDew</dcscor:value>
+					</dcscor:item>
+				</dcsset:appearance>
+			</dcsset:item>
+		</ConditionalAppearance>
+	</Attributes>
+	<Commands>
+		<Command name="ConnectToSwagger" id="1">
+			<Title>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Connect to Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Connect to Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Подключиться к Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Підключитись до Swagger</v8:content>
+				</v8:item>
+			</Title>
+			<ToolTip>
+				<v8:item>
+					<v8:lang>en</v8:lang>
+					<v8:content>Connect to Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>en_CA</v8:lang>
+					<v8:content>Connect to Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Подключиться к Swagger</v8:content>
+				</v8:item>
+				<v8:item>
+					<v8:lang>uk</v8:lang>
+					<v8:content>Підключитись до Swagger</v8:content>
+				</v8:item>
+			</ToolTip>
+			<Picture>
+				<xr:Ref>CommonPicture.FL_Swagger</xr:Ref>
+				<xr:LoadTransparent>true</xr:LoadTransparent>
+			</Picture>
+			<Action>ConnectToSwagger</Action>
+			<Representation>TextPicture</Representation>
+		</Command>
+	</Commands>
+</Form>

@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -111,6 +111,32 @@ EndFunction // Schedule()
 #EndRegion // ProgramInterface
 
 #Region ServiceIterface
+
+// This procedure adds the value into input data parameters.
+//
+// Parameters:
+//  JobData - Structure - see function Catalogs.FL_Jobs.NewJobData.
+//  Name    - String    - parameter name.
+//  Value   - Arbitrary - parameter value.
+//
+Procedure AddToJobInputData(JobData, Name, Value) Export
+      
+    Catalogs.FL_Jobs.AddToJobInputData(JobData, Name, Value);   
+    
+EndProcedure // AddToJobInputData()
+
+// This procedure adds the value into output data parameters.
+//
+// Parameters:
+//  JobData - Structure - see function Catalogs.FL_Jobs.NewJobData.
+//  Name    - String    - parameter name.
+//  Value   - Arbitrary - parameter value.
+//
+Procedure AddToJobOutputData(JobData, Name, Value) Export
+    
+    Catalogs.FL_Jobs.AddToJobOutputData(JobData, Name, Value);
+    
+EndProcedure // AddToJobOutputData()
 
 // Returns a new job data for a service method.
 //

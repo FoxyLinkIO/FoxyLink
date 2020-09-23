@@ -23,7 +23,7 @@
 			</Synonym>
 			<Comment/>
 			<RootURL>AppEndpoint</RootURL>
-			<ReuseSessions>AutoUse</ReuseSessions>
+			<ReuseSessions>Use</ReuseSessions>
 			<SessionMaxAge>300</SessionMaxAge>
 		</Properties>
 		<ChildObjects>

@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2018 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -31,17 +31,16 @@ Function AppIdentifier() Export
     
 EndFunction // AppIdentifier() 
 
-// Returns maximum message size.
+// Returns day in milliseconds.
 //
 // Returns:
-//  Number - maximum message size in bytes.
+//  Number - day in milliseconds.
 //
-Function MaximumMessageSize() Export
+Function DayInMilliseconds() Export
     
-    SetPrivilegedMode(True);
-    Return Constants.FL_MaximumMessageSize.Get();
+    Return 86400000;
     
-EndFunction // MaximumMessageSize() 
+EndFunction // DayInMilliseconds()
 
 // Returns job expiration timeout.
 //
@@ -55,16 +54,33 @@ Function JobExpirationTimeout() Export
     
 EndFunction // JobExpirationTimeout()
 
-// Returns day in milliseconds.
+// Returns maximum message size.
 //
 // Returns:
-//  Number - day in milliseconds.
+//  Number - maximum message size in bytes.
 //
-Function DayInMilliseconds() Export
+Function MaximumMessageSize() Export
     
-    Return 60 * 60 * 24 * 1000;
+    SetPrivilegedMode(True);
+    Return Constants.FL_MaximumMessageSize.Get();
     
-EndFunction // DayInMilliseconds()
+EndFunction // MaximumMessageSize() 
+
+// Function is intended for initiating session parameters of the FoxyLink 
+// subsystem.
+//
+// Returns:
+//  Boolean - always True.
+// 
+Function SetSessionParameters() Export
+    
+    SetPrivilegedMode(True);
+    SessionParameters.FL_CanceledBackgroundJobs = New FixedArray(New Array);
+    SetPrivilegedMode(False);
+    
+    Return True;
+    
+EndFunction // SetSessionParameters()
 
 #Region SubsystemInteraction
 
@@ -212,6 +228,19 @@ Function SuccessHTTPStatusCodes() Export
     Return New FixedMap(Map);
     
 EndFunction // SuccessHTTPStatusCodes()
+
+// Returns unprocessable entity error status code.
+// The request was well-formed but was unable to be followed due to semantic 
+// errors.
+//
+// Returns:
+//  Number - unprocessable entity error status code. 
+//
+Function UnprocessableEntity() Export
+    
+    Return 422;
+    
+EndFunction // UnprocessableEntity() 
 
 // Defines if HTTP method has no body.
 //

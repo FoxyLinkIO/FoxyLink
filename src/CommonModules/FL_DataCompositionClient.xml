@@ -6,19 +6,19 @@
 			<Synonym>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Data composition (Client)</v8:content>
+					<v8:content>Data composition (client)</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Data composition (Client)</v8:content>
+					<v8:content>Data composition (client)</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Компоновка данных (Клиент)</v8:content>
+					<v8:content>Компоновка данных (клиент)</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Компонування даних (Клієнт)</v8:content>
+					<v8:content>Компонування даних (клієнт)</v8:content>
 				</v8:item>
 			</Synonym>
 			<Comment/>

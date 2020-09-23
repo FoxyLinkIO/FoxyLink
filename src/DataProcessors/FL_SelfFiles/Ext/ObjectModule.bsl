@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -73,39 +73,35 @@ EndFunction // ChannelFullName()
 // Delivers a data object to the file export application endpoint.
 //
 // Parameters:
-//  Payload    - Arbitrary - the data that can be read successively and 
-//                               delivered to the app endpoint.
-//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
-Procedure DeliverMessage(Payload, Properties, JobResult) Export
+Procedure DeliverMessage(Invocation, JobResult) Export
     
     Try 
                     
-        FullName = WriteOutputToDestination(Payload, Properties);
+        FullName = WriteOutputToDestination(Invocation);
         
         FileProperties = FL_InteriorUseClientServer.NewFileProperties(FullName);   
         ProcessAdditionalOutputProperties(FileProperties);     
  
-        // OutPayload
+        // Out payload
         MemoryStream = New MemoryStream;
         JSONWriter = New JSONWriter;
         JSONWriter.OpenStream(MemoryStream);
         WriteJSON(JSONWriter, FileProperties);
         JSONWriter.Close();
-        OutPayload = MemoryStream.CloseAndGetBinaryData();
         
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Payload", OutPayload);
+        // Out invocation
+        OutInvocation = Catalogs.FL_Messages.NewInvocation();
+        FillPropertyValues(OutInvocation, Invocation);
+        OutInvocation.ContentEncoding = "UTF-8";
+        OutInvocation.ContentType = "application/json";
+        OutInvocation.FileExtension = ".json";
+        OutInvocation.Payload = MemoryStream.CloseAndGetBinaryData();
+        OutInvocation.Timestamp = CurrentUniversalDateInMilliseconds();
         
-        // OutProperties
-        OutProperties = Catalogs.FL_Exchanges.NewProperties();
-        FillPropertyValues(OutProperties, Properties);
-        OutProperties.ContentEncoding = "UTF-8";
-        OutProperties.ContentType = "application/json";
-        OutProperties.FileExtension = ".json";
-        OutProperties.Timestamp = CurrentUniversalDateInMilliseconds();
-        
-        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Properties", OutProperties);
+        Catalogs.FL_Jobs.AddToJobResult(JobResult, "Invocation", OutInvocation);
         
         JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode(); 
         If TypeOf(JobResult.LogAttribute) = Type("String") Then
@@ -185,7 +181,7 @@ Function SuppliedIntegrations() Export
         |en_CA='Exchange description service'");
     PluggableSettings.Template = "Self";
     PluggableSettings.ToolTip = StrConcat(BasicPhrases);
-    PluggableSettings.Version = "1.2.10";
+    PluggableSettings.Version = "1.0.10";
     SuppliedIntegrations.Add(PluggableSettings);
     
     Return SuppliedIntegrations;
@@ -217,32 +213,35 @@ EndProcedure // ProcessAdditionalOutputProperties()
 
 // Only for internal use.
 //
-Function WriteOutputToDestination(Payload, Properties)
+Function WriteOutputToDestination(Invocation)
     
     Path = FL_CommonUseClientServer.AddPathSeparatorToPath(
         FL_EncryptionClientServer.FieldValue(ChannelResources, "Path"));
+    
     BaseName = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "BaseName", StrReplace(New UUID, "-", ""));     
+    BaseName = StrTemplate("%1%2", BaseName, NewTimestamp());    
+    
     Extension = FL_EncryptionClientServer.FieldValueNoException(
-        ChannelResources, "Extension", Properties.FileExtension);
+        ChannelResources, "Extension", Invocation.FileExtension);    
     If NOT ValueIsFilled(Extension) Then
-        Extension = Properties.FileExtension;
+        Extension = Invocation.FileExtension;
     EndIf;
-        
-    FullName = StrTemplate("%1%2%3%4", Path, BaseName, NewTimestamp(), 
-        Extension);
-        
-    If TypeOf(Payload) = Type("SpreadsheetDocument") Then
-        WriteSpreadsheetDocument(Payload, FullName, Extension);    
-    Else
-        Payload.Write(FullName);
+    
+    BinaryData = Invocation.Payload;
+    If TypeOf(BinaryData) = Type("SpreadsheetDocument") Then
+        BinaryData = ProcessSpreadsheetDocument(Invocation.Payload, Extension);    
     EndIf;
     
     CompressOutput = Boolean(FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "CompressOutput", False));
     If CompressOutput Then
-        WriteZipDocument(FullName);
+        BinaryData = CompressToZipDocument(BinaryData, BaseName, Extension);
+        Extension = ".zip";
     EndIf;
+    
+    FullName = StrTemplate("%1%2%3", Path, BaseName, Extension);
+    BinaryData.Write(FullName);
     
     Return FullName;
     
@@ -250,44 +249,62 @@ EndFunction // WriteOutputToDestination()
 
 // Only for internal use.
 //
-Procedure WriteSpreadsheetDocument(Payload, FullName, Extension)
+Function ProcessSpreadsheetDocument(SpreadsheetDocument, Extension)
     
-    If Upper(Extension) = ".PDF" Then
-        Payload.Write(FullName, SpreadsheetDocumentFileType.PDF);
-    ElsIf Upper(Extension) = ".MXL" Then
-        Payload.Write(FullName, SpreadsheetDocumentFileType.MXL);    
-    Else
+    MemoryStream = New MemoryStream;
+    
+    FileTypes = New Map;
+    FileTypes.Insert(".DOCX", SpreadsheetDocumentFileType.DOCX);
+    FileTypes.Insert(".HTML", SpreadsheetDocumentFileType.HTML);
+    FileTypes.Insert(".MXL", SpreadsheetDocumentFileType.MXL);
+    FileTypes.Insert(".ODS", SpreadsheetDocumentFileType.ODS);
+    FileTypes.Insert(".PDF", SpreadsheetDocumentFileType.PDF);
+    FileTypes.Insert(".TXT", SpreadsheetDocumentFileType.TXT);
+    FileTypes.Insert(".XLS", SpreadsheetDocumentFileType.XLS);
+    FileTypes.Insert(".XLSX", SpreadsheetDocumentFileType.XLSX);
+    
+    FileType = FileTypes.Get(Upper(Extension));
+    If FileType = Undefined Then
         Raise NStr("en='Unsupported file type for spreadsheet document.';
             |ru='Неподдерживаемый тип файла для табличного документа.';
             |uk='Непідтримуваний тип файлу для табличного документу.';
-            |en_CA='Unsupported file type for spreadsheet document.'");
-    EndIf;    
+            |en_CA='Unsupported file type for spreadsheet document.'");  
+    EndIf;
     
-EndProcedure // WriteSpreadsheetDocument()
+    MemoryStream = New MemoryStream;
+    SpreadsheetDocument.Write(MemoryStream, FileType);
+    Return MemoryStream.CloseAndGetBinaryData();
+        
+EndFunction // ProcessSpreadsheetDocument()
 
 // Only for internal use.
 //
-Procedure WriteZipDocument(FullName)
+Function CompressToZipDocument(BinaryData, BaseName, Extension)
+    
+    Path = TempFilesDir();
+    FullName = StrTemplate("%1%2%3", Path, BaseName, Extension);
+    BinaryData.Write(FullName);
     
     ZipPassword = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "ZipPassword");
     ZipCommentaries = FL_EncryptionClientServer.FieldValueNoException(
         ChannelResources, "ZipCommentaries");
         
-    ZipFileWriter = New ZipFileWriter(FullName + ".zip", 
+    MemoryStream = New MemoryStream;
+    ZipFileWriter = New ZipFileWriter(MemoryStream,
         ZipPassword, 
         ZipCommentaries, 
         NewCompressionMethod(), 
         NewCompressionLevel(), 
-        NewEncryptionMethod());
+        NewEncryptionMethod()); 
     ZipFileWriter.Add(FullName);
     ZipFileWriter.Write();
     
     DeleteFiles(FullName);
     
-    FullName = FullName + ".zip";   
+    Return MemoryStream.CloseAndGetBinaryData();
     
-EndProcedure // WriteZipDocument()
+EndFunction // CompressToZipDocument()
 
 // Only for internal use.
 //
@@ -298,10 +315,10 @@ Function NewCompressionMethod()
     If CompressionMethod = "BZIP2" Then
         Return ZIPCompressionMethod.BZIP2;    
     ElsIf CompressionMethod = "Copy" Then
-        Return ZIPCompressionMethod.Copy;    
-    Else
-        Return ZIPCompressionMethod.Deflate;    
-    EndIf;   
+        Return ZIPCompressionMethod.Copy;      
+    EndIf;  
+    
+    Return ZIPCompressionMethod.Deflate;
     
 EndFunction // NewCompressionMethod()
 
@@ -314,10 +331,10 @@ Function NewCompressionLevel()
     If CompressionLevel = "Maximum" Then
         Return ZIPCompressionLevel.Maximum;    
     ElsIf CompressionLevel = "Minimum" Then
-        Return ZIPCompressionLevel.Minimum;    
-    Else
-        Return ZIPCompressionLevel.Optimal;    
+        Return ZIPCompressionLevel.Minimum;       
     EndIf;
+    
+    Return ZIPCompressionLevel.Optimal;
     
 EndFunction // NewCompressionLevel()
 
@@ -332,10 +349,10 @@ Function NewEncryptionMethod()
     ElsIf EncryptionMethod = "AES192" Then
         Return ZipEncryptionMethod.AES192;    
     ElsIf EncryptionMethod = "AES256" Then
-        Return ZipEncryptionMethod.AES256;
-    Else
-        Return ZipEncryptionMethod.Zip20;    
+        Return ZipEncryptionMethod.AES256;  
     EndIf;
+    
+    Return ZipEncryptionMethod.Zip20;
     
 EndFunction // NewEncryptionMethod()
 
@@ -378,7 +395,7 @@ EndFunction // NewTimestamp()
 //
 Function Version() Export
     
-    Return "1.0.10";
+    Return "1.1.3";
     
 EndFunction // Version()
 
@@ -394,8 +411,7 @@ Function BaseDescription() Export
         |ru='Обработчик конечной точки приложения экспорта данных в файл (%1), вер. %2';
         |uk='Обробник кінцевої точки додатку експорту данних в файл (%1), вер. %2';
         |en_CA='Export data to file (%1) application endpoint processor, ver. %2'");
-    BaseDescription = StrTemplate(BaseDescription, ChannelStandard(), Version());      
-    Return BaseDescription;    
+    Return StrTemplate(BaseDescription, ChannelStandard(), Version());        
     
 EndFunction // BaseDescription()
 

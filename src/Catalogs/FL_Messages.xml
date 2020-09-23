@@ -330,7 +330,7 @@
 			<SearchStringModeOnInputByString>Begin</SearchStringModeOnInputByString>
 			<FullTextSearchOnInputByString>DontUse</FullTextSearchOnInputByString>
 			<ChoiceDataGetModeOnInputByString>Directly</ChoiceDataGetModeOnInputByString>
-			<DefaultObjectForm/>
+			<DefaultObjectForm>Catalog.FL_Messages.Form.ItemForm</DefaultObjectForm>
 			<DefaultFolderForm/>
 			<DefaultListForm>Catalog.FL_Messages.Form.ListForm</DefaultListForm>
 			<DefaultChoiceForm/>
@@ -634,7 +634,7 @@
 						</v8:item>
 						<v8:item>
 							<v8:lang>uk</v8:lang>
-							<v8:content>Повідомлення корелює з іншим повідомленням, наприклад, це повідомлення є відповіддю запит. </v8:content>
+							<v8:content>Повідомлення корелює з іншим повідомленням, наприклад, це повідомлення є відповіддю на запит. </v8:content>
 						</v8:item>
 					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
@@ -759,7 +759,24 @@
 					<PasswordMode>false</PasswordMode>
 					<Format/>
 					<EditFormat/>
-					<ToolTip/>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>The request operation indicates the desired action to be performed for this message.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>The request operation indicates the desired action to be performed for this message.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Операция запроса указывает желаемое действие, которое должно быть выполнено для данного сообщения.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Операція запиту вказує бажану дію, яка повинна бути виконана для даного повідомлення.</v8:content>
+						</v8:item>
+					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
 					<Mask/>
 					<MultiLine>false</MultiLine>
@@ -882,7 +899,24 @@
 					<PasswordMode>false</PasswordMode>
 					<Format/>
 					<EditFormat/>
-					<ToolTip/>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Shows that a message was consumed and delivered to a different exchanges and app endpoints depending on a set of conditions.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Shows that a message was consumed and delivered to a different exchanges and app endpoints depending on a set of conditions.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Показывает, что сообщение было потреблено и доставлено в различные обмены и конечные точки приложений в зависимости от ряда условий.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Показує, що повідомлення було спожито і доставлено в різні обміни і кінцеві точки додатків в залежності від ряду умов.</v8:content>
+						</v8:item>
+					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
 					<Mask/>
 					<MultiLine>false</MultiLine>
@@ -980,11 +1014,11 @@
 					<Synonym>
 						<v8:item>
 							<v8:lang>en</v8:lang>
-							<v8:content>User id</v8:content>
+							<v8:content>User identifier</v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>en_CA</v8:lang>
-							<v8:content>User id</v8:content>
+							<v8:content>User identifier </v8:content>
 						</v8:item>
 						<v8:item>
 							<v8:lang>ru</v8:lang>
@@ -995,7 +1029,7 @@
 							<v8:content>Ідентифікатор користувача</v8:content>
 						</v8:item>
 					</Synonym>
-					<Comment>User id.</Comment>
+					<Comment>User identifier.</Comment>
 					<Type>
 						<v8:Type>xs:string</v8:Type>
 						<v8:StringQualifiers>
@@ -1006,7 +1040,24 @@
 					<PasswordMode>false</PasswordMode>
 					<Format/>
 					<EditFormat/>
-					<ToolTip/>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>User identifier is a logical entity used to identify a user who created message.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>User identifier is a logical entity used to identify a user who created message.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Идентификатор пользователя - это логическая сущность, используемая для идентификации пользователя, создавшего сообщение.</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Ідентифікатор користувача - це логічна сутність, яка використовується для ідентифікації користувача, який створив повідомлення.</v8:content>
+						</v8:item>
+					</ToolTip>
 					<MarkNegatives>false</MarkNegatives>
 					<Mask/>
 					<MultiLine>false</MultiLine>
@@ -1201,6 +1252,10 @@
 									<v8:lang>ru</v8:lang>
 									<v8:content>Основной ключ</v8:content>
 								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Основний ключ</v8:content>
+								</v8:item>
 							</Synonym>
 							<Comment/>
 							<Type>
@@ -1248,6 +1303,10 @@
 								<v8:item>
 									<v8:lang>ru</v8:lang>
 									<v8:content>Имя типа</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>uk</v8:lang>
+									<v8:content>Назва типу</v8:content>
 								</v8:item>
 							</Synonym>
 							<Comment>A representation XML data type by XML type name.</Comment>
@@ -1935,6 +1994,7 @@
 			</TabularSection>
 			<Form>EnqueueMessagesForm</Form>
 			<Form>EventsFilterForm</Form>
+			<Form>ItemForm</Form>
 			<Form>ListForm</Form>
 			<Command uuid="8e8e5fc5-bf9a-463b-8532-545dbb2f7fdd">
 				<Properties>
@@ -1983,6 +2043,43 @@
 					</ToolTip>
 					<Picture>
 						<xr:Ref>CommonPicture.FL_Schedule</xr:Ref>
+						<xr:LoadTransparent>true</xr:LoadTransparent>
+					</Picture>
+					<Shortcut/>
+				</Properties>
+			</Command>
+			<Command uuid="77309055-991c-4e92-9ba4-4293ec37c0e8">
+				<Properties>
+					<Name>ManualRoute</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Manual route</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>en_CA</v8:lang>
+							<v8:content>Manual route</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Маршрутизировать вручную</v8:content>
+						</v8:item>
+						<v8:item>
+							<v8:lang>uk</v8:lang>
+							<v8:content>Маршрутизувати вручну</v8:content>
+						</v8:item>
+					</Synonym>
+					<Comment/>
+					<Group>FormCommandBarImportant</Group>
+					<CommandParameterType>
+						<v8:Type>cfg:CatalogRef.FL_Messages</v8:Type>
+					</CommandParameterType>
+					<ParameterUseMode>Multiple</ParameterUseMode>
+					<ModifiesData>false</ModifiesData>
+					<Representation>PictureAndText</Representation>
+					<ToolTip/>
+					<Picture>
+						<xr:Ref>CommonPicture.FL_ExplanationMark</xr:Ref>
 						<xr:LoadTransparent>true</xr:LoadTransparent>
 					</Picture>
 					<Shortcut/>

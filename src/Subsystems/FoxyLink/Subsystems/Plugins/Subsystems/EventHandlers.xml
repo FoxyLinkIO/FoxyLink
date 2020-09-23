@@ -28,7 +28,7 @@
 			<Picture/>
 			<Content>
 				<xr:Item xsi:type="xr:MDObjectRef">Catalog.FL_Exchanges</xr:Item>
-				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.SocialNetworks_Events</xr:Item>
+				<xr:Item xsi:type="xr:MDObjectRef">CommonModule.FL_Exchange</xr:Item>
 			</Content>
 		</Properties>
 		<ChildObjects/>

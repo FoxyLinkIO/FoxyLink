@@ -70,6 +70,9 @@
 				<xr:Object>Catalog.FL_Messages.Command.ConfigureJobRoutingStartUp</xr:Object>
 				<xr:Object>InformationRegister.FL_LinkedObjects</xr:Object>
 				<xr:Object>Constant.FL_JobExpirationTimeout</xr:Object>
+				<xr:Object>Catalog.FL_Handlers</xr:Object>
+				<xr:Object>Enum.FL_HandlerTypes</xr:Object>
+				<xr:Object>Catalog.FL_Messages.Command.ManualRoute</xr:Object>
 			</Content>
 		</Properties>
 	</FunctionalOption>
