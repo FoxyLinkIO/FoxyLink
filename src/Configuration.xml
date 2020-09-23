@@ -57,7 +57,7 @@
 			<ScriptVariant>English</ScriptVariant>
 			<DefaultRoles/>
 			<Vendor>Petro Bazeliuk</Vendor>
-			<Version>1.0.0.9</Version>
+			<Version>0.9.9.1488</Version>
 			<UpdateCatalogAddress/>
 			<IncludeHelpInContents>false</IncludeHelpInContents>
 			<UseManagedFormInOrdinaryApplication>true</UseManagedFormInOrdinaryApplication>
@@ -123,7 +123,7 @@
 			<BriefInformation>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>FoxyLink, version 1.0</v8:content>
+					<v8:content>FoxyLink, version 0.9</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
@@ -141,7 +141,7 @@
 			<DetailedInformation>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>FoxyLink, version 1.0</v8:content>
+					<v8:content>FoxyLink, version 0.9</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
@@ -159,19 +159,19 @@
 			<Copyright>
 				<v8:item>
 					<v8:lang>en</v8:lang>
-					<v8:content>Copyright © Petro Bazeliuk, 2016-2018. All rights reserved</v8:content>
+					<v8:content>Copyright © Petro Bazeliuk, 2016-2020. All rights reserved</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>en_CA</v8:lang>
-					<v8:content>Copyright © Petro Bazeliuk, 2016-2018. All rights reserved</v8:content>
+					<v8:content>Copyright © Petro Bazeliuk, 2016-2020. All rights reserved</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>ru</v8:lang>
-					<v8:content>Копирайт © Петр Базелюк, 2016-2018. Все права защищены</v8:content>
+					<v8:content>Копирайт © Петр Базелюк, 2016-2020. Все права защищены</v8:content>
 				</v8:item>
 				<v8:item>
 					<v8:lang>uk</v8:lang>
-					<v8:content>Копірайт © Петро Базелюк, 2016-2018. Всі права захищені</v8:content>
+					<v8:content>Копірайт © Петро Базелюк, 2016-2020. Всі права захищені</v8:content>
 				</v8:item>
 			</Copyright>
 			<VendorInformationAddress>
@@ -292,10 +292,8 @@
 			<Role>FL_FullRightsFoxyLink</Role>
 			<CommonTemplate>FL_LICENSE</CommonTemplate>
 			<CommonModule>FL_BackgroundJob</CommonModule>
-			<CommonModule>FL_BatchJob</CommonModule>
-			<CommonModule>FL_CommonUse</CommonModule>
 			<CommonModule>FL_CommonUseClientServer</CommonModule>
-			<CommonModule>FL_CommonUseReUse</CommonModule>
+			<CommonModule>FL_BatchJob</CommonModule>
 			<CommonModule>FL_ConfigurationUpdate</CommonModule>
 			<CommonModule>FL_DataComposition</CommonModule>
 			<CommonModule>FL_DataCompositionClient</CommonModule>
@@ -303,6 +301,8 @@
 			<CommonModule>FL_EncryptionClientServer</CommonModule>
 			<CommonModule>FL_ErrorsClientServer</CommonModule>
 			<CommonModule>FL_Events</CommonModule>
+			<CommonModule>FL_CommonUse</CommonModule>
+			<CommonModule>FL_CommonUseReUse</CommonModule>
 			<CommonModule>FL_InteriorUse</CommonModule>
 			<CommonModule>FL_InteriorUseClient</CommonModule>
 			<CommonModule>FL_InteriorUseClientServer</CommonModule>
@@ -313,6 +313,8 @@
 			<CommonModule>FL_TasksClientServer</CommonModule>
 			<CommonModule>SocialNetworks_Events</CommonModule>
 			<CommonModule>SocialNetworks_ExchangeServer</CommonModule>
+			<CommonModule>FL_EventsReUse</CommonModule>
+			<CommonModule>FL_Exchange</CommonModule>
 			<HTTPService>FL_AppEndpoint</HTTPService>
 			<EventSubscription>FL_CatalogsBeforeDelete</EventSubscription>
 			<EventSubscription>FL_CatalogsBeforeWrite</EventSubscription>
@@ -331,8 +333,8 @@
 			<ScheduledJob>FL_JobRouting</ScheduledJob>
 			<ScheduledJob>FL_JobServer</ScheduledJob>
 			<ScheduledJob>SocialNetworks_ExchangeServer</ScheduledJob>
-			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
 			<FunctionalOption>FL_UseFoxyLink</FunctionalOption>
+			<FunctionalOption>FL_LicenseAccepted</FunctionalOption>
 			<Constant>FL_AppIdentifier</Constant>
 			<Constant>FL_JobExpirationTimeout</Constant>
 			<Constant>FL_LicenseAccepted</Constant>

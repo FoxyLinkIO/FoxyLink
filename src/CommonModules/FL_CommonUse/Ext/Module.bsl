@@ -17,7 +17,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#Region ProgramInterface
+#Region Public
 
 // Returns a structure containing attribute values that have been read from 
 // the infobase through the object link.
@@ -62,8 +62,8 @@ Function ObjectAttributesValues(Ref, Val Attributes) Export
         
         AttributesStructure = New Structure;
         For Each Attribute In Attributes Do
-            AttributesStructure.Insert(StrReplace(Attribute, ".", ""), 
-                Attribute);
+            AttributeName = StrReplace(Attribute, ".", "");
+            AttributesStructure.Insert(AttributeName, Attribute);
         EndDo;
         
     Else
@@ -88,8 +88,9 @@ Function ObjectAttributesValues(Ref, Val Attributes) Export
             |   " + FieldName + " AS " + Alias;
     EndDo;
 
+    FullName = Ref.Metadata().FullName();
+    
     Query = New Query;
-    Query.SetParameter("Ref", Ref);
     Query.Text = StrTemplate(
         "SELECT
         |   %1
@@ -97,7 +98,8 @@ Function ObjectAttributesValues(Ref, Val Attributes) Export
         |   %2 AS SpecifiedTableAlias
         |WHERE 
         |   SpecifiedTableAlias.Ref = &Ref
-        |", FieldText, Ref.Metadata().FullName());
+        |", FieldText, FullName);
+    Query.SetParameter("Ref", Ref);
     Selection = Query.Execute().Select();
     Selection.Next();
 
@@ -157,9 +159,11 @@ EndFunction // ReferenceByUUID()
 //
 Function ReferenceByCode(MetadataObject, Code) Export
     
+    FullName = MetadataObject.FullName();
+    QueryTextTemplate = QueryTextReferenceByCode();
+    
     Query = New Query;
-    Query.Text = StrTemplate(QueryTextReferenceByCode(), 
-        MetadataObject.FullName());
+    Query.Text = StrTemplate(QueryTextTemplate, FullName);
     Query.SetParameter("Code", Code);
     QueryResultSelection = Query.Execute().Select();
     
@@ -179,9 +183,11 @@ EndFunction // ReferenceByCode()
 //
 Function ReferenceByDescription(MetadataObject, Description) Export
     
+    FullName = MetadataObject.FullName();
+    QueryTextTemplate = QueryTextReferenceByDescription();
+    
     Query = New Query;
-    Query.Text = StrTemplate(QueryTextReferenceByDescription(), 
-        MetadataObject.FullName());
+    Query.Text = StrTemplate(QueryTextTemplate, FullName);
     Query.SetParameter("Description", Description);
     QueryResultSelection = Query.Execute().Select();
     
@@ -205,10 +211,12 @@ Function ReferenceByPredefinedDataName(MetadataObject,
     If IsBlankString(PredefinedDataName) Then
         Return Undefined;
     EndIf;
+    
+    FullName = MetadataObject.FullName();
+    QueryTextTemplate = QueryTextReferenceByPredefinedDataName();
 
     Query = New Query;
-    Query.Text = StrTemplate(QueryTextReferenceByPredefinedDataName(), 
-        MetadataObject.FullName());
+    Query.Text = StrTemplate(QueryTextTemplate, FullName);
     Query.SetParameter("PredefinedDataName", PredefinedDataName);
     
     Try
@@ -248,10 +256,7 @@ EndFunction // ReferenceByPredefinedDataName()
 Function RegisterAttributeValues(MetadataObject, Filter, 
     Val Attributes = "") Export
     
-    FieldText = "";
-    FieldTemplate = "%1SpecifiedTableAlias.%2 AS %2";
-    FilterText = "";
-    FilterTemplate = "%1SpecifiedTableAlias.%2 = &%2";
+    FullName = MetadataObject.FullName();
     
     If TypeOf(Attributes) = Type("String") Then
         
@@ -261,44 +266,35 @@ Function RegisterAttributeValues(MetadataObject, Filter,
         EndIf;
         
     Else
-        
         AttributesStructure = Attributes;
-        
     EndIf;
     
-    For Each KeyAndValue In AttributesStructure Do
-        
-        FieldText = FieldText + StrTemplate(FieldTemplate, 
-            ?(IsBlankString(FieldText), "", ","), KeyAndValue.Key);
-        
-    EndDo;
-    
+    FieldText = RegisterAttributeValuesFieldText(AttributesStructure);
     If IsBlankString(FieldText) Then
         FieldText = "*";             
     EndIf;
 
-    Query = New Query;
-    For Each FilterValue In Filter Do
-        If FilterValue.Use Then
-            
-            Query.SetParameter(FilterValue.Name, FilterValue.Value);
-            FilterText = FilterText + StrTemplate(FilterTemplate, 
-                ?(IsBlankString(FilterText), "", " AND "), FilterValue.Name); 
-            
-        EndIf;
-    EndDo;    
+    Query = New Query;   
+    FilterText = RegisterAttributeValuesFilterText(Query, Filter);
     
-    If NOT IsBlankString(FilterText) Then
-        FilterText = " WHERE " + FilterText;
+    MemoryStream = New MemoryStream;
+    DataWriter = New DataWriter(MemoryStream);
+    
+    DataWriter.WriteChars("SELECT ");
+    DataWriter.WriteChars(FieldText);
+    DataWriter.WriteChars(" FROM ");
+    DataWriter.WriteChars(FullName);
+    DataWriter.WriteChars(" AS SpecifiedTableAlias");
+    If ValueIsFilled(FilterText) Then
+        DataWriter.WriteChars(" WHERE ");
+        DataWriter.WriteChars(FilterText);
     EndIf;
     
-    Query.Text = StrTemplate(
-        "SELECT
-        |   %1
-        |FROM
-        |   %2 AS SpecifiedTableAlias
-        |   %3
-        |", FieldText, MetadataObject.FullName(), FilterText);
+    DataWriter.Close();
+    BinaryData = MemoryStream.CloseAndGetBinaryData();
+    QueryText = GetStringFromBinaryData(BinaryData);
+    
+    Query.Text = QueryText;
     Return Query.Execute().Unload();
     
 EndFunction // RegisterAttributeValues()
@@ -367,11 +363,11 @@ EndFunction // ValueTableColumnsIntoStructure()
 // Extends the target table with the data from the source array.
 //
 // Parameters:
-//  SourceArray - Array      - array from which rows will be taken.
-//      * Map       - with values:
+//  SourceArray - Array, FixedArray - array from which rows will be taken.
+//      * Map, FixedMap - with values:
 //          ** Key   - String    - a column name of target table.
 //          ** Value - Arbitrary - a column value.
-//      * Structure - with values:
+//      * Structure, FixedStructure - with values:
 //          ** Key   - String    - a column name of target table.
 //          ** Value - Arbitrary - a column value.
 //  TargetTable - ValueTable - table to which rows will be added.
@@ -385,10 +381,21 @@ Procedure ExtendValueTableFromArray(SourceArray, TargetTable) Export
     EndIf;
     
     For Each SourceItem In SourceArray Do
+        
         TargetRow = TargetTable.Add();
-        For Each Column In Columns Do
-            TargetRow[Column.Name] = SourceItem[Column.Name];
-        EndDo;
+        If TypeOf(SourceItem) = Type("Map") 
+            OR TypeOf(SourceItem) = Type("FixedMap") Then
+            
+            For Each Column In Columns Do
+                TargetRow[Column.Name] = SourceItem.Get(Column.Name);
+            EndDo;
+            
+            Continue;
+            
+        EndIf;
+        
+        FillPropertyValues(TargetRow, SourceItem);
+        
     EndDo;
 
 EndProcedure // ExtendValueTableFromArray()
@@ -1014,6 +1021,21 @@ Function IsCatalog(MetadataObject) Export
 
 EndFunction // IsCatalog()
 
+// Defines if passed a metadata object belongs to the document type.
+// 
+// Parameters:
+//  MetadataObject - MetadataObject - object for which it is necessary to specify 
+//                                      whether it belongs to the document type.
+// 
+// Returns:
+//  Boolean - True if metadata object belongs to the document type.
+//
+Function IsDocument(MetadataObject) Export
+
+    Return Metadata.Documents.Contains(MetadataObject);
+
+EndFunction // IsDocument()
+
 // Defines if passed a metadata object belongs to the register type.
 // 
 // Parameters:
@@ -1195,7 +1217,7 @@ EndFunction // BaseTypeNameByMetadataObject()
 //
 Function MetadataObjectNameByManagerName(ManagerName) Export
 
-    Position = Find(ManagerName, ".");
+    Position = StrFind(ManagerName, ".");
     If Position = 0 Then
         Return "CommonModule." + ManagerName;
     EndIf;
@@ -1398,6 +1420,8 @@ EndFunction // ObjectManagerByReference()
 
 #EndRegion // ObjectTypes
 
+#Region Moks
+
 // Returns a value table mock for a metadata object.
 // 
 // Parameters:
@@ -1415,21 +1439,19 @@ Function NewMockOfMetadataObjectAttributes(MetadataObject) Export
     For Each Attribute In MetadataObject.Attributes Do
         Mock.Columns.Add(Attribute.Name, Attribute.Type, Attribute.Synonym); 
     EndDo;
-
-    SynonymsRU = FL_CommonUseReUse.StandardAttributeSynonymsRU();
-    For Each Attribute In MetadataObject.StandardAttributes Do
-        
-        AttributeName = SynonymsRU.Get(Upper(Attribute.Name));
-        If AttributeName = Undefined Then
-            AttributeName = Attribute.Name;
-        EndIf;
-        
-        Mock.Columns.Add(AttributeName, Attribute.Type, Attribute.Synonym);
-        
-    EndDo;
-
+    
+    AddStandardAttributesDescriptionToMock(Mock, 
+        MetadataObject.StandardAttributes);
+    
     FullName = MetadataObject.FullName();
-    If FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(FullName) Then
+    If FL_CommonUseReUse.IsReferenceTypeObjectCached(FullName) Then
+        
+        Type = New TypeDescription("ValueTable");
+        For Each TabularSection In MetadataObject.TabularSections Do
+            Mock.Columns.Add(TabularSection.Name, Type, TabularSection.Synonym);        
+        EndDo;
+        
+    ElsIf FL_CommonUseReUse.IsInformationRegisterTypeObjectCached(FullName) Then
         
         For Each Dimension In MetadataObject.Dimensions Do
              Mock.Columns.Add(Dimension.Name, Dimension.Type, Dimension.Synonym);
@@ -1444,6 +1466,58 @@ Function NewMockOfMetadataObjectAttributes(MetadataObject) Export
     Return Mock;
     
 EndFunction // NewMockOfMetadataObjectAttributes()
+
+// Returns a value table mock for metadata of catalog item object.
+// 
+// Parameters:
+//  MetadataObject - MetadataObject - catalog metadata object for which it is necessary 
+//                                    to create the value table mock.
+// 
+// Returns:
+//  ValueTable - the mock for metadata of catalog item object.
+//
+Function NewMockOfMetadataCatalogItemAttributes(MetadataObject) Export
+    
+    Mock = New ValueTable;
+    ExclusionFilter = Metadata.ObjectProperties.AttributeUse.ForFolder;
+    
+    AddAttributesDescriptionToMock(Mock, MetadataObject.Attributes, 
+        ExclusionFilter);
+    AddStandardAttributesDescriptionToMock(Mock, 
+        MetadataObject.StandardAttributes);
+    AddTabularSectionsDescriptionToMock(Mock, MetadataObject.TabularSections,
+        ExclusionFilter);
+
+    Return Mock;
+    
+EndFunction // NewMockOfMetadataCatalogItemAttributes()
+
+// Returns a value table mock for metadata of catalog folder object.
+// 
+// Parameters:
+//  MetadataObject - MetadataObject - catalog metadata object for which it is necessary 
+//                                    to create the value table mock.
+// 
+// Returns:
+//  ValueTable - the mock for metadata of catalog folder object.
+//
+Function NewMockOfMetadataCatalogFolderAttributes(MetadataObject) Export
+    
+    Mock = New ValueTable;
+    ExclusionFilter = Metadata.ObjectProperties.AttributeUse.ForItem;
+    
+    AddAttributesDescriptionToMock(Mock, MetadataObject.Attributes, 
+        ExclusionFilter);
+    AddStandardAttributesDescriptionToMock(Mock, 
+        MetadataObject.StandardAttributes);
+    AddTabularSectionsDescriptionToMock(Mock, MetadataObject.TabularSections,
+        ExclusionFilter);    
+
+    Return Mock;
+    
+EndFunction // NewMockOfMetadataCatalogItemAttributes()
+
+#EndRegion // Moks
 
 #Region ValueConversion 
 
@@ -1667,15 +1741,17 @@ EndFunction // ValueFromXMLTypeAndValue()
 //  Value          - Arbitrary - value to be converted.
 //  SupportedTypes - Array     - array of types.
 //      * ArrayItem - Type - type to which you want to convert.
+//  AllowMissedRef - Boolean   - defines if it's allowed to have broken reference.
+//                      Default value: False.
 //
 // Returns:
 //  Structure - see function FL_CommonUse.NewConversionResult.
 //
-Function ConvertValueIntoPlatformObject(Val Value, SupportedTypes) Export
+Function ConvertValueIntoPlatformObject(Val Value, SupportedTypes, 
+    AllowMissedRef = False) Export
 
     ValueType = TypeOf(Value);
     ConversionResult = NewConversionResult();
-
     For Each Type In SupportedTypes Do
         
         If Type = ValueType Then
@@ -1692,7 +1768,8 @@ Function ConvertValueIntoPlatformObject(Val Value, SupportedTypes) Export
         ElsIf Type = Type("StandardPeriod") Then
             ConvertValueIntoStandardPeriod(Value, ConversionResult);
         ElsIf IsReference(Type) Then
-            ConvertValueIntoReference(Value, Type, ConversionResult);
+            ConvertValueIntoReference(Value, Type, AllowMissedRef, 
+                ConversionResult);
         EndIf;
         
         If ConversionResult.TypeConverted Then
@@ -1708,16 +1785,16 @@ EndFunction // ConvertValueIntoPlatformObject()
 // Returns conversion result.
 //
 // Parameters:
-//  Value           - Structure      - value to be converted.
-//  MetadataObject  - MetadataObject - the metadata object to which it is required to convert the value.
-//  CheckAttributes - FixedArray     - list of attribute names to be checked.
+//  Value          - Structure      - value to be converted.
+//  MetadataObject - MetadataObject - the metadata object to which it is required to convert the value.
+//  Settings       - Structure      - see function FL_CommonUse.NewConversionSettings.
 //                          Default value: Undefined.
 //
 // Returns:
 //  Structure - see function FL_CommonUse.NewConversionResult.
 //
 Function ConvertValueIntoMetadataObject(Val Value, MetadataObject, 
-    CheckAttributes = Undefined) Export
+    Settings = Undefined) Export
 
     ConversionResult = NewConversionResult();
     If TypeOf(Value) = Type("Array") Then
@@ -1728,7 +1805,7 @@ Function ConvertValueIntoMetadataObject(Val Value, MetadataObject,
         For Each Item In Value Do
             
             ConversionItemResult = NewConversionResult();
-            ConvertValueIntoObject(Item, MetadataObject, CheckAttributes, 
+            ConvertValueIntoObject(Item, MetadataObject, Settings, 
                 ConversionItemResult);
                 
             ConversionResult.ConvertedValue.Add(ConversionItemResult.ConvertedValue);
@@ -1744,7 +1821,7 @@ Function ConvertValueIntoMetadataObject(Val Value, MetadataObject,
         
     ElsIf ValueTypeMatchExpected(Value, Type("Structure"), ConversionResult) Then
         
-        ConvertValueIntoObject(Value, MetadataObject, CheckAttributes, 
+        ConvertValueIntoObject(Value, MetadataObject, Settings, 
             ConversionResult);
         
     EndIf;
@@ -1770,15 +1847,36 @@ Function NewConversionResult() Export
     ConversionResult.Insert("ConvertedValue");
     ConversionResult.Insert("TypeConverted", False);
     ConversionResult.Insert("ErrorMessages", New Array);
+    
     Return ConversionResult;
 
 EndFunction // NewConversionResult()
 
+// Returns a new conversion settings structure.
+//
+// Returns:
+//  Structure - convertion settings structure.
+//      * AllowBrokenRefs - FixedMap - map of attribute names that are allowed
+//                                       to have broken reference.
+//          ** Key   - String  - attribute name.
+//          ** Value - Boolean - true if broken reference is allowed.
+//      * CheckAttributes - FixedArray - list of attribute names to be checked.
+//
+Function NewConversionSettings() Export
+    
+    ConversionSettings = New Structure;
+    ConversionSettings.Insert("AllowMissedRefs");
+    ConversionSettings.Insert("CheckAttributes");
+    
+    Return ConversionSettings;
+    
+EndFunction // NewConversionSettings()
+
 #EndRegion // ValueConversion
 
-#EndRegion // ProgramInterface
+#EndRegion // Public
 
-#Region ServiceIterface
+#Region Internal
 
 // Defines the operation mode of the infobase. It can be file (True) or server (False).
 // During checking InfobaseConnectionRow is used that can clearly be recognized.
@@ -1795,13 +1893,73 @@ Function FileInfobase(Val InfobaseConnectionString = "") Export
     If IsBlankString(InfobaseConnectionString) Then
         InfobaseConnectionString = InfobaseConnectionString();
     EndIf;
-    Return Find(Upper(InfobaseConnectionString), "FILE=") = 1;
+    Return StrFind(Upper(InfobaseConnectionString), "FILE=") = 1;
 
 EndFunction // FileInfobase()
 
-#EndRegion // FileInfobase
+#EndRegion // Internal
 
-#Region ServiceProceduresAndFunctions
+#Region Private
+
+// Only for internal use.
+//
+Function RegisterAttributeValuesFieldText(AttributesStructure)
+    
+    MemoryStream = New MemoryStream;
+    DataWriter = New DataWriter(MemoryStream);
+    
+    FirstField = True;
+    For Each KeyAndValue In AttributesStructure Do
+        
+        If NOT FirstField Then
+            DataWriter.WriteChars(",");
+        Else
+            FirstField = False;    
+        EndIf;
+        
+        DataWriter.WriteChars("SpecifiedTableAlias.");
+        DataWriter.WriteChars(KeyAndValue.Key);
+        
+    EndDo;
+    
+    DataWriter.Close();
+    BinaryData = MemoryStream.CloseAndGetBinaryData();
+    Return GetStringFromBinaryData(BinaryData);
+    
+EndFunction // RegisterAttributeValuesFieldText()
+
+// Only for internal use.
+//
+Function RegisterAttributeValuesFilterText(Query, Filter)
+    
+    MemoryStream = New MemoryStream;
+    DataWriter = New DataWriter(MemoryStream);
+    
+    FirstFilter = True;
+    For Each FilterValue In Filter Do
+        If FilterValue.Use Then
+            
+            Query.SetParameter(FilterValue.Name, FilterValue.Value);
+            
+            If NOT FirstFilter Then
+                DataWriter.WriteChars(" AND ");
+            Else
+                FirstFilter = False;    
+            EndIf;
+            
+            DataWriter.WriteChars("SpecifiedTableAlias.");
+            DataWriter.WriteChars(FilterValue.Name);
+            DataWriter.WriteChars(" = &");
+            DataWriter.WriteChars(FilterValue.Name);
+ 
+        EndIf;
+    EndDo;
+    
+    DataWriter.Close();
+    BinaryData = MemoryStream.CloseAndGetBinaryData();
+    Return GetStringFromBinaryData(BinaryData);
+    
+EndFunction // RegisterAttributeValuesFilterText()
 
 #Region ValueTreeOperations
 
@@ -2251,23 +2409,72 @@ EndProcedure // ProcessRecalculationObjectManager()
 
 #EndRegion // ObjectTypes
 
+#Region Moks
+
+// Only for internal use.
+//
+Procedure AddAttributesDescriptionToMock(Mock, Attributes, ExclusionFilter)
+    
+    For Each Attribute In Attributes Do
+        If Attribute.Use <> ExclusionFilter Then
+            Mock.Columns.Add(Attribute.Name, Attribute.Type, Attribute.Synonym);
+        EndIf;
+    EndDo;    
+    
+EndProcedure // AddAttributesDescriptionToMock()
+
+// Only for internal use.
+//
+Procedure AddStandardAttributesDescriptionToMock(Mock, Attributes)
+    
+    SynonymsRU = FL_CommonUseReUse.StandardAttributeSynonymsRU();
+    For Each Attribute In Attributes Do
+        
+        AttributeName = SynonymsRU.Get(Upper(Attribute.Name));
+        If AttributeName = Undefined Then
+            AttributeName = Attribute.Name;
+        EndIf;
+        
+        Mock.Columns.Add(AttributeName, Attribute.Type, Attribute.Synonym);
+        
+    EndDo;    
+    
+EndProcedure // AddStandardAttributesDescriptionToMock()
+
+// Only for internal use.
+//
+Procedure AddTabularSectionsDescriptionToMock(Mock, TabularSections, 
+    ExclusionFilter)
+    
+    Type = New TypeDescription("ValueTable");
+    For Each TabularSection In TabularSections Do
+        If TabularSection.Use <> ExclusionFilter Then
+            Mock.Columns.Add(TabularSection.Name, Type, TabularSection.Synonym);
+        EndIf;
+    EndDo;    
+    
+EndProcedure // AddTabularSectionsDescriptionToMock()
+
+#EndRegion // Moks 
+
 #Region ValueConversion
 
 // Converts value into {MetadataObject} type.
 //
 // Parameters:
-//  Value            - Arbitrary      - value to be converted into {String} type.
-//  MetadataObject   - MetadataObject - the metadata object to which it is 
+//  Value          - Arbitrary      - value to be converted into {String} type.
+//  MetadataObject - MetadataObject - the metadata object to which it is 
 //                                      required to convert the value.
-//  CheckAttributes  - FixedArray     - list of attribute names to be checked.
+//  Settings       - Structure      - see function FL_CommonUse.NewConversionSettings.
 //                          Default value: Undefined.
 //  ConversionResult - Structure      - see function FL_CommonUse.NewConversionResult.
 //
-Procedure ConvertValueIntoObject(Value, MetadataObject, 
-    CheckAttributes = Undefined, ConversionResult)
+Procedure ConvertValueIntoObject(Value, MetadataObject, Settings = Undefined, 
+    ConversionResult)
 
     CriticalError = False;
     ConvertedValue = New Structure;
+    ConversionSettings = BackwardCompatibilityCheckAttributes(Settings);
     MockObject = NewMockOfMetadataObjectAttributes(MetadataObject).Columns;
     For Each Item In Value Do
         
@@ -2278,7 +2485,8 @@ Procedure ConvertValueIntoObject(Value, MetadataObject,
                 MockObject, 
                 MetadataObject, 
                 ConvertedValue, 
-                ConversionResult.ErrorMessages, 
+                ConversionResult.ErrorMessages,
+                ConversionSettings,
                 CriticalError);
                 
         Else
@@ -2287,7 +2495,8 @@ Procedure ConvertValueIntoObject(Value, MetadataObject,
                 Item.Value, 
                 MetadataObject,  
                 ConvertedValue, 
-                ConversionResult.ErrorMessages, 
+                ConversionResult.ErrorMessages,
+                ConversionSettings,
                 CriticalError);
             
         EndIf;
@@ -2298,9 +2507,12 @@ Procedure ConvertValueIntoObject(Value, MetadataObject,
         
         ConversionResult.TypeConverted = True;
         ConversionResult.ConvertedValue = ConvertedValue;
-        
-        If CheckAttributes <> Undefined Then
-            CheckAttributesFilling(ConversionResult, CheckAttributes);
+        If TypeOf(Settings) = Type("Structure") 
+            AND Settings.Property("CheckAttributes")
+            AND TypeOf(Settings.CheckAttributes) = Type("FixedArray") Then
+            
+            CheckAttributesFilling(ConversionResult, Settings.CheckAttributes);
+            
         EndIf;
         
     EndIf;
@@ -2516,7 +2728,8 @@ EndProcedure // ConvertValueIntoStandardPeriodUsingVariant()
 //  Type             - Type      - the type of the object to which the value is converted. 
 //  ConversionResult - Structure - see function FL_CommonUse.NewConversionResult.
 //
-Procedure ConvertValueIntoReference(Value, Type, ConversionResult)
+Procedure ConvertValueIntoReference(Value, Type, AllowMissedRef, 
+    ConversionResult)
     
     TypeMatch = ValueTypeMatchExpected(Value, Type("Structure"), 
         ConversionResult);
@@ -2556,7 +2769,8 @@ Procedure ConvertValueIntoReference(Value, Type, ConversionResult)
         
     EndTry;
     
-    ConvertValueIntoReferenceUsingGUID(Value, Type, ConversionResult);
+    ConvertValueIntoReferenceUsingGUID(Value, Type, AllowMissedRef, 
+        ConversionResult);
     ConvertValueIntoReferenceUsingCode(Value, Type, ObjectManager, 
         TypeEmptyRef, ConversionResult);
     ConvertValueIntoReferenceUsingEnum(Value, Type, ObjectManager,
@@ -2583,7 +2797,8 @@ EndProcedure // ConvertValueIntoReference()
 
 // Only for internal use.
 //
-Procedure ConvertValueIntoReferenceUsingGUID(Value, Type, ConversionResult)
+Procedure ConvertValueIntoReferenceUsingGUID(Value, Type, AllowMissedRef, 
+    ConversionResult)
     
     Var KeyValue;
     
@@ -2598,7 +2813,8 @@ Procedure ConvertValueIntoReferenceUsingGUID(Value, Type, ConversionResult)
          If ValueMatchUniqueIdentifier(KeyValue, ConversionResult) Then
             
             ConvertedValue = XMLValue(Type, KeyValue);
-            If RefExists(ConvertedValue) 
+            If AllowMissedRef 
+                OR RefExists(ConvertedValue) 
                 OR KeyValue = "00000000-0000-0000-0000-000000000000" Then
                 
                 ConversionResult.TypeConverted = True;
@@ -2712,7 +2928,11 @@ Procedure ConvertValueIntoReferenceUsingEnumValueName(Value, Type,
         
         Try
             
-            ConvertedValue = ObjectManager[Value];
+            If NOT IsBlankString(Value) Then
+                ConvertedValue = ObjectManager[Value];
+            Else
+                ConvertedValue = ObjectManager.EmptyRef();   
+            EndIf;
             ConversionResult.TypeConverted = True;                
             ConversionResult.ConvertedValue = ConvertedValue;
             Return;
@@ -2827,7 +3047,7 @@ EndProcedure // ConvertValueIntoReferenceUsingDescription()
 // Only for internal use.
 //
 Procedure ConvertValueIntoAttribute(AttributeName, AttributeValue, Object, 
-    MetadataObject, ConvertedValue, ErrorMessages, CriticalError)
+    MetadataObject, ConvertedValue, ErrorMessages, ConversionSettings, CriticalError)
     
     // Fixed map with standard attribute synonym names in russian. 
     SynonymsRU = FL_CommonUseReUse.StandardAttributeSynonymsRU();
@@ -2847,10 +3067,17 @@ Procedure ConvertValueIntoAttribute(AttributeName, AttributeValue, Object,
         Return;
         
     EndIf;
-                
+    
+    AllowMissedRef = False;
+    If TypeOf(ConversionSettings) = Type("Structure")
+        AND ConversionSettings.Property("AllowMissedRefs")
+        AND TypeOf(ConversionSettings.AllowMissedRefs) = Type("FixedMap") Then
+        AllowMissedRef = ConversionSettings.AllowMissedRefs.Get(AttributeName) = True; 
+    EndIf;
+    
     // Perform the conversion to the platform object
     ConvertionResult = ConvertValueIntoPlatformObject(AttributeValue, 
-        Attribute.ValueType.Types());   
+        Attribute.ValueType.Types(), AllowMissedRef);   
     If ConvertionResult.TypeConverted Then
         ConvertedValue.Insert(AttributeName, ConvertionResult.ConvertedValue);   
     Else
@@ -2864,7 +3091,7 @@ EndProcedure // ConvertValueIntoAttribute()
 // Only for internal use.
 //
 Procedure ConvertArrayValueIntoAttribute(AttributeName, AttributeValue, 
-    MetadataObject, ConvertedValue, ErrorMessages, CriticalError)
+    MetadataObject, ConvertedValue, ErrorMessages, ConversionSettings, CriticalError)
     
     TabularSection = MetadataObject.TabularSections.Find(AttributeName);
     If TabularSection = Undefined Then
@@ -2898,7 +3125,8 @@ Procedure ConvertArrayValueIntoAttribute(AttributeName, AttributeValue,
                 MockObject, 
                 TabularSection, 
                 InnerConvertedValue, 
-                InnerConversionResult.ErrorMessages, 
+                InnerConversionResult.ErrorMessages,
+                ConversionSettings,
                 InnerCriticalError);
                 
         EndDo;        
@@ -3258,6 +3486,20 @@ Function UniqueIdentifierHypenPosition(Index)
     
 EndFunction // UniqueIdentifierHypenPosition()
 
+// Only for internal use.
+//
+Function BackwardCompatibilityCheckAttributes(ConversionSettings)
+    
+    If TypeOf(ConversionSettings) = Type("FixedArray") Then
+        NewConversionSettings = NewConversionSettings();
+        NewConversionSettings.CheckAttributes = ConversionSettings;
+        Return NewConversionSettings;
+    EndIf;
+    
+    Return ConversionSettings;
+    
+EndFunction // BackwardCompatibilityCheckAttributes()
+
 #EndRegion // ValueConversion
 
 // Only for internal use.
@@ -3305,4 +3547,4 @@ Function QueryTextReferenceByPredefinedDataName()
 
 EndFunction // QueryTextReferenceByPredefinedDataName()
 
-#EndRegion // ServiceProceduresAndFunctions
+#EndRegion // Private

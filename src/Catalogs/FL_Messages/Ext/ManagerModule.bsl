@@ -45,9 +45,8 @@ Procedure Route(Source = Undefined, Exchange = Undefined,
             Continue;
         EndIf;
         
+        BeginTransaction();
         Try
-            
-            BeginTransaction();
             
             MessageObject = Message.GetObject();
             MessageObject.Routed = True;
@@ -142,10 +141,10 @@ Function RouteAndRunOutputResult(Source, Exchange, AppEndpoint = Null) Export
         
     Else
         
+        BeginTransaction();
+        
         Try
         
-            BeginTransaction();
-            
             Message = GetMessage(Source);
             RouteAndRun(Message, ExchangeRef, AppEndpointRef, JobResult); 
             
@@ -185,11 +184,10 @@ Function Create(Invocation) Export
     If TransactionActive() Then
         Return CreateMessage(Invocation);
     EndIf;
-        
+    
+    BeginTransaction();
     Try
     
-        BeginTransaction();
-        
         // Creates a message in transaction
         Message = CreateMessage(Invocation);
         
@@ -197,15 +195,13 @@ Function Create(Invocation) Export
     
     Except
         
-        If TransactionActive() Then
-            RollbackTransaction();
-        EndIf;
+        RollbackTransaction();
         
-        ErrorMessage = ErrorDescription();
+        ErrorInfo = ErrorInfo();
         FL_InteriorUse.WriteLog("FoxyLink.Integration.Create",
             EventLogLevel.Error,
             Metadata.Catalogs.FL_Messages,
-            ErrorMessage);     
+            ErrorInfo);     
             
         Message = Undefined;           
             
@@ -256,7 +252,7 @@ Procedure FillContentTypeFromHeaders(Invocation, Headers) Export
     Var ContentType; 
     
     For Each Header In Headers Do
-        If Upper(Header.Key) = "CONTENT-TYPE" Then
+        If Header.Key = "CONTENT-TYPE" Then
             ContentType = Header.Value;    
         EndIf;    
     EndDo;
@@ -497,50 +493,6 @@ Function DeserializeContext(Val Message, StorageAddress = "") Export
     
 EndFunction // DeserializeContext()
 
-// Defines if event is a publisher.
-//
-// Parameters:
-//  EventSource - String - the full name of a event object as a term.
-//
-// Returns:
-//  Boolean - True, if it is publisher, otherwise False.
-//
-Function IsPublisher(EventSource) Export
-    
-    Query = New Query;
-    Query.Text = QueryTextIsPublisher();
-    Query.SetParameter("EventSource", EventSource);
-    Return NOT Query.Execute().IsEmpty();
-    
-EndFunction // IsPublisher()
-
-// Defines if event is a message publisher.
-//
-// Parameters:
-//  EventSource - String                   - the full name of a event object as a term.
-//  Operation   - CatalogRef.FL_Operations - reference to the FL_Operations catalog.
-//              - String                   - item name of FL_Operations catalog.
-//
-// Returns:
-//  Boolean - True, if it is message publisher, otherwise False.
-//
-Function IsMessagePublisher(EventSource, Operation) Export
-    
-    OperationRef = Operation;
-    If TypeOf(OperationRef) = Type("String") Then
-        OperationRef = FL_CommonUse.ReferenceByDescription(
-            Metadata.Catalogs.FL_Operations, OperationRef);
-    EndIf;
-    
-    Query = New Query;
-    Query.Text = QueryTextIsMessagePublisher();
-    Query.SetParameter("EventSource", EventSource);
-    Query.SetParameter("Operation", OperationRef);
-    
-    Return NOT Query.Execute().IsEmpty();
-    
-EndFunction // IsMessagePublisher()
-
 // This function returns a new invocation request\response structure for 
 // a service method.
 // 
@@ -725,7 +677,7 @@ Procedure RouteToEndpoints(Source, Exchange, AppEndpoint, RouteAndRun = False)
     
     Invocation = NewInvocationFromMessage(Source);
     
-    ExchangeEndpoints = ExchangeEndpoints(Source, Exchange);  
+    ExchangeEndpoints = ExchangeEndpoints(Invocation, Exchange);  
     For Each Endpoint In ExchangeEndpoints Do
         
         // Checks whether message is passed through event filter 
@@ -922,20 +874,31 @@ EndFunction // Messages()
 
 // Only for internal use.
 //
-Function ExchangeEndpoints(Source, Exchange)
+Function ExchangeEndpoints(Invocation, Exchange)
     
     Query = New Query;
     Query.Text = QueryTextExchangeEndpoints();
-    Query.SetParameter("EventSource", Source.EventSource);
-    Query.SetParameter("Operation", Source.Operation);
-        
+    Query.SetParameter("EventSource", Invocation.EventSource);
+    Query.SetParameter("Operation", Invocation.Operation);
+    
+    // If an exchange is defined, it is needed to process only this one 
+    // exchange item.
     If Exchange <> Undefined Then 
+        
         Query.Text = QueryTextExchangeEndpoint();
-        Query.SetParameter("Exchange", Exchange);
+        
+        // This parameter is used to set a default handler if another doesn't exist.
         Query.SetParameter("EventHandler", "Catalogs.FL_Exchanges.ProcessMessage");
+        Query.SetParameter("Exchange", Exchange);
+        
     EndIf;
     
-    Return Query.Execute().Unload();
+    QueryResult = Query.Execute();
+    If NOT QueryResult.IsEmpty() Then
+        Return QueryResult.Unload();
+    EndIf;
+    
+    Return New ValueTable;
         
 EndFunction // ExchangeEndpoints()
 
@@ -1006,41 +969,6 @@ Function ResolveFormatHandler(ContentType, FileExtension)
 EndFunction // ResolveFormatHandler()
 
 #EndRegion // FormatHandlers 
-
-// Only for internal use.
-//
-Function QueryTextIsPublisher()
-
-    Return "
-        |SELECT 
-        |   MessagePublishers.EventSource AS EventSource
-        |FROM
-        |   InformationRegister.FL_MessagePublishers AS MessagePublishers 
-        |WHERE
-        |   MessagePublishers.EventSource = &EventSource
-        |AND MessagePublishers.InUse
-        |";
-    
-EndFunction // QueryTextIsPublisher()
-
-// Only for internal use.
-//
-Function QueryTextIsMessagePublisher()
-
-    Return "
-        |SELECT 
-        |   MessagePublishers.EventSource AS EventSource,
-        |   MessagePublishers.Operation AS Operation,
-        |   MessagePublishers.InUse AS InUse
-        |FROM
-        |   InformationRegister.FL_MessagePublishers AS MessagePublishers 
-        |WHERE
-        |   MessagePublishers.EventSource = &EventSource
-        |AND MessagePublishers.Operation = &Operation
-        |AND MessagePublishers.InUse
-        |";
-    
-EndFunction // QueryTextIsMessagePublisher()
 
 // Only for internal use.
 //

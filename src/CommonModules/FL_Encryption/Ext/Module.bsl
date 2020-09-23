@@ -64,6 +64,50 @@ Procedure AddBearerAuthorizationHeader(Headers, Val Bearer,
     
 EndProcedure // AddBearerAuthorizationHeader()
 
+// Checks whether JWT-token is outdated.
+//
+// Parameters:
+//  JWTToken - String - JWT-token.
+//
+// Returns:
+//  Boolean - True if JWT-token is expired; otherwise False.
+//
+Function JWTTokenExpired(Val JWTToken) Export
+    
+    Var Expiration;
+    
+    MiddlePart = 1;
+    Seconds = 300;
+    
+    If NOT ValueIsFilled(JWTToken) Then
+        Return True;
+    EndIf;
+    
+    Parts = StrSplit(JWTToken, ".");
+    If Parts.Count() <> 3 Then
+        Return True;
+    EndIf;
+    
+    Description = Parts[MiddlePart];
+    Description = Description + "==";
+    
+    Invocation = Catalogs.FL_Messages.NewInvocation();
+    Invocation.ContentType = "application/json";
+    Invocation.Payload = Base64Value(Description);
+    
+    JWTMap = Catalogs.FL_Messages.ReadInvocationPayload(Invocation);
+        
+    Expiration = JWTMap.Get("exp");
+    If ValueIsFilled(Expiration) Then
+        TokenUTC = FL_CommonUseClientServer.UnixTimeToDate(Expiration - Seconds);
+        UTC = CurrentUniversalDate();
+        Return TokenUTC < UTC; 
+    EndIf;
+        
+    Return True;
+    
+EndFunction // JWTTokenExpired()
+
 // Calculates OAuth signature. 
 //
 // Parameters:
@@ -174,8 +218,8 @@ EndFunction // HMAC()
 //                                  being calculated.
 //
 // Returns:
-//  BinaryData - for functions MD5, SHA1 and SHA256 – current value of the hash-sum. 
-//  Number     - for function CRC32 – current value of the hash-sum.
+//  BinaryData - for functions MD5, SHA1 and SHA256 - current value of the hash-sum. 
+//  Number     - for function CRC32 - current value of the hash-sum.
 //
 Function Hash(Value, HashFunction) Export
     
@@ -255,8 +299,8 @@ EndFunction // GenerateRandomNumber()
 // Returns the result of logical bitwise AND operator for two numeric values.
 //
 // Parameters:
-//  Number1 - Number - the first operand, an integer in range 0 – 2^32-1.
-//  Number2 - Number - the second operand, an integer in range 0 – 2^32-1.
+//  Number1 - Number - the first operand, an integer in range 0 - 2^32-1.
+//  Number2 - Number - the second operand, an integer in range 0 - 2^32-1.
 //
 // Returns:
 //  Number - the result of logical bitwise AND operator for two numeric values. 

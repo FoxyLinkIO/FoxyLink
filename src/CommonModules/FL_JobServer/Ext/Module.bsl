@@ -706,7 +706,7 @@ Procedure RunBackgroundJobs(JobTable, HeartbeatTable, WorkerCount, Val Limit)
             
             NewItem = HeartbeatTable.Add();
             FillPropertyValues(NewItem, JobTable[Index]);
-            NewItem.TaskId = BackgroundJob.UUID;
+            NewItem.TaskId = BackgroundJob.TaskId;
             
         Else
             
@@ -721,7 +721,7 @@ Procedure RunBackgroundJobs(JobTable, HeartbeatTable, WorkerCount, Val Limit)
                 WorkerCount);
             
             For Each Item In BoostTable Do
-                Item.TaskId = BackgroundJob.UUID;        
+                Item.TaskId = BackgroundJob.TaskId;        
             EndDo;
             
             FL_CommonUseClientServer.ExtendValueTable(BoostTable, 

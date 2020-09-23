@@ -25,7 +25,7 @@ Function MessageHandler(Request)
     
     ProcessURLParameters(Request.URLParameters, Exchange, Operation, Async);
     
-    Headers = Request.Headers;
+    Headers = FL_InteriorUse.HeadersFromRequestResponse(Request);
     Invocation = Catalogs.FL_Messages.NewInvocation();
     
     Catalogs.FL_Messages.FillContentTypeFromHeaders(Invocation, Headers);
@@ -35,15 +35,15 @@ Function MessageHandler(Request)
     
     Invocation.Operation = Operation;
     Invocation.Payload = Request.GetBodyAsBinaryData(); 
-    Invocation.ReplyTo = Headers.Get("ReplyTo");
-    Invocation.CorrelationId = Headers.Get("CorrelationId");
+    Invocation.ReplyTo = Headers.Get("REPLYTO");
+    Invocation.CorrelationId = Headers.Get("CORRELATIONID");
     
-    Timestamp = Headers.Get("Timestamp");
+    Timestamp = Headers.Get("TIMESTAMP");
     If ValueIsFilled(Timestamp) Then
         Invocation.Timestamp = Timestamp;
     EndIf;
     
-    UserId = Headers.Get("UserId");
+    UserId = Headers.Get("USERID");
     If ValueIsFilled(UserId) Then 
         Invocation.UserId = UserId;
     EndIf;
@@ -51,7 +51,7 @@ Function MessageHandler(Request)
     AppEndpoint = Undefined;
     If ValueIsFilled(Invocation.ReplyTo) Then
         AppEndpoint = FL_CommonUse.ReferenceByDescription(
-            Metadata.Catalogs.FL_Channels, Headers.Get("AppId"));
+            Metadata.Catalogs.FL_Channels, Headers.Get("APPID"));
     EndIf;
     
     // Avoid using hierarchical transactions. 

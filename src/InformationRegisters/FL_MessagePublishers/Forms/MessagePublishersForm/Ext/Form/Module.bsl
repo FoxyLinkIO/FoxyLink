@@ -231,7 +231,7 @@ Function QueryTextMessagePublishers()
         |";
     Return QueryText;
     
-EndFunction // QueryTextIsMessagePublisher()
+EndFunction // QueryTextMessagePublishers()
 
 #EndRegion // ServiceProceduresAndFunctions
 

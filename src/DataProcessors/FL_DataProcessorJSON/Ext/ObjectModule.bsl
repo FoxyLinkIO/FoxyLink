@@ -737,7 +737,7 @@ EndProcedure // CheckDublicateProperty()
 //
 Function Version() Export
     
-    Return "1.0.5";
+    Return "1.0.6";
     
 EndFunction // Version()
 

@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -157,6 +157,42 @@ Function ErrorKeyIsMissingInObject(VarName, VarValue, KeyName) Export
     
 EndFunction // ErrorKeyIsMissingInObject()
 
+// Returns configuration object not found error description.
+//
+// Parameters:
+//  Name - String - object name.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorConfigurationObjectNotFound(Name) Export
+    
+    ErrorMessage = NStr("en='Error: Configuration object {%1} not found.';
+        |ru='Ошибка: Объект конфигурации {%1} не найден.';
+        |uk='Помилка: Елемент конфігурації {%1} не знайдено.';
+        |en_CA='Error: Configuration object {%1} {%1} not found.'");
+    Return StrTemplate(ErrorMessage, Name);
+    
+EndFunction // ErrorConfigurationObjectNotFound()
+
+// Returns metadata object not supported error description.
+//
+// Parameters:
+//  Name - String - metadata name.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorMetadataObjectIsNotSupported(Name) Export
+    
+    ErrorMessage = NStr("en='Error: Metadata object {%1} not supported.';
+        |ru='Ошибка: Объект метаданных {%1} не поддерживается.';
+        |uk='Помилка: Елемент метаданих {%1} не підтримується.';
+        |en_CA='Error: Metadata object {%1} {%1} not supported.'");
+    Return StrTemplate(ErrorMessage, Name);
+    
+EndFunction // ErrorMetadataObjectIsNotSupported()
+
 // Returns wrong type error description.
 //
 // Parameters:
@@ -178,6 +214,26 @@ Function ErrorTypeIsDifferentFromExpected(VarName, VarValue,
         String(TypeOf(VarValue)));  
     
 EndFunction // ErrorTypeIsDifferentFromExpected()
+
+// Returns wrong type error description.
+//
+// Parameters:
+//  VarName      - String    - variable name.
+//  VarValue     - Arbitrary - variable value.
+//
+// Returns:
+//  String - error description message.
+//
+Function ErrorTypeIsDifferentFromReferenceType(VarName, VarValue) Export
+    
+    ErrorMessage = NStr("
+        |en='Error: Failed to process parameter {%1}. Expected type {AnyRef} and received type is {%2}.';
+        |ru='Ошибка: Не удалось обработать параметр {%1}. Ожидался тип {ЛюбаяСсылка}, а получили тип {%2}.';
+        |uk='Помилка: Не вдалось опрацювати параметр {%1}. Очікувався тип {ЛюбаяСсылка}, а отримали тип {%2}.';
+        |en_CA='Error: Failed to process parameter {%1}. Expected type {AnyRef} and received type is {%2}.'");
+    Return StrTemplate(ErrorMessage, VarName, String(TypeOf(VarValue)));  
+    
+EndFunction // ErrorTypeIsDifferentFromReferenceType()
 
 #Region BackgroundJobs
 

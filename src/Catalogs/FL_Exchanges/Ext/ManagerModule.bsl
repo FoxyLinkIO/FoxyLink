@@ -271,14 +271,9 @@ Function ExportObject(Exchange) Export
             FileProperties.Size = FileData.Size();
             FileProperties.IsFile = True;
             FileProperties.StorageAddress = PutToTempStorage(FileData);
-            
-            #If MobileAppServer OR МобильноеПриложениеСервер Then
-            FileProperties.ModificationTime = CurrentDate();
-            #ElsIf Server OR ThickClientOrdinaryApplication OR ExternalConnection OR Сервер OR ТолстыйКлиентОбычноеПриложение OR ВнешнееСоединение Then
             FileProperties.ModificationTime = CurrentSessionDate();
-            #EndIf
-        
             FileProperties.ModificationTimeUTC = CurrentUniversalDate();
+            
             Return FileProperties;
             
         EndIf;

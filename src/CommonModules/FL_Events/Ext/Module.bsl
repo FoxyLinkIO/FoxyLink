@@ -17,7 +17,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#Region ProgramInterface
+#Region Public
 
 // Occurs before license accepted constant recording is executed. A handler 
 // procedure is called after the recording transaction is begun but before 
@@ -238,7 +238,7 @@ Procedure RegisterBeforeWrite(Source, Cancel, Replacing) Export
     
     SourceMetadata = Source.Metadata();
     EventSource = SourceMetadata.FullName();
-    If NOT Catalogs.FL_Messages.IsPublisher(EventSource) Then
+    If NOT FL_EventsReUse.IsPublisher(EventSource) Then
         Return;    
     EndIf;
     
@@ -263,7 +263,7 @@ Procedure RegisterBeforeWrite(Source, Cancel, Replacing) Export
     EndIf;
     
     Operation = RegisterMessageOperation(RecordsCount, DBRecordsCount, Replacing);
-    If NOT Catalogs.FL_Messages.IsMessagePublisher(EventSource, Operation) Then
+    If NOT FL_EventsReUse.IsMessagePublisher(EventSource, Operation) Then
         Return;    
     EndIf;
     
@@ -303,9 +303,9 @@ Procedure RegisterOnWrite(Source, Cancel, Replacing) Export
     
 EndProcedure // RegisterOnWrite()
 
-#EndRegion // ProgramInterface
+#EndRegion // Public
 
-#Region ServiceInterface
+#Region Internal
 
 // Handles event subscription.
 //
@@ -330,9 +330,9 @@ Procedure EnqueueEvent(Source) Export
     
 EndProcedure // EnqueueEvent()
 
-#EndRegion // ServiceInterface
+#EndRegion // Internal
 
-#Region ServiceProceduresAndFunctions
+#Region Private
 
 // Only for internal use.
 //
@@ -340,7 +340,7 @@ Procedure ApplyInvocation(Source, Operation)
 
     SourceMetadata = Source.Metadata();
     EventSource = SourceMetadata.FullName();
-    If NOT Catalogs.FL_Messages.IsMessagePublisher(EventSource, Operation) Then
+    If NOT FL_EventsReUse.IsMessagePublisher(EventSource, Operation) Then
         Return;    
     EndIf;
     
@@ -422,4 +422,4 @@ Function IsInvocationFilled(Invocation, Properties)
     
 EndFunction // IsInvocationFilled()
 
-#EndRegion // ServiceProceduresAndFunctions
+#EndRegion // Private

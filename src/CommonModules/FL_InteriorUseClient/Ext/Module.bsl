@@ -253,7 +253,7 @@ EndProcedure // DoAfterConfirmFormClosing()
 // Attaches the extension for working with files. 
 //
 // Parameters:
-//  Connected         – Boolean           - the connection result. 
+//  Connected         - Boolean           - the connection result. 
 //                              True - extension is successfully connected. 
 //  NotifyDescription - NotifyDescription - value specified when the 
 //                              NotifyDescription object was created.

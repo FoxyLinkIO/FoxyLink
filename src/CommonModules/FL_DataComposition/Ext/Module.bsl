@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -17,7 +17,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#Region ProgramInterface
+#Region Public
 
 // Outputs the result of the data composition schema in the stream object.
 //
@@ -164,21 +164,16 @@ Function ExportDataCompositionSchema(SourceAddress, FileDescription = "") Export
     FileProperties.Size = FileData.Size();
     FileProperties.IsFile = True;
     FileProperties.StorageAddress = PutToTempStorage(FileData);
-    
-    #If MobileAppServer OR МобильноеПриложениеСервер Then
-    FileProperties.ModificationTime = CurrentDate();
-    #ElsIf Server OR ThickClientOrdinaryApplication OR ExternalConnection OR Сервер OR ТолстыйКлиентОбычноеПриложение OR ВнешнееСоединение Then
     FileProperties.ModificationTime = CurrentSessionDate();
-    #EndIf
-
     FileProperties.ModificationTimeUTC = CurrentUniversalDate();
+    
     Return FileProperties;
             
 EndFunction // ExportDataCompositionSchema()
 
-#EndRegion // ProgramInterface
+#EndRegion // Public
 
-#Region ServiceInterface
+#Region Internal
 
 // Copies data composition schema from the source address to the destination address.
 //
@@ -203,8 +198,8 @@ Procedure CopyDataCompositionSchema(DestinationAddress, SourceAddress,
     EndIf;
     
     If TypeOf(DataCompositionSchema) = Type("DataCompositionSchema") Then
-        DataCompositionSchema = XDTOSerializer.ReadXDTO(
-            XDTOSerializer.WriteXDTO(DataCompositionSchema));
+        XDTOResult = XDTOSerializer.WriteXDTO(DataCompositionSchema);
+        DataCompositionSchema = XDTOSerializer.ReadXDTO(XDTOResult);
     Else
         DataCompositionSchema = New DataCompositionSchema;
     EndIf;
@@ -254,12 +249,14 @@ Procedure InitSettingsComposer(SettingsComposer, DataCompositionSchemaURL,
             New DataCompositionAvailableSettingsSource(DataCompositionSchemaURL));
     Except
         
+        ErrorInfo = ErrorInfo();
+        DetailErrorDescription = DetailErrorDescription(ErrorInfo);
         ErrorMessage = StrTemplate(
             NStr("en='Error: Failed to initialize data composition settings composer. %1.';
                 |ru='Ошибка: Не удалось инициализировать компоновщик настроек компоновки данных. %1.';
                 |uk='Помилка: Не вдалось ініціалізувати компонувальник налаштувань компоновки даних. %1.';
                 |en_CA='Error: Failed to initialize data composition settings composer. %1.'"),
-            ErrorDescription());  
+            DetailErrorDescription);  
         Raise ErrorMessage;
              
     EndTry;
@@ -349,8 +346,8 @@ Function CreateDataCompositionSchema(DataSources, DataSets) Export
     
     // Determine the data sources for the schema.
     For Each DataSource In DataSources Do
-        FillPropertyValues(DataCompositiomSchema.DataSources.Add(), 
-            DataSource);
+        NewDataSource = DataCompositiomSchema.DataSources.Add();
+        FillPropertyValues(NewDataSource, DataSource);
     EndDo;
 
     // Determine the data sets for the schema.
@@ -455,6 +452,8 @@ Function CreateEventSourceDataCompositionSchema(EventSource,
 
 EndFunction // CreateEventSourceDataCompositionSchema()
 
+#Region DataSource
+
 // Creates description of data source of data composition schema.
 //
 // Returns:
@@ -476,6 +475,10 @@ Function NewDataCompositionSchemaDataSource() Export
     Return DataCompositionSchemaDataSource;
     
 EndFunction // NewDataCompositionSchemaDataSource()
+
+#EndRegion // DataSource
+
+#Region DataSet
 
 // Creates description of a data set of data composition schema (query).
 //
@@ -507,7 +510,7 @@ Function NewDataCompositionSchemaDataSetQuery() Export
         Type("DataCompositionSchemaDataSetQuery"));
     Return DataCompositionSchemaDataSetQuery;
     
-EndFunction // NewDataCompositionSchemaDataSet()
+EndFunction // NewDataCompositionSchemaDataSetQuery()
 
 // Creates description of a data set of data composition schema (object).
 //
@@ -557,6 +560,10 @@ Function NewDataCompositionSchemaDataSetUnion() Export
     Return DataCompositionSchemaDataSetUnion;
     
 EndFunction // NewDataCompositionSchemaDataSetUnion()
+
+#EndRegion // DataSet
+
+#Region DataSetFields
 
 // Creates description for data set field of data composition schema (field).
 //
@@ -726,10 +733,12 @@ Function NewDataCompositionSchemaNestedDataSet() Export
     
 EndFunction // NewDataCompositionSchemaNestedDataSet()
 
+#EndRegion // DataSetFields
+
 // Creates layout template according passed parameters.
 //
 // Parameters:
-//  DCTParameters - Structure - see function FL_DataComposition.NewDataCompositionTemplateParameters.
+//  DCTParameters - Structure - see function FL_DataComposition.NewTemplateComposerParameters.
 //
 // Returns:
 //  DataCompositionTemplate - created layout template.
@@ -797,7 +806,7 @@ EndFunction // NewTemplateComposerParameters()
 //      * CanUseExternalFunctions - Boolean - indicates the possibility to use the function of common configuration
 //                                              modules in expressions of data composition.
 //                                  Default value: False.
-//      * DCTParameters - Structure - see function FL_DataComposition.NewDataCompositionTemplateParameters.
+//      * DCTParameters - Structure - see function FL_DataComposition.NewTemplateComposerParameters.
 //
 // See also:
 //  DataCompositionProcessor.Initialize in the syntax-assistant.
@@ -834,9 +843,9 @@ Function NewMessageSettings() Export
     
 EndFunction // NewMessageSettings() 
 
-#EndRegion // ServiceInterface
+#EndRegion // Internal
 
-#Region ServiceProceduresAndFunctions
+#Region Private
 
 #Region SettingsComposer
 
@@ -1266,7 +1275,7 @@ Function TemplateColumns(DataCompositionSettings,
             
             CellKey = String(Cell.Value);
             
-            // Here can be a fatal error. However, in future it might be handled.
+            // Here can be a fatal error. However, in future it might be handled. AreaTemplateDefinition.Name
             ColumnName = ColumnsCache[AreaTemplateDefinition.Name][CellKey];
             
             // Skip column on current level.
@@ -1369,6 +1378,10 @@ Function NewColumnsCache(DataCompositionTemplate)
     
     MainTemplate = DataCompositionTemplate.Templates.Find("Template1");
     If MainTemplate = Undefined Then
+        MainTemplate = DataCompositionTemplate.Templates.Find("Layout1");
+    EndIf;
+    
+    If MainTemplate = Undefined Then
         MainTemplate = DataCompositionTemplate.Templates.Find("Макет1");
     EndIf;
     
@@ -1384,7 +1397,9 @@ Function NewColumnsCache(DataCompositionTemplate)
             Continue;
         EndIf;
         
-        ColumnsCache.Insert(Template.Name, NewTemplateColumnsCache(Template, 
+        Name = Template.Name;
+        
+        ColumnsCache.Insert(Name, NewTemplateColumnsCache(Template, 
             MainTemplateCells));
     
     EndDo;
@@ -1627,4 +1642,4 @@ Function NewReportStructure()
     
 EndFunction // NewReportStructure() 
 
-#EndRegion // ServiceProceduresAndFunctions
+#EndRegion // Private

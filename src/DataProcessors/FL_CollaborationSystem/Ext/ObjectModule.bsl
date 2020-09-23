@@ -82,16 +82,14 @@ EndFunction // ChannelFullName()
 // Delivers a data object to the Elasticsearch application.
 //
 // Parameters:
-//  Payload    - Arbitrary - the data that can be read successively and 
-//                               delivered to the app endpoint.
-//  Properties - Structure - see function Catalogs.FL_Exchanges.NewProperties.
+//  Invocation - Structure - see function Catalogs.FL_Messages.NewInvocation.
 //  JobResult  - Structure - see function Catalogs.FL_Jobs.NewJobResult.
 //
-Procedure DeliverMessage(Payload, Properties, JobResult) Export
+Procedure DeliverMessage(Invocation, JobResult) Export
     
     JobResult.StatusCode = FL_InteriorUseReUse.OkStatusCode();
     SocialMessage = InformationRegisters.SocialNetworks_Messages
-        .DeserializeSocialMessage(Payload, Properties, JobResult);
+        .DeserializeSocialMessage(Invocation.Payload, Invocation, JobResult);
     
     If FL_InteriorUseReUse.IsSuccessHTTPStatusCode(JobResult.StatusCode)     
         AND SocialMessage.Property("CollaborationMessageId")

@@ -335,8 +335,9 @@ Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod,
         
         Invocation = Catalogs.FL_Messages.NewInvocation();
         Invocation.Payload = HTTPResponse.GetBodyAsBinaryData(); 
-        Catalogs.FL_Messages.FillContentTypeFromHeaders(Invocation, 
-            HTTPResponse.Headers);
+        
+        Headers = HeadersFromRequestResponse(HTTPResponse);
+        Catalogs.FL_Messages.FillContentTypeFromHeaders(Invocation, Headers);
             
         JobResult.StatusCode = HTTPResponse.StatusCode;
         Catalogs.FL_Jobs.AddToJobResult(JobResult, "Invocation", Invocation);
@@ -358,6 +359,25 @@ Procedure CallHTTPMethod(HTTPConnection, HTTPRequest, HTTPMethod,
         JobResult.StatusCode);
         
 EndProcedure // CallHTTPMethod()
+
+// Deprecated. Returns headers from HTTP response or request.
+//
+// Parameters:
+//  RequestResponse - HTTPResponse, HTTPRequest - HTTP response or request.
+//
+// Returns:
+//  Map - Returns headers from HTTP response or request.  
+//
+Function HeadersFromRequestResponse(RequestResponse) Export
+    
+    Headers = New Map;
+    For Each Header In RequestResponse.Headers Do
+        Headers.Insert(Upper(Header.Key), Header.Value);     
+    EndDo;
+    
+    Return Headers;
+    
+EndFunction // HeadersFromRequestResponse()
 
 // Deprecated. Creates HTTPConnection object. 
 //

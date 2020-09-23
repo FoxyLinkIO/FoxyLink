@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2017 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -389,6 +389,24 @@ Function IsObjectAttribute(Object, AttributeName) Export
     Return AttributeStructure[AttributeName] <> UniquenessKey;
 
 EndFunction // IsObjectAttribute()
+
+#Region DateOperations
+
+// Converts Unix time to 1C date.
+//
+// Parameters:
+//  UnixTime - Number - Unix time.
+//
+// Returns:
+//  Date - converted date.
+//
+Function UnixTimeToDate(Val UnixTime) Export
+    
+    Return Date(1970, 1, 1, 0, 0, 0) + UnixTime;         
+    
+EndFunction // UnixDateToDate()
+
+#EndRegion // DateOperations
 
 #Region FilterOperations
 

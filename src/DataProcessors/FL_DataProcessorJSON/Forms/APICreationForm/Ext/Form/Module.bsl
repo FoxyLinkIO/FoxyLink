@@ -551,6 +551,7 @@ Procedure FillAPISchemaFromSwagger(Rows, Name, Path, OpenAPI,
             
             If Item.Key = "array" Or Item.Key = "items" Then
                 ObjectRows = NewAPISchemaRow(Rows, Name, "Array");
+                ObjectRows.StructuredType = True;
                 FillAPISchemaFromSwagger(ObjectRows.Rows, "ArrayItem", 
                     Item.Value, OpenAPI, RecursiveRef);
             EndIf;
@@ -585,6 +586,7 @@ Procedure ProcessRefValue(Rows, Name, Item, OpenAPI, RecursiveRef = Undefined)
     If ResolvedValue.Get("type") = "object" Then
         
         ObjectRows = NewAPISchemaRow(Rows, Name, "Object");
+        ObjectRows.StructuredType = True;
         For Each Property In ResolvedValue.Get("properties") Do
             
             Type = Property.Value.Get("$ref");

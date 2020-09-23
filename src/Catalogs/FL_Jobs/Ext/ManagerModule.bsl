@@ -51,24 +51,23 @@ Procedure Trigger(Jobs, Invoke = False, JobResultCopy = Undefined) Export
             
         Else
             
-            Try
+            StartTime = CurrentUniversalDateInMilliseconds();
+            
+            BeginTransaction();
+            Try 
                 
-                StartTime = CurrentUniversalDateInMilliseconds();
-                
-                BeginTransaction();
-
                 ProcessJob(Job, Invoke, , JobResultCopy);
-                
                 CommitTransaction();
                 
             Except
                 
                 RollbackTransaction();
                 
+                ErrorInfo = ErrorInfo();
                 FL_InteriorUse.WriteLog("FoxyLink.Tasks.Trigger", 
                     EventLogLevel.Error,
                     Metadata.Catalogs.FL_Jobs,
-                    ErrorDescription());
+                    ErrorInfo);
                                     
                 Duration = CurrentUniversalDateInMilliseconds() - StartTime;
                 ChangeState(Job, Catalogs.FL_States.Failed, , Duration);  
@@ -110,10 +109,9 @@ Function Create(JobData) Export
         AND TypeOf(JobData.Log) = Type("ValueTable") Then
         JobObject.Log.Load(JobData.Log);    
     EndIf;
-            
+    
+    BeginTransaction();
     Try
-        
-        BeginTransaction();
         
         JobObject.Write();
         If JobData.Continuations <> Undefined Then

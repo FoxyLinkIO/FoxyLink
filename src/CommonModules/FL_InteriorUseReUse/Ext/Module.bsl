@@ -229,6 +229,19 @@ Function SuccessHTTPStatusCodes() Export
     
 EndFunction // SuccessHTTPStatusCodes()
 
+// Returns unprocessable entity error status code.
+// The request was well-formed but was unable to be followed due to semantic 
+// errors.
+//
+// Returns:
+//  Number - unprocessable entity error status code. 
+//
+Function UnprocessableEntity() Export
+    
+    Return 422;
+    
+EndFunction // UnprocessableEntity() 
+
 // Defines if HTTP method has no body.
 //
 // Parameters:

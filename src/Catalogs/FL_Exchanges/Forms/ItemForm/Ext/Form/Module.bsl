@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 // This file is part of FoxyLink.
-// Copyright © 2016-2019 Petro Bazeliuk.
+// Copyright © 2016-2020 Petro Bazeliuk.
 // 
 // This program is free software: you can redistribute it and/or modify 
 // it under the terms of the GNU Affero General Public License as 
@@ -455,10 +455,26 @@ EndProcedure // EditAppEndpointResources()
 
 &AtClient
 Procedure EditDataCompositionSchema(Command)
-    
-    FL_DataCompositionClient.RunDataCompositionSchemaWizard(ThisObject,
-        DataCompositionSchemaEditAddress);
-            
+           
+    #If ThickClientOrdinaryApplication OR ThickClientManagedApplication OR ТолстыйКлиентОбычноеПриложение OR ТолстыйКлиентУправляемоеПриложение Then
+        
+        // Copy existing data composition schema.
+        DataCompositionSchema = XDTOSerializer.ReadXDTO(XDTOSerializer.WriteXDTO(
+            GetFromTempStorage(DataCompositionSchemaEditAddress)));
+        
+        Wizard = New DataCompositionSchemaWizard(DataCompositionSchema);
+        Wizard.Edit(ThisObject);
+        
+    #Else
+        
+        ShowMessageBox(Undefined,
+            NStr("en='To edit the layout scheme, run configuration in thick client mode.';
+                |ru='Для того, чтобы редактировать схему компоновки, необходимо запустить конфигурацию в режиме толстого клиента.';
+                |uk='Для того, щоб редагувати схему компонування, необхідно запустити конфігурацію в режимі товстого клієнта.';
+                |en_CA='To edit the layout scheme, run configuration in thick client mode.'"));
+        
+    #EndIf     
+        
 EndProcedure // EditDataCompositionSchema()
 
 &AtClient
@@ -756,7 +772,7 @@ EndFunction // CurrentOperationsWithAPISchema()
 // Parameters:
 //  Result               - Boolean   - the result value passed by the second 
 //                                      parameter when the method was called. 
-//  AdditionalParameters – Arbitrary - the value, which was specified when the 
+//  AdditionalParameters - Arbitrary - the value, which was specified when the 
 //                                      notification object was created. 
 //
 &AtClient

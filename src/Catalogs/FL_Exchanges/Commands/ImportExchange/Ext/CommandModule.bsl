@@ -41,7 +41,7 @@ EndProcedure // CommandProcessing()
 // Parameters:
 //  Result               - Boolean   - the result value passed by the second 
 //                                      parameter when the method was called. 
-//  AdditionalParameters – Arbitrary - the value, which was specified when the 
+//  AdditionalParameters - Arbitrary - the value, which was specified when the 
 //                                      notification object was created. 
 //
 &AtClient
