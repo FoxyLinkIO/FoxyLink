@@ -30,16 +30,27 @@ Procedure Fact_EmptyDataCompositionSchema() Export
     
     DataCompositionSchema = New DataCompositionSchema;
 
-    ExchangeSettings = Catalogs.FL_Exchanges.NewExchangeSettings();
-    ExchangeSettings.BasicFormatGuid = "3ca485fe-3fcc-445b-9843-48c5ed370c0f";
-    ExchangeSettings.DataCompositionSchema = DataCompositionSchema;
-    ExchangeSettings.DataCompositionSettings = DataCompositionSchema
+    Settings = Catalogs.FL_Exchanges.NewExchangeSettings();
+    Settings.BasicFormatGuid = "3ca485fe-3fcc-445b-9843-48c5ed370c0f";
+    Settings.DataCompositionSchema = DataCompositionSchema;
+    Settings.DataCompositionSettings = DataCompositionSchema
         .DefaultSettings;
               
-    MemoryStream = New MemoryStream;
-    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
-        ExchangeSettings);
-    ResultMessage = GetStringFromBinaryData(MemoryStream.CloseAndGetBinaryData());
+    StreamObject = FL_InteriorUse.NewFormatProcessor(
+            Settings.BasicFormatGuid);
+        
+    // Open new memory stream and initialize format processor.
+    Stream = New MemoryStream;
+    StreamObject.Initialize(Stream, Settings.APISchema);
+    
+    OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(Settings);
+                
+    FL_DataComposition.Output(StreamObject, OutputParameters);
+    
+    // Close format stream and memory stream.
+    StreamObject.Close();
+
+    ResultMessage = GetStringFromBinaryData(Stream.CloseAndGetBinaryData());
     
     Assertions.ПроверитьРавенство(ResultMessage, "{}");
         
@@ -431,15 +442,6 @@ Procedure Fact_OLGrouping_SLGrouping_TLDetailRecords_NestedResource() Export
         |""СоставРеквизитЧисло"": 11,
         |""Goods"": [
         |{
-        |""СоставПростойСправочник2Description"": ""Ноутбук"",
-        |""СоставРеквизитЧисло"": 1,
-        |""Details"": [
-        |{
-        |""СоставРеквизитЧисло"": 1
-        |}
-        |]
-        |},
-        |{
         |""СоставПростойСправочник2Description"": ""Видео-карта"",
         |""СоставРеквизитЧисло"": 4,
         |""Details"": [
@@ -454,6 +456,15 @@ Procedure Fact_OLGrouping_SLGrouping_TLDetailRecords_NestedResource() Export
         |""Details"": [
         |{
         |""СоставРеквизитЧисло"": 6
+        |}
+        |]
+        |},
+        |{
+        |""СоставПростойСправочник2Description"": ""Ноутбук"",
+        |""СоставРеквизитЧисло"": 1,
+        |""Details"": [
+        |{
+        |""СоставРеквизитЧисло"": 1
         |}
         |]
         |}
@@ -472,14 +483,25 @@ EndProcedure // Fact_OLGrouping_SLGrouping_TLDetailRecords_NestedResource()
 
 Procedure VerifyAssertion(CatalogRefName, BenchmarkData)
     
-    ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
+    Settings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
         Catalogs.FL_Exchanges.FindByDescription(CatalogRefName), 
-        Catalogs.FL_Methods.Read); 
+        Catalogs.FL_Operations.Read); 
                 
-    MemoryStream = New MemoryStream;
-    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
-        ExchangeSettings);
-    ResultMessage = GetStringFromBinaryData(MemoryStream.CloseAndGetBinaryData());
+    StreamObject = FL_InteriorUse.NewFormatProcessor(
+            Settings.BasicFormatGuid);
+        
+    // Open new memory stream and initialize format processor.
+    Stream = New MemoryStream;
+    StreamObject.Initialize(Stream, Settings.APISchema);
+    
+    OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(Settings);
+                
+    FL_DataComposition.Output(StreamObject, OutputParameters);
+    
+    // Close format stream and memory stream.
+    StreamObject.Close();
+        
+    ResultMessage = GetStringFromBinaryData(Stream.CloseAndGetBinaryData());
     
     Assertions.ПроверитьРавенство(DeleteCRLF(ResultMessage), DeleteCRLF(BenchmarkData));
         
