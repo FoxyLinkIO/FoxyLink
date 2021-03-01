@@ -43,6 +43,7 @@ FoxyLink subsystem is available as configuration, so you can install it using co
 
 ## Status
 
+![](https://vistr.dev/badge?repo=FoxyLinkIO.FoxyLink)
 [![Telegram](https://img.shields.io/badge/chat-Telegram-blue.svg)](https://t.me/FoxyLink)
 [![Quality Gate](https://sonar.silverbulleters.org/api/badges/gate?key=ktc-foxylink)](https://sonar.silverbulleters.org/dashboard?id=ktc-foxylink)
 
