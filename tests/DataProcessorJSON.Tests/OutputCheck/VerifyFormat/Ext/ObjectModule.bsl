@@ -28,7 +28,9 @@ Procedure ЗаполнитьНаборТестов(TestsSet) Export
     TestsSet.Добавить("Fact_TwoInnerObjectValue");
     TestsSet.Добавить("Fact_ObjectValue");
     TestsSet.Добавить("Fact_ObjectArraySeveralTypes");
-    TestsSet.Добавить("Fact_ArrayObjectDetailRecords");
+    
+    TestsSet.Добавить("Fact_Bug_46");
+    TestsSet.Добавить("Fact_Bug_232");
     
     TestsSet.Добавить("Fact_ComplexHierarchy_1");
     
@@ -91,7 +93,6 @@ Procedure Fact_EmptyArrayValue() Export
     VerifyAssertion("EmptyArrayValueOutput", BenchmarkData);
 
 EndProcedure // Fact_EmptyArrayValue() 
-
 
 Procedure Fact_TwoEmptyObjectValue() Export
     
@@ -174,7 +175,6 @@ Procedure Fact_TwoEmptyArrayStringInArray() Export
     
 EndProcedure // Fact_TwoEmptyArrayStringInArray()
 
-
 Procedure Fact_TwoInnerObjectValue() Export
     
     BenchmarkData = "
@@ -247,7 +247,7 @@ Procedure Fact_ObjectArraySeveralTypes() Export
     
 EndProcedure // Fact_ObjectArraySeveralTypes()
 
-Procedure Fact_ArrayObjectDetailRecords() Export
+Procedure Fact_Bug_46() Export
     
     BenchmarkData = "[
     |{
@@ -264,10 +264,44 @@ Procedure Fact_ArrayObjectDetailRecords() Export
 
     VerifyAssertion("#46 Bug: JSON Array", BenchmarkData);
     
-EndProcedure // Fact_ArrayObjectDetailRecords()
+EndProcedure // Fact_Bug_46()
 
+Procedure Fact_Bug_232() Export
+    
+    BenchmarkData = "{
+    |""ExchangeName"": ""Exchange"",
+    |""Stock"": [
+    |{
+    |""Sku"": ""AT-01"",
+    |""Warehouse"": [
+    |{
+    |""String"": ""String3"",
+    |""Number"": 100,
+    |""Boolean"": false
+    |}
+    |]
+    |},
+    |{
+    |""Sku"": ""SN-0112"",
+    |""Warehouse"": [
+    |{
+    |""String"": ""String1"",
+    |""Number"": 1,
+    |""Boolean"": true
+    |},
+    |{
+    |""String"": ""String2"",
+    |""Number"": 10,
+    |""Boolean"": true
+    |}
+    |]
+    |}
+    |]
+    |}";
 
-
+    VerifyAssertion("#232 Bug: Array+Field", BenchmarkData);
+    
+EndProcedure // Fact_Bug_232()
 
 Procedure Fact_ComplexHierarchy_1() Export
     
@@ -290,21 +324,30 @@ Procedure Fact_ComplexHierarchy_1() Export
     
 EndProcedure // Fact_ComplexHierarchy_1()
 
-
 #EndRegion // TestCases
 
 #Region ServiceProceduresAndFunctions
 
 Procedure VerifyAssertion(CatalogRefName, BenchmarkData)
     
-    ExchangeSettings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
+    Settings = Catalogs.FL_Exchanges.ExchangeSettingsByRefs(
         Catalogs.FL_Exchanges.FindByDescription(CatalogRefName), 
-        Catalogs.FL_Methods.Read); 
+        Catalogs.FL_Operations.Read); 
                 
-    MemoryStream = New MemoryStream;
-    Catalogs.FL_Exchanges.OutputMessageIntoStream(MemoryStream, 
-        ExchangeSettings);
-    ResultMessage = GetStringFromBinaryData(MemoryStream.CloseAndGetBinaryData());
+    StreamObject = FL_InteriorUse.NewFormatProcessor(
+            Settings.BasicFormatGuid);
+        
+    // Open new memory stream and initialize format processor.
+    Stream = New MemoryStream;
+    StreamObject.Initialize(Stream, Settings.APISchema);
+    
+    OutputParameters = Catalogs.FL_Exchanges.NewOutputParameters(Settings);
+                
+    FL_DataComposition.Output(StreamObject, OutputParameters);
+    
+    // Close format stream and memory stream.
+    StreamObject.Close();
+    ResultMessage = GetStringFromBinaryData(Stream.CloseAndGetBinaryData());
 
     If TypeOf(BenchmarkData) = Type("Number") Then
         Assertions.ПроверитьРавенство(Number(ResultMessage), BenchmarkData);       
