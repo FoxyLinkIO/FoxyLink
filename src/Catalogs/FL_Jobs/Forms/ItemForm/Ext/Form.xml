@@ -1,45 +1,161 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.10">
 	<WindowOpeningMode>LockOwnerWindow</WindowOpeningMode>
 	<UseForFoldersAndItems>Items</UseForFoldersAndItems>
 	<AutoCommandBar name="FormCommandBar" id="-1"/>
+	<Events>
+		<Event name="OnOpen">OnOpen</Event>
+	</Events>
 	<ChildItems>
-		<InputField name="Code" id="1">
-			<DataPath>Object.Code</DataPath>
-			<EditMode>EnterOnInput</EditMode>
-			<ContextMenu name="CodeContextMenu" id="2"/>
-			<ExtendedTooltip name="CodeExtendedTooltip" id="3"/>
-		</InputField>
-		<InputField name="CreatedAt" id="10">
-			<DataPath>Object.CreatedAt</DataPath>
-			<EditMode>EnterOnInput</EditMode>
-			<ContextMenu name="CreatedAtContextMenu" id="11"/>
-			<ExtendedTooltip name="CreatedAtExtendedTooltip" id="12"/>
-		</InputField>
-		<InputField name="ExpireAt" id="13">
-			<DataPath>Object.ExpireAt</DataPath>
-			<EditMode>EnterOnInput</EditMode>
-			<ContextMenu name="ExpireAtContextMenu" id="14"/>
-			<ExtendedTooltip name="ExpireAtExtendedTooltip" id="15"/>
-		</InputField>
-		<CheckBoxField name="Isolated" id="118">
-			<DataPath>Object.Isolated</DataPath>
-			<CheckBoxType>Auto</CheckBoxType>
-			<ContextMenu name="IsolatedContextMenu" id="119"/>
-			<ExtendedTooltip name="IsolatedExtendedTooltip" id="120"/>
-		</CheckBoxField>
-		<InputField name="Priority" id="25">
-			<DataPath>Object.Priority</DataPath>
-			<EditMode>EnterOnInput</EditMode>
-			<ContextMenu name="PriorityContextMenu" id="26"/>
-			<ExtendedTooltip name="PriorityExtendedTooltip" id="27"/>
-		</InputField>
-		<InputField name="State" id="31">
-			<DataPath>Object.State</DataPath>
-			<EditMode>EnterOnInput</EditMode>
-			<ContextMenu name="StateContextMenu" id="32"/>
-			<ExtendedTooltip name="StateExtendedTooltip" id="33"/>
-		</InputField>
+		<UsualGroup name="Group1" id="128">
+			<Group>AlwaysHorizontal</Group>
+			<Representation>None</Representation>
+			<ShowTitle>false</ShowTitle>
+			<ExtendedTooltip name="Group1ExtendedTooltip" id="129"/>
+			<ChildItems>
+				<UsualGroup name="GroupHeader" id="124">
+					<Title>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Group header</v8:content>
+						</v8:item>
+					</Title>
+					<ToolTip>
+						<v8:item>
+							<v8:lang>en</v8:lang>
+							<v8:content>Group header</v8:content>
+						</v8:item>
+					</ToolTip>
+					<Group>Vertical</Group>
+					<Representation>None</Representation>
+					<ShowTitle>false</ShowTitle>
+					<ExtendedTooltip name="GroupHeaderExtendedTooltip" id="125"/>
+					<ChildItems>
+						<UsualGroup name="Group4" id="140">
+							<Group>AlwaysHorizontal</Group>
+							<Representation>None</Representation>
+							<ShowTitle>false</ShowTitle>
+							<ExtendedTooltip name="Group4ExtendedTooltip" id="141"/>
+							<ChildItems>
+								<InputField name="Code" id="1">
+									<DataPath>Object.Code</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="CodeContextMenu" id="2"/>
+									<ExtendedTooltip name="CodeExtendedTooltip" id="3"/>
+								</InputField>
+								<InputField name="Priority" id="25">
+									<DataPath>Object.Priority</DataPath>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="PriorityContextMenu" id="26"/>
+									<ExtendedTooltip name="PriorityExtendedTooltip" id="27"/>
+								</InputField>
+								<CheckBoxField name="Isolated" id="118">
+									<DataPath>Object.Isolated</DataPath>
+									<CheckBoxType>Auto</CheckBoxType>
+									<ContextMenu name="IsolatedContextMenu" id="119"/>
+									<ExtendedTooltip name="IsolatedExtendedTooltip" id="120"/>
+								</CheckBoxField>
+							</ChildItems>
+						</UsualGroup>
+						<UsualGroup name="Group2" id="133">
+							<Representation>None</Representation>
+							<ShowTitle>false</ShowTitle>
+							<ExtendedTooltip name="Group2ExtendedTooltip" id="134"/>
+							<ChildItems>
+								<InputField name="CreatedAt" id="10">
+									<DataPath>Object.CreatedAt</DataPath>
+									<ToolTipRepresentation>Button</ToolTipRepresentation>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="CreatedAtContextMenu" id="11"/>
+									<ExtendedTooltip name="CreatedAtExtendedTooltip" id="12"/>
+								</InputField>
+								<LabelDecoration name="TimestampCreatedAt" id="130">
+									<TextColor>style:FieldSelectionBackColor</TextColor>
+									<ContextMenu name="TimestampCreatedAtContextMenu" id="131"/>
+									<ExtendedTooltip name="TimestampCreatedAtExtendedTooltip" id="132"/>
+								</LabelDecoration>
+							</ChildItems>
+						</UsualGroup>
+						<UsualGroup name="Group3" id="138">
+							<Representation>None</Representation>
+							<ShowTitle>false</ShowTitle>
+							<ExtendedTooltip name="Group3ExtendedTooltip" id="139"/>
+							<ChildItems>
+								<InputField name="ExpireAt" id="13">
+									<DataPath>Object.ExpireAt</DataPath>
+									<ToolTipRepresentation>Button</ToolTipRepresentation>
+									<EditMode>EnterOnInput</EditMode>
+									<ContextMenu name="ExpireAtContextMenu" id="14"/>
+									<ExtendedTooltip name="ExpireAtExtendedTooltip" id="15"/>
+								</InputField>
+								<LabelDecoration name="TimestampExpireAt" id="135">
+									<TextColor>style:FieldSelectionBackColor</TextColor>
+									<ContextMenu name="TimestampExpireAtContextMenu" id="136"/>
+									<ExtendedTooltip name="TimestampExpireAtExtendedTooltip" id="137"/>
+								</LabelDecoration>
+							</ChildItems>
+						</UsualGroup>
+						<RadioButtonField name="State" id="31">
+							<DataPath>Object.State</DataPath>
+							<EditMode>EnterOnInput</EditMode>
+							<RadioButtonType>Tumbler</RadioButtonType>
+							<ChoiceList>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xr:DesignTimeRef">Catalog.FL_States.Scheduled</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xr:DesignTimeRef">Catalog.FL_States.Enqueued</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xr:DesignTimeRef">Catalog.FL_States.Awaiting</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xr:DesignTimeRef">Catalog.FL_States.Failed</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xr:DesignTimeRef">Catalog.FL_States.Succeeded</Value>
+									</xr:Value>
+								</xr:Item>
+								<xr:Item>
+									<xr:Presentation/>
+									<xr:CheckState>0</xr:CheckState>
+									<xr:Value xsi:type="FormChoiceListDesTimeValue">
+										<Presentation/>
+										<Value xsi:type="xr:DesignTimeRef">Catalog.FL_States.Deleted</Value>
+									</xr:Value>
+								</xr:Item>
+							</ChoiceList>
+							<ContextMenu name="StateContextMenu" id="32"/>
+							<ExtendedTooltip name="StateExtendedTooltip" id="33"/>
+						</RadioButtonField>
+					</ChildItems>
+				</UsualGroup>
+			</ChildItems>
+		</UsualGroup>
 		<Pages name="Pages" id="34">
 			<Title>
 				<v8:item>
@@ -92,6 +208,7 @@
 							<AutoInsertNewRow>true</AutoInsertNewRow>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>Object.Input</DataPath>
 							<RowFilter xsi:nil="true"/>
 							<ContextMenu name="InputContextMenu" id="52"/>
@@ -183,6 +300,7 @@
 							<AutoInsertNewRow>true</AutoInsertNewRow>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>Object.Output</DataPath>
 							<RowFilter xsi:nil="true"/>
 							<ContextMenu name="OutputContextMenu" id="73"/>
@@ -274,6 +392,7 @@
 							<AutoInsertNewRow>true</AutoInsertNewRow>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>Object.Log</DataPath>
 							<RowFilter xsi:nil="true"/>
 							<ContextMenu name="LogContextMenu" id="94"/>

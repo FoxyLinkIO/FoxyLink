@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.10">
 	<Title>
 		<v8:item>
 			<v8:lang>en</v8:lang>
@@ -52,6 +52,7 @@
 					<SelectionMode>SingleRow</SelectionMode>
 					<RowSelectionMode>Row</RowSelectionMode>
 					<InitialTreeView>ExpandAllLevels</InitialTreeView>
+					<FileDragMode>AsFile</FileDragMode>
 					<DataPath>Object.APISchema</DataPath>
 					<RowPictureDataPath>Object.APISchema.RowPicture</RowPictureDataPath>
 					<RowsPicture>
@@ -180,8 +181,8 @@
 								<ChildItems>
 									<Button name="LoadFromText" id="57">
 										<Type>CommandBarButton</Type>
-										<OnlyInAllActions>true</OnlyInAllActions>
 										<CommandName>Form.Command.LoadFromText</CommandName>
+										<LocationInCommandBar>InCommandBarAndInAdditionalSubmenu</LocationInCommandBar>
 										<ExtendedTooltip name="LoadFromTextExtendedTooltip" id="58"/>
 									</Button>
 									<Button name="LoadFromSwagger" id="75">
@@ -622,7 +623,7 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>ReadOnly</dcscor:parameter>
+						<dcscor:parameter>ТолькоПросмотр</dcscor:parameter>
 						<dcscor:value xsi:type="xs:boolean">true</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -645,7 +646,7 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>ReadOnly</dcscor:parameter>
+						<dcscor:parameter>ТолькоПросмотр</dcscor:parameter>
 						<dcscor:value xsi:type="xs:boolean">false</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -668,7 +669,7 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>ReadOnly</dcscor:parameter>
+						<dcscor:parameter>ТолькоПросмотр</dcscor:parameter>
 						<dcscor:value xsi:type="xs:boolean">false</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -688,7 +689,7 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:parameter>ЦветФона</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">win:ButtonLightShadow</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -708,11 +709,11 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:parameter>ЦветФона</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">#A0A0A4</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>Font</dcscor:parameter>
+						<dcscor:parameter>Шрифт</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Font" ref="sys:DefaultGUIFont" bold="false" italic="false" underline="false" strikeout="true" kind="WindowsFont"/>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -755,6 +756,7 @@
 			</Picture>
 			<Action>AddRowAPITable</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="SaveAndClose" id="2">
 			<Title>
@@ -787,6 +789,7 @@
 			</Picture>
 			<Action>SaveAndClose</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="DeleteRowAPITable" id="3">
 			<Title>
@@ -823,6 +826,7 @@
 			</Picture>
 			<Action>DeleteRowAPITable</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="LoadFromText" id="4">
 			<Title>
@@ -867,6 +871,7 @@
 			</Picture>
 			<Action>LoadFromText</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="AddStringItem" id="5">
 			<Title>
@@ -899,6 +904,7 @@
 			</ToolTip>
 			<Action>AddStringItem</Action>
 			<Representation>Picture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="AddNumberItem" id="6">
 			<Title>
@@ -931,6 +937,7 @@
 			</ToolTip>
 			<Action>AddNumberItem</Action>
 			<Representation>Picture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="AddBooleanItem" id="7">
 			<Title>
@@ -963,6 +970,7 @@
 			</ToolTip>
 			<Action>AddBooleanItem</Action>
 			<Representation>Picture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="AddNullItem" id="8">
 			<Title>
@@ -995,6 +1003,7 @@
 			</ToolTip>
 			<Action>AddNullItem</Action>
 			<Representation>Picture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="AddObjectItem" id="9">
 			<Title>
@@ -1027,6 +1036,7 @@
 			</ToolTip>
 			<Action>AddObjectItem</Action>
 			<Representation>Picture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="AddArrayItem" id="10">
 			<Title>
@@ -1059,6 +1069,7 @@
 			</ToolTip>
 			<Action>AddArrayItem</Action>
 			<Representation>Picture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="LoadFromSwagger" id="11">
 			<Title>
@@ -1103,6 +1114,7 @@
 			</Picture>
 			<Action>LoadFromSwagger</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 	</Commands>
 </Form>

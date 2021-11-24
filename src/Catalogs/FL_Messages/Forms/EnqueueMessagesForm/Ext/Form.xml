@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.10">
 	<AutoCommandBar name="FormCommandBar" id="-1">
 		<Autofill>false</Autofill>
 	</AutoCommandBar>
@@ -170,6 +170,7 @@
 							<InitialTreeView>ExpandAllLevels</InitialTreeView>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>ComposerSettings.Settings</DataPath>
 							<ContextMenu name="ComposerSettingsContextMenu" id="69"/>
 							<AutoCommandBar name="ComposerSettingsCommandBar" id="70"/>
@@ -247,6 +248,7 @@
 							<VerticalLines>false</VerticalLines>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>ComposerSettings.Settings.Selection.SelectionAvailableFields</DataPath>
 							<ContextMenu name="ComposerSettingsSelectionAvailableFieldsContextMenu" id="54"/>
 							<AutoCommandBar name="ComposerSettingsSelectionAvailableFieldsCommandBar" id="55"/>
@@ -283,6 +285,7 @@
 							<InitialTreeView>ExpandAllLevels</InitialTreeView>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>ComposerSettings.Settings.Selection</DataPath>
 							<ContextMenu name="ComposerSettingsSelectionContextMenu" id="41"/>
 							<AutoCommandBar name="ComposerSettingsSelectionCommandBar" id="42"/>
@@ -360,6 +363,7 @@
 							<VerticalLines>false</VerticalLines>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>ComposerSettings.Settings.Filter.FilterAvailableFields</DataPath>
 							<ContextMenu name="ComposerSettingsFilterAvailableFieldsContextMenu" id="7"/>
 							<AutoCommandBar name="ComposerSettingsFilterAvailableFieldsCommandBar" id="8"/>
@@ -396,6 +400,7 @@
 							<InitialTreeView>ExpandAllLevels</InitialTreeView>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>ComposerSettings.Settings.Filter</DataPath>
 							<ViewMode>All</ViewMode>
 							<SettingsNamedItemDetailedRepresentation>false</SettingsNamedItemDetailedRepresentation>
@@ -475,6 +480,7 @@
 							<VerticalLines>false</VerticalLines>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>ComposerSettings.Settings.Order.OrderAvailableFields</DataPath>
 							<ContextMenu name="ComposerSettingsOrderAvailableFieldsContextMenu" id="106"/>
 							<AutoCommandBar name="ComposerSettingsOrderAvailableFieldsCommandBar" id="107"/>
@@ -510,6 +516,7 @@
 							<Width>60</Width>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>ComposerSettings.Settings.Order</DataPath>
 							<ContextMenu name="ComposerSettingsOrderContextMenu" id="119"/>
 							<AutoCommandBar name="ComposerSettingsOrderCommandBar" id="120"/>
@@ -837,6 +844,7 @@
 			</Picture>
 			<Action>PreviewEvents</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="EnqueueEvents" id="2">
 			<Title>
@@ -873,6 +881,7 @@
 			</Picture>
 			<Action>EnqueueEvents</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="EditDataCompositionSchema" id="3">
 			<Title>
@@ -917,6 +926,7 @@
 			</Picture>
 			<Action>EditDataCompositionSchema</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 	</Commands>
 	<Parameters>

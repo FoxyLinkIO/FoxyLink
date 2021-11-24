@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4">
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:dcscor="http://v8.1c.ru/8.1/data-composition-system/core" xmlns:dcsset="http://v8.1c.ru/8.1/data-composition-system/settings" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.10">
 	<Title>
 		<v8:item>
 			<v8:lang>en</v8:lang>
@@ -288,6 +288,7 @@
 							<AutoInsertNewRow>true</AutoInsertNewRow>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>Operations</DataPath>
 							<RowFilter xsi:nil="true"/>
 							<ContextMenu name="OperationsContextMenu" id="4">
@@ -408,6 +409,7 @@
 							<AutoInsertNewRow>true</AutoInsertNewRow>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>Events</DataPath>
 							<RowPictureDataPath>Events.PictureIndex</RowPictureDataPath>
 							<RowsPicture>
@@ -549,6 +551,7 @@
 							<AutoInsertNewRow>true</AutoInsertNewRow>
 							<EnableStartDrag>true</EnableStartDrag>
 							<EnableDrag>true</EnableDrag>
+							<FileDragMode>AsFile</FileDragMode>
 							<DataPath>Channels</DataPath>
 							<RowFilter xsi:nil="true"/>
 							<ContextMenu name="ChannelsContextMenu" id="52">
@@ -1877,16 +1880,16 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:parameter>ЦветФона</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">web:MistyRose</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
 						<dcscor:use>false</dcscor:use>
-						<dcscor:parameter>TextColor</dcscor:parameter>
+						<dcscor:parameter>ЦветТекста</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">auto</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>MarkIncomplete</dcscor:parameter>
+						<dcscor:parameter>ОтметкаНезаполненного</dcscor:parameter>
 						<dcscor:value xsi:type="xs:boolean">true</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -1906,16 +1909,16 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:parameter>ЦветФона</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">web:MistyRose</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
 						<dcscor:use>false</dcscor:use>
-						<dcscor:parameter>TextColor</dcscor:parameter>
+						<dcscor:parameter>ЦветТекста</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">auto</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>MarkIncomplete</dcscor:parameter>
+						<dcscor:parameter>ОтметкаНезаполненного</dcscor:parameter>
 						<dcscor:value xsi:type="xs:boolean">true</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -1935,16 +1938,16 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:parameter>ЦветФона</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">web:MistyRose</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
 						<dcscor:use>false</dcscor:use>
-						<dcscor:parameter>TextColor</dcscor:parameter>
+						<dcscor:parameter>ЦветТекста</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">auto</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>MarkIncomplete</dcscor:parameter>
+						<dcscor:parameter>ОтметкаНезаполненного</dcscor:parameter>
 						<dcscor:value xsi:type="xs:boolean">true</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -1964,16 +1967,16 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:parameter>ЦветФона</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">web:MistyRose</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
 						<dcscor:use>false</dcscor:use>
-						<dcscor:parameter>TextColor</dcscor:parameter>
+						<dcscor:parameter>ЦветТекста</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">auto</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>MarkIncomplete</dcscor:parameter>
+						<dcscor:parameter>ОтметкаНезаполненного</dcscor:parameter>
 						<dcscor:value xsi:type="xs:boolean">true</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -1993,12 +1996,12 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:parameter>ЦветФона</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">web:MistyRose</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
 						<dcscor:use>false</dcscor:use>
-						<dcscor:parameter>TextColor</dcscor:parameter>
+						<dcscor:parameter>ЦветТекста</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">auto</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -2017,12 +2020,12 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:parameter>ЦветФона</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">web:MistyRose</dcscor:value>
 					</dcscor:item>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
 						<dcscor:use>false</dcscor:use>
-						<dcscor:parameter>TextColor</dcscor:parameter>
+						<dcscor:parameter>ЦветТекста</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">auto</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -2042,7 +2045,7 @@
 				</dcsset:filter>
 				<dcsset:appearance>
 					<dcscor:item xsi:type="dcsset:SettingsParameterValue">
-						<dcscor:parameter>BackColor</dcscor:parameter>
+						<dcscor:parameter>ЦветФона</dcscor:parameter>
 						<dcscor:value xsi:type="v8ui:Color">web:MistyRose</dcscor:value>
 					</dcscor:item>
 				</dcsset:appearance>
@@ -2081,6 +2084,7 @@
 			</ToolTip>
 			<Action>SelectChannel</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="DeleteChannel" id="2">
 			<Title>
@@ -2117,6 +2121,7 @@
 			</Picture>
 			<Action>DeleteChannel</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="InstallChannelUpdate" id="3">
 			<Title>
@@ -2153,6 +2158,7 @@
 			</Picture>
 			<Action>InstallChannelUpdate</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="DeleteEvent" id="4">
 			<Title>
@@ -2189,6 +2195,7 @@
 			</Picture>
 			<Action>DeleteEvent</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="SelectOperation" id="5">
 			<Title>
@@ -2220,6 +2227,7 @@
 				</v8:item>
 			</ToolTip>
 			<Action>SelectOperation</Action>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="DeleteOperation" id="6">
 			<Title>
@@ -2256,6 +2264,7 @@
 			</Picture>
 			<Action>DeleteOperation</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="InstallExchange" id="8">
 			<Title>
@@ -2292,6 +2301,7 @@
 			</Picture>
 			<Action>InstallOrUpdateExchange</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="InstallExchangeUpdate" id="9">
 			<Title>
@@ -2328,6 +2338,7 @@
 			</Picture>
 			<Action>InstallOrUpdateExchange</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 		<Command name="InstallChannel" id="7">
 			<Title>
@@ -2364,6 +2375,7 @@
 			</Picture>
 			<Action>InstallChannel</Action>
 			<Representation>TextPicture</Representation>
+			<CurrentRowUse>DontUse</CurrentRowUse>
 		</Command>
 	</Commands>
 	<Parameters>

@@ -21,9 +21,9 @@
 
 Function MessageHandler(Request)
     
-    Var Exchange, Operation, Async;
+    Var Exchange, Operation, Async, Exec;
     
-    ProcessURLParameters(Request.URLParameters, Exchange, Operation, Async);
+    ProcessURLParameters(Request.URLParameters, Exchange, Operation, Async, Exec);
     
     Headers = FL_InteriorUse.HeadersFromRequestResponse(Request);
     Invocation = Catalogs.FL_Messages.NewInvocation();
@@ -59,12 +59,25 @@ Function MessageHandler(Request)
     Message = Catalogs.FL_Messages.Create(Invocation);
     
     If Async Then
-        Catalogs.FL_Messages.Route(Message, Exchange, AppEndpoint, True);     
+        Catalogs.FL_Messages.Route(Message, Exchange, AppEndpoint, True);
+    ElsIf Exec Then
+        
+        JobResult = Catalogs.FL_Messages.RouteAndRunOutputResult(
+            Message, Exchange, AppEndpoint);
+            
+        OutInvocation = Catalogs.FL_Jobs.GetFromJobResult(
+            JobResult, "Invocation");
+        
     Else 
-        Catalogs.FL_Messages.RouteAndRun(Message, Exchange, AppEndpoint);    
+        Catalogs.FL_Messages.RouteAndRun(Message, Exchange, AppEndpoint);
     EndIf;
     
     Response = New HTTPServiceResponse(FL_InteriorUseReUse.OkStatusCode());
+    
+    If Exec Then
+        Response.SetBodyFromBinaryData(OutInvocation.Payload);
+    EndIf;
+    
     Return Response;
     
 EndFunction // MessageHandler()
@@ -75,7 +88,7 @@ EndFunction // MessageHandler()
 
 // Only for internal use.
 //
-Procedure ProcessURLParameters(URLParameters, Exchange, Operation, Async)
+Procedure ProcessURLParameters(URLParameters, Exchange, Operation, Async, Exec)
     
     ExchangeName = URLParameters.Get("Exchange");
     Exchange = FL_CommonUse.ReferenceByDescription(
@@ -108,6 +121,7 @@ Procedure ProcessURLParameters(URLParameters, Exchange, Operation, Async)
     EndIf;
    
     Async = Upper(URLParameters.Get("Type")) = "ASYNC";
+    Exec = Upper(URLParameters.Get("Type")) = "EXEC";
     
 EndProcedure // ProcessURLParameters()
 
