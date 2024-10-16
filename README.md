@@ -126,11 +126,11 @@ This is a legal way of saying "If you submit a PR to us, that code becomes ours"
 
 ## Happy Customers
 
-[<img src="img/customers/Riger.ca.png" width="100px">](https://www.riger.ca/)
-[<img src="img/customers/ktc.svg" width="100px">](https://ktc.ua/)
-[<img src="img/customers/prime-print.svg" width="100px">](https://prime-print.com.ua/)
-[<img src="img/customers/secur.svg" width="100px">](https://secur.ua/)
-[<img src="img/customers/meest-china.svg" width="100px">](https://meest.cn/)
-[<img src="img/customers/sviymarket.png" width="100px">](https://sviymarket.com/)
-[<img src="img/customers/badyorui.png" width="100px">](https://badyorui.com.ua/)
-[<img src="img/customers/previa.uk.png" width="100px">](https://previa.uk.com/)
+[<img src="img/customers/Riger.ca.png" width="90px">](https://www.riger.ca/)
+[<img src="img/customers/ktc.svg" width="90px">](https://ktc.ua/)
+[<img src="img/customers/prime-print.svg" width="90px">](https://prime-print.com.ua/)
+[<img src="img/customers/secur.svg" width="90px">](https://secur.ua/)
+[<img src="img/customers/meest-china.svg" width="90px">](https://meest.cn/)
+[<img src="img/customers/sviymarket.png" width="90px">](https://sviymarket.com/)
+[<img src="img/customers/badyorui.png" width="90px">](https://badyorui.com.ua/)
+[<img src="img/customers/previa.uk.png" width="90px">](https://previa.uk.com/)
