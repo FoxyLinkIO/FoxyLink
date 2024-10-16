@@ -126,15 +126,11 @@ This is a legal way of saying "If you submit a PR to us, that code becomes ours"
 
 ## Happy Customers
 
-<p align="center">
-  <a href="https://www.riger.ca/">
-    <img src="https://github.com/FoxyLinkIO/FoxyLink/blob/develop/img/customers/Riger.ca.png" alt="" width=100px height=42px/>
-  </a>
-  <a href="https://ktc.ua/">
-    <img src="https://github.com/FoxyLinkIO/FoxyLink/blob/develop/img/customers/ktc.svg" alt="" width=196px height=42px/>
-  </a>
-  <a href="https://previa.uk.com/">
-    <img src="https://github.com/FoxyLinkIO/FoxyLink/blob/develop/img/customers/previa.uk.png" alt="" width=100px height=42px/>
-  </a>
-</p>
-
+[<img src="img/customers/Riger.ca.png" width="100px">](https://www.riger.ca/)
+[<img src="img/customers/ktc.svg" width="100px">](https://ktc.ua/)
+[<img src="img/customers/prime-print.svg" width="100px">](https://prime-print.com.ua/)
+[<img src="img/customers/secur.svg" width="100px">](https://secur.ua/)
+[<img src="img/customers/meest-china.svg" width="100px">](https://meest.cn/)
+[<img src="img/customers/sviymarket.png" width="100px">](https://sviymarket.com/)
+[<img src="img/customers/badyorui.png" width="100px">](https://badyorui.com.ua/)
+[<img src="img/customers/previa.uk.png" width="100px">](https://previa.uk.com/)
